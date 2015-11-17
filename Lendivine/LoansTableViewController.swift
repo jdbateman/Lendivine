@@ -60,6 +60,7 @@ class LoansTableViewController: UITableViewController {
         return cell
     }
     
+    // Initialize the contents of the cell.
     func configureCell(cell: LoansTableViewCell, indexPath: NSIndexPath) {
         let loan = self.loans[indexPath.row]
         cell.nameLabel.text = loan.name

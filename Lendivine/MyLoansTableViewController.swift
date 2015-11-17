@@ -1,38 +1,40 @@
 //
-//  CartTableViewController.swift
+//  MyLoansTableViewController.swift
 //  Lendivine
 //
-//  Created by john bateman on 11/15/15.
+//  Created by john bateman on 11/17/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
-// This table view controller displays a set of loans retrieved from Kiva.org. TODO: Additional loans are displayed when the refresh button is selected. 
-
-// TODO - support selecting a loan to display detailed information on the loan
+// This table view controller displays a list of the loans made previously by the user.
 
 import UIKit
 
-class CartTableViewController: UITableViewController {
+class MyLoansTableViewController: UITableViewController {
 
-    var cart = KivaCart.sharedInstance
-    var kivaAPI: KivaAPI?
+    var kivaAPI: KivaAPI = KivaAPI.sharedInstance
+    
+    // a collection of the Kiva loans the user has made
+    var loans = [KivaLoan]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // initialize user's loans
+        populateLoans()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-        print("cart = \(cart.items.count) [viewDidLoad]")
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        self.tableView.reloadData()
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.tableView.reloadData()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -45,26 +47,25 @@ class CartTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cart.items.count
+        // #warning Incomplete implementation, return the number of rows
+        return self.loans.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> MyLoansTableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("CartTableCellID", forIndexPath: indexPath) as! CartTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("MyLoansTableViewCellID", forIndexPath: indexPath) as! MyLoansTableViewCell
 
         // Configure the cell...
         configureCell(cell, row: indexPath.row)
-        
+
         return cell
     }
+    
+    // Initialize the contents of the cell.
+    func configureCell(cell: MyLoansTableViewCell, row: Int) {
 
-    func configureCell(cell: CartTableViewCell, row: Int) {
-        let loan = cart.items[row].loan as KivaLoan
-        
-        // make delete button corners rounded
-        cell.deleteButton.layer.cornerRadius = 7
-        cell.deleteButton.layer.masksToBounds = true
-        
+        let loan = self.loans[row]
         cell.nameLabel.text = loan.name
         cell.sectorLabel.text = loan.sector
         cell.amountLabel.text = "$" + loan.loanAmount.stringValue
@@ -82,10 +83,8 @@ class CartTableViewController: UITableViewController {
                 print("error retrieving image: \(error)")
             }
         }
-        
-        print("cart = \(cart.items.count) [configureCell]")
     }
-    
+
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -131,4 +130,21 @@ class CartTableViewController: UITableViewController {
     }
     */
 
+    // Call the kiva API to initialize the local collection of loans previously made by the user.
+    func populateLoans() {
+        kivaAPI.kivaOAuthGetUserLoans() { success, error, loans in
+            if success {
+                if let loans = loans {
+                    self.loans = loans
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.tableView.reloadData()
+                    }
+                } else {
+                    self.loans.removeAll()
+                }
+            } else {
+                print("error retrieving user's loans from Kiva.org: \(error)")
+            }
+        }
+    }
 }

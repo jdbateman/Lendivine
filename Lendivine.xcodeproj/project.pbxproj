@@ -29,9 +29,9 @@
 		9E495BE21BFA51B500E3DEAD /* CartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE11BFA51B500E3DEAD /* CartTableViewCell.swift */; };
 		9E495BE41BFAD82000E3DEAD /* NSCache+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE31BFAD82000E3DEAD /* NSCache+Singleton.swift */; };
 		9E495BE61BFB76F000E3DEAD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */; };
+		9E495BE81BFBA13800E3DEAD /* MyLoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */; };
+		9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE91BFBAAD200E3DEAD /* MyLoansTableViewCell.swift */; };
 		9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E131BF559E90000D9BF /* AppDelegate.swift */; };
-		9EC72E161BF559E90000D9BF /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E151BF559E90000D9BF /* FirstViewController.swift */; };
-		9EC72E181BF559E90000D9BF /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E171BF559E90000D9BF /* SecondViewController.swift */; };
 		9EC72E1B1BF559E90000D9BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E191BF559E90000D9BF /* Main.storyboard */; };
 		9EC72E1D1BF559E90000D9BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1C1BF559E90000D9BF /* Assets.xcassets */; };
 		9EC72E201BF559E90000D9BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1E1BF559E90000D9BF /* LaunchScreen.storyboard */; };
@@ -101,10 +101,10 @@
 		9E495BE11BFA51B500E3DEAD /* CartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartTableViewCell.swift; sourceTree = "<group>"; };
 		9E495BE31BFAD82000E3DEAD /* NSCache+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCache+Singleton.swift"; sourceTree = "<group>"; };
 		9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLoansTableViewController.swift; sourceTree = "<group>"; };
+		9E495BE91BFBAAD200E3DEAD /* MyLoansTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLoansTableViewCell.swift; sourceTree = "<group>"; };
 		9EC72E101BF559E90000D9BF /* Lendivine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lendivine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EC72E131BF559E90000D9BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9EC72E151BF559E90000D9BF /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		9EC72E171BF559E90000D9BF /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		9EC72E1A1BF559E90000D9BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9EC72E1C1BF559E90000D9BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9EC72E1F1BF559E90000D9BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -155,15 +155,17 @@
 		9E39504F1BF66B2D007BC75E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */,
 				9E495BE11BFA51B500E3DEAD /* CartTableViewCell.swift */,
 				9E495BDD1BF9060E00E3DEAD /* CartTableViewController.swift */,
 				9E495BDB1BF9050E00E3DEAD /* KivaCartViewController.swift */,
 				9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */,
 				9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */,
+				9E495BE91BFBAAD200E3DEAD /* MyLoansTableViewCell.swift */,
+				9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */,
 				9EC72E191BF559E90000D9BF /* Main.storyboard */,
 				9EC72E1E1BF559E90000D9BF /* LaunchScreen.storyboard */,
 				9EC72E1C1BF559E90000D9BF /* Assets.xcassets */,
-				9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -221,8 +223,6 @@
 			children = (
 				9EC72E131BF559E90000D9BF /* AppDelegate.swift */,
 				9E39504F1BF66B2D007BC75E /* View */,
-				9EC72E151BF559E90000D9BF /* FirstViewController.swift */,
-				9EC72E171BF559E90000D9BF /* SecondViewController.swift */,
 				9EC72E211BF559E90000D9BF /* Info.plist */,
 				9E3950501BF66B34007BC75E /* Model */,
 				9E495BDF1BF9611400E3DEAD /* VTError.swift */,
@@ -339,7 +339,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EC72E181BF559E90000D9BF /* SecondViewController.swift in Sources */,
 				9E39506B1BF66E23007BC75E /* MySingleton.swift in Sources */,
 				9E3950631BF66E23007BC75E /* KivaCountry.swift in Sources */,
 				9E3950671BF66E23007BC75E /* KivaOauth.swift in Sources */,
@@ -354,13 +353,14 @@
 				9E39506A1BF66E23007BC75E /* KivaUserAccount.swift in Sources */,
 				9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */,
 				9E495BDC1BF9050E00E3DEAD /* KivaCartViewController.swift in Sources */,
+				9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */,
 				9E3950711BF670F4007BC75E /* Constants.swift in Sources */,
 				9E39506E1BF66E23007BC75E /* RESTConvenience.swift in Sources */,
 				9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */,
+				9E495BE81BFBA13800E3DEAD /* MyLoansTableViewController.swift in Sources */,
 				9E3950661BF66E23007BC75E /* KivaLoanStatistics.swift in Sources */,
 				9E495BE21BFA51B500E3DEAD /* CartTableViewCell.swift in Sources */,
 				9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */,
-				9EC72E161BF559E90000D9BF /* FirstViewController.swift in Sources */,
 				9E3950641BF66E23007BC75E /* KivaLender.swift in Sources */,
 				9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */,
 				9E495BDE1BF9060E00E3DEAD /* CartTableViewController.swift in Sources */,

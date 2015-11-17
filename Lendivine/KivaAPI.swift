@@ -214,7 +214,7 @@ extension KivaAPI {
         }
     }
     
-    func kivaOAuthGetLoans(completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void ) {
+    func kivaOAuthGetUserLoans(completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void ) {
         
         // page details
         var page = 0
