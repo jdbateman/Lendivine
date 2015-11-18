@@ -177,7 +177,7 @@ class RESTClient {
         
 //        // TODO: try application/x-www-form-urlencoded instead of application/json for "Content-Type"
 //        let loanIDs = [974236, 961687, 961683, 974236, 973680] // [961687, 961683, 974236, 973680, 974236]
-//        if let body = createHTTPBody(loanIDs, appID: "com.johnbateman.awesomeapp", donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
+//        if let body = createHTTPBody(loanIDs, appID: Constants.OAuthValues.consumerKey, donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
 //            request.HTTPBody = body
 //        }
         
@@ -218,7 +218,7 @@ class RESTClient {
         loanString.appendContentsOf("]")
         
         // app_id
-        loanString.appendContentsOf("&app_id=com.johnbateman.awesomeapp")
+        loanString.appendContentsOf("&app_id=" + Constants.OAuthValues.consumerKey) //("&app_id=com.johnbateman.awesomeapp")
         
         // donation
         if let donation = donation {
@@ -238,7 +238,10 @@ class RESTClient {
 
     // TODO - test function. OK to comment out.
     func createHTTPBody() -> NSData? {
-        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=com.johnbateman.awesomeapp&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva",974236,10.00)
+        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=%@&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva/Lendivine",974236, Constants.OAuthValues.consumerKey, 10.00)
+
+//        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=%@&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva",974236, Constants.OAuthValues.consumerKey, 10.00)
+        
         return loanString.dataUsingEncoding(NSUTF8StringEncoding)
 
         // jsonBody["callback_url"] = "oauth-swift://oauth-callback/kiva"

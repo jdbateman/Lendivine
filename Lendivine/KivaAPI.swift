@@ -41,7 +41,7 @@ class KivaAPI {
         var parameters =  Dictionary<String, AnyObject>()
         parameters = [
             "oauth_token" : self.oAuthAccessToken!.stringByRemovingPercentEncoding!,
-            "app_id" : "com.johnbateman.awesomeapp"
+            "app_id" : Constants.OAuthValues.consumerKey // "com.johnbateman.awesomeapp" // TODO - check this works
         ]
         if let newParameters = parametersDict {
             for (key,value) in newParameters {
@@ -302,7 +302,7 @@ extension KivaAPI {
     // TODO: Post to Kiva support. getting 404 no matter what parameters are.
     func kivaOAuthGetLoanBalances(loanID: NSNumber, completionHandler: (success: Bool, error: NSError?, balances: [String]? /*TODO: change type*/) -> Void ) {
     
-        var parametersDict = [/*"ids": 965946, "app_id": "com.johnbateman.awesomeapp"*/] //TODO: ["ids": loanID]
+        var parametersDict = [/*"ids": 965946, "app_id": Constants.OAuthValues.consumerKey*/] //TODO: ["ids": loanID]
         
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
@@ -943,7 +943,7 @@ extension KivaAPI {
             for item in cart.items {
                 loanIDs.append(item.loanID)
             }
-            if let body = createHTTPBody(loanIDs, appID: "com.johnbateman.awesomeapp", donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
+            if let body = createHTTPBody(loanIDs, appID: Constants.OAuthValues.consumerKey /*"com.johnbateman.awesomeapp"*/, donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
                 httpBody = body
             }
             
@@ -954,7 +954,7 @@ extension KivaAPI {
 //                let serializableItems: [[String : AnyObject]] = cart.convertCartItemsToSerializableItems()
 //                jsonBody["loans"] = serializableItems
 //            }
-//            jsonBody["app_id"] = "com.johnbateman.awesomeapp"
+//            jsonBody["app_id"] = Constants.OAuthValues.consumerKey
 //            jsonBody["donation"] = "10.00"
 ////            jsonBody["callback_url"] = "oauth-swift://oauth-callback/kiva" // TODO - differentiate this url from oauth callback url
 //            
@@ -1005,7 +1005,7 @@ extension KivaAPI {
         loanString.appendContentsOf("]")
         
         // app_id
-        loanString.appendContentsOf("&app_id=com.johnbateman.awesomeapp")
+        loanString.appendContentsOf("&app_id=" + Constants.OAuthValues.consumerKey) // ("&app_id=com.johnbateman.awesomeapp")
         
         // donation
         if let donation = donation {

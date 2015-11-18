@@ -16,6 +16,7 @@ class CartTableViewCell: UITableViewCell {
     @IBOutlet weak var amountLabel: UILabel! // loan amount
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var countryLabel: UILabel!
     
     @IBAction func onRemoveFromCartButtonTap(sender: UIButton) {
         

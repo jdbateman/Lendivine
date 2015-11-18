@@ -30,11 +30,11 @@ class KivaOAuth {
             consumerSecret: Kiva["consumerSecret"]!,
             requestTokenUrl: "https://api.kivaws.org/oauth/request_token",
             authorizeUrl:    "https://www.kiva.org/oauth/authorize",
-            accessTokenUrl:  "https://api.kivaws.org/oauth/access_token"
+            accessTokenUrl:  "https://api.kivaws.org/oauth/access_token" 
         )
         
         // Request an unauthorized oauth Request Token. Upon receipt of the request token from Kiva use it to redirect to Kiva.org for user authentication and user authorization of app. If the user authorizes this app then Kiva.org redirects to the callback url below by appending an oauth_verifier code. The app will exchange the unauthorized oauth request token and oauth_verifier code for a long lived Access Token that can be used to make Kiva API calls to access protected resources.
-        oauthswift.authorizeWithCallbackURL( NSURL(string: "oauth-swift://oauth-callback/kiva")!,
+        oauthswift.authorizeWithCallbackURL( NSURL(string: Constants.OAuthValues.consumerCallbackUrl /*"oauth-swift://oauth-callback/kiva"*/)!,
             success: { credential, response in
             
                 print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")

@@ -15,6 +15,7 @@ class MyLoansTableViewCell: UITableViewCell {
     @IBOutlet weak var sectorLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var loanImageView: UIImageView!
+    @IBOutlet weak var countryLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

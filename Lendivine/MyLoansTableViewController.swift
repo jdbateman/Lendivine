@@ -69,6 +69,7 @@ class MyLoansTableViewController: UITableViewController {
         cell.nameLabel.text = loan.name
         cell.sectorLabel.text = loan.sector
         cell.amountLabel.text = "$" + loan.loanAmount.stringValue
+        cell.countryLabel.text = loan.country
         
         // Set placeholder image
         cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets

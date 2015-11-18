@@ -11,7 +11,8 @@ import Foundation
 
 extension RESTClient {
 
-    struct Constants {
+    struct RESTConstants {
+        
 //        // MARK: API Keys
 //        static let ParseApiKey : String = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
 //        static let ParseAppID : String = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"

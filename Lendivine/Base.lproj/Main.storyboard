@@ -39,6 +39,12 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Country" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S6f-HJ-XUr">
+                                            <rect key="frame" x="182" y="92" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ooC-hV-FCj">
                                             <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                                             <constraints>
@@ -63,6 +69,7 @@
                                     <constraints>
                                         <constraint firstItem="ZFX-7i-jOM" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="2kZ-aW-Ri6"/>
                                         <constraint firstItem="ooC-hV-FCj" firstAttribute="leading" secondItem="z5d-i8-ZVm" secondAttribute="leading" id="3Lh-kq-rSA"/>
+                                        <constraint firstItem="S6f-HJ-XUr" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="22" id="4c4-Lp-SDX"/>
                                         <constraint firstItem="orN-mG-1TS" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="9zI-JO-xuv"/>
                                         <constraint firstItem="J2F-fO-8hu" firstAttribute="top" secondItem="ZFX-7i-jOM" secondAttribute="bottom" constant="4" id="AYr-fg-vdh"/>
                                         <constraint firstItem="orN-mG-1TS" firstAttribute="top" secondItem="J2F-fO-8hu" secondAttribute="bottom" constant="4" id="Jh6-Cg-18Y"/>
@@ -71,11 +78,13 @@
                                         <constraint firstItem="ZFX-7i-jOM" firstAttribute="top" secondItem="z5d-i8-ZVm" secondAttribute="top" constant="20" id="YUS-F1-hI0"/>
                                         <constraint firstItem="J2F-fO-8hu" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="e3y-LZ-QEW"/>
                                         <constraint firstItem="R9r-rX-l3M" firstAttribute="centerY" secondItem="z5d-i8-ZVm" secondAttribute="centerY" id="faY-m6-OfY"/>
+                                        <constraint firstItem="S6f-HJ-XUr" firstAttribute="top" secondItem="orN-mG-1TS" secondAttribute="bottom" constant="4" id="jMF-Rf-hvY"/>
                                         <constraint firstItem="ooC-hV-FCj" firstAttribute="top" secondItem="z5d-i8-ZVm" secondAttribute="top" id="lQR-cu-yLV"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="amountLabel" destination="orN-mG-1TS" id="tUM-2j-61A"/>
+                                    <outlet property="countryLabel" destination="S6f-HJ-XUr" id="ucU-wu-2n0"/>
                                     <outlet property="loanImageView" destination="ooC-hV-FCj" id="bVc-J3-hw9"/>
                                     <outlet property="nameLabel" destination="ZFX-7i-jOM" id="Ccy-9H-BeB"/>
                                     <outlet property="sectorLabel" destination="J2F-fO-8hu" id="Is7-p1-LZc"/>
@@ -109,7 +118,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="175"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Net-53-UaY">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Net-53-UaY">
                                             <rect key="frame" x="8" y="8" width="160" height="160"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="160" id="dQI-Qo-UeJ"/>
@@ -133,6 +142,12 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Country" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E92-og-7Sx">
+                                            <rect key="frame" x="190" y="101" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
                                             <rect key="frame" x="529" y="62" width="50" height="50"/>
                                             <color key="backgroundColor" red="0.87257310164668578" green="0.077613799259091135" blue="0.040547476314373179" alpha="1" colorSpace="calibratedRGB"/>
@@ -143,6 +158,7 @@
                                         </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="E92-og-7Sx" firstAttribute="leading" secondItem="Net-53-UaY" secondAttribute="trailing" constant="22" id="0a9-TM-R5p"/>
                                         <constraint firstItem="pYm-12-Ibb" firstAttribute="leading" secondItem="Net-53-UaY" secondAttribute="trailing" constant="22" id="0gV-kC-QVn"/>
                                         <constraint firstItem="aEV-4g-zwL" firstAttribute="leading" secondItem="Net-53-UaY" secondAttribute="trailing" constant="22" id="1xR-00-QNa"/>
                                         <constraint firstItem="2zr-8W-zSk" firstAttribute="centerY" secondItem="qlg-Ip-XRF" secondAttribute="centerY" id="2aG-ua-Xch"/>
@@ -152,12 +168,14 @@
                                         <constraint firstAttribute="trailing" secondItem="2zr-8W-zSk" secondAttribute="trailing" constant="24" id="TNS-CY-dWD"/>
                                         <constraint firstAttribute="bottom" secondItem="Net-53-UaY" secondAttribute="bottom" constant="8" id="Xzz-Z6-BGh"/>
                                         <constraint firstItem="Net-53-UaY" firstAttribute="leading" secondItem="qlg-Ip-XRF" secondAttribute="leading" constant="8" id="YRS-fq-myu"/>
+                                        <constraint firstItem="E92-og-7Sx" firstAttribute="top" secondItem="pYm-12-Ibb" secondAttribute="bottom" constant="4" id="Yii-Uh-hnb"/>
                                         <constraint firstItem="aEV-4g-zwL" firstAttribute="top" secondItem="qlg-Ip-XRF" secondAttribute="top" constant="20" id="qGa-Wy-vyn"/>
                                         <constraint firstItem="Net-53-UaY" firstAttribute="top" secondItem="qlg-Ip-XRF" secondAttribute="top" constant="7" id="uCt-xh-rnz"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="amountLabel" destination="pYm-12-Ibb" id="pvN-BT-wpM"/>
+                                    <outlet property="countryLabel" destination="E92-og-7Sx" id="8kK-k3-Qwc"/>
                                     <outlet property="deleteButton" destination="2zr-8W-zSk" id="UDn-Ey-08I"/>
                                     <outlet property="loanImageView" destination="Net-53-UaY" id="WfJ-vm-hDe"/>
                                     <outlet property="nameLabel" destination="aEV-4g-zwL" id="aku-lw-gQy"/>
@@ -424,8 +442,16 @@
                                                 <action selector="onAddToCartButtonTap:" destination="NX9-ZF-AIV" eventType="touchUpInside" id="4Ru-5n-UFM"/>
                                             </connections>
                                         </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Country" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vkj-J2-MYe">
+                                            <rect key="frame" x="182" y="95" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="vkj-J2-MYe" firstAttribute="top" secondItem="rnE-Po-SEf" secondAttribute="bottom" constant="4" id="0PX-Jn-lan"/>
+                                        <constraint firstItem="vkj-J2-MYe" firstAttribute="leading" secondItem="JQ9-a9-zQg" secondAttribute="trailing" constant="22" id="3sw-mw-bg9"/>
                                         <constraint firstAttribute="bottom" secondItem="JQ9-a9-zQg" secondAttribute="bottom" id="6io-AU-OSi"/>
                                         <constraint firstItem="rnE-Po-SEf" firstAttribute="top" secondItem="9jx-0k-wc7" secondAttribute="bottom" constant="4" id="Ivc-F1-hqq"/>
                                         <constraint firstItem="zlN-ub-Jt1" firstAttribute="top" secondItem="ZIw-7w-tgh" secondAttribute="top" constant="20" id="Jg3-8B-wha"/>
@@ -441,6 +467,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="amountLabel" destination="rnE-Po-SEf" id="iZX-ri-bXY"/>
+                                    <outlet property="countryLabel" destination="vkj-J2-MYe" id="LP5-bs-8ZM"/>
                                     <outlet property="loanImageView" destination="JQ9-a9-zQg" id="x9v-Kk-bop"/>
                                     <outlet property="nameLabel" destination="zlN-ub-Jt1" id="icH-jc-Bgs"/>
                                     <outlet property="sectorLabel" destination="9jx-0k-wc7" id="XCv-91-rcM"/>

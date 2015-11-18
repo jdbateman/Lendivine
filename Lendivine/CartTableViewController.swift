@@ -68,6 +68,7 @@ class CartTableViewController: UITableViewController {
         cell.nameLabel.text = loan.name
         cell.sectorLabel.text = loan.sector
         cell.amountLabel.text = "$" + loan.loanAmount.stringValue
+        cell.countryLabel.text = loan.country
         
         // Set placeholder image
         cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
@@ -86,25 +87,32 @@ class CartTableViewController: UITableViewController {
         print("cart = \(cart.items.count) [configureCell]")
     }
     
-    /*
-    // Override to support conditional editing of the table view.
+    // Conditional editing of the table view. (Return true to allow edit of the item, false if item is not editable.)
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
-
-    /*
+/*
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            // Remove the data from collection and update the tableview.
+            cart.removeItemByIndex(indexPath.row)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
+        }
+    }
+*/
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
+            cart.removeItemByIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
-    */
+
 
     /*
     // Override to support rearranging the table view.

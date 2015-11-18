@@ -15,6 +15,7 @@ class LoansTableViewCell: UITableViewCell {
     @IBOutlet weak var sectorLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel! // loan amount
     @IBOutlet weak var loanImageView: UIImageView!
+    @IBOutlet weak var countryLabel: UILabel!
     
     @IBAction func onAddToCartButtonTap(sender: UIButton) {
         
