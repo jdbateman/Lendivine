@@ -41,7 +41,7 @@ class LoansTableViewCell: UITableViewCell {
         let tableViewController = tableView.dataSource as! LoansTableViewController
         let loan = tableViewController.loans[indexPath!.row]
         let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5  // TODO: calculate default amount: ($25 or user set preference)
-        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, amount: amount)
+        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount)
     }
     
     override func awakeFromNib() {

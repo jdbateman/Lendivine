@@ -148,12 +148,22 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
-                                            <rect key="frame" x="529" y="62" width="50" height="50"/>
-                                            <color key="backgroundColor" red="0.87257310164668578" green="0.077613799259091135" blue="0.040547476314373179" alpha="1" colorSpace="calibratedRGB"/>
-                                            <state key="normal" image="Clear Shopping Cart-50"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
+                                            <rect key="frame" x="526" y="62" width="50" height="50"/>
+                                            <color key="backgroundColor" red="0.1667993425" green="0.70766321409999999" blue="0.13096996690000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="70" id="cdi-49-Axx"/>
+                                                <constraint firstAttribute="height" constant="70" id="znf-KV-w0v"/>
+                                            </constraints>
+                                            <state key="normal" image="EmptyCart-50"/>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="cdi-49-Axx"/>
+                                                    <exclude reference="znf-KV-w0v"/>
+                                                </mask>
+                                            </variation>
                                             <connections>
-                                                <action selector="onRemoveFromCartButtonTap:" destination="3dS-mj-Ioq" eventType="touchUpInside" id="lcU-1O-IeB"/>
+                                                <action selector="onChangeDonationButton:" destination="3dS-mj-Ioq" eventType="touchUpInside" id="BUZ-Vf-JdI"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -175,8 +185,8 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="amountLabel" destination="pYm-12-Ibb" id="pvN-BT-wpM"/>
+                                    <outlet property="changeDonationButton" destination="2zr-8W-zSk" id="9ZO-Ir-biF"/>
                                     <outlet property="countryLabel" destination="E92-og-7Sx" id="8kK-k3-Qwc"/>
-                                    <outlet property="deleteButton" destination="2zr-8W-zSk" id="UDn-Ey-08I"/>
                                     <outlet property="loanImageView" destination="Net-53-UaY" id="WfJ-vm-hDe"/>
                                     <outlet property="nameLabel" destination="aEV-4g-zwL" id="aku-lw-gQy"/>
                                     <outlet property="sectorLabel" destination="0XM-kn-udv" id="RrJ-VE-jk0"/>
@@ -254,7 +264,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="User-100" translatesAutoresizingMaskIntoConstraints="NO" id="QK1-ay-rHQ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="User-100" translatesAutoresizingMaskIntoConstraints="NO" id="QK1-ay-rHQ">
                                 <rect key="frame" x="180" y="104" width="240" height="128"/>
                             </imageView>
                         </subviews>
@@ -509,8 +519,8 @@
         <image name="Add Shopping Cart-50" width="50" height="50"/>
         <image name="Borrow Book-32" width="32" height="32"/>
         <image name="Clear Shopping Cart-32" width="32" height="32"/>
-        <image name="Clear Shopping Cart-50" width="50" height="50"/>
         <image name="Donate-32" width="32" height="32"/>
+        <image name="EmptyCart-50" width="50" height="50"/>
         <image name="User-100" width="100" height="100"/>
         <image name="User-32" width="32" height="32"/>
     </resources>

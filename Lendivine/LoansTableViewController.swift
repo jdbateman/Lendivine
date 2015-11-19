@@ -272,7 +272,7 @@ class LoansTableViewController: UITableViewController {
                             let loanId = loan.id
                             let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5
                             print("amount of loan = \(amount)")
-                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, amount: amount)
+                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount)
                             
                             print("cart contains loanId: \(loanId) in amount: \(amount)")
                         }

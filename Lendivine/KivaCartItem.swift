@@ -11,19 +11,19 @@ import Foundation
 class KivaCartItem: Equatable {
     
     var loanID: NSNumber = -1
-    var amount: NSNumber = 0
+    var donationAmount: NSNumber = 0
     var loan = KivaLoan()
     
-    init(loan: KivaLoan, loanID: NSNumber, amount: NSNumber) {
+    init(loan: KivaLoan, loanID: NSNumber, donationAmount: NSNumber) {
         self.loanID = loanID
-        self.amount = amount
+        self.donationAmount = donationAmount
         self.loan = loan
     }
     
     func getDictionaryRespresentation() -> [String: AnyObject] {
         var dictionary = [String: AnyObject]()
         dictionary["id"] = loanID
-        dictionary["amount"] = amount
+        dictionary["donationAmount"] = donationAmount
         return dictionary
     }
 }

@@ -893,15 +893,15 @@ extension KivaAPI {
 extension KivaAPI {
     
     // Add an item to the cart.
-    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, amount: NSNumber?) {
+    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?) {
         if let loan = loan {
             if let loanID = loanID {
-                if let amount = amount {
+                if let donationAmount = donationAmount {
                     let cart = KivaCart.sharedInstance
-                    let item = KivaCartItem(loan: loan, loanID: loanID, amount: amount)
+                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount)
                     if !cart.items.contains(item) {
                         cart.add(item)
-                        print("Added item to cart with loan Id: \(loanID) in amount: \(amount)")
+                        print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
                     } else {
                         print("Item not added to cart. The cart already contains loanId: \(loanID)")
                     }
@@ -991,7 +991,7 @@ extension KivaAPI {
         // loans
         for item in cart.items {
             if item.loanID.intValue > 0 {
-                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", item.loanID.intValue, item.amount.floatValue)
+                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", item.loanID.intValue, item.donationAmount.floatValue)
                 loanString.appendContentsOf(loanToAdd)
             }
         }
@@ -1076,12 +1076,12 @@ extension KivaAPI {
             
     // MARK: POST Convenience Methods
     
-    /*
+    /*!
     @brief Post cart to Kiva.org.
     @return void
     completion handler:
         result Contains true if post was successful, else it contains false if an error occurred.
-        error  An error if something went wrong, else nil.
+        error  An NSError object if something went wrong, else nil.
     */
     func postCartToKiva(cart: KivaCart /*, completionHandler: (result: Bool, error: NSError?) -> NSMutableURLRequest?*/) -> NSMutableURLRequest? {
         

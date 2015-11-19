@@ -192,7 +192,7 @@ class KivaOAuth {
                     // put the first loan into the cart
                     let loanId = loans[0].id
                     let loan = loans[0]
-                    kivaAPI.KivaAddItemToCart(loan, loanID: loanId, amount: 25.00 )
+                    kivaAPI.KivaAddItemToCart(loan, loanID: loanId, donationAmount: 25.00 )
                     
                     // call checkout
                     kivaAPI.KivaCheckout()

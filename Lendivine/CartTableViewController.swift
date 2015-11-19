@@ -19,6 +19,11 @@ class CartTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.kivaAPI = KivaAPI.sharedInstance
+        
+        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCheckoutButtonTapped")
+        self.navigationItem.rightBarButtonItem = checkoutButton
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -59,18 +64,27 @@ class CartTableViewController: UITableViewController {
     }
 
     func configureCell(cell: CartTableViewCell, row: Int) {
-        let loan = cart.items[row].loan as KivaLoan
+        let cartItem = cart.items[row]
+        let loan = cartItem.loan as KivaLoan
         
         // make delete button corners rounded
-        cell.deleteButton.layer.cornerRadius = 7
-        cell.deleteButton.layer.masksToBounds = true
+        cell.changeDonationButton.layer.cornerRadius = 7
+        cell.changeDonationButton.layer.masksToBounds = true
         
         cell.nameLabel.text = loan.name
         cell.sectorLabel.text = loan.sector
         cell.amountLabel.text = "$" + loan.loanAmount.stringValue
         cell.countryLabel.text = loan.country
         
-        // Set placeholder image
+        // donation amount
+        let donationAmount = "$" + cartItem.donationAmount.stringValue
+        
+        // Set button image to donation amount
+//        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
+        let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
+        cell.changeDonationButton.imageView!.image = donationImage
+        
+        // Set main image placeholder image
         cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
         
         // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
@@ -138,5 +152,23 @@ class CartTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func onCheckoutButtonTapped() {
+        print("TODO: call KivaAPI.checkout")
+        showEmbeddedBrowser()
+    }
+    
+    /* Display url in an embeded webkit browser. */
+    func showEmbeddedBrowser() {
+        let controller = KivaCartViewController()
+        //        var storyboard = UIStoryboard (name: "Main", bundle: nil)
+        //        var controller = storyboard.instantiateViewControllerWithIdentifier("WebSearchStoryboardID") as! WebSearchViewController
+        //controller.initialURL = url
+        if let kivaAPI = self.kivaAPI {
+            controller.request = kivaAPI.getKivaCartRequest()  // KivaCheckout()
+        }
+        //controller.webViewDelegate = self
+        self.presentViewController(controller, animated: true, completion: nil);
+    }
 
 }

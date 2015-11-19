@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */; };
 		9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950511BF66E23007BC75E /* KivaAPI.swift */; };
 		9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950521BF66E23007BC75E /* KivaCart.swift */; };
 		9E3950621BF66E23007BC75E /* KivaCartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950531BF66E23007BC75E /* KivaCartItem.swift */; };
@@ -78,6 +79,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtility.swift; sourceTree = "<group>"; };
 		9E3950511BF66E23007BC75E /* KivaAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaAPI.swift; sourceTree = "<group>"; };
 		9E3950521BF66E23007BC75E /* KivaCart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaCart.swift; sourceTree = "<group>"; };
 		9E3950531BF66E23007BC75E /* KivaCartItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaCartItem.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				9EC72E191BF559E90000D9BF /* Main.storyboard */,
 				9EC72E1E1BF559E90000D9BF /* LaunchScreen.storyboard */,
 				9EC72E1C1BF559E90000D9BF /* Assets.xcassets */,
+				9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -354,6 +357,7 @@
 				9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */,
 				9E495BDC1BF9050E00E3DEAD /* KivaCartViewController.swift in Sources */,
 				9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */,
+				9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */,
 				9E3950711BF670F4007BC75E /* Constants.swift in Sources */,
 				9E39506E1BF66E23007BC75E /* RESTConvenience.swift in Sources */,
 				9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */,
