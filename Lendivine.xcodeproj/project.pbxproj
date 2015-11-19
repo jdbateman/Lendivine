@@ -38,6 +38,7 @@
 		9EC72E201BF559E90000D9BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1E1BF559E90000D9BF /* LaunchScreen.storyboard */; };
 		9EC72E281BF55A7D0000D9BF /* LoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */; };
 		9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */; };
+		9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		9EC72E211BF559E90000D9BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansTableViewController.swift; sourceTree = "<group>"; };
 		9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansTableViewCell.swift; sourceTree = "<group>"; };
+		9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaPaging.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				9E39505A1BF66E23007BC75E /* KivaTeam.swift */,
 				9E39505B1BF66E23007BC75E /* KivaUserAccount.swift */,
 				9E39506F1BF66E49007BC75E /* REST */,
+				9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */,
 			);
 			name = Kiva;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				9E3950671BF66E23007BC75E /* KivaOauth.swift in Sources */,
 				9E495BE01BF9611400E3DEAD /* VTError.swift in Sources */,
 				9E3950621BF66E23007BC75E /* KivaCartItem.swift in Sources */,
+				9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */,
 				9E3950691BF66E23007BC75E /* KivaTeam.swift in Sources */,
 				9EC72E281BF55A7D0000D9BF /* LoansTableViewController.swift in Sources */,
 				9E495BE61BFB76F000E3DEAD /* AccountViewController.swift in Sources */,

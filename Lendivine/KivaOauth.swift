@@ -182,44 +182,46 @@ class KivaOAuth {
         //            self.testCheckout(self.kivaAPI!)
     }
     
-    func testCheckout(kivaAPI: KivaAPI) {
-        // search some loans
-        //var loans = [KivaLoan]()
-        
-        findLoans(kivaAPI) { success, error, loanResults in
-            if success {
-                if let loans = loanResults {
-                    // put the first loan into the cart
-                    let loanId = loans[0].id
-                    let loan = loans[0]
-                    kivaAPI.KivaAddItemToCart(loan, loanID: loanId, donationAmount: 25.00 )
-                    
-                    // call checkout
-                    kivaAPI.KivaCheckout()
-                }
-                print("search loans results: \(loanResults)")
-            } else {
-                print("failed")
-            }
-        }
-    }
+//    func testCheckout(kivaAPI: KivaAPI) {
+//        // search some loans
+//        //var loans = [KivaLoan]()
+//        
+//        findLoans(kivaAPI) { success, error, loanResults in
+//            if success {
+//                if let loans = loanResults {
+//                    // put the first loan into the cart
+//                    let loanId = loans[0].id
+//                    let loan = loans[0]
+//                    kivaAPI.KivaAddItemToCart(loan, loanID: loanId, donationAmount: 25.00 )
+//                    
+//                    // call checkout
+//                    kivaAPI.KivaCheckout()
+//                }
+//                print("search loans results: \(loanResults)")
+//            } else {
+//                print("failed")
+//            }
+//        }
+//    }
     
-    // helper function that searches for loans
-    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
-        
-        let regions = "ca,sa,af,as,me,ee,we,an,oc"
-        let countries = "TD,TG,TH,TJ,TL,TR,TZ"
-        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaAPI.LoanStatus.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: 1, perPage: 20, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) { success, error, loanResults in
-            
-            if success {
-                // print("search loans results: \(loanResults)")
-                completionHandler(success: success, error: error, loans: loanResults)
-            } else {
-                // print("kivaSearchLoans failed")
-                completionHandler(success: success, error: error, loans: nil)
-            }
-        }
-    }
+//    // helper function that searches for loans
+//    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+//        
+//        let regions = "ca,sa,af,as,me,ee,we,an,oc"
+//        let countries = "TD,TG,TH,TJ,TL,TR,TZ"
+//        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaAPI.LoanStatus.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: 1, perPage: 20, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) { success, error, loanResults, nextPage in
+//            
+//            // TODO - handle paging using the page and nextPage parameters above
+//            
+//            if success {
+//                // print("search loans results: \(loanResults)")
+//                completionHandler(success: success, error: error, loans: loanResults)
+//            } else {
+//                // print("kivaSearchLoans failed")
+//                completionHandler(success: success, error: error, loans: nil)
+//            }
+//        }
+//    }
     
 //    func doOAuthKiva(){
 //

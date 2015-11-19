@@ -15,6 +15,10 @@ class LoansTableViewController: UITableViewController {
     
     var kivaAPI: KivaAPI?
     
+    var nextPageOfKivaSearchResults = 1
+    
+    static let KIVA_LOAN_SEARCH_RESULTS_PER_PAGE = 20
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,9 +33,13 @@ class LoansTableViewController: UITableViewController {
         
         // Additional bar button items
         //TODO - enable let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
-        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
-        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
+//        let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
+//        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
+//        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
+        
+        let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
+        navigationItem.setRightBarButtonItems([refreshButton], animated: true)
+    
         
         self.navigationItem.rightBarButtonItems?.first?.enabled = false
     }
@@ -172,7 +180,7 @@ class LoansTableViewController: UITableViewController {
         print("OAuth completed with success = \(success)")
         
         // fetch loans from Kiva.org
-        populateLoans(20) { success, error in
+        populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
             dispatch_async(dispatch_get_main_queue()) {
                 (self.tableView.reloadData()) // self.tableView.setNeedsDisplay()
                 
@@ -292,10 +300,26 @@ class LoansTableViewController: UITableViewController {
     
     // helper function that searches for loans
     func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
-        
+
         let regions = "ca,sa,af,as,me,ee,we,an,oc"
         let countries = "TD,TG,TH,TJ,TL,TR,TZ"
-        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaAPI.LoanStatus.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: 1, perPage: 20, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) { success, error, loanResults in
+        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaAPI.LoanStatus.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
+            
+            success, error, loanResults, nextPage in
+            
+            // paging
+            if nextPage == -1 {
+                // disable the refresh button
+                self.navigationItem.rightBarButtonItems?.first?.enabled = false
+                //.enabled = false
+            } else {
+                // save the nextPage
+                self.nextPageOfKivaSearchResults = nextPage
+                    
+                // enable the refresh button
+                self.navigationItem.rightBarButtonItems?.first?.enabled = true
+                //.enabled = true
+            }
             
             if success {
                 // print("search loans results: \(loanResults)")
@@ -320,4 +344,19 @@ class LoansTableViewController: UITableViewController {
         self.presentViewController(controller, animated: true, completion: nil);
     }
 
+    /* Refresh button was selected. */
+    func onRefreshButtonTap() {
+        
+        // Search Kiva.org for the next page of Loan results.
+        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+            if success {
+                dispatch_async(dispatch_get_main_queue()) {
+                    (self.tableView.reloadData()) // self.tableView.setNeedsDisplay()
+                }
+            } else {
+                print("failed to populate loans. error: \(error?.localizedDescription)")
+            }
+
+        }
+    }
 }

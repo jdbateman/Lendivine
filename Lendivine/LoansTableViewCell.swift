@@ -40,7 +40,7 @@ class LoansTableViewCell: UITableViewCell {
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! LoansTableViewController
         let loan = tableViewController.loans[indexPath!.row]
-        let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5  // TODO: calculate default amount: ($25 or user set preference)
+        let amount = 25  // TODO: set default donation amount to user preference.
         tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount)
     }
     

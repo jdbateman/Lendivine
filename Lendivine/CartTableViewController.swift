@@ -168,7 +168,12 @@ class CartTableViewController: UITableViewController {
             controller.request = kivaAPI.getKivaCartRequest()  // KivaCheckout()
         }
         //controller.webViewDelegate = self
-        self.presentViewController(controller, animated: true, completion: nil);
+        
+        // push the webView controller onto the stack modally
+//        self.presentViewController(controller, animated: true, completion: nil);
+        
+        // add the view controller to the navigation controller stack
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 
 }

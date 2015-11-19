@@ -784,9 +784,11 @@ extension KivaAPI {
         success (out) true if call succeeded and image data was retrieved, else false if an error occurred.
         error (out) An NSError if an error occurred, else nil.
         loans (out) An Array of KivaLoan objects. Nil if an error occurred or no loans were found.
+        nextPage (out) -1 if there is no next page, else the number of the next page of results to request.
     */
-    func kivaSearchLoans(queryMatch queryMatch: String?, status: String?, gender: LoanGender?, regions: String?, countries: String?, sector: LoanSector?, borrowerType: String?, maxPartnerRiskRating: PartnerRiskRatingMaximum?, maxPartnerDelinquency: PartnerDelinquencyMaximum?, maxPartnerDefaultRate: PartnerDefaultRateMaximum?, includeNonRatedPartners: Bool?, includedPartnersWithCurrencyRisk: Bool?, page: NSNumber?, perPage: NSNumber?, sortBy: String?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func kivaSearchLoans(queryMatch queryMatch: String?, status: String?, gender: LoanGender?, regions: String?, countries: String?, sector: LoanSector?, borrowerType: String?, maxPartnerRiskRating: PartnerRiskRatingMaximum?, maxPartnerDelinquency: PartnerDelinquencyMaximum?, maxPartnerDefaultRate: PartnerDefaultRateMaximum?, includeNonRatedPartners: Bool?, includedPartnersWithCurrencyRisk: Bool?, page: NSNumber?, perPage: NSNumber?, sortBy: String?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?, nextPage: Int) -> Void) {
         
+        var nextPage = -1
         var parametersDictionary = [String: AnyObject]()
                     
         // Validate input parameters
@@ -877,11 +879,21 @@ extension KivaAPI {
                                 loans.append(kivaLoan)
                             }
                         }
+                        
+                        // paging
+                        if let pagingDictionary = jsonData["paging"] as? [String: AnyObject] {
+                            let paging = KivaPaging(dictionary: pagingDictionary)
+                            if paging.page < paging.pages {
+                                nextPage = paging.page + 1
+                            } else {
+                                nextPage = -1
+                            }
+                        }
                     }
                 }
-                completionHandler(success: success, error: error, loans: loans)
+                completionHandler(success: success, error: error, loans: loans, nextPage: nextPage)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success: success, error: error, loans: nil, nextPage: nextPage)
             }
         }
     }
@@ -1196,6 +1208,43 @@ extension KivaAPI {
 //        let controller = createWebViewController()
 //        self.addChildViewController(controller) // allow WebViewController to use this ViewController as parent to be presented
 //        return controller
+//    }
+}
+
+// MARK: KivaAPI helper functions.
+
+extension KivaAPI {
+    
+//    func getPaging(jsonData: AnyObject?) -> KivaPaging? {
+//        
+//        if let jsonData = jsonData {
+//            if jsonData.count > 0 {
+//                
+//                print("\(jsonData)")
+//                
+//                // paging
+//                if let pagingDict = jsonData["paging"] as? [String: AnyObject] {
+//                    
+//                    let paging = KivaPaging(dictionary: pagingDict)
+//                    return paging
+//                    
+////                    if let pg = pagingDict["page"] as? Int {
+////                        page = pg
+////                    }
+////                    if let size = pagingDict["page_size"] as? Int {
+////                        page_size = size
+////                    }
+////                    if let pgs = pagingDict["pages"] as? Int {
+////                        pages = pgs
+////                    }
+////                    if let t = pagingDict["total"] as? Int {
+////                        total = t
+////                    }
+//                }
+//            }
+//        }
+//        
+//        return nil
 //    }
 }
 
