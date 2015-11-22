@@ -24,6 +24,8 @@ class VTError {
         case IMAGE_CONVERSION_ERROR = 9004
         case FILE_NOT_FOUND_ERROR = 9005
         case KIVA_OAUTH_ERROR = 9006
+        case KIVA_API_NO_LOANS = 9007
+        case KIVA_API_LOAN_NOT_FOUND = 9008
     }
     
     init(errorString: String, errorCode: ErrorCodes) {

@@ -6,7 +6,7 @@
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
 
-// TODO: API calls that support paging. set up mechanism to call to get additional pages of data
+// TODO: API calls that support paging. set up mechanism to call to get additional pages of data. Search has been updated. Fix others.
 
 import Foundation
 import OAuthSwift
@@ -41,7 +41,7 @@ class KivaAPI {
         var parameters =  Dictionary<String, AnyObject>()
         parameters = [
             "oauth_token" : self.oAuthAccessToken!.stringByRemovingPercentEncoding!,
-            "app_id" : Constants.OAuthValues.consumerKey // "com.johnbateman.awesomeapp" // TODO - check this works
+            "app_id" : Constants.OAuthValues.consumerKey // "com.johnbateman.awesomeapp" // TODO
         ]
         if let newParameters = parametersDict {
             for (key,value) in newParameters {
@@ -555,45 +555,17 @@ extension KivaAPI {
 
 extension KivaAPI {
     
-    func kivaGetNewestLoans(completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
-    
-        makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/newest.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
-            
-            if success {
-            var loans = [KivaLoan]()
-            
-            if let jsonData = jsonData {
-                if jsonData.count > 0 {
-                    print("newest loans: \(jsonData)")
-                    
-                    // loans
-                    if let arrayOfPartnersDictionaries = jsonData["loans"] as? [[String: AnyObject]] {
-                        print("partners: \(arrayOfPartnersDictionaries)")
-                        
-                        for loan in arrayOfPartnersDictionaries {
-                        let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
-                        loans.append(kivaLoan)
-                        }
-                    }
-                }
-            }
 
-            completionHandler(success: success, error: error, loans: loans)
-        } else {
-            completionHandler(success: success, error: error, loans: nil)
-            }
-        }
-    }
     
-    enum LoanStatus: String {
-        case fundraising = "fundraising"
-        case funded = "funded"
-        case in_repayment = "in_repayment"
-        case paid = "paid"
-        case defaulted = "defaulted"
-        case ended_with_loss = "ended_with_loss"
-        case expired = "expired"
-    }
+//    enum LoanStatus: String {
+//        case fundraising = "fundraising"
+//        case funded = "funded"
+//        case in_repayment = "in_repayment"
+//        case paid = "paid"
+//        case defaulted = "defaulted"
+//        case ended_with_loss = "ended_with_loss"
+//        case expired = "expired"
+//    }
     
     enum LoanGender: String {
         case male = "male"
@@ -766,7 +738,7 @@ extension KivaAPI {
     /*!
     @brief Search Kiva for loans using the specified query string parameters.
     @param (in) queryMatch - A string to match against the query results.
-    @param (in) status - A comma seperated list of LoanStatus values as a String.
+    @param (in) status - A comma seperated list of KivaLoan.Status enum values as a String.
     @param (in) gender - Filter results by gender. Defaults to all.
     @param (in) regions - A comma seperated list of LoanRegion values as a String.
     @param (in) countries - A comma seperated list of LoanCountries values as a String.
@@ -894,6 +866,87 @@ extension KivaAPI {
                 completionHandler(success: success, error: error, loans: loans, nextPage: nextPage)
             } else {
                 completionHandler(success: success, error: error, loans: nil, nextPage: nextPage)
+            }
+        }
+    }
+    
+    func kivaGetNewestLoans(completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+        
+        makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/newest.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
+            
+            if success {
+                var loans = [KivaLoan]()
+                
+                if let jsonData = jsonData {
+                    if jsonData.count > 0 {
+                        print("newest loans: \(jsonData)")
+                        
+                        // loans
+                        if let arrayOfPartnersDictionaries = jsonData["loans"] as? [[String: AnyObject]] {
+                            print("partners: \(arrayOfPartnersDictionaries)")
+                            
+                            for loan in arrayOfPartnersDictionaries {
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
+                                loans.append(kivaLoan)
+                            }
+                        }
+                    }
+                }
+                
+                completionHandler(success: success, error: error, loans: loans)
+            } else {
+                completionHandler(success: success, error: error, loans: nil)
+            }
+        }
+    }
+    
+    func kivaGetLoans(loanIDs: [NSNumber]?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+        
+        // ensure at least one loan ID was passed in
+        if loanIDs == nil || loanIDs!.count == 0 {
+            let error = VTError(errorString: "No loan IDs.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+            completionHandler(success: false, error: error.error, loans: nil)
+        }
+        
+        // make a string containing the loan ids and save it in a dictionary
+        var loanIDsString = ""
+        if let loanIDs = loanIDs {
+            for id in loanIDs{
+                let nextLoanString = id.stringValue
+                loanIDsString.appendContentsOf(String(format:"%@,",nextLoanString))
+            }
+        }
+        loanIDsString.removeAtIndex(loanIDsString.endIndex.predecessor())
+//        let parametersDict = ["ids" : loanIDsString]
+
+//       let requestUrl = "http://api.kivaws.org/v1/loans/"
+        let requestUrl = String(format: "http://api.kivaws.org/v1/loans/%@.json", loanIDsString /*loanIDs![0]*/) // TODO - append all loan IDs not just the first.
+        
+        // TODO - replace url with hardcoded loan id = 2039 with requestURL
+        makeKivaOAuthAPIRequest(urlOfAPI: requestUrl /*TODO: remove - "http://api.kivaws.org/v1/loans/2930.json"*/, parametersDict: nil) { success, error, jsonData in
+            
+            if success {
+                var loans = [KivaLoan]()
+                
+                if let jsonData = jsonData {
+                    if jsonData.count > 0 {
+                        print("newest loans: \(jsonData)")
+                        
+                        // loans TODO: change arrayOfPartnersDictionaries to loans
+                        if let jsonLoans = jsonData["loans"] as? [[String: AnyObject]] {
+                            print("loans: \(jsonLoans)")
+                            
+                            for loan in jsonLoans {
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
+                                loans.append(kivaLoan)
+                            }
+                        }
+                    }
+                }
+                
+                completionHandler(success: success, error: error, loans: loans)
+            } else {
+                completionHandler(success: success, error: error, loans: nil)
             }
         }
     }
@@ -1031,7 +1084,7 @@ extension KivaAPI {
             loanString.appendContentsOf(String(format:"&callback_url=%@",callbackUrl))
         }
         
-        print("\(loanString)")
+        print("loan string = \(loanString)")
         
         print("cart = \(cart.count) [createHTTPBody]")
 

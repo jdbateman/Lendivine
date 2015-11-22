@@ -58,7 +58,7 @@ class CartTableViewCell: UITableViewCell {
             self.changeDonationButton.imageView!.image = self.imageForButton(50)
             
             // update donation amount in cart item
-            self.updateCartItem(sender as! UIView, donationAmount: 25)
+            self.updateCartItem(sender as! UIView, donationAmount: 50)
         }
         alertController.addAction(Action50)
         
@@ -67,11 +67,11 @@ class CartTableViewCell: UITableViewCell {
             self.changeDonationButton.imageView!.image = self.imageForButton(100)
             
             // update donation amount in cart item
-            self.updateCartItem(sender as! UIView, donationAmount: 25)
+            self.updateCartItem(sender as! UIView, donationAmount: 100)
         }
         alertController.addAction(Action100)
         
-        // Find the cell starting from the button.
+        // present the controller
         let controller = parentViewController
         if let controller = controller {
             controller.presentViewController(alertController, animated: true) {

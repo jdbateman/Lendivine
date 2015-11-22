@@ -10,7 +10,16 @@
 import Foundation
 import UIKit
 
-class KivaLoan {
+class KivaLoan: Equatable {
+    
+    enum Status:String {
+        case fundraising = "fundraising"
+        case funded = "funded"
+        case in_repayment = "in_repayment"
+        case paid = "paid"
+        case defaulted = "defaulted"
+        case refunded = "refunded"
+    }
     
     var name: String = ""
     
@@ -123,8 +132,11 @@ class KivaLoan {
     }
 }
 
+
+// MARK: image management functions
+
 extension KivaLoan {
-    // MARK: image management functions
+
     /*
     @brief Acquire the UIImage for this Loan object.
     @discussion The image is retrieved using the following sequence:
@@ -325,4 +337,49 @@ extension KivaLoan {
         // save the image to the image cache in memory
         self.cacheImage(theImage)
     }
+}
+
+// MARK: helper functions
+
+extension KivaLoan {
+
+    /*! 
+    @brief Check with Kiva.org to see if the current loan status matches the specified KivaLoan.Status enum value.
+    @param (in) statusToMatch
+    @param (in) completionHandler called when function has completed
+        (out) result - true if loan status matches the specified input, else false.
+        (out) error - nil if loan status successfully determined, else contains an NSError.
+    */
+    func confirmLoanStatus(statusToMatch: KivaLoan.Status, completionHandler: (result: Bool, error: NSError?) -> Void ) {
+        // get loan from server and check it's status
+        let loanIDs = [self.id]
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
+            success, error, loans in
+            if success {
+                if let loans = loans {
+                    for loan in loans {
+                        if loan.id == self.id {
+                            // Found the loan in the results, now determine if the loan status matches the desired status.
+                            if loan.status == statusToMatch.rawValue {
+                                completionHandler(result: true, error: nil)
+                            } else {
+                                completionHandler(result: false, error: nil)
+                            }
+                            return
+                        }
+                    }
+                }
+            } else {
+                
+            }
+            
+            let error = VTError(errorString: "Unable to find loan id.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
+            completionHandler(result: false, error: error.error)
+        }
+    }
+
+}
+
+func ==(lhs: KivaLoan, rhs: KivaLoan) -> Bool {
+    return lhs.id == rhs.id
 }

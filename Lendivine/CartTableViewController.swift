@@ -5,8 +5,7 @@
 //  Created by john bateman on 11/15/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
-// This table view controller displays a set of loans retrieved from Kiva.org. TODO: Additional loans are displayed when the refresh button is selected. 
-
+// This table view controller displays a set of loans the user has added to the cart.
 // TODO - support selecting a loan to display detailed information on the loan
 
 import UIKit
@@ -153,9 +152,131 @@ class CartTableViewController: UITableViewController {
     }
     */
     
+    // The user selected the checkout button.
     func onCheckoutButtonTapped() {
-        print("TODO: call KivaAPI.checkout")
-        showEmbeddedBrowser()
+        print("call KivaAPI.checkout")
+        
+        let loans = cart.getLoans()
+        print("cart count before stripping out non-fundraising loans = \(cart.items.count)")
+        
+        self.getCurrentFundraisingStatus(loans) {
+            success, error, fundraising, notFundraising in
+            if success {
+                // remove notFundraising loans from the cart
+                if let notFundraising = notFundraising {
+                    if notFundraising.count > 0 {
+                        if var loans = loans {
+                            for notFRLoan in notFundraising {
+                                //var index: Int?
+                                //do {
+                                    if let index = loans.indexOf(notFRLoan) {
+                                        loans.removeAtIndex(index)
+                                    }
+                                //} catch {
+    //                                print("removeAtIndex throws")
+    //                                index = nil
+                                //}
+                                
+                                //  UIAlertController here
+                                var userMessage = "The following loans are no longer raising funds and have been removed from the cart:"
+                                var allRemovedLoansString = ""
+                                for nfLoan in notFundraising {
+                                    let removedLoanString = String(format: "%@, %@, %@", nfLoan.name, nfLoan.sector, nfLoan.country)
+                                    allRemovedLoansString.appendContentsOf(removedLoanString)
+                                }
+                                userMessage.appendContentsOf(allRemovedLoansString)
+                                let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
+                                var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                                    UIAlertAction in
+                                    print("OK Tapped")
+                                    self.showEmbeddedBrowser()
+                                }
+                                alertController.addAction(okAction)
+                                self.presentViewController(alertController, animated: true, completion: nil)
+                            }
+                        }
+                    } else {
+                        // There are no loans to remove from the cart
+                        self.showEmbeddedBrowser()
+                    }
+                }
+                
+                var loanCount = 0
+                if let loans = loans {
+                    loanCount = loans.count
+                }
+                print("cart count after stripping out non-fundraising loans = \(self.cart.items.count). loans count should be the same: \(loanCount)")
+            } else {
+                // Even though an error occured just continue on to the cart on Kiva.org and they will handle any invalid loans in the cart.
+                print("Non-fatal error confirming fundraising status of loans.")
+                self.showEmbeddedBrowser()
+            }
+        }
+    }
+    
+    /*! 
+    @brief Get loans from Kiva.org and confirm the status of each is "fundraising".
+    @return List of loans with fundraising status, and list of loans no longer with fundraining status.
+    */
+    func getCurrentFundraisingStatus(loans: [KivaLoan]?, completionHandler: (success: Bool, error: NSError?, fundraising: [KivaLoan]?, notFundraising: [KivaLoan]?) -> Void) {
+        
+        // validate loans not nil or empty
+        if loans == nil || loans!.count == 0 {
+            let error = VTError(errorString: "Kiva loan not specified.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+            completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+        }
+        
+        var fundraising = [KivaLoan]()
+        var notFundraising = [KivaLoan]()
+        
+        // accumulate loan IDs
+        var loanIDs = [NSNumber]()
+        for loan in loans! {
+            loanIDs.append(loan.id)
+        }
+        
+        // Find loans on Kiva.org
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
+            success, error, loans in
+            if success {
+                if let loans = loans {
+                    for loan in loans {
+                        if loan.status == KivaLoan.Status.fundraising.rawValue {
+                            fundraising.append(loan)
+                        } else {
+                            notFundraising.append(loan)
+                        }
+                    }
+                    completionHandler(success: true, error: nil, fundraising: fundraising, notFundraising: notFundraising)
+                }
+            } else {
+                let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
+                completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+            }
+        }
+    }
+    
+    /*! 
+    @brief Check the Kiva.org service to verify that the specified loan is still available to be funded.
+    @param (in) loan - the loan whose status the caller wishes to verify
+    @param (out) completionHandler:  - callback is invoked when function completes and has a result to return.
+        (out) result - true if loan status was able to be confirmed, else false if an error occurred.
+        (out) error - NSError describing the error, else nil if no error occurred. If an error occured the result is not valid.
+    */
+    func confirmLoanIsAvailable(loan: KivaLoan?, completionHandler: (result: Bool, error: NSError?) -> Void) {
+        
+        if let loan = loan {
+            loan.confirmLoanStatus(KivaLoan.Status.fundraising) {
+                result, error in
+                if error == nil {
+                    // successfully determined status of loan
+                    completionHandler(result: result, error: nil)
+                } else {
+                    // error determining the status of the loan
+                    completionHandler(result: false, error: error)
+                }
+            }
+        }
     }
     
     /* Display url in an embeded webkit browser. */

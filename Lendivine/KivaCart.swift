@@ -88,4 +88,15 @@ class KivaCart {
         return itemsArray
     }
     
+    /*!
+    @brief Return a list of all the KivaLoan objects in the cart.
+    */
+    func getLoans() -> [KivaLoan]? {
+        var loansInCart = [KivaLoan]()
+        for item in self.items {
+            loansInCart.append(item.loan)
+        }
+        return loansInCart
+    }
+    
 }
