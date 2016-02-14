@@ -180,12 +180,18 @@ class LoansTableViewController: UITableViewController {
         print("OAuth completed with success = \(success)")
         
         // fetch loans from Kiva.org
-        populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                (self.tableView.reloadData()) // self.tableView.setNeedsDisplay()
-                
-                // TODO: enable cart button
-                self.navigationItem.rightBarButtonItems?.first?.enabled = true
+        // populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+        getMostRecentLoans() {
+            success, error in
+            if success {
+                dispatch_async(dispatch_get_main_queue()) {
+                    (self.tableView.reloadData()) // self.tableView.setNeedsDisplay()
+                    
+                    // TODO: enable cart button
+                    self.navigationItem.rightBarButtonItems?.first?.enabled = true
+                }
+            } else {
+                // TODO - handle error
             }
         }
     }
@@ -202,6 +208,29 @@ class LoansTableViewController: UITableViewController {
         
         // For now to demonstration checkout functionality call checkout here directly. TODO - move this to local CartVC.
         //checkout()
+    }
+    
+    // Get the 20 most recent loands from Kiva.org.
+    func getMostRecentLoans(completionHandler: (success: Bool, error: NSError?) -> Void) {
+        if let kivaAPI = self.kivaAPI {
+            kivaAPI.kivaGetNewestLoans() {
+                success, error, loans in
+                if success {
+                    if let loans = loans {
+                        self.loans = loans
+                        completionHandler(success: true, error: nil)
+                    } else {
+                        // TODO - display "no loans" in view controller
+                        let error = VTError(errorString: "No Kiva loans found.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+                        completionHandler(success: false, error: error.error)
+                    }
+                } else {
+                    // TODO - display error, then "no loans" in view controller
+                    let error = VTError(errorString: "Error searching for newest Kiva loans.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+                    completionHandler(success: false, error: error.error)
+                }
+            }
+        }
     }
     
     // Find loans from Kiva.org and update the loan collection.
