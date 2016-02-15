@@ -8,6 +8,7 @@
 // This custom table view cell is used in the LoansTableViewController to display summary information about a loan. The cell contains an AddToCart button. When selected the loan associated with the cell must be added to the cart. That is handled in this class.
 
 import UIKit
+import CoreData
 
 class LoansTableViewCell: UITableViewCell {
 
@@ -16,6 +17,11 @@ class LoansTableViewCell: UITableViewCell {
     @IBOutlet weak var amountLabel: UILabel! // loan amount
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var countryLabel: UILabel!
+    
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
     
     @IBAction func onAddToCartButtonTap(sender: UIButton) {
         
@@ -41,7 +47,10 @@ class LoansTableViewCell: UITableViewCell {
         let tableViewController = tableView.dataSource as! LoansTableViewController
         let loan = tableViewController.loans[indexPath!.row]
         let amount = 25  // TODO: set default donation amount to user preference.
-        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount)
+        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
+        
+        // Persist the KivaCartItem object we added to the Core Data shared context
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     override func awakeFromNib() {

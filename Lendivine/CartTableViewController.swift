@@ -76,8 +76,10 @@ class CartTableViewController: UITableViewController {
         cell.countryLabel.text = loan.country
         
         // donation amount
-        let donationAmount = "$" + cartItem.donationAmount.stringValue
-        
+        var donationAmount = "$"
+        if let itemDonationAmount = cartItem.donationAmount {
+            donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+        }
         // Set button image to donation amount
 //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
         let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))

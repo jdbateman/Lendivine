@@ -39,6 +39,8 @@
 		9EC72E281BF55A7D0000D9BF /* LoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */; };
 		9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */; };
 		9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */; };
+		9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */; };
+		9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356921C71577900363652 /* Model.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +117,8 @@
 		9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansTableViewController.swift; sourceTree = "<group>"; };
 		9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansTableViewCell.swift; sourceTree = "<group>"; };
 		9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaPaging.swift; sourceTree = "<group>"; };
+		9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
+		9EE356931C71577900363652 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +186,8 @@
 				9E39504E1BF66B1A007BC75E /* Kiva */,
 				9E39504C1BF66AD7007BC75E /* OAuth */,
 				9E495BE31BFAD82000E3DEAD /* NSCache+Singleton.swift */,
+				9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */,
+				9EE356921C71577900363652 /* Model.xcdatamodeld */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -365,9 +371,11 @@
 				9E3950711BF670F4007BC75E /* Constants.swift in Sources */,
 				9E39506E1BF66E23007BC75E /* RESTConvenience.swift in Sources */,
 				9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */,
+				9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */,
 				9E495BE81BFBA13800E3DEAD /* MyLoansTableViewController.swift in Sources */,
 				9E3950661BF66E23007BC75E /* KivaLoanStatistics.swift in Sources */,
 				9E495BE21BFA51B500E3DEAD /* CartTableViewCell.swift in Sources */,
+				9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */,
 				9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */,
 				9E3950641BF66E23007BC75E /* KivaLender.swift in Sources */,
 				9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */,
@@ -532,6 +540,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9EE356921C71577900363652 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9EE356931C71577900363652 /* Model.xcdatamodel */,
+			);
+			currentVersion = 9EE356931C71577900363652 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9EC72E081BF559E90000D9BF /* Project object */;
 }

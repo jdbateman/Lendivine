@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class LoansTableViewController: UITableViewController {
 
@@ -14,6 +15,11 @@ class LoansTableViewController: UITableViewController {
     var loans = [KivaLoan]()
     
     var kivaAPI: KivaAPI?
+    
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
     
     var nextPageOfKivaSearchResults = 1
     
@@ -309,7 +315,7 @@ class LoansTableViewController: UITableViewController {
                             let loanId = loan.id
                             let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5
                             print("amount of loan = \(amount)")
-                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount)
+                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
                             
                             print("cart contains loanId: \(loanId) in amount: \(amount)")
                         }

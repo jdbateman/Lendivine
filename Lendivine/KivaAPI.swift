@@ -11,6 +11,7 @@
 import Foundation
 import OAuthSwift
 import UIKit
+import CoreData
 
 class KivaAPI {
     
@@ -958,12 +959,12 @@ extension KivaAPI {
 extension KivaAPI {
     
     // Add an item to the cart.
-    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?) {
+    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
         if let loan = loan {
             if let loanID = loanID {
                 if let donationAmount = donationAmount {
                     let cart = KivaCart.sharedInstance
-                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount)
+                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount, context: context)
                     if !cart.items.contains(item) {
                         cart.add(item)
                         print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
@@ -990,7 +991,7 @@ extension KivaAPI {
             let baseURL = "http://www.kiva.org" // TODO: make a constant in RESTClient.Constants.kivaBaseURL
             
             // specify method
-            var mutableMethod : String = "/basket/set" // TODO: make a constant in RESTClient.Constants.parseGetStudentLocations
+            let mutableMethod : String = "/basket/set" // TODO: make a constant in RESTClient.Constants.parseGetStudentLocations
             
             // set up http header parameters
             let headerParms = [String:AnyObject]() /*[
@@ -1006,7 +1007,9 @@ extension KivaAPI {
             var loanIDs = [NSNumber]()
             //let loanIDs = [974236, 961687, 961683, 974236, 973680] // [961687, 961683, 974236, 973680, 974236]
             for item in cart.items {
-                loanIDs.append(item.loanID)
+                if let loanID = item.loanID {
+                    loanIDs.append(loanID)
+                }
             }
             if let body = createHTTPBody(loanIDs, appID: Constants.OAuthValues.consumerKey /*"com.johnbateman.awesomeapp"*/, donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
                 httpBody = body
@@ -1055,8 +1058,8 @@ extension KivaAPI {
         
         // loans
         for item in cart.items {
-            if item.loanID.intValue > 0 {
-                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", item.loanID.intValue, item.donationAmount.floatValue)
+            if let loanID = item.loanID, donationAmount = item.donationAmount where loanID.intValue > 0 {
+                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", loanID.intValue, donationAmount.floatValue)
                 loanString.appendContentsOf(loanToAdd)
             }
         }
