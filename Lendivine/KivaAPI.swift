@@ -19,6 +19,11 @@ class KivaAPI {
     var oAuth1: OAuth1Swift?
     
     static let sharedInstance = KivaAPI()
+
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
     
     init() {
         oAuthAccessToken = nil
@@ -258,8 +263,13 @@ extension KivaAPI {
                         // The jsonData contains an array of loans where each loan is described by a dictionary.
                         if let loansArray = jsonData["loans"] as? [AnyObject] {
                             for loanDict in loansArray {
-                                let loan = KivaLoan(dictionary: loanDict as? [String: AnyObject])
-                                loans.append(loan)
+                                var loan:KivaLoan?
+                                if let loanDict = loanDict as? [String: AnyObject] {
+                                    loan = KivaLoan(dictionary: loanDict, context:self.sharedContext)
+                                }
+                                if let loan = loan {
+                                    loans.append(loan)
+                                }
                             }
                         }
                     }
@@ -848,7 +858,7 @@ extension KivaAPI {
                             print("partners: \(arrayOfPartnersDictionaries)")
                     
                             for loan in arrayOfPartnersDictionaries {
-                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
                                 loans.append(kivaLoan)
                             }
                         }
@@ -887,7 +897,7 @@ extension KivaAPI {
                             print("partners: \(arrayOfPartnersDictionaries)")
                             
                             for loan in arrayOfPartnersDictionaries {
-                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
                                 loans.append(kivaLoan)
                             }
                         }
@@ -901,7 +911,7 @@ extension KivaAPI {
         }
     }
     
-    func kivaGetLoans(loanIDs: [NSNumber]?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func kivaGetLoans(loanIDs: [NSNumber?]?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
         // ensure at least one loan ID was passed in
         if loanIDs == nil || loanIDs!.count == 0 {
@@ -913,8 +923,10 @@ extension KivaAPI {
         var loanIDsString = ""
         if let loanIDs = loanIDs {
             for id in loanIDs{
-                let nextLoanString = id.stringValue
-                loanIDsString.appendContentsOf(String(format:"%@,",nextLoanString))
+                if let id = id {
+                    let nextLoanString = id.stringValue
+                    loanIDsString.appendContentsOf(String(format:"%@,",nextLoanString))
+                }
             }
         }
         loanIDsString.removeAtIndex(loanIDsString.endIndex.predecessor())
@@ -938,7 +950,7 @@ extension KivaAPI {
                             print("loans: \(jsonLoans)")
                             
                             for loan in jsonLoans {
-                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
                                 loans.append(kivaLoan)
                             }
                         }

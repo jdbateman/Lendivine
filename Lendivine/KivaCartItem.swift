@@ -55,15 +55,17 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
     /*! Init instance with a dictionary of values, and a core data context. */
     init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("CartItem", inManagedObjectContext: context)!
+        let entity = NSEntityDescription.entityForName("KivaCartItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         self.loanID = dictionary[InitKeys.loanId] as? NSNumber
         self.donationAmount = dictionary[InitKeys.donationAmount] as? NSNumber
         
         // todo: when made into an NSmanaged object then get rid of the if let construct:
-        if let loan = dictionary[InitKeys.kivaLoan] as? KivaLoan {
-            self.loan = loan
+        dispatch_async(dispatch_get_main_queue()) {
+            if let loan = dictionary[InitKeys.kivaLoan] as? KivaLoan {
+                self.loan = loan
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class LoansTableViewController: UITableViewController {
+class LoansTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     // a collection of Kiva loans
     var loans = [KivaLoan]()
@@ -25,11 +25,18 @@ class LoansTableViewController: UITableViewController {
     
     static let KIVA_LOAN_SEARCH_RESULTS_PER_PAGE = 20
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
         doOAuth()
+        
+        // Initialize the fetchResultsController from the core data store.
+        fetchLoans()
+        
+        // set the NSFetchedResultsControllerDelegate
+        fetchedResultsController.delegate = self
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -49,6 +56,10 @@ class LoansTableViewController: UITableViewController {
         
         self.navigationItem.rightBarButtonItems?.first?.enabled = false
     }
+    
+    override func viewDidDisappear(animated: Bool) {
+        fetchedResultsController.delegate = nil
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -59,10 +70,16 @@ class LoansTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
+        // return self.fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.loans.count
+        // return self.loans.count
+        
+        let sectionInfo = self.fetchedResultsController.sections![section]
+        let count = sectionInfo.numberOfObjects
+        
+        return count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -76,40 +93,134 @@ class LoansTableViewController: UITableViewController {
     
     // Initialize the contents of the cell.
     func configureCell(cell: LoansTableViewCell, indexPath: NSIndexPath) {
-        let loan = self.loans[indexPath.row]
-        cell.nameLabel.text = loan.name
-        cell.sectorLabel.text = loan.sector
-        cell.amountLabel.text = "$" + loan.loanAmount.stringValue
-        cell.countryLabel.text = loan.country
         
-        // Set placeholder image
-        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-        
-//        if let kivaAPI = self.kivaAPI {
-//            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-//            kivaAPI.getKivaImage(loan.imageID) {success, error, image in
-//                if success {
-//                    dispatch_async(dispatch_get_main_queue()) {
-//                        cell.loanImageView!.image = image
-//                    }
-//                } else  {
-//                    print("error retrieving image: \(error)")
-//                }
-//            }
-//        }
-        
-        // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-        loan.getImage() {success, error, image in
-            if success {
-                dispatch_async(dispatch_get_main_queue()) {
-                    cell.loanImageView!.image = image
+        dispatch_async(dispatch_get_main_queue()) {
+            
+            //            TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
+            let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
+            
+            //let loan = self.loans[indexPath.row]
+            cell.nameLabel.text = loan.name
+            cell.sectorLabel.text = loan.sector
+            var amountString = "$"
+            if let loanAmount = loan.loanAmount {
+                amountString.appendContentsOf(loanAmount.stringValue)
+            } else {
+                amountString.appendContentsOf("0")
+            }
+            cell.amountLabel.text = amountString
+            cell.countryLabel.text = loan.country
+            
+            // Set placeholder image
+            cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+            
+    //        if let kivaAPI = self.kivaAPI {
+    //            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+    //            kivaAPI.getKivaImage(loan.imageID) {success, error, image in
+    //                if success {
+    //                    dispatch_async(dispatch_get_main_queue()) {
+    //                        cell.loanImageView!.image = image
+    //                    }
+    //                } else  {
+    //                    print("error retrieving image: \(error)")
+    //                }
+    //            }
+    //        }
+            
+            // TODO: crashing here
+            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+            loan.getImage() {success, error, image in
+                if success {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.loanImageView!.image = image
+                    }
+                } else  {
+                    print("error retrieving image: \(error)")
                 }
-            } else  {
-                print("error retrieving image: \(error)")
             }
         }
     }
+    
+    // MARK: - Fetched results controller
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        
+        // Create the fetch request
+        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+        
+        // Add a sort descriptor to enforce a sort order on the results.
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+        
+        // Create the Fetched Results Controller
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+            self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        // Return the fetched results controller. It will be the value of the lazy variable
+        return fetchedResultsController
+    } ()
 
+    /* Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store. */
+    func fetchLoans() {
+        var error: NSError? = nil
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let error1 as NSError {
+            error = error1
+        }
+        
+        if let error = error {
+            LDAlert(viewController:self).displayErrorAlertView("Error retrieving loans", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+        }
+    }
+
+    
+    // MARK: NSFetchedResultsControllerDelegate
+    
+    // Any change to Core Data causes these delegate methods to be called.
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        // store up changes to the table until endUpdates() is called
+        self.tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        // Our project does not use sections. So we can ignore these invocations.
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        switch type {
+            
+        case .Insert:
+            
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            
+        case .Delete:
+            
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            
+        case .Update:
+            
+            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!) as! LoansTableViewCell, indexPath: indexPath!)
+            
+        case .Move:
+            
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            
+        default:
+            return
+            
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        // Make the stored changes visible.
+        self.tableView.endUpdates()
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

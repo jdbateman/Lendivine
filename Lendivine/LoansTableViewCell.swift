@@ -50,7 +50,9 @@ class LoansTableViewCell: UITableViewCell {
         tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
         
         // Persist the KivaCartItem object we added to the Core Data shared context
-        CoreDataStackManager.sharedInstance().saveContext()
+        dispatch_async(dispatch_get_main_queue()) {
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
     }
     
     override func awakeFromNib() {

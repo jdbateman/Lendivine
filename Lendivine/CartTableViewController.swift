@@ -63,43 +63,53 @@ class CartTableViewController: UITableViewController {
     }
 
     func configureCell(cell: CartTableViewCell, row: Int) {
-        let cartItem = cart.items[row]
-        let loan = cartItem.loan as KivaLoan
         
-        // make delete button corners rounded
-        cell.changeDonationButton.layer.cornerRadius = 7
-        cell.changeDonationButton.layer.masksToBounds = true
-        
-        cell.nameLabel.text = loan.name
-        cell.sectorLabel.text = loan.sector
-        cell.amountLabel.text = "$" + loan.loanAmount.stringValue
-        cell.countryLabel.text = loan.country
-        
-        // donation amount
-        var donationAmount = "$"
-        if let itemDonationAmount = cartItem.donationAmount {
-            donationAmount.appendContentsOf(itemDonationAmount.stringValue)
-        }
-        // Set button image to donation amount
-//        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
-        let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
-        cell.changeDonationButton.imageView!.image = donationImage
-        
-        // Set main image placeholder image
-        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-        
-        // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-        loan.getImage() {success, error, image in
-            if success {
-                dispatch_async(dispatch_get_main_queue()) {
-                    cell.loanImageView!.image = image
-                }
-            } else  {
-                print("error retrieving image: \(error)")
+        dispatch_async(dispatch_get_main_queue()) {
+            
+            let cartItem = self.cart.items[row]
+            let loan = cartItem.loan as KivaLoan
+            
+            // make delete button corners rounded
+            cell.changeDonationButton.layer.cornerRadius = 7
+            cell.changeDonationButton.layer.masksToBounds = true
+            
+            cell.nameLabel.text = loan.name
+            cell.sectorLabel.text = loan.sector
+            var amountString = "$"
+            if let loanAmount = loan.loanAmount {
+                amountString.appendContentsOf(loanAmount.stringValue)
+            } else {
+                amountString.appendContentsOf("0")
             }
+            cell.amountLabel.text = amountString
+            cell.countryLabel.text = loan.country
+            
+            // donation amount
+            var donationAmount = "$"
+            if let itemDonationAmount = cartItem.donationAmount {
+                donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+            }
+            // Set button image to donation amount
+    //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
+            let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
+            cell.changeDonationButton.imageView!.image = donationImage
+            
+            // Set main image placeholder image
+            cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+            
+            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+            loan.getImage() {success, error, image in
+                if success {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.loanImageView!.image = image
+                    }
+                } else  {
+                    print("error retrieving image: \(error)")
+                }
+            }
+            
+            print("cart = \(self.cart.items.count) [configureCell]")
         }
-        
-        print("cart = \(cart.items.count) [configureCell]")
     }
     
     // Conditional editing of the table view. (Return true to allow edit of the item, false if item is not editable.)
@@ -183,12 +193,14 @@ class CartTableViewController: UITableViewController {
                                 var userMessage = "The following loans are no longer raising funds and have been removed from the cart:"
                                 var allRemovedLoansString = ""
                                 for nfLoan in notFundraising {
-                                    let removedLoanString = String(format: "%@, %@, %@", nfLoan.name, nfLoan.sector, nfLoan.country)
-                                    allRemovedLoansString.appendContentsOf(removedLoanString)
+                                    if let country = nfLoan.country, name = nfLoan.name, sector = nfLoan.sector {
+                                        let removedLoanString = String(format: "%@, %@, %@", name, sector, country)
+                                        allRemovedLoansString.appendContentsOf(removedLoanString)
+                                    }
                                 }
                                 userMessage.appendContentsOf(allRemovedLoansString)
                                 let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
-                                var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
                                     UIAlertAction in
                                     print("OK Tapped")
                                     self.showEmbeddedBrowser()
@@ -234,7 +246,9 @@ class CartTableViewController: UITableViewController {
         // accumulate loan IDs
         var loanIDs = [NSNumber]()
         for loan in loans! {
-            loanIDs.append(loan.id)
+            if let id = loan.id {
+                loanIDs.append(id)
+            }
         }
         
         // Find loans on Kiva.org

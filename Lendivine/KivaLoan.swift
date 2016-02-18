@@ -9,8 +9,14 @@
 
 import Foundation
 import UIKit
+import CoreData
 
-class KivaLoan: Equatable {
+// make KivaLoan visible to CoreData
+@objc(KivaLoan)
+
+class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
+    
+    static let entityName = "KivaLoan"
     
     enum Status:String {
         case fundraising = "fundraising"
@@ -21,115 +27,166 @@ class KivaLoan: Equatable {
         case refunded = "refunded"
     }
     
-    var name: String = ""
+    struct InitKeys {
+        static let name: String = "name"
+        static let country: String = "country"
+        static let geo: String = "geo"
+        static let town: String = "town"
+        static let postedDate: String = "postedDate"
+        static let activity: String = "activity"
+        static let id: String = "id"
+        
+        static let use: String = "use"
+        static let fundedAmount: String = "fundedAmount"
+        static let partnerID: String = "partnerID"
+        static let imageID: String = "imageID"
+        static let imageTemplateID: String = "imageTemplateID"
+        static let borrowerCount: String = "borrowerCount"
+        
+        static let loanAmount: String = "loanAmount"
+        static let status: String = "status"
+        static let sector: String = "sector"
+    }
+    
+    @NSManaged var name: String?
     
     // Location
-    var country: String = ""
-    var geo: String = ""
-    var town: String = ""
+    @NSManaged var country: String?
+    @NSManaged var geo: String?
+    @NSManaged var town: String?
     
-    var postedDate: String = ""
-    var activity: String = ""
-    var id: NSNumber = -1
-    var use: String = ""
-    var languages = [String]()
-    var fundedAmount: NSNumber = 0
-    var partnerID: NSNumber = -1
+    @NSManaged var postedDate: String?
+    @NSManaged var activity: String?
+    @NSManaged var id: NSNumber? // = -1
+    @NSManaged var use: String?
+//    @NSManaged var languages:[String]?
+    @NSManaged var fundedAmount: NSNumber? // = 0
+    @NSManaged var partnerID: NSNumber? // = -1
     
     // image
-    var imageID: NSNumber = -1
-    var imageTemplateID: NSNumber = -1
+    @NSManaged var imageID: NSNumber? // = -1
+    @NSManaged var imageTemplateID: NSNumber? // = -1
     
-    var borrowerCount: NSNumber = 0
-    var loanAmount: NSNumber = 0
-    var status: String = ""
-    var sector: String = ""
+    @NSManaged var borrowerCount: NSNumber? // = 0
+    @NSManaged var loanAmount: NSNumber? // = 0
+    @NSManaged var status: String?
+    @NSManaged var sector: String?
     
-    // designated initializer
-    init() {
-        // just use defaults
+    /*! Core Data init method */
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    // designated initializer
-    init(dictionary: [String: AnyObject]?) {
+    /*! Init instance with a dictionary of values, and a core data context. */
+    init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
         
-        if let dictionary = dictionary {
-
-            if let n = dictionary["name"] as? String {
-                name = n
-            }
-            
-            // location
-            if let locationDict = dictionary["location"] as? [String: AnyObject] {
-                if let countryName = locationDict["country"] as? String {
-                    country = countryName
-                }
-                if let geoDict = locationDict["geo"] as? [String: AnyObject] {
-                    if let coordinateString = geoDict["pairs"] as? String {
-                        geo = coordinateString
-                    }
-                    // geoDict["level"] example value = "town"
-                    // geoDict["type"] example value = "point"
-                }
-                if let t = locationDict["town"] as? String {
-                    town = t
-                }
-            }
-            
-            if let date = dictionary["posted_date"] as? String {
-                postedDate = date
-            }
-            if let act = dictionary["activity"] as? String {
-                activity = act
-            }
-            if let ID = dictionary["id"] as? NSNumber {
-                id = ID
-            }
-            if let u = dictionary["use"] as? String {
-                use = u
-            }
-            
-            // description
-            if let descriptionDict = dictionary["description"] as? [String: AnyObject] {
-                if let languagesArray = descriptionDict["languages"] as? [String] {
-                    for language in languagesArray {
-                        languages.append(language)
-                    }
-                }
-            }
-            
-            if let funded = dictionary["funded_amount"] as? NSNumber {
-                fundedAmount = funded
-            }
-            if let partnerId = dictionary["partner_id"] as? NSNumber {
-                partnerID = partnerId
-            }
-            
-            // image
-            if let imageDict = dictionary["image"] as? [String: AnyObject] {
-                if let templateId = imageDict["template_id"] as? NSNumber {
-                    imageTemplateID = templateId
-                }
-                if let imgId = imageDict["id"] as? NSNumber {
-                    imageID = imgId
-                }
-            }
-
-            if let count = dictionary["borrower_count"] as? NSNumber {
-                borrowerCount = count
-            }
-            if let l = dictionary["loan_amount"] as? NSNumber {
-                loanAmount = l
-            }
-            
-            if let s = dictionary["status"] as? String {
-                status = s
-            }
-            if let s = dictionary["sector"] as? String {
-                sector = s
-            }
-        }
+        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        self.name = dictionary[InitKeys.name] as? String
+        self.country = dictionary[InitKeys.country] as? String
+        self.geo = dictionary[InitKeys.geo] as? String
+        self.town = dictionary[InitKeys.town] as? String
+        self.postedDate = dictionary[InitKeys.postedDate] as? String
+        self.activity = dictionary[InitKeys.activity] as? String
+        self.id = dictionary[InitKeys.id] as? NSNumber
+        self.use = dictionary[InitKeys.use] as? String
+        self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
+        self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
+        self.imageID = dictionary[InitKeys.imageID] as? NSNumber
+        self.imageTemplateID = dictionary[InitKeys.imageTemplateID] as? NSNumber
+        self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
+        self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
+        self.status = dictionary[InitKeys.status] as? String
+        self.sector = dictionary[InitKeys.sector] as? String
     }
+    
+//    // designated initializer
+//    init() {
+//        // just use defaults
+//    }
+//    
+//    // designated initializer
+//    init(dictionary: [String: AnyObject]?) {
+//        
+//        if let dictionary = dictionary {
+//
+//            if let n = dictionary["name"] as? String {
+//                name = n
+//            }
+//            
+//            // location
+//            if let locationDict = dictionary["location"] as? [String: AnyObject] {
+//                if let countryName = locationDict["country"] as? String {
+//                    country = countryName
+//                }
+//                if let geoDict = locationDict["geo"] as? [String: AnyObject] {
+//                    if let coordinateString = geoDict["pairs"] as? String {
+//                        geo = coordinateString
+//                    }
+//                    // geoDict["level"] example value = "town"
+//                    // geoDict["type"] example value = "point"
+//                }
+//                if let t = locationDict["town"] as? String {
+//                    town = t
+//                }
+//            }
+//            
+//            if let date = dictionary["posted_date"] as? String {
+//                postedDate = date
+//            }
+//            if let act = dictionary["activity"] as? String {
+//                activity = act
+//            }
+//            if let ID = dictionary["id"] as? NSNumber {
+//                id = ID
+//            }
+//            if let u = dictionary["use"] as? String {
+//                use = u
+//            }
+//
+//// TODO: reenable if want to figure out how to store an array of strings in core data
+//            // description
+////            if let descriptionDict = dictionary["description"] as? [String: AnyObject] {
+////                if let languagesArray = descriptionDict["languages"] as? [String] {
+////                    for language in languagesArray {
+////                        languages.append(language)
+////                    }
+////                }
+////            }
+//            
+//            if let funded = dictionary["funded_amount"] as? NSNumber {
+//                fundedAmount = funded
+//            }
+//            if let partnerId = dictionary["partner_id"] as? NSNumber {
+//                partnerID = partnerId
+//            }
+//            
+//            // image
+//            if let imageDict = dictionary["image"] as? [String: AnyObject] {
+//                if let templateId = imageDict["template_id"] as? NSNumber {
+//                    imageTemplateID = templateId
+//                }
+//                if let imgId = imageDict["id"] as? NSNumber {
+//                    imageID = imgId
+//                }
+//            }
+//
+//            if let count = dictionary["borrower_count"] as? NSNumber {
+//                borrowerCount = count
+//            }
+//            if let l = dictionary["loan_amount"] as? NSNumber {
+//                loanAmount = l
+//            }
+//            
+//            if let s = dictionary["status"] as? String {
+//                status = s
+//            }
+//            if let s = dictionary["sector"] as? String {
+//                sector = s
+//            }
+//        }
+//    }
 }
 
 
@@ -162,14 +219,16 @@ extension KivaLoan {
         }
         
         // Try loading the data from the file system.
-        if let image = getImageFromFileSystem(self.imageID.stringValue) {
-            print("image loaded from file system")
-            
-            // Cache the image in memory.
-            self.cacheImage(image)
-            
-            completion(success: true, error: nil, image: image)
-            return
+        if let imageID = self.imageID {
+            if let image = getImageFromFileSystem(imageID.stringValue) {
+                print("image loaded from file system")
+                
+                // Cache the image in memory.
+                self.cacheImage(image)
+                
+                completion(success: true, error: nil, image: image)
+                return
+            }
         }
 
         // Load the image from the server asynchronously on a background queue.
@@ -330,7 +389,9 @@ extension KivaLoan {
             // save the image data to the file system
             let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
             dispatch_async(backgroundQueue, {
-                self.saveImageToFileSystem(self.imageID.stringValue, image: theImage)
+                if let imageID = self.imageID {
+                    self.saveImageToFileSystem(imageID.stringValue, image: theImage)
+                }
             })
         }
         

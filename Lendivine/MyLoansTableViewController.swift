@@ -68,7 +68,13 @@ class MyLoansTableViewController: UITableViewController {
         let loan = self.loans[row]
         cell.nameLabel.text = loan.name
         cell.sectorLabel.text = loan.sector
-        cell.amountLabel.text = "$" + loan.loanAmount.stringValue
+        var amountString = "$"
+        if let loanAmount = loan.loanAmount {
+            amountString.appendContentsOf(loanAmount.stringValue)
+        } else {
+            amountString.appendContentsOf("0")
+        }
+        cell.amountLabel.text = amountString
         cell.countryLabel.text = loan.country
         
         // Set placeholder image

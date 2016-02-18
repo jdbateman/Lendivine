@@ -41,6 +41,7 @@
 		9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */; };
 		9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */; };
 		9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356921C71577900363652 /* Model.xcdatamodeld */; };
+		9EE356961C74501400363652 /* LDAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356951C74501400363652 /* LDAlert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaPaging.swift; sourceTree = "<group>"; };
 		9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		9EE356931C71577900363652 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		9EE356951C74501400363652 /* LDAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LDAlert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +240,7 @@
 				9EC72E211BF559E90000D9BF /* Info.plist */,
 				9E3950501BF66B34007BC75E /* Model */,
 				9E495BDF1BF9611400E3DEAD /* VTError.swift */,
+				9EE356951C74501400363652 /* LDAlert.swift */,
 			);
 			path = Lendivine;
 			sourceTree = "<group>";
@@ -367,6 +370,7 @@
 				9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */,
 				9E495BDC1BF9050E00E3DEAD /* KivaCartViewController.swift in Sources */,
 				9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */,
+				9EE356961C74501400363652 /* LDAlert.swift in Sources */,
 				9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */,
 				9E3950711BF670F4007BC75E /* Constants.swift in Sources */,
 				9E39506E1BF66E23007BC75E /* RESTConvenience.swift in Sources */,
