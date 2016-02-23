@@ -1,4 +1,4 @@
-//
+    //
 //  KivaLoan.swift
 //  OAuthSwift
 //
@@ -39,7 +39,8 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         static let use: String = "use"
         static let fundedAmount: String = "fundedAmount"
         static let partnerID: String = "partnerID"
-        static let imageID: String = "imageID"
+        static let image: String = "image"
+        static let imageId: String = "id"
         static let imageTemplateID: String = "imageTemplateID"
         static let borrowerCount: String = "borrowerCount"
         
@@ -93,7 +94,8 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         self.use = dictionary[InitKeys.use] as? String
         self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
         self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
-        self.imageID = dictionary[InitKeys.imageID] as? NSNumber
+        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
+        //self.templateID = (dictionary[InitKeys.image])?.objectForKey("template_id") as? NSNumber
         self.imageTemplateID = dictionary[InitKeys.imageTemplateID] as? NSNumber
         self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
         self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
@@ -343,9 +345,10 @@ extension KivaLoan {
     
     /* Save the image data to the image cache in memory. */
     func cacheImage(theImage: UIImage) {
-        let imageUrl = getImageUrl(self.imageID)
+        
         // Ensure access of the managed object happpens on the main queue
         dispatch_async(dispatch_get_main_queue()) {
+            let imageUrl = self.getImageUrl(self.imageID)
             if let url = imageUrl {
                 let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
                 dispatch_async(backgroundQueue, {
@@ -361,7 +364,7 @@ extension KivaLoan {
         let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
         dispatch_async(backgroundQueue, {
             // get the binary image data
-            let imageURL = NSURL(string: imageUrlString!)
+            let imageURL:NSURL? = NSURL(string: imageUrlString!)
             if let imageData = NSData(contentsOfURL: imageURL!) {
                 
                 // Convert the image data to a UIImage object and append to the array to be returned.
@@ -385,14 +388,15 @@ extension KivaLoan {
         
         // Ensure access of the managed object happpens on the main queue
         dispatch_async(dispatch_get_main_queue()) {
-            
-            // save the image data to the file system
-            let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
-            dispatch_async(backgroundQueue, {
-                if let imageID = self.imageID {
-                    self.saveImageToFileSystem(imageID.stringValue, image: theImage)
-                }
-            })
+            if let imageID = self.imageID {
+                // save the image data to the file system
+                let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+                dispatch_async(backgroundQueue, {
+                    //if let imageID = self.imageID {
+                        self.saveImageToFileSystem(imageID.stringValue, image: theImage)
+                    //}
+                })
+            }
         }
         
         // save the image to the image cache in memory

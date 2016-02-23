@@ -78,7 +78,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         
         let sectionInfo = self.fetchedResultsController.sections![section]
         let count = sectionInfo.numberOfObjects
-        
+        print("tableView numberOfRowsInSection = \(count)")
         return count
     }
 
@@ -100,8 +100,15 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
             let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
             
             //let loan = self.loans[indexPath.row]
-            cell.nameLabel.text = loan.name
-            cell.sectorLabel.text = loan.sector
+            
+            if let name = loan.name {
+                cell.nameLabel.text = name
+            }
+            
+            if let sector = loan.sector {
+                cell.sectorLabel.text = sector
+            }
+            
             var amountString = "$"
             if let loanAmount = loan.loanAmount {
                 amountString.appendContentsOf(loanAmount.stringValue)
@@ -109,7 +116,10 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
                 amountString.appendContentsOf("0")
             }
             cell.amountLabel.text = amountString
-            cell.countryLabel.text = loan.country
+            
+            if let country = loan.country {
+                cell.countryLabel.text = loan.country
+            }
             
             // Set placeholder image
             cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
