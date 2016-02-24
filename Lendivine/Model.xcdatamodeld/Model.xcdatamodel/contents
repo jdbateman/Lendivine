@@ -3,6 +3,7 @@
     <entity name="KivaCartItem" representedClassName="KivaCartItem" syncable="YES">
         <attribute name="donationAmount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="loanID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <relationship name="kivaloan" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="KivaLoan" syncable="YES"/>
     </entity>
     <entity name="KivaLoan" representedClassName="KivaLoan" syncable="YES">
         <attribute name="activity" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
@@ -23,7 +24,7 @@
         <attribute name="use" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
     </entity>
     <elements>
-        <element name="KivaCartItem" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="KivaCartItem" positionX="-63" positionY="-18" width="128" height="90"/>
         <element name="KivaLoan" positionX="-54" positionY="9" width="128" height="285"/>
     </elements>
 </model>

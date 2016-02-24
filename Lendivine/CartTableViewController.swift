@@ -66,49 +66,54 @@ class CartTableViewController: UITableViewController {
         
         dispatch_async(dispatch_get_main_queue()) {
             
-            let cartItem = self.cart.items[row]
-            let loan = cartItem.loan as KivaLoan
-            
             // make delete button corners rounded
             cell.changeDonationButton.layer.cornerRadius = 7
             cell.changeDonationButton.layer.masksToBounds = true
+
+            let cartItem = self.cart.items[row]
             
-            cell.nameLabel.text = loan.name
-            cell.sectorLabel.text = loan.sector
-            var amountString = "$"
-            if let loanAmount = loan.loanAmount {
-                amountString.appendContentsOf(loanAmount.stringValue)
-            } else {
-                amountString.appendContentsOf("0")
-            }
-            cell.amountLabel.text = amountString
-            cell.countryLabel.text = loan.country
+            if let loan = cartItem.kivaloan as KivaLoan? {
             
-            // donation amount
-            var donationAmount = "$"
-            if let itemDonationAmount = cartItem.donationAmount {
-                donationAmount.appendContentsOf(itemDonationAmount.stringValue)
-            }
-            // Set button image to donation amount
-    //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
-            let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
-            cell.changeDonationButton.imageView!.image = donationImage
-            
-            // Set main image placeholder image
-            cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-            
-            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-            loan.getImage() {success, error, image in
-                if success {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        cell.loanImageView!.image = image
-                    }
-                } else  {
-                    print("error retrieving image: \(error)")
+                cell.nameLabel.text = loan.name
+                
+                cell.sectorLabel.text = loan.sector
+                
+                var amountString = "$"
+                if let loanAmount = loan.loanAmount {
+                    amountString.appendContentsOf(loanAmount.stringValue)
+                } else {
+                    amountString.appendContentsOf("0")
                 }
+                cell.amountLabel.text = amountString
+                
+                cell.countryLabel.text = loan.country
+                
+                // donation amount
+                var donationAmount = "$"
+                if let itemDonationAmount = cartItem.donationAmount {
+                    donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+                }
+                // Set button image to donation amount
+        //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
+                let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
+                cell.changeDonationButton.imageView!.image = donationImage
+                
+                // Set main image placeholder image
+                cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+                
+                // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+                loan.getImage() {success, error, image in
+                    if success {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            cell.loanImageView!.image = image
+                        }
+                    } else  {
+                        print("error retrieving image: \(error)")
+                    }
+                }
+                
+                print("cart = \(self.cart.items.count) [configureCell]")
             }
-            
-            print("cart = \(self.cart.items.count) [configureCell]")
         }
     }
     

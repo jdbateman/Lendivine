@@ -22,14 +22,9 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
     
     @NSManaged var loanID: NSNumber? // default: -1
     @NSManaged var donationAmount: NSNumber? // default: 0
-    var loan = KivaLoan() // todo: make an optional NSManaged object
+    @NSManaged var kivaloan: KivaLoan?
     
     convenience init(loan: KivaLoan, loanID: NSNumber, donationAmount: NSNumber, context: NSManagedObjectContext) {
-
-// todo: remove
-//        self.loanID = loanID
-//        self.donationAmount = donationAmount
-//        self.loan = loan
         
         var dictionary = [String: AnyObject]()
         dictionary[InitKeys.loanId] = loanID
@@ -61,16 +56,17 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
         self.loanID = dictionary[InitKeys.loanId] as? NSNumber
         self.donationAmount = dictionary[InitKeys.donationAmount] as? NSNumber
         
-        // todo: when made into an NSmanaged object then get rid of the if let construct:
-        dispatch_async(dispatch_get_main_queue()) {
-            if let loan = dictionary[InitKeys.kivaLoan] as? KivaLoan {
-                self.loan = loan
-            }
+        //dispatch_async(dispatch_get_main_queue()) {
+        if let loan = dictionary[InitKeys.kivaLoan] as? KivaLoan {
+            print("kivaLoan: \(loan)")
+            self.kivaloan = loan
         }
+        //todo > self.loan = dictionary[InitKeys.kivaLoan] as? KivaLoan
+        //}
     }
 }
 
 /*! Support Equatable protocol. Allows KivaCartItem instances to be compared. */
 func ==(lhs: KivaCartItem, rhs: KivaCartItem) -> Bool {
-    return (lhs.loan.id == rhs.loan.id)
+    return (lhs.kivaloan?.id == rhs.kivaloan?.id)
 }

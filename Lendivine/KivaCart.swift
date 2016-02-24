@@ -94,7 +94,9 @@ class KivaCart {
     func getLoans() -> [KivaLoan]? {
         var loansInCart = [KivaLoan]()
         for item in self.items {
-            loansInCart.append(item.loan)
+            if let loan = item.kivaloan {
+                loansInCart.append(loan)
+            }
         }
         return loansInCart
     }
