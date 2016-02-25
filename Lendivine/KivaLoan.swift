@@ -32,19 +32,20 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         static let country: String = "country"
         static let geo: String = "geo"
         static let town: String = "town"
-        static let postedDate: String = "postedDate"
+        static let postedDate: String = "posted_date"
         static let activity: String = "activity"
         static let id: String = "id"
         
         static let use: String = "use"
-        static let fundedAmount: String = "fundedAmount"
-        static let partnerID: String = "partnerID"
+        static let fundedAmount: String = "funded_amount"
+        static let partnerID: String = "partner_id"
         static let image: String = "image"
         static let imageId: String = "id"
-        static let imageTemplateID: String = "imageTemplateID"
-        static let borrowerCount: String = "borrowerCount"
+        static let imageTemplateID: String = "template_id"
+        static let borrowerCount: String = "borrower_count"
+        static let lenderCount: String = "lender_count"
         
-        static let loanAmount: String = "loanAmount"
+        static let loanAmount: String = "loan_amount"
         static let status: String = "status"
         static let sector: String = "sector"
     }
@@ -60,7 +61,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
     @NSManaged var activity: String?
     @NSManaged var id: NSNumber? // = -1
     @NSManaged var use: String?
-//    @NSManaged var languages:[String]?
+//    @NSManaged var languages:[String]? // todo - enable by storing first language
     @NSManaged var fundedAmount: NSNumber? // = 0
     @NSManaged var partnerID: NSNumber? // = -1
     
@@ -69,6 +70,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
     @NSManaged var imageTemplateID: NSNumber? // = -1
     
     @NSManaged var borrowerCount: NSNumber? // = 0
+    //todo @NSManaged var lenderCount: NSNumber? // = 0
     @NSManaged var loanAmount: NSNumber? // = 0
     @NSManaged var status: String?
     @NSManaged var sector: String?
@@ -78,30 +80,30 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    /*! Init instance with a dictionary of values, and a core data context. */
-    init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
-        
-        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
-        
-        self.name = dictionary[InitKeys.name] as? String
-        self.country = dictionary[InitKeys.country] as? String
-        self.geo = dictionary[InitKeys.geo] as? String
-        self.town = dictionary[InitKeys.town] as? String
-        self.postedDate = dictionary[InitKeys.postedDate] as? String
-        self.activity = dictionary[InitKeys.activity] as? String
-        self.id = dictionary[InitKeys.id] as? NSNumber
-        self.use = dictionary[InitKeys.use] as? String
-        self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
-        self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
-        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
-        //self.templateID = (dictionary[InitKeys.image])?.objectForKey("template_id") as? NSNumber
-        self.imageTemplateID = dictionary[InitKeys.imageTemplateID] as? NSNumber
-        self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
-        self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
-        self.status = dictionary[InitKeys.status] as? String
-        self.sector = dictionary[InitKeys.sector] as? String
-    }
+//    /*! Init instance with a dictionary of values, and a core data context. */
+//    init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
+//        
+//        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
+//        super.init(entity: entity, insertIntoManagedObjectContext: context)
+//        
+//        self.name = dictionary[InitKeys.name] as? String
+//        self.country = dictionary[InitKeys.country] as? String
+//        self.geo = dictionary[InitKeys.geo] as? String
+//        self.town = dictionary[InitKeys.town] as? String
+//        self.postedDate = dictionary[InitKeys.postedDate] as? String
+//        self.activity = dictionary[InitKeys.activity] as? String
+//        self.id = dictionary[InitKeys.id] as? NSNumber
+//        self.use = dictionary[InitKeys.use] as? String
+//        self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
+//        self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
+//        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
+//        //self.templateID = (dictionary[InitKeys.image])?.objectForKey("template_id") as? NSNumber
+//        self.imageTemplateID = dictionary[InitKeys.imageTemplateID] as? NSNumber
+//        self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
+//        self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
+//        self.status = dictionary[InitKeys.status] as? String
+//        self.sector = dictionary[InitKeys.sector] as? String
+//    }
     
 //    // designated initializer
 //    init() {
@@ -189,7 +191,35 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
 //            }
 //        }
 //    }
+
+
+    /*! Init instance with a dictionary of values, and a core data context. */
+    init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
+        
+        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        self.name = dictionary[InitKeys.name] as? String
+        self.country = dictionary["location"]?.objectForKey(InitKeys.country) as? String
+        self.geo = dictionary["location"]?.objectForKey(InitKeys.geo)?.objectForKey("pairs") as? String
+        self.town = dictionary["location"]?.objectForKey(InitKeys.town) as? String
+        self.postedDate = dictionary[InitKeys.postedDate] as? String
+        self.activity = dictionary[InitKeys.activity] as? String
+        self.id = dictionary[InitKeys.id] as? NSNumber
+        self.use = dictionary[InitKeys.use] as? String
+        self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
+        self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
+        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
+        self.imageTemplateID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageTemplateID) as? NSNumber
+        self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
+        //todo self.lenderCount = dictionary[InitKeys.lenderCount] as NSNumber
+        self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
+        self.status = dictionary[InitKeys.status] as? String
+        self.sector = dictionary[InitKeys.sector] as? String
+    }
 }
+
+
 
 
 // MARK: image management functions
