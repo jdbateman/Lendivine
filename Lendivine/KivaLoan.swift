@@ -48,6 +48,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         static let loanAmount: String = "loan_amount"
         static let status: String = "status"
         static let sector: String = "sector"
+        static let languages: String = "languages"
     }
     
     @NSManaged var name: String?
@@ -61,7 +62,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
     @NSManaged var activity: String?
     @NSManaged var id: NSNumber? // = -1
     @NSManaged var use: String?
-//    @NSManaged var languages:[String]? // todo - enable by storing first language
+    @NSManaged var language: String?
     @NSManaged var fundedAmount: NSNumber? // = 0
     @NSManaged var partnerID: NSNumber? // = -1
     
@@ -70,7 +71,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
     @NSManaged var imageTemplateID: NSNumber? // = -1
     
     @NSManaged var borrowerCount: NSNumber? // = 0
-    //todo @NSManaged var lenderCount: NSNumber? // = 0
+    @NSManaged var lenderCount: NSNumber? // = 0
     @NSManaged var loanAmount: NSNumber? // = 0
     @NSManaged var status: String?
     @NSManaged var sector: String?
@@ -212,10 +213,11 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
         self.imageTemplateID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageTemplateID) as? NSNumber
         self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
-        //todo self.lenderCount = dictionary[InitKeys.lenderCount] as NSNumber
+        self.lenderCount = dictionary[InitKeys.lenderCount] as? NSNumber
         self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
+        self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
     }
 }
 

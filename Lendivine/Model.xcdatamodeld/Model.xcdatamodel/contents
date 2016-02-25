@@ -14,6 +14,8 @@
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
         <attribute name="imageID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
         <attribute name="imageTemplateID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <attribute name="language" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lenderCount" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="loanAmount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
         <attribute name="partnerID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
@@ -25,6 +27,6 @@
     </entity>
     <elements>
         <element name="KivaCartItem" positionX="-63" positionY="-18" width="128" height="90"/>
-        <element name="KivaLoan" positionX="-54" positionY="9" width="128" height="285"/>
+        <element name="KivaLoan" positionX="-54" positionY="9" width="128" height="315"/>
     </elements>
 </model>
