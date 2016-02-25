@@ -438,20 +438,6 @@
                                                 <constraint firstAttribute="width" constant="160" id="jvV-8n-toA"/>
                                             </constraints>
                                         </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Da-NL-SPr">
-                                            <rect key="frame" x="530" y="55" width="62" height="50"/>
-                                            <color key="backgroundColor" red="0.1667993425" green="0.70766321409999999" blue="0.13096996690000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            <size key="titleShadowOffset" width="1" height="1"/>
-                                            <state key="normal" image="Add Shopping Cart-50"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="7"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="onAddToCartButtonTap:" destination="NX9-ZF-AIV" eventType="touchUpInside" id="4Ru-5n-UFM"/>
-                                            </connections>
-                                        </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Country" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vkj-J2-MYe">
                                             <rect key="frame" x="182" y="95" width="280" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -466,10 +452,8 @@
                                         <constraint firstItem="rnE-Po-SEf" firstAttribute="top" secondItem="9jx-0k-wc7" secondAttribute="bottom" constant="4" id="Ivc-F1-hqq"/>
                                         <constraint firstItem="zlN-ub-Jt1" firstAttribute="top" secondItem="ZIw-7w-tgh" secondAttribute="top" constant="20" id="Jg3-8B-wha"/>
                                         <constraint firstItem="9jx-0k-wc7" firstAttribute="top" secondItem="zlN-ub-Jt1" secondAttribute="bottom" constant="4" id="Ue5-s1-JUk"/>
-                                        <constraint firstItem="6Da-NL-SPr" firstAttribute="centerY" secondItem="ZIw-7w-tgh" secondAttribute="centerY" id="W0G-dN-uoL"/>
                                         <constraint firstItem="JQ9-a9-zQg" firstAttribute="top" secondItem="ZIw-7w-tgh" secondAttribute="top" id="d74-f9-LIs"/>
                                         <constraint firstItem="JQ9-a9-zQg" firstAttribute="leading" secondItem="ZIw-7w-tgh" secondAttribute="leading" id="d7Y-Ay-duU"/>
-                                        <constraint firstAttribute="trailing" secondItem="6Da-NL-SPr" secondAttribute="trailing" constant="24" id="eOT-0f-Z9T"/>
                                         <constraint firstItem="zlN-ub-Jt1" firstAttribute="leading" secondItem="JQ9-a9-zQg" secondAttribute="trailing" constant="21" id="snj-6i-u4j"/>
                                         <constraint firstItem="9jx-0k-wc7" firstAttribute="leading" secondItem="JQ9-a9-zQg" secondAttribute="trailing" constant="21" id="wGO-Ms-sUA"/>
                                         <constraint firstItem="rnE-Po-SEf" firstAttribute="leading" secondItem="JQ9-a9-zQg" secondAttribute="trailing" constant="21" id="xXP-c4-icc"/>
