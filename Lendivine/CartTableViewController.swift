@@ -249,12 +249,18 @@ class CartTableViewController: UITableViewController {
         var notFundraising = [KivaLoan]()
         
         // accumulate loan IDs
-        var loanIDs = [NSNumber]()
+        var loanIDs = [NSNumber?]()
         for loan in loans! {
             if let id = loan.id {
                 loanIDs.append(id)
             }
         }
+//        var loanIDs: NSMutableArray // = [NSNumber]()
+//        for loan in loans! {
+//            if let id = loan.id {
+//                loanIDs.addObject(id) // loanIDs.append(id)
+//            }
+//        }
         
         // Find loans on Kiva.org
         KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
