@@ -89,7 +89,7 @@ class CartTableViewCell: UITableViewCell {
             let index = indexPath.row
             let cartViewController = getTableViewControllerForCellContainingSubview(subView)
         
-            let cartItem = cartViewController.cart.items[index]
+            let cartItem = cartViewController.cart!.items[index]
             let donationAmountOriginal = cartItem.donationAmount
             cartItem.donationAmount = donationAmount
             print("cartItem donation amount changed from \(donationAmountOriginal) to \(cartItem.donationAmount)")
@@ -227,8 +227,8 @@ class CartTableViewCell: UITableViewCell {
         // Remove the loan from the cart.
         let cartViewController = tableView.dataSource as! CartTableViewController
         let index = indexPath!.row
-        cartViewController.cart.removeItemByIndex(index)
-        print("cart = \(cartViewController.cart.items.count) [onRemoveFromCartButtonTap]")
+        cartViewController.cart?.removeItemByIndex(index)
+        print("cart = \(cartViewController.cart?.items.count) [onRemoveFromCartButtonTap]")
         
         //cartViewController.cart.items.removeAtIndex(indexPath!.row)
         

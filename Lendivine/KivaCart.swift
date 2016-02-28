@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 class KivaCart {
     
@@ -25,6 +26,9 @@ class KivaCart {
     // designated initializer
     init() {
         print("KivaCart init called")
+        
+        // TODO: load all cart items here from the core data shared context
+        fetchCartItems()
     }
     
     // designated initializer
@@ -44,21 +48,32 @@ class KivaCart {
     
     // remove all items from the cart
     func empty() {
-        items.removeAll()
+        for item in items {
+            self.removeItem(item)
+        }
     }
     
     // remove an item from the cart
     func removeItem(item: KivaCartItem?) {
         if let item = item {
             if let index = items.indexOf(item) {
-                items.removeAtIndex(index)
+                removeItemByIndex(index)
             }
         }
     }
     
     // remove an item from the cart given it's index
     func removeItemByIndex(index: Int?) {
-        if let index = index {
+        
+        if let index = index where index < items.count {
+            
+            let item = items[index]
+            
+            // remove the item from the core data store
+            sharedContext.deleteObject(item)
+            CoreDataStackManager.sharedInstance().saveContext()
+            
+            // remove the item from the array
             items.removeAtIndex(index)
         }
     }
@@ -101,4 +116,70 @@ class KivaCart {
         return loansInCart
     }
     
+    // MARK: - Fetched results controller
+    
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        
+        // Create the fetch request
+        let fetchRequest = NSFetchRequest(entityName: KivaCartItem.entityName)
+        
+        // Add a sort descriptor to enforce a sort order on the results.
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "loanID", ascending: false)]
+        
+        // Create the Fetched Results Controller
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+            self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        // Return the fetched results controller. It will be the value of the lazy variable
+        return fetchedResultsController
+    } ()
+    
+    /* Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store. */
+    func fetchCartItems() {
+        var error: NSError? = nil
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            do {
+                try self.fetchedResultsController.performFetch()
+            } catch let error1 as NSError {
+                error = error1
+                print("fetchCartItems error: \(error)")
+            }
+            self.items = self.fetchedResultsController.fetchedObjects as! [KivaCartItem]
+        }
+        
+//        if let error = error {
+//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving loans", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+//        }
+    }
+    
+    // Add an item to the local cart.
+    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
+        if let loan = loan {
+            if let loanID = loanID {
+                if let donationAmount = donationAmount {
+                    let cart = KivaCart.sharedInstance
+                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount, context: context)
+                    if !cart.items.contains(item) {
+                        cart.add(item)
+                        print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
+                        
+                        // Persist the KivaCartItem object we added to the Core Data shared context
+                        dispatch_async(dispatch_get_main_queue()) {
+                            CoreDataStackManager.sharedInstance().saveContext()
+                        }
+                        
+                    } else {
+                        print("Item not added to cart. The cart already contains loanId: \(loanID)")
+                    }
+                    print("cart = \(cart.count) [KivaAddItemToCart]")
+                }
+            }
+        }
+    }
 }

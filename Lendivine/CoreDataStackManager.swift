@@ -109,4 +109,13 @@ class CoreDataStackManager {
             }
         }
     }
+    
+    // MARK: - Scratch context
+    
+    /* A core data managed object context that will not be persisted. */
+    lazy var scratchContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+    }()
 }

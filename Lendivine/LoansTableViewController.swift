@@ -21,6 +21,14 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }()
     
+    /* A core data managed object context that will not be persisted. */
+//todo remove
+//    lazy var scratchContext: NSManagedObjectContext = {
+//        var context = NSManagedObjectContext()
+//        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+//        return context
+//    }()
+    
     var nextPageOfKivaSearchResults = 1
     
     static let KIVA_LOAN_SEARCH_RESULTS_PER_PAGE = 20
@@ -163,7 +171,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Return the fetched results controller. It will be the value of the lazy variable
         return fetchedResultsController
@@ -340,7 +348,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
     // Get the 20 most recent loands from Kiva.org.
     func getMostRecentLoans(completionHandler: (success: Bool, error: NSError?) -> Void) {
         if let kivaAPI = self.kivaAPI {
-            kivaAPI.kivaGetNewestLoans() {
+            kivaAPI.kivaGetNewestLoans(CoreDataStackManager.sharedInstance().scratchContext) {
                 success, error, loans in
                 if success {
                     if let loans = loans {
@@ -394,65 +402,65 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
     
     // MARK: Kiva Test functions
     
-    func checkout() {
-        print("checkout called")
-        
-        let numberOfLoans = self.loans.count
-        putLoansInCart(numberOfLoans) {success, error in
-            if success {
-                self.showEmbeddedBrowser()
-            } else {
-                print("failed to put any loans in the cart")
-            }
-        }
-        
-        //    TODO - this is a data class. Need to move this logic to a view class and create a view controller for the web view. Look at code in OnTheMap.
-        //
-        //    /* Create a UIWebView the size of the screen and set it's delegate to this view controller. */
-        //    func showWebView(request: NSURLRequest?) {
-        //        let webView:UIWebView = UIWebView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height))
-        //        webView.delegate = self
-        //        if let url = url {
-        //            webView.loadRequest(request)
-        //            self.view.addSubview(webView)
-        //        }
-        //    }
-        
-    }
+//    func checkout() {
+//        print("checkout called")
+//        
+//        let numberOfLoans = self.loans.count
+//        putLoansInCart(numberOfLoans) {success, error in
+//            if success {
+//                self.showEmbeddedBrowser()
+//            } else {
+//                print("failed to put any loans in the cart")
+//            }
+//        }
+//        
+//        //    TODO - this is a data class. Need to move this logic to a view class and create a view controller for the web view. Look at code in OnTheMap.
+//        //
+//        //    /* Create a UIWebView the size of the screen and set it's delegate to this view controller. */
+//        //    func showWebView(request: NSURLRequest?) {
+//        //        let webView:UIWebView = UIWebView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height))
+//        //        webView.delegate = self
+//        //        if let url = url {
+//        //            webView.loadRequest(request)
+//        //            self.view.addSubview(webView)
+//        //        }
+//        //    }
+//        
+//    }
     
     // Add some randomly selected loans to the cart.
-    func putLoansInCart(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
-        if let kivaAPI = self.kivaAPI {
-            self.findLoans(kivaAPI) { success, error, loanResults in
-                if success {
-                    if var loans = loanResults {
-                        
-                        // just keep the first numberOfLoansToAdd loans
-                        loans.removeRange(numberOfLoansToAdd..<loans.count)
-                        
-                        print("looping through loans...")
-                        for loan in loans {
-                            // put the  loan into the cart
-                            let loanId = loan.id
-                            let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5
-                            print("amount of loan = \(amount)")
-                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
-                            
-                            print("cart contains loanId: \(loanId) in amount: \(amount)")
-                        }
-                        
-                        completionHandler(success: true, error: nil)
-                    }
-                } else {
-                    print("failed")
-                    completionHandler(success: false, error: error)
-                }
-            }
-        } else {
-            print("no kivaAPI")
-            completionHandler(success: false, error: nil)
-        }
-    }
+//    func putLoansInCart(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
+//        if let kivaAPI = self.kivaAPI {
+//            self.findLoans(kivaAPI) { success, error, loanResults in
+//                if success {
+//                    if var loans = loanResults {
+//                        
+//                        // just keep the first numberOfLoansToAdd loans
+//                        loans.removeRange(numberOfLoansToAdd..<loans.count)
+//                        
+//                        print("looping through loans...")
+//                        for loan in loans {
+//                            // put the  loan into the cart
+//                            let loanId = loan.id
+//                            let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5
+//                            print("amount of loan = \(amount)")
+//                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: CoreDataStackManager.sharedInstance().scratchContext)
+//                            
+//                            print("cart contains loanId: \(loanId) in amount: \(amount)")
+//                        }
+//                        
+//                        completionHandler(success: true, error: nil)
+//                    }
+//                } else {
+//                    print("failed")
+//                    completionHandler(success: false, error: error)
+//                }
+//            }
+//        } else {
+//            print("no kivaAPI")
+//            completionHandler(success: false, error: nil)
+//        }
+//    }
     
     // helper function that searches for loans
     func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {

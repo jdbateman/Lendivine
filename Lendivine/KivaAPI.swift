@@ -881,7 +881,7 @@ extension KivaAPI {
         }
     }
     
-    func kivaGetNewestLoans(completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func kivaGetNewestLoans(scratchContext: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
         makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/newest.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
             
@@ -897,7 +897,7 @@ extension KivaAPI {
                             print("partners: \(arrayOfPartnersDictionaries)")
                             
                             for loan in arrayOfPartnersDictionaries {
-                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: scratchContext /*self.sharedContext*/) // todo: 2/26/2016 - trying scratchContext
                                 loans.append(kivaLoan)
                             }
                         }
@@ -970,24 +970,31 @@ extension KivaAPI {
 
 extension KivaAPI {
     
-    // Add an item to the cart.
-    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
-        if let loan = loan {
-            if let loanID = loanID {
-                if let donationAmount = donationAmount {
-                    let cart = KivaCart.sharedInstance
-                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount, context: context)
-                    if !cart.items.contains(item) {
-                        cart.add(item)
-                        print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
-                    } else {
-                        print("Item not added to cart. The cart already contains loanId: \(loanID)")
-                    }
-                    print("cart = \(cart.count) [KivaAddItemToCart]")
-                }
-            }
-        }
-    }
+//    // TODO: move this function, which has no kiva api dependency, to a better place, like in KivaCart
+//    // Add an item to the local cart.
+//    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
+//        if let loan = loan {
+//            if let loanID = loanID {
+//                if let donationAmount = donationAmount {
+//                    let cart = KivaCart.sharedInstance
+//                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount, context: context)
+//                    if !cart.items.contains(item) {
+//                        cart.add(item)
+//                        print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
+//                        
+//                        // Persist the KivaCartItem object we added to the Core Data shared context
+//                        dispatch_async(dispatch_get_main_queue()) {
+//                            CoreDataStackManager.sharedInstance().saveContext()
+//                        }
+//                        
+//                    } else {
+//                        print("Item not added to cart. The cart already contains loanId: \(loanID)")
+//                    }
+//                    print("cart = \(cart.count) [KivaAddItemToCart]")
+//                }
+//            }
+//        }
+//    }
     
     // Assemble an HTTP POST request containing the cart in the request body.
     func getKivaCartRequest() -> NSMutableURLRequest? {

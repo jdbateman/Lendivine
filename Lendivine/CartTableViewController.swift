@@ -12,7 +12,7 @@ import UIKit
 
 class CartTableViewController: UITableViewController {
 
-    var cart = KivaCart.sharedInstance
+    var cart:KivaCart? // = KivaCart.sharedInstance
     var kivaAPI: KivaAPI?
     
     override func viewDidLoad() {
@@ -29,7 +29,9 @@ class CartTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        print("cart = \(cart.items.count) [viewDidLoad]")
+        cart = KivaCart.sharedInstance
+        
+        print("cart = \(cart!.items.count) [viewDidLoad]")
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -49,7 +51,7 @@ class CartTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cart.items.count
+        return cart!.items.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -70,7 +72,7 @@ class CartTableViewController: UITableViewController {
             cell.changeDonationButton.layer.cornerRadius = 7
             cell.changeDonationButton.layer.masksToBounds = true
 
-            let cartItem = self.cart.items[row]
+            let cartItem = self.cart!.items[row]
             
             if let loan = cartItem.kivaloan as KivaLoan? {
             
@@ -112,7 +114,7 @@ class CartTableViewController: UITableViewController {
                     }
                 }
                 
-                print("cart = \(self.cart.items.count) [configureCell]")
+                print("cart = \(self.cart!.items.count) [configureCell]")
             }
         }
     }
@@ -136,8 +138,13 @@ class CartTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
-            cart.removeItemByIndex(indexPath.row)
+            
+            // remove the item from the KivaCart object
+            cart!.removeItemByIndex(indexPath.row)
+            
+            // remove the item from the table view
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -173,8 +180,8 @@ class CartTableViewController: UITableViewController {
     func onCheckoutButtonTapped() {
         print("call KivaAPI.checkout")
         
-        let loans = cart.getLoans()
-        print("cart count before stripping out non-fundraising loans = \(cart.items.count)")
+        let loans = cart!.getLoans()
+        print("cart count before stripping out non-fundraising loans = \(cart!.items.count)")
         
         self.getCurrentFundraisingStatus(loans) {
             success, error, fundraising, notFundraising in
@@ -184,22 +191,16 @@ class CartTableViewController: UITableViewController {
                     if notFundraising.count > 0 {
                         if var loans = loans {
                             for notFRLoan in notFundraising {
-                                //var index: Int?
-                                //do {
-                                    if let index = loans.indexOf(notFRLoan) {
-                                        loans.removeAtIndex(index)
-                                    }
-                                //} catch {
-    //                                print("removeAtIndex throws")
-    //                                index = nil
-                                //}
+                                if let index = loans.indexOf(notFRLoan) {
+                                    loans.removeAtIndex(index)
+                                }
                                 
-                                //  UIAlertController here
-                                var userMessage = "The following loans are no longer raising funds and have been removed from the cart:"
+                                //  UIAlertController
+                                var userMessage = "The following loans are no longer raising funds and have been removed from the cart:\n\n"
                                 var allRemovedLoansString = ""
                                 for nfLoan in notFundraising {
                                     if let country = nfLoan.country, name = nfLoan.name, sector = nfLoan.sector {
-                                        let removedLoanString = String(format: "%@, %@, %@", name, sector, country)
+                                        let removedLoanString = String(format: "%@, %@, %@\n", name, sector, country)
                                         allRemovedLoansString.appendContentsOf(removedLoanString)
                                     }
                                 }
@@ -208,7 +209,7 @@ class CartTableViewController: UITableViewController {
                                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
                                     UIAlertAction in
                                     print("OK Tapped")
-                                    self.showEmbeddedBrowser()
+                                    self.displayKivaWebCartInBrowser()
                                 }
                                 alertController.addAction(okAction)
                                 self.presentViewController(alertController, animated: true, completion: nil)
@@ -216,21 +217,32 @@ class CartTableViewController: UITableViewController {
                         }
                     } else {
                         // There are no loans to remove from the cart
-                        self.showEmbeddedBrowser()
+                        self.displayKivaWebCartInBrowser()
                     }
                 }
                 
-                var loanCount = 0
-                if let loans = loans {
-                    loanCount = loans.count
-                }
-                print("cart count after stripping out non-fundraising loans = \(self.cart.items.count). loans count should be the same: \(loanCount)")
+// todo: remove debugging code:
+//                var loanCount = 0
+//                if let loans = loans {
+//                    loanCount = loans.count
+//                }
+//                print("cart count after stripping out non-fundraising loans = \(self.cart!.items.count). loans count should be the same: \(loanCount)")
             } else {
                 // Even though an error occured just continue on to the cart on Kiva.org and they will handle any invalid loans in the cart.
                 print("Non-fatal error confirming fundraising status of loans.")
-                self.showEmbeddedBrowser()
+                self.displayKivaWebCartInBrowser()
             }
         }
+    }
+    
+    /*! Clear local cart of all items and present the Kiva web cart in the browser. */
+    func displayKivaWebCartInBrowser() {
+        
+        // Remove all items from local cart view.
+        cart?.empty()
+        
+        // Display web cart.
+        self.showEmbeddedBrowser()
     }
     
     /*! 

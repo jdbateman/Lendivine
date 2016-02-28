@@ -47,7 +47,12 @@ class LoansTableViewCell: UITableViewCell {
         let tableViewController = tableView.dataSource as! LoansTableViewController
         let loan = tableViewController.loans[indexPath!.row]
         let amount = 25  // TODO: set default donation amount to user preference.
-        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
+        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
+        let cart = KivaCart.sharedInstance
+        cart.KivaAddItemToCart(persistedLoan, loanID: persistedLoan.id, donationAmount: amount, context: self.sharedContext)
+        
+//todo - cleanup        tableViewController.kivaAPI!.KivaAddItemToCart(persistedLoan, loanID: persistedLoan.id, donationAmount: amount, context: self.sharedContext)
+//        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: sharedContext /*self.sharedContext*/)
         
         // Persist the KivaCartItem object we added to the Core Data shared context
         dispatch_async(dispatch_get_main_queue()) {

@@ -219,6 +219,38 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         self.sector = dictionary[InitKeys.sector] as? String
         self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
     }
+
+    /*! 
+        @brief Initialize a KivaLoan object from another KivaLoan object.  
+        @discussion Useful for creating a new loan in the specified context from a loan in another context.
+        @param (in) fromLoan - the KivaLoan object from which to generate the new KivaLoan instance.
+        @param (in) context - the NSManagedObjectContext of the new KivaLoan object.
+        @return the new KivaLoan instance.
+    */
+    init(fromLoan: KivaLoan, context: NSManagedObjectContext) {
+        
+        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+
+        self.name = fromLoan.name
+        self.country = fromLoan.country
+        self.geo = fromLoan.geo
+        self.town = fromLoan.town
+        self.postedDate = fromLoan.postedDate
+        self.activity = fromLoan.activity
+        self.id = fromLoan.id
+        self.use = fromLoan.use
+        self.fundedAmount = fromLoan.fundedAmount
+        self.partnerID = fromLoan.partnerID
+        self.imageID = fromLoan.imageID
+        self.imageTemplateID = fromLoan.imageTemplateID
+        self.borrowerCount = fromLoan.borrowerCount
+        self.lenderCount = fromLoan.lenderCount
+        self.loanAmount = fromLoan.loanAmount
+        self.status = fromLoan.status
+        self.sector = fromLoan.sector
+        self.language = fromLoan.language
+    }
 }
 
 

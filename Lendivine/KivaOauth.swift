@@ -19,10 +19,6 @@ class KivaOAuth {
     
     static let sharedInstance = KivaOAuth()
     
-//    init() {
-//
-//    }
-    
     func doOAuthKiva(completionHandler: (success: Bool, error: NSError?, kivaAPI: KivaAPI?) -> Void){
         
         let oauthswift = OAuth1Swift(
@@ -181,99 +177,4 @@ class KivaOAuth {
         */
         //            self.testCheckout(self.kivaAPI!)
     }
-    
-//    func testCheckout(kivaAPI: KivaAPI) {
-//        // search some loans
-//        //var loans = [KivaLoan]()
-//        
-//        findLoans(kivaAPI) { success, error, loanResults in
-//            if success {
-//                if let loans = loanResults {
-//                    // put the first loan into the cart
-//                    let loanId = loans[0].id
-//                    let loan = loans[0]
-//                    kivaAPI.KivaAddItemToCart(loan, loanID: loanId, donationAmount: 25.00 )
-//                    
-//                    // call checkout
-//                    kivaAPI.KivaCheckout()
-//                }
-//                print("search loans results: \(loanResults)")
-//            } else {
-//                print("failed")
-//            }
-//        }
-//    }
-    
-//    // helper function that searches for loans
-//    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
-//        
-//        let regions = "ca,sa,af,as,me,ee,we,an,oc"
-//        let countries = "TD,TG,TH,TJ,TL,TR,TZ"
-//        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaAPI.LoanStatus.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: 1, perPage: 20, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) { success, error, loanResults, nextPage in
-//            
-//            // TODO - handle paging using the page and nextPage parameters above
-//            
-//            if success {
-//                // print("search loans results: \(loanResults)")
-//                completionHandler(success: success, error: error, loans: loanResults)
-//            } else {
-//                // print("kivaSearchLoans failed")
-//                completionHandler(success: success, error: error, loans: nil)
-//            }
-//        }
-//    }
-    
-//    func doOAuthKiva(){
-//
-//        let oauthswift = OAuth1Swift(
-//            consumerKey:    Kiva["consumerKey"]!,
-//            consumerSecret: Kiva["consumerSecret"]!,
-//            requestTokenUrl: "https://api.kivaws.org/oauth/request_token",
-//            authorizeUrl:    "https://www.kiva.org/oauth/authorize",
-//            accessTokenUrl:  "https://api.kivaws.org/oauth/access_token"
-//        )
-//        
-//        // Request an unauthorized oauth Request Token. Upon receipt of the request token from Kiva use it to redirect to Kiva.org for user authentication and user authorization of app. If the user authorizes this app then Kiva.org redirects to the callback url below by appending an oauth_verifier code. The app will exchange the unauthorized oauth request token and oauth_verifier code for a long lived Access Token that can be used to make Kiva API calls to access protected resources.
-//        oauthswift.authorizeWithCallbackURL( NSURL(string: "oauth-swift://oauth-callback/kiva")!, success: {
-//            credential, response in
-//            
-//            print("bravo. Now make a call to the Kiva api")
-//            
-//            print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-//            //self.showAlertView("Kiva", message: "oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-//            
-//            // TODO: securely store the access credentials
-//            
-//            // TODO: make a call to a Kiva API using the access credentials.
-//            
-//            print("")
-//            print("****************************************************************************")
-//            print("Step 4: Make Kiva API request with Access Token")
-//            //print("")
-//            
-//            let url :String = "https://api.kivaws.org/v1/my/account.json"
-//            
-//            // set the oauth_token parameter. remove any existing URL encoding (% escaped characters)
-//            var parameters =  Dictionary<String, AnyObject>()
-//            var oauthToken = credential.oauth_token
-//            oauthToken = oauthToken.stringByRemovingPercentEncoding!
-//            parameters = [
-//                "oauth_token"    : oauthToken
-//            ]
-//            
-//            oauthswift.client.get(url, parameters: parameters,
-//                success: {
-//                    data, response in
-//                    print("Kiva API request succeeded.")
-//                    let jsonDict: AnyObject! = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-//                    print(jsonDict)
-//                }, failure: {(error:NSError!) -> Void in
-//                    print("Kiva API request failed.")
-//                    print(error)
-//            })
-//            }, failure: {(error:NSError!) -> Void in
-//                print(error.localizedDescription)
-//            }
-//        )
-//    }
 }

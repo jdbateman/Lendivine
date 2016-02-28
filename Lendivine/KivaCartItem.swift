@@ -14,6 +14,8 @@ import CoreData
 
 class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
     
+    static let entityName = "KivaCartItem"
+    
     struct InitKeys {
         static let kivaLoan: String = "kivaLoan"
         static let donationAmount: String = "donationAmount"
