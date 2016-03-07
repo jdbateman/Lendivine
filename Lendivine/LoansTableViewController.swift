@@ -104,7 +104,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         
         dispatch_async(dispatch_get_main_queue()) {
             
-            //            TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
+            // TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
             let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
             
             //let loan = self.loans[indexPath.row]
@@ -317,9 +317,23 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         // fetch loans from Kiva.org
         // populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
         getMostRecentLoans() {
-            success, error in
+            success, loans, error in
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
+                    
+                    // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
+                    if let loans = loans {
+                        for loan in loans where loan.id != nil {
+                            if KivaLoan.fetchLoanByID2(loan.id!) == nil {
+                                _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
+                                CoreDataStackManager.sharedInstance().saveContext()
+                            }
+                        }
+                    }
+                    
+                    // call reloadData to trigger the fetchedResultController to pickup the newly added loans and add them to the table
+                    // TODO: have we added this code yet or are we still using the self.loans array?
+                    
                     (self.tableView.reloadData()) // self.tableView.setNeedsDisplay()
                     
                     // TODO: enable cart button
@@ -345,24 +359,24 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         //checkout()
     }
     
-    // Get the 20 most recent loands from Kiva.org.
-    func getMostRecentLoans(completionHandler: (success: Bool, error: NSError?) -> Void) {
+    // Get the 20 most recent loans from Kiva.org in a Core Data scratch context.
+    func getMostRecentLoans(completionHandler: (success: Bool, loans: [KivaLoan]?, error: NSError?) -> Void) {
         if let kivaAPI = self.kivaAPI {
             kivaAPI.kivaGetNewestLoans(CoreDataStackManager.sharedInstance().scratchContext) {
                 success, error, loans in
                 if success {
                     if let loans = loans {
                         self.loans = loans
-                        completionHandler(success: true, error: nil)
+                        completionHandler(success: true, loans: loans, error: nil)
                     } else {
                         // TODO - display "no loans" in view controller
                         let error = VTError(errorString: "No Kiva loans found.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-                        completionHandler(success: false, error: error.error)
+                        completionHandler(success: false, loans: nil, error: error.error)
                     }
                 } else {
                     // TODO - display error, then "no loans" in view controller
                     let error = VTError(errorString: "Error searching for newest Kiva loans.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-                    completionHandler(success: false, error: error.error)
+                    completionHandler(success: false, loans: nil, error: error.error)
                 }
             }
         }

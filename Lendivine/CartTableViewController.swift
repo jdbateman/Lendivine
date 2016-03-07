@@ -9,11 +9,17 @@
 // TODO - support selecting a loan to display detailed information on the loan
 
 import UIKit
+import CoreData
 
 class CartTableViewController: UITableViewController {
 
     var cart:KivaCart? // = KivaCart.sharedInstance
     var kivaAPI: KivaAPI?
+    
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,7 +69,7 @@ class CartTableViewController: UITableViewController {
         
         return cell
     }
-
+    
     func configureCell(cell: CartTableViewCell, row: Int) {
         
         dispatch_async(dispatch_get_main_queue()) {
@@ -71,53 +77,128 @@ class CartTableViewController: UITableViewController {
             // make delete button corners rounded
             cell.changeDonationButton.layer.cornerRadius = 7
             cell.changeDonationButton.layer.masksToBounds = true
-
+            
             let cartItem = self.cart!.items[row]
             
-            if let loan = cartItem.kivaloan as KivaLoan? {
+//            if let loanID = cartItem.loanID {
+//                
+//                KivaLoan.createKivaLoanFromLoanID(loanID, context: self.sharedContext /*TODO: put this back? CoreDataStackManager.sharedInstance().scratchContext*/) {
+//                    loan, error in
             
-                cell.nameLabel.text = loan.name
-                
-                cell.sectorLabel.text = loan.sector
-                
-                var amountString = "$"
-                if let loanAmount = loan.loanAmount {
-                    amountString.appendContentsOf(loanAmount.stringValue)
-                } else {
-                    amountString.appendContentsOf("0")
-                }
-                cell.amountLabel.text = amountString
-                
-                cell.countryLabel.text = loan.country
-                
-                // donation amount
-                var donationAmount = "$"
-                if let itemDonationAmount = cartItem.donationAmount {
-                    donationAmount.appendContentsOf(itemDonationAmount.stringValue)
-                }
-                // Set button image to donation amount
-        //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
-                let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
-                cell.changeDonationButton.imageView!.image = donationImage
-                
-                // Set main image placeholder image
-                cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-                
-                // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-                loan.getImage() {success, error, image in
-                    if success {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            cell.loanImageView!.image = image
+                    //            if let loan = cartItem.kivaloan as KivaLoan? {
+                    
+//                    if let loan = loan {
+            
+                        cell.nameLabel.text = cartItem.name
+                        
+                        cell.sectorLabel.text = cartItem.sector
+                        
+                        var amountString = "$"
+                        if let loanAmount = cartItem.loanAmount {
+                            amountString.appendContentsOf(loanAmount.stringValue)
+                        } else {
+                            amountString.appendContentsOf("0")
                         }
-                    } else  {
-                        print("error retrieving image: \(error)")
-                    }
-                }
-                
-                print("cart = \(self.cart!.items.count) [configureCell]")
-            }
+                        cell.amountLabel.text = amountString
+                        
+                        cell.countryLabel.text = cartItem.country
+                        
+                        // donation amount
+                        var donationAmount = "$"
+                        if let itemDonationAmount = cartItem.donationAmount {
+                            donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+                        }
+                        // Set button image to donation amount
+                        //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
+                        let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
+                        cell.changeDonationButton.imageView!.image = donationImage
+                        
+                        // Set main image placeholder image
+                        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+                        
+                        // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+                        cartItem.getImage() {success, error, image in
+                            if success {
+                                dispatch_async(dispatch_get_main_queue()) {
+                                    cell.loanImageView!.image = image
+                                }
+                            } else  {
+                                print("error retrieving image: \(error)")
+                            }
+                        }
+                        
+                        print("cart = \(self.cart!.items.count) [configureCell]")
+                        
+//                    }
+//                }
+//            }
         }
     }
+
+//    func configureCell(cell: CartTableViewCell, row: Int) {
+//        
+//        dispatch_async(dispatch_get_main_queue()) {
+//            
+//            // make delete button corners rounded
+//            cell.changeDonationButton.layer.cornerRadius = 7
+//            cell.changeDonationButton.layer.masksToBounds = true
+//
+//            let cartItem = self.cart!.items[row]
+//            
+//            if let loanID = cartItem.loanID {
+//                
+//                KivaLoan.createKivaLoanFromLoanID(loanID, context: self.sharedContext /*TODO: put this back? CoreDataStackManager.sharedInstance().scratchContext*/) {
+//                    loan, error in
+//
+//    //            if let loan = cartItem.kivaloan as KivaLoan? {
+//                
+//                    if let loan = loan {
+//
+//                        cell.nameLabel.text = loan.name
+//                        
+//                        cell.sectorLabel.text = loan.sector
+//                        
+//                        var amountString = "$"
+//                        if let loanAmount = loan.loanAmount {
+//                            amountString.appendContentsOf(loanAmount.stringValue)
+//                        } else {
+//                            amountString.appendContentsOf("0")
+//                        }
+//                        cell.amountLabel.text = amountString
+//                        
+//                        cell.countryLabel.text = loan.country
+//                        
+//                        // donation amount
+//                        var donationAmount = "$"
+//                        if let itemDonationAmount = cartItem.donationAmount {
+//                            donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+//                        }
+//                        // Set button image to donation amount
+//                //        let donationImage: UIImage = textToImage("$25", inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(14, 8))
+//                        let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(14), 4))
+//                        cell.changeDonationButton.imageView!.image = donationImage
+//                        
+//                        // Set main image placeholder image
+//                        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+//                        
+//                        // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+//                        loan.getImage() {success, error, image in
+//                            if success {
+//                                dispatch_async(dispatch_get_main_queue()) {
+//                                    cell.loanImageView!.image = image
+//                                }
+//                            } else  {
+//                                print("error retrieving image: \(error)")
+//                            }
+//                        }
+//                        
+//                        print("cart = \(self.cart!.items.count) [configureCell]")
+//                        
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     // Conditional editing of the table view. (Return true to allow edit of the item, false if item is not editable.)
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -180,59 +261,62 @@ class CartTableViewController: UITableViewController {
     func onCheckoutButtonTapped() {
         print("call KivaAPI.checkout")
         
-        let loans = cart!.getLoans()
-        print("cart count before stripping out non-fundraising loans = \(cart!.items.count)")
-        
-        self.getCurrentFundraisingStatus(loans) {
-            success, error, fundraising, notFundraising in
-            if success {
-                // remove notFundraising loans from the cart
-                if let notFundraising = notFundraising {
-                    if notFundraising.count > 0 {
-                        if var loans = loans {
-                            for notFRLoan in notFundraising {
-                                if let index = loans.indexOf(notFRLoan) {
-                                    loans.removeAtIndex(index)
-                                }
-                                
-                                //  UIAlertController
-                                var userMessage = "The following loans are no longer raising funds and have been removed from the cart:\n\n"
-                                var allRemovedLoansString = ""
-                                for nfLoan in notFundraising {
-                                    if let country = nfLoan.country, name = nfLoan.name, sector = nfLoan.sector {
-                                        let removedLoanString = String(format: "%@, %@, %@\n", name, sector, country)
-                                        allRemovedLoansString.appendContentsOf(removedLoanString)
+        //cart!.getLoans() { loans, error in
+            
+            let loans = cart!.getLoans2()
+            print("cart count before stripping out non-fundraising loans = \(self.cart!.items.count)")
+            print("loans: %@", loans)
+            self.getCurrentFundraisingStatus(loans) {
+                success, error, fundraising, notFundraising in
+                if success {
+                    // remove notFundraising loans from the cart
+                    if let notFundraising = notFundraising {
+                        if notFundraising.count > 0 {
+                            if var loans = loans {
+                                for notFRLoan in notFundraising {
+                                    if let index = loans.indexOf(notFRLoan) {
+                                        loans.removeAtIndex(index)
                                     }
+                                    
+                                    //  UIAlertController
+                                    var userMessage = "The following loans are no longer raising funds and have been removed from the cart:\n\n"
+                                    var allRemovedLoansString = ""
+                                    for nfLoan in notFundraising {
+                                        if let country = nfLoan.country, name = nfLoan.name, sector = nfLoan.sector {
+                                            let removedLoanString = String(format: "%@, %@, %@\n", name, sector, country)
+                                            allRemovedLoansString.appendContentsOf(removedLoanString)
+                                        }
+                                    }
+                                    userMessage.appendContentsOf(allRemovedLoansString)
+                                    let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
+                                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                                        UIAlertAction in
+                                        print("OK Tapped")
+                                        self.displayKivaWebCartInBrowser()
+                                    }
+                                    alertController.addAction(okAction)
+                                    self.presentViewController(alertController, animated: true, completion: nil)
                                 }
-                                userMessage.appendContentsOf(allRemovedLoansString)
-                                let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
-                                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-                                    UIAlertAction in
-                                    print("OK Tapped")
-                                    self.displayKivaWebCartInBrowser()
-                                }
-                                alertController.addAction(okAction)
-                                self.presentViewController(alertController, animated: true, completion: nil)
                             }
+                        } else {
+                            // There are no loans to remove from the cart
+                            self.displayKivaWebCartInBrowser()
                         }
-                    } else {
-                        // There are no loans to remove from the cart
-                        self.displayKivaWebCartInBrowser()
                     }
+                    
+    // todo: remove debugging code:
+    //                var loanCount = 0
+    //                if let loans = loans {
+    //                    loanCount = loans.count
+    //                }
+    //                print("cart count after stripping out non-fundraising loans = \(self.cart!.items.count). loans count should be the same: \(loanCount)")
+                } else {
+                    // Even though an error occured just continue on to the cart on Kiva.org and they will handle any invalid loans in the cart.
+                    print("Non-fatal error confirming fundraising status of loans.")
+                    self.displayKivaWebCartInBrowser()
                 }
-                
-// todo: remove debugging code:
-//                var loanCount = 0
-//                if let loans = loans {
-//                    loanCount = loans.count
-//                }
-//                print("cart count after stripping out non-fundraising loans = \(self.cart!.items.count). loans count should be the same: \(loanCount)")
-            } else {
-                // Even though an error occured just continue on to the cart on Kiva.org and they will handle any invalid loans in the cart.
-                print("Non-fatal error confirming fundraising status of loans.")
-                self.displayKivaWebCartInBrowser()
             }
-        }
+        //}
     }
     
     /*! Clear local cart of all items and present the Kiva web cart in the browser. */

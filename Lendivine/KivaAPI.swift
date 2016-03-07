@@ -41,6 +41,7 @@ class KivaAPI {
         if oAuthAccessToken == nil || oAuth1 == nil {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, jsonData: nil)
+            return
         }
         
         // set the oauth_token parameter. remove any existing URL encoding (% escaped characters)
@@ -93,6 +94,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, userAccount: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/account.json", parametersDict: nil) { success, error, jsonData in
             if success {
@@ -129,6 +131,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, balance: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/balance.json", parametersDict: nil) { success, error, jsonData in
             //parse jsonData to extract user balance
@@ -146,16 +149,21 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, email: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/email.json", parametersDict: nil) { success, error, jsonData in
             //parse jsonData to extract user email
 //            let userEmail = jsonData?.valueForKey("user_email") as? NSDictionary
 //            let email = userEmail?.valueForKey("email") as? String
             
-            let userEmailDict = jsonData!["user_email"] as? [String: AnyObject]
-            let email = userEmailDict?["email"] as? String
+            if success {
+                let userEmailDict = jsonData!["user_email"] as? [String: AnyObject]
+                let email = userEmailDict?["email"] as? String
 
-            completionHandler(success: success, error: error, email: email)
+                completionHandler(success: success, error: error, email: email)
+            } else {
+                completionHandler(success: false, error: error, email: nil)
+            }
         }
     }
     
@@ -164,6 +172,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, expectedRepayment: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/expected_repayments.json", parametersDict: nil) { success, error, jsonData in
             //parse jsonData to extract repayment information
@@ -198,6 +207,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, lender: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/lender.json", parametersDict: nil) { success, error, jsonData in
             if success {
@@ -233,6 +243,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, loans: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/loans.json", parametersDict: nil) { success, error, jsonData in
             
@@ -287,6 +298,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, statistics: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/stats.json", parametersDict: nil) { success, error, jsonData in
             
@@ -318,6 +330,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, balances: nil)
+            return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/loans/:ids/balances.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
             
@@ -352,6 +365,7 @@ extension KivaAPI {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, teams: nil)
+            return
         }
  
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/teams.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
@@ -917,6 +931,7 @@ extension KivaAPI {
         if loanIDs == nil || loanIDs!.count == 0 {
             let error = VTError(errorString: "No loan IDs.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
             completionHandler(success: false, error: error.error, loans: nil)
+            return
         }
         
         // make a string containing the loan ids and save it in a dictionary

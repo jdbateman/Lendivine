@@ -18,6 +18,8 @@ class LoansTableViewCell: UITableViewCell {
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var countryLabel: UILabel!
     
+    var KivaLoanId: NSNumber?
+    
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
@@ -45,14 +47,12 @@ class LoansTableViewCell: UITableViewCell {
         
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! LoansTableViewController
-        let loan = tableViewController.loans[indexPath!.row]
+        let loan = tableViewController.fetchedResultsController.objectAtIndexPath(indexPath!) as! KivaLoan
         let amount = 25  // TODO: set default donation amount to user preference.
-        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
+//        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
         let cart = KivaCart.sharedInstance
-        cart.KivaAddItemToCart(persistedLoan, loanID: persistedLoan.id, donationAmount: amount, context: self.sharedContext)
-        
-//todo - cleanup        tableViewController.kivaAPI!.KivaAddItemToCart(persistedLoan, loanID: persistedLoan.id, donationAmount: amount, context: self.sharedContext)
-//        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: sharedContext /*self.sharedContext*/)
+        cart.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
+//        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
         
         // Persist the KivaCartItem object we added to the Core Data shared context
         dispatch_async(dispatch_get_main_queue()) {
