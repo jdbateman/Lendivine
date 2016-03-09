@@ -149,11 +149,11 @@
 			children = (
 				9E3950511BF66E23007BC75E /* KivaAPI.swift */,
 				9E3950521BF66E23007BC75E /* KivaCart.swift */,
-				9E3950531BF66E23007BC75E /* KivaCartItem.swift */,
 				9E3950541BF66E23007BC75E /* KivaCountry.swift */,
 				9E3950551BF66E23007BC75E /* KivaLender.swift */,
 				9E3950561BF66E23007BC75E /* KivaLoan.swift */,
 				9E3950571BF66E23007BC75E /* KivaLoanStatistics.swift */,
+				9E3950531BF66E23007BC75E /* KivaCartItem.swift */,
 				9E3950591BF66E23007BC75E /* KivaPartner.swift */,
 				9E39505A1BF66E23007BC75E /* KivaTeam.swift */,
 				9E39505B1BF66E23007BC75E /* KivaUserAccount.swift */,

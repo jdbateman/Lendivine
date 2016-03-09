@@ -20,7 +20,7 @@ class MyLoansTableViewController: UITableViewController {
         super.viewDidLoad()
         
         // initialize user's loans
-        populateLoans()
+        //todo: duplicate loans. re-enable?  populateLoans()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

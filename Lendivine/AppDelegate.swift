@@ -41,6 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         
+        // remove all the loans from the scratch context
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller: LoansTableViewController = storyboard.instantiateViewControllerWithIdentifier("LoansTableViewControllerStoryboardID") as! LoansTableViewController
+        controller.removeAllLoans()
+        
         // Save changes in the application's managed object context before the application terminates.
         CoreDataStackManager.sharedInstance().saveContext()
     }

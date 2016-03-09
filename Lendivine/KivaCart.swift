@@ -130,7 +130,7 @@ class KivaCart {
             if let loanID = item.loanID {
                 id = loanID
             }
-            
+            // NOTE: TODO - the context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
             if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(id, context: CoreDataStackManager.sharedInstance().scratchContext) {
                 loansInCart.append(loan)
             }

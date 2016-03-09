@@ -322,11 +322,11 @@ class CartTableViewController: UITableViewController {
     /*! Clear local cart of all items and present the Kiva web cart in the browser. */
     func displayKivaWebCartInBrowser() {
         
-        // Remove all items from local cart view.
-        cart?.empty()
-        
         // Display web cart.
         self.showEmbeddedBrowser()
+        
+        // Remove all items from local cart view.
+        //todo cart?.empty()
     }
     
     /*! 

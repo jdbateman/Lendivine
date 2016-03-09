@@ -265,7 +265,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-        return fetchLoanByID2(fromLoanID) //{ //loan, error in
+        return fetchLoanByID2(fromLoanID, context: context) //{ //loan, error in
             
 //            if error == nil {
 //                
@@ -356,13 +356,13 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
             results = try sharedContext.executeFetchRequest(fetchRequest)
         } catch let error1 as NSError {
             error.memory = error1
-            print("Error in fetchPin(): \(error)")
+            print("Error in fetchLoanByID(): \(error)")
             completion(loan: nil, error: error1)
         }
         
         // Check for Errors
         if error != nil {
-            print("Error in fetchPin(): \(error)")
+            print("Error in fetchLoanByID(): \(error)")
         }
         
         // Return the first result, or nil
@@ -381,39 +381,9 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
             completion(loan: nil, error: NSError(domain: "fetch error", code: 920, userInfo: nil))
         }
     }
-// todo: delete
-//    func fetchPin(atCoordinate coordinate: CLLocationCoordinate2D) -> Pin? {
-//        // Create and execute the fetch request
-//        let error: NSErrorPointer = nil
-//        let fetchRequest = NSFetchRequest(entityName: Pin.entityName)
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: false), NSSortDescriptor(key: "longitude", ascending: false)]
-//        let predicateLat = NSPredicate(format: "latitude == %@", NSNumber(double: coordinate.latitude))
-//        let predicateLon = NSPredicate(format: "longitude == %@", NSNumber(double: coordinate.longitude))
-//        let predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [predicateLat, predicateLon])
-//        fetchRequest.predicate = predicate
-//        let results: [AnyObject]?
-//        do {
-//            results = try sharedContext.executeFetchRequest(fetchRequest)
-//        } catch let error1 as NSError {
-//            error.memory = error1
-//            results = nil
-//        }
-//        
-//        // Check for Errors
-//        if error != nil {
-//            print("Error in fetchPin(): \(error)")
-//        }
-//        
-//        // Return the first result, or nil
-//        if let results = results {
-//            return (results[0] as! Pin)
-//        } else {
-//            return nil
-//        }
-//    }
 
     /* Perform a fetch of the loan object. Updates the fetchedResultsController with the matching data from the core data store. */
-    class func fetchLoanByID2(loanID: NSNumber) -> KivaLoan? {
+    class func fetchLoanByID2(loanID: NSNumber, context: NSManagedObjectContext) -> KivaLoan? {
         
         let error: NSErrorPointer = nil
         let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
@@ -421,25 +391,16 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
         var results: [AnyObject]?
         do {
-            results = try sharedContext.executeFetchRequest(fetchRequest) as! [KivaLoan]
+            results = try context.executeFetchRequest(fetchRequest) as! [KivaLoan]
         } catch let error1 as NSError {
             error.memory = error1
-            print("Error in fetchPin(): \(error)")
+            print("Error in fetchLoanByID2(): \(error)")
             return nil
         }
         
-        // Example
-        
-//        let results = sharedContext?.executeFetchRequest(fetchRequest, error: errorPointer)
-//        if errorPointer != nil {
-//            println("error in fetchRequest, aplication didFinishLaunchingWithOptions: \(errorPointer)")
-//        } else {
-//            memes = results as! [Meme]
-//        }
-        
         // Check for Errors
         if error != nil {
-            print("Error in fetchPin(): \(error)")
+            print("Error in fetchLoanByID2(): \(error)")
         }
         
         // Return the first result, or nil
@@ -457,8 +418,32 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         }
         return nil
     }
+    
+//    /* Perform a fetch of all the loan objects current in the main core data context. Updates the fetchedResultsController with the matching data from the core data store. */
+//    class func fetchAllLoans() -> [KivaLoan]? {
+//        
+//        let error: NSErrorPointer = nil
+//        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+//        var results: [AnyObject]?
+//        do {
+//            results = try sharedContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
+//        } catch let error1 as NSError {
+//            error.memory = error1
+//            print("Error in fetchAllLoans(): \(error)")
+//            return nil
+//        }
+//        
+//        // Check for Errors
+//        if error != nil {
+//            print("Error in fetchAllLoans(): \(error)")
+//        }
+//        
+//        return results as? [KivaLoan]
+//    }
 }
 
+    
 
 
 // MARK: image management functions
