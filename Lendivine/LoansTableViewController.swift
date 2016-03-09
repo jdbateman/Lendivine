@@ -54,13 +54,16 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         
         // Additional bar button items
         //TODO - enable let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-//        let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
+        //let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
+        
+        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
 //        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
 //        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
         
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        navigationItem.setRightBarButtonItems([refreshButton], animated: true)
-    
+        //navigationItem.setRightBarButtonItems([refreshButton], animated: true)
+        navigationItem.setRightBarButtonItems([refreshButton, trashButton, oAuthButton], animated: true)
         
         self.navigationItem.rightBarButtonItems?.first?.enabled = false
     }
@@ -103,7 +106,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
     // Initialize the contents of the cell.
     func configureCell(cell: LoansTableViewCell, indexPath: NSIndexPath) {
         
-        dispatch_async(dispatch_get_main_queue()) {
+        //dispatch_async(dispatch_get_main_queue()) {
             
             // TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
             let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
@@ -157,7 +160,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
                     print("error retrieving image: \(error)")
                 }
             }
-        }
+        //}
     }
     
     // MARK: - Fetched results controller
@@ -216,6 +219,8 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
             
         case .Delete:
+            
+            print("deleting row \(indexPath!.row)")
             
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             
@@ -286,7 +291,12 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
     */
     
     // OAuth button was selected.
-    func onOAuthButton() {
+    func onTrashButtonTap() {
+        removeAllLoans()
+    }
+    
+    // OAuth button was selected.
+    func onOAuthButtonTap() {
         doOAuth()
     }
     
