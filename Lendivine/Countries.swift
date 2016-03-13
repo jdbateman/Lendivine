@@ -163,7 +163,7 @@ class Countries {
         let fetchRequest = NSFetchRequest(entityName: Country.entityName)
         
         // Add a sort descriptor to enforce a sort order on the results.
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:

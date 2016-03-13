@@ -40,7 +40,10 @@ class Country: NSManagedObject /*, Equatable  < todo remove*/  {
     }
     
     @NSManaged var name: String?
-    
+    @NSManaged var region: String?
+    @NSManaged var languages: String?
+    @NSManaged var population: NSNumber?
+    @NSManaged var giniCoefficient: NSNumber?
 
     /*! Core Data init method */
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
@@ -54,6 +57,16 @@ class Country: NSManagedObject /*, Equatable  < todo remove*/  {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         self.name = dictionary[InitKeys.name] as? String
+        self.region = dictionary[InitKeys.region] as? String
+
+        if let languagesArray = dictionary[InitKeys.languages] as? [String] {
+            self.languages = languagesArray.joinWithSeparator(",")
+        } else {
+            self.languages = "unknown"
+        }
+        
+        self.population = dictionary[InitKeys.population] as? NSNumber
+        self.giniCoefficient = dictionary[InitKeys.gini] as? NSNumber
     }
 }
 

@@ -97,7 +97,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("CountryTableViewCellID", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("CountryTableViewCellID", forIndexPath: indexPath) as! CountriesTableViewCell
 
         configureCell(cell, indexPath: indexPath)
         
@@ -105,17 +105,44 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     }
     
     // Initialize the contents of the cell.
-    func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
+    func configureCell(cell: CountriesTableViewCell, indexPath: NSIndexPath) {
+        
+        cell.selectionStyle = UITableViewCellSelectionStyle.None;
         
         let country = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
         
         //let country = self.countries[indexPath.row]
         
         if let name = country.name {
-            cell.textLabel!.text = name
+            cell.name.text = name
+            print("\(name)")
+        }
+        
+        if let region = country.region {
+            cell.region.text = region
+        }
+        
+        if let population = country.population {
+            cell.population.text = population.stringValue
+        }
+        
+        if let languages = country.languages {
+            cell.languages.text = languages
+        }
+        
+        if let gini = country.giniCoefficient {
+            cell.giniCoefficient.text = gini.stringValue
+        }
+        
+        if let name = country.name {
+            let flagImage:String = name
+            if let uiImage = UIImage(named: flagImage) {
+                cell.flagImageView.image = uiImage
+            } else {
+                cell.flagImageView.image = UIImage(named: "United Nations")
+            }
         }
     }
-    
 
     /*
     // Override to support conditional editing of the table view.
@@ -224,7 +251,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             
         case .Update:
             
-            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!) as! LoansTableViewCell, indexPath: indexPath!)
+            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!) as! CountriesTableViewCell, indexPath: indexPath!)
             
         case .Move:
             
@@ -249,7 +276,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     func onCountriesUpdate() {
         
         print("received notification. reloading data")
-        self.tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
     }
     
 }
