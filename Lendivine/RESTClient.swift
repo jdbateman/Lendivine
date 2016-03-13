@@ -272,9 +272,12 @@ class RESTClient {
 // TODO: remove legacy code
 //        if let parsedResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String : AnyObject] {
         
+        guard let data = data else {
+            return NSError(domain: "REST service Error", code: 1, userInfo: [NSLocalizedDescriptionKey : "no json data in response"])
+        }
             
         do {
-            if let parsedResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as? [String : AnyObject] {
+            if let parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String : AnyObject] {
 
                 if let errorMessage = parsedResult["status_message"] as? String {
                     
@@ -295,7 +298,13 @@ class RESTClient {
     }
     
     /* Helper: Given raw JSON, return a usable Foundation object */
-    class func parseJSONWithCompletionHandler(data: NSData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
+    class func parseJSONWithCompletionHandler(data: NSData?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
+        
+        guard let data = data
+            else {
+                print("no data found")
+                return
+            }
         
         let dataAsUTF8String = String(data: data, encoding: NSUTF8StringEncoding)
         print("raw json data: \(dataAsUTF8String)")

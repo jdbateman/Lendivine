@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E1911731C94D6CD004E5FBB /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1911721C94D6CD004E5FBB /* Countries.swift */; };
 		9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */; };
 		9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950511BF66E23007BC75E /* KivaAPI.swift */; };
 		9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950521BF66E23007BC75E /* KivaCart.swift */; };
@@ -32,6 +33,10 @@
 		9E495BE61BFB76F000E3DEAD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */; };
 		9E495BE81BFBA13800E3DEAD /* MyLoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */; };
 		9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BE91BFBAAD200E3DEAD /* MyLoansTableViewCell.swift */; };
+		9E4D85E21C9140AC0063DEE5 /* CountriesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E11C9140AC0063DEE5 /* CountriesAPI.swift */; };
+		9E4D85E81C914D5A0063DEE5 /* RESTCountries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */; };
+		9E4D85EA1C927FDE0063DEE5 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E91C927FDE0063DEE5 /* Country.swift */; };
+		9E4D85EC1C928A460063DEE5 /* CountriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */; };
 		9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E131BF559E90000D9BF /* AppDelegate.swift */; };
 		9EC72E1B1BF559E90000D9BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E191BF559E90000D9BF /* Main.storyboard */; };
 		9EC72E1D1BF559E90000D9BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1C1BF559E90000D9BF /* Assets.xcassets */; };
@@ -83,6 +88,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9E1911721C94D6CD004E5FBB /* Countries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countries.swift; sourceTree = "<group>"; };
 		9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtility.swift; sourceTree = "<group>"; };
 		9E3950511BF66E23007BC75E /* KivaAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaAPI.swift; sourceTree = "<group>"; };
 		9E3950521BF66E23007BC75E /* KivaCart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaCart.swift; sourceTree = "<group>"; };
@@ -109,6 +115,10 @@
 		9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLoansTableViewController.swift; sourceTree = "<group>"; };
 		9E495BE91BFBAAD200E3DEAD /* MyLoansTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLoansTableViewCell.swift; sourceTree = "<group>"; };
+		9E4D85E11C9140AC0063DEE5 /* CountriesAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesAPI.swift; sourceTree = "<group>"; };
+		9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTCountries.swift; sourceTree = "<group>"; };
+		9E4D85E91C927FDE0063DEE5 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesTableViewController.swift; sourceTree = "<group>"; };
 		9EC72E101BF559E90000D9BF /* Lendivine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lendivine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EC72E131BF559E90000D9BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EC72E1A1BF559E90000D9BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -169,6 +179,7 @@
 				9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */,
 				9E495BE11BFA51B500E3DEAD /* CartTableViewCell.swift */,
 				9E495BDD1BF9060E00E3DEAD /* CartTableViewController.swift */,
+				9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */,
 				9E495BDB1BF9050E00E3DEAD /* KivaCartViewController.swift */,
 				9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */,
 				9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */,
@@ -185,6 +196,7 @@
 		9E3950501BF66B34007BC75E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9E4D85E61C914D1B0063DEE5 /* Countries */,
 				9E39504E1BF66B1A007BC75E /* Kiva */,
 				9E39504C1BF66AD7007BC75E /* OAuth */,
 				9E495BE31BFAD82000E3DEAD /* NSCache+Singleton.swift */,
@@ -213,6 +225,17 @@
 				9E3950911BF68406007BC75E /* OAuthSwift.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9E4D85E61C914D1B0063DEE5 /* Countries */ = {
+			isa = PBXGroup;
+			children = (
+				9E4D85E11C9140AC0063DEE5 /* CountriesAPI.swift */,
+				9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */,
+				9E4D85E91C927FDE0063DEE5 /* Country.swift */,
+				9E1911721C94D6CD004E5FBB /* Countries.swift */,
+			);
+			name = Countries;
 			sourceTree = "<group>";
 		};
 		9EC72E071BF559E90000D9BF = {
@@ -358,6 +381,9 @@
 				9E3950631BF66E23007BC75E /* KivaCountry.swift in Sources */,
 				9E3950671BF66E23007BC75E /* KivaOauth.swift in Sources */,
 				9E495BE01BF9611400E3DEAD /* VTError.swift in Sources */,
+				9E1911731C94D6CD004E5FBB /* Countries.swift in Sources */,
+				9E4D85EC1C928A460063DEE5 /* CountriesTableViewController.swift in Sources */,
+				9E4D85E21C9140AC0063DEE5 /* CountriesAPI.swift in Sources */,
 				9E3950621BF66E23007BC75E /* KivaCartItem.swift in Sources */,
 				9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */,
 				9E3950691BF66E23007BC75E /* KivaTeam.swift in Sources */,
@@ -377,9 +403,11 @@
 				9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */,
 				9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */,
 				9E495BE81BFBA13800E3DEAD /* MyLoansTableViewController.swift in Sources */,
+				9E4D85E81C914D5A0063DEE5 /* RESTCountries.swift in Sources */,
 				9E3950661BF66E23007BC75E /* KivaLoanStatistics.swift in Sources */,
 				9E495BE21BFA51B500E3DEAD /* CartTableViewCell.swift in Sources */,
 				9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */,
+				9E4D85EA1C927FDE0063DEE5 /* Country.swift in Sources */,
 				9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */,
 				9E3950641BF66E23007BC75E /* KivaLender.swift in Sources */,
 				9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */,

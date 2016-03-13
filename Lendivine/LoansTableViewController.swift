@@ -12,7 +12,7 @@ import CoreData
 class LoansTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     // a collection of Kiva loans
-    var loans = [KivaLoan]()
+    var loans = [KivaLoan]() // todo - comment out this line. no longer used.
     
     var kivaAPI: KivaAPI?
     
@@ -45,27 +45,14 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         
         // set the NSFetchedResultsControllerDelegate
         fetchedResultsController.delegate = self
+
+        configureBarButtonItems()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-        // Additional bar button items
-        //TODO - enable let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        //let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
-        
-        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
-//        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
-//        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
-        
-        let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        //navigationItem.setRightBarButtonItems([refreshButton], animated: true)
-        navigationItem.setRightBarButtonItems([refreshButton, trashButton, oAuthButton], animated: true)
-        
-        self.navigationItem.rightBarButtonItems?.first?.enabled = false
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -78,6 +65,25 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         // Dispose of any resources that can be recreated.
     }
 
+    /*! Setup the nav bar button items. */
+    func configureBarButtonItems() {
+    
+        // Additional bar button items
+        //TODO - enable let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
+        //let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
+        
+        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
+        //        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
+        //        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
+        
+        let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
+        //navigationItem.setRightBarButtonItems([refreshButton], animated: true)
+        navigationItem.setRightBarButtonItems([refreshButton, trashButton, oAuthButton], animated: true)
+        
+        self.navigationItem.rightBarButtonItems?.first?.enabled = false
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -86,15 +92,14 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // return self.loans.count
         
         let sectionInfo = self.fetchedResultsController.sections![section]
         let count = sectionInfo.numberOfObjects
-        print("tableView numberOfRowsInSection = \(count)")
         return count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("LoansTableViewCellID", forIndexPath: indexPath) as! LoansTableViewCell
 
         // Configure the cell...
