@@ -44,6 +44,7 @@ class Country: NSManagedObject /*, Equatable  < todo remove*/  {
     @NSManaged var languages: String?
     @NSManaged var population: NSNumber?
     @NSManaged var giniCoefficient: NSNumber?
+    @NSManaged var countryCodeTwoLetter: String?
 
     /*! Core Data init method */
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
@@ -58,6 +59,7 @@ class Country: NSManagedObject /*, Equatable  < todo remove*/  {
         
         self.name = dictionary[InitKeys.name] as? String
         self.region = dictionary[InitKeys.region] as? String
+        self.countryCodeTwoLetter = dictionary[InitKeys.alpha2Code] as? String
 
         if let languagesArray = dictionary[InitKeys.languages] as? [String] {
             self.languages = languagesArray.joinWithSeparator(",")

@@ -210,9 +210,9 @@
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
+                                            <exclude reference="OXi-fw-BG9"/>
                                             <exclude reference="DWb-7q-qXj"/>
                                             <exclude reference="ikq-X0-MmK"/>
-                                            <exclude reference="OXi-fw-BG9"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
@@ -223,6 +223,7 @@
                                     <outlet property="name" destination="AwW-rE-Gbs" id="8iV-Oc-Elh"/>
                                     <outlet property="population" destination="ExZ-MC-i9B" id="LoG-Ol-ldP"/>
                                     <outlet property="region" destination="xjG-TL-tnI" id="VPp-Cb-1vW"/>
+                                    <segue destination="Shz-Gq-j04" kind="show" identifier="CountryLoansSegueID" trigger="accessoryAction" id="oeU-2J-07m"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -652,6 +653,121 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ajP-kf-9WO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="750" y="-1829"/>
+        </scene>
+        <!--Country Loans Table View Controller-->
+        <scene sceneID="xjX-ph-bvE">
+            <objects>
+                <tableViewController storyboardIdentifier="CountryLoansStoryboardID" id="YfW-JB-BBn" customClass="CountryLoansTableViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="152" sectionHeaderHeight="28" sectionFooterHeight="28" id="NfX-SM-iYI">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CountryLoansTableViewCellID" rowHeight="160" id="Rnc-r1-Zi4" customClass="CountryLoanTableViewCell" customModule="Lendivine" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="600" height="160"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Rnc-r1-Zi4" id="Pz7-1l-hQA">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="159"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hd9-g2-cg6">
+                                            <rect key="frame" x="181" y="20" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Sector" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oTU-kv-c0M">
+                                            <rect key="frame" x="181" y="49" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Amount" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZRs-7g-pPs">
+                                            <rect key="frame" x="181" y="70" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MAJ-Fe-hVd">
+                                            <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="160" id="Gef-yp-LYG"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Country" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RWY-k8-a5K">
+                                            <rect key="frame" x="182" y="95" width="280" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xap-VV-9PF">
+                                            <rect key="frame" x="514" y="55" width="62" height="50"/>
+                                            <color key="backgroundColor" red="0.1667993425" green="0.70766321409999999" blue="0.13096996690000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <size key="titleShadowOffset" width="1" height="1"/>
+                                            <state key="normal" image="Add Shopping Cart-50"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="7"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="onAddCountryLoanToCartButtonTap:" destination="Rnc-r1-Zi4" eventType="touchUpInside" id="U4c-Gf-3qj"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Hd9-g2-cg6" firstAttribute="leading" secondItem="MAJ-Fe-hVd" secondAttribute="trailing" constant="21" id="1zZ-oS-qmF"/>
+                                        <constraint firstItem="ZRs-7g-pPs" firstAttribute="leading" secondItem="MAJ-Fe-hVd" secondAttribute="trailing" constant="21" id="6Zz-es-wXG"/>
+                                        <constraint firstItem="Xap-VV-9PF" firstAttribute="centerY" secondItem="Pz7-1l-hQA" secondAttribute="centerY" id="GEy-3F-W8j"/>
+                                        <constraint firstItem="oTU-kv-c0M" firstAttribute="leading" secondItem="MAJ-Fe-hVd" secondAttribute="trailing" constant="21" id="RWH-a8-Djd"/>
+                                        <constraint firstItem="oTU-kv-c0M" firstAttribute="top" secondItem="Hd9-g2-cg6" secondAttribute="bottom" constant="4" id="TPy-AC-MYO"/>
+                                        <constraint firstItem="RWY-k8-a5K" firstAttribute="top" secondItem="ZRs-7g-pPs" secondAttribute="bottom" constant="4" id="UVw-FC-gCA"/>
+                                        <constraint firstItem="MAJ-Fe-hVd" firstAttribute="top" secondItem="Pz7-1l-hQA" secondAttribute="top" id="gUC-aD-6g2"/>
+                                        <constraint firstItem="ZRs-7g-pPs" firstAttribute="top" secondItem="oTU-kv-c0M" secondAttribute="bottom" constant="4" id="hgq-R4-svz"/>
+                                        <constraint firstItem="Hd9-g2-cg6" firstAttribute="top" secondItem="Pz7-1l-hQA" secondAttribute="top" constant="20" id="l8Q-oe-LLM"/>
+                                        <constraint firstItem="RWY-k8-a5K" firstAttribute="leading" secondItem="MAJ-Fe-hVd" secondAttribute="trailing" constant="22" id="lkE-Xc-3hk"/>
+                                        <constraint firstAttribute="bottom" secondItem="MAJ-Fe-hVd" secondAttribute="bottom" id="pFp-4H-nXY"/>
+                                        <constraint firstItem="MAJ-Fe-hVd" firstAttribute="leading" secondItem="Pz7-1l-hQA" secondAttribute="leading" id="sSo-Te-pVF"/>
+                                        <constraint firstAttribute="trailing" secondItem="Xap-VV-9PF" secondAttribute="trailing" constant="24" id="sdf-FZ-RUp"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="amountLabel" destination="ZRs-7g-pPs" id="9tC-je-brA"/>
+                                    <outlet property="countryLabel" destination="RWY-k8-a5K" id="Q9d-oV-595"/>
+                                    <outlet property="loanImageView" destination="MAJ-Fe-hVd" id="iQx-Jx-Fbf"/>
+                                    <outlet property="nameLabel" destination="Hd9-g2-cg6" id="dHf-iV-RR6"/>
+                                    <outlet property="sectorLabel" destination="oTU-kv-c0M" id="jm6-14-bXb"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="YfW-JB-BBn" id="5XM-Oy-8un"/>
+                            <outlet property="delegate" destination="YfW-JB-BBn" id="P8P-AB-bG4"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="Qlp-bf-baY"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RBq-jC-FUn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3072" y="-1829"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="tJ3-qR-YL8">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Shz-Gq-j04" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9U5-FF-duv">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="YfW-JB-BBn" kind="relationship" relationship="rootViewController" id="KEc-Wl-zws"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CPM-eq-b7N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2314" y="-1829"/>
         </scene>
     </scenes>
     <resources>

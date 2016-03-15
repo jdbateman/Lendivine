@@ -14,6 +14,7 @@ let restCountriesAPI = RESTCountries.sharedInstance()
 class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     var countries = [Country]()
+//    var selectedCountry: Country?
     
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
@@ -107,7 +108,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     // Initialize the contents of the cell.
     func configureCell(cell: CountriesTableViewCell, indexPath: NSIndexPath) {
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.None;
+        //TODO: cell.selectionStyle = UITableViewCellSelectionStyle.None;
         
         let country = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
         
@@ -144,6 +145,20 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
     }
 
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // save the selected country
+        let country = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+        //self.selectedCountry = country
+        
+        // transition to the CountryLoans view controller
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
+        
+        controller.country = country
+        
+        self.navigationController!.pushViewController(controller, animated: true)
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -179,15 +194,21 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        // Get the new view controller using segue.destinationViewController.
+//        // Pass the selected object to the new view controller.
+//        
+//        if segue.identifier == "CountryLoansSegueID" {
+//            
+//            // Pass the selected Country object to the CountryLoansTableViewController
+//            let controller = segue.destinationViewController as! CountryLoansTableViewController
+//            controller.country = self.selectedCountry
+//        }
+//    }
+
 
     // MARK: - Fetched results controller
     
