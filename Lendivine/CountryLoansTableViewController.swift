@@ -9,7 +9,7 @@
 
 import UIKit
 
-class CountryLoansTableViewController: UITableViewController {
+class CountryLoansTableViewController: UITableViewController{
     
     var country: Country?
     
@@ -20,8 +20,15 @@ class CountryLoansTableViewController: UITableViewController {
     // a collection of the Kiva loans the user has made
     var loans = [KivaLoan]()
     
+    let activityIndicator = DVNActivityIndicator()
+    
+    // Set to true if No Results message should be displayed.
+    var showNoResults: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.activityIndicator.startActivityIndicator(tableView)
         
         // initialize user's loans
         //populateLoans()
@@ -45,6 +52,7 @@ class CountryLoansTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -56,15 +64,18 @@ class CountryLoansTableViewController: UITableViewController {
             
         } else {
             
-            let noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
-            noDataLabel.text = "No loans available"
-            if let country = self.country, let name = country.name {
-                noDataLabel.text = "No loans available" + " for " + "\(name)"
+            if self.showNoResults {
+                
+                let noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
+                noDataLabel.text = "No loans available"
+                if let country = self.country, let name = country.name {
+                    noDataLabel.text = "No loans available" + " for " + "\(name)"
+                }
+                noDataLabel.textColor = UIColor.blackColor()
+                noDataLabel.textAlignment = .Center
+                tableView.backgroundView = noDataLabel
+                tableView.separatorStyle = .None
             }
-            noDataLabel.textColor = UIColor.blackColor()
-            noDataLabel.textAlignment = .Center
-            tableView.backgroundView = noDataLabel
-            tableView.separatorStyle = .None
             
             return 0
         }
@@ -232,13 +243,16 @@ class CountryLoansTableViewController: UITableViewController {
                     
                     self.tableView.reloadData() // self.tableView.setNeedsDisplay()
                     
-//                    if self.loans.count == 0 {
-//                        self.showNoLoansFoundAlert()
-//                    }
+                    if self.loans.count == 0 {
+                        self.showNoResults = true
+                    }
                 }
             } else {
+                self.showNoResults = true
                 print("failed to populate loans. error: \(error?.localizedDescription)")
             }
+            
+            self.activityIndicator.stopActivityIndicator()
         }
     }
     

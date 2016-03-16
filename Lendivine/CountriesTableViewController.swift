@@ -11,10 +11,13 @@ import CoreData
 
 let restCountriesAPI = RESTCountries.sharedInstance()
 
-class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating  {
 
+    let searchController = UISearchController(searchResultsController: nil)
+    
     var countries = [Country]()
 //    var selectedCountry: Country?
+    var filteredTableData = [Country]()
     
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
@@ -32,6 +35,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         //Countries.getCountriesFromWebService()
         initCountriesFromCoreData()
+        
+        addSearchBar()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -81,6 +86,39 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         // Dispose of any resources that can be recreated.
     }
 
+    
+    // MARK - Search Results Controller
+    
+    func addSearchBar() {
+        
+        // Prevents the search display controller from hanging around when a search result cell is selected and a new view controller is pushed.
+        self.definesPresentationContext = true
+        
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        self.tableView.tableHeaderView = searchController.searchBar
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+        if filteredTableData.count > 0 {
+            filteredTableData.removeAll(keepCapacity: false)
+        }
+        
+        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
+        
+        let array = fetchCountriesFilteredByNameOn(searchController.searchBar.text!)
+        
+        
+        //let array = (countries as NSArray).filteredArrayUsingPredicate(searchPredicate)
+        filteredTableData = array as! [Country]
+        
+        self.tableView.reloadData()
+    }
+    
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -89,10 +127,17 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return countries.count
-
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        let count = sectionInfo.numberOfObjects
-        return count
+        
+        if self.searchController.active {
+        
+            return self.filteredTableData.count
+        
+        } else {
+            
+            let sectionInfo = self.fetchedResultsController.sections![section]
+            let count = sectionInfo.numberOfObjects
+            return count
+        }
     }
 
     
@@ -108,9 +153,21 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     // Initialize the contents of the cell.
     func configureCell(cell: CountriesTableViewCell, indexPath: NSIndexPath) {
         
-        //TODO: cell.selectionStyle = UITableViewCellSelectionStyle.None;
+        //TODO - eliminates grey cell background on selection: cell.selectionStyle = UITableViewCellSelectionStyle.None;
         
-        let country = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+        var theCountry: Country?
+        if self.searchController.active {
+            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+                theCountry = countries[indexPath.row]
+            }
+        } else {
+            
+            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Country // TODO use indexPath.row instead of indexPath?
+        }
+
+        guard let country = theCountry else {
+            return
+        }
         
         //let country = self.countries[indexPath.row]
         
@@ -146,17 +203,33 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+
+        let activityIndicator = DVNActivityIndicator()
         
-        // save the selected country
-        let country = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
-        //self.selectedCountry = country
+        activityIndicator.startActivityIndicator(tableView)
+        
+        var theCountry: Country?
+        if self.searchController.active {
+        
+            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+                theCountry = countries[indexPath.row]
+            }
+        } else {
+            
+            // save the selected country
+            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+            
+            //self.selectedCountry = theCountry
+        }
         
         // transition to the CountryLoans view controller
         let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
         
-        controller.country = country
+        controller.country = theCountry
         
         self.navigationController!.pushViewController(controller, animated: true)
+        
+        activityIndicator.stopActivityIndicator()
     }
     
     /*
@@ -228,7 +301,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         return fetchedResultsController
     } ()
     
-    /* Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store. */
+    /*! Perform a fetch of Country objects to update the fetchedResultsController with the current data from the core data store. */
     func fetchCountries() {
         var error: NSError? = nil
         
@@ -243,6 +316,55 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
     }
 
+    /*! Perform a fetch of Country objects from the scratchContext filtered for those that contain the specified userInput string. */
+    func fetchCountriesFilteredByNameOn(userInput: String?) -> [AnyObject]? {
+        
+        guard let userInput = userInput else {
+            return nil
+        }
+        
+        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+
+        fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
+        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+//        var error: NSError?
+//        var results: [AnyObject]?
+//        do {
+//            results = try fetchedResultsController.performFetch()
+//        } catch let error1 as NSError {
+//            error = error1
+//        }
+//
+//        if let error = error {
+//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+//        }
+
+        //let error: NSErrorPointer?
+        var results: [AnyObject]?
+        do {
+            results = try sharedContext.executeFetchRequest(fetchRequest)
+        } catch let error1 as NSError {
+            //error!.memory = error1
+            print("Error in fetchLoanByID(): \(error1)")
+            results = nil
+        }
+        
+//        // Check for Errors
+//        if error != nil {
+//            print("Error in fetchLoanByID(): \(error)")
+//            results = nil
+//        }
+        
+        return results
+    }
+    
+    
     // MARK: NSFetchedResultsControllerDelegate
     
     // Any change to Core Data causes these delegate methods to be called.
