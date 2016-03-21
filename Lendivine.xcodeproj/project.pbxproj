@@ -40,8 +40,6 @@
 		9E7869D31C99291100F1FE93 /* DVNActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869D21C99291100F1FE93 /* DVNActivityIndicator.swift */; };
 		9E7869E21C9E0F6100F1FE93 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869E11C9E0F6100F1FE93 /* MapViewController.swift */; };
 		9E7869E51C9EF15100F1FE93 /* LoanDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869E41C9EF15100F1FE93 /* LoanDetailViewController.swift */; };
-		9E7869EA1C9F284900F1FE93 /* MapPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869E91C9F284900F1FE93 /* MapPin.swift */; };
-		9E7869EC1C9F28E600F1FE93 /* MapPinCallout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869EB1C9F28E600F1FE93 /* MapPinCallout.swift */; };
 		9E7869EE1C9F3A1200F1FE93 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869ED1C9F3A1200F1FE93 /* CustomView.swift */; };
 		9E7869F01C9F5CCF00F1FE93 /* DVNPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869EF1C9F5CCF00F1FE93 /* DVNPointAnnotation.swift */; };
 		9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E131BF559E90000D9BF /* AppDelegate.swift */; };
@@ -133,8 +131,6 @@
 		9E7869D21C99291100F1FE93 /* DVNActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNActivityIndicator.swift; sourceTree = "<group>"; };
 		9E7869E11C9E0F6100F1FE93 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9E7869E41C9EF15100F1FE93 /* LoanDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoanDetailViewController.swift; sourceTree = "<group>"; };
-		9E7869E91C9F284900F1FE93 /* MapPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapPin.swift; sourceTree = "<group>"; };
-		9E7869EB1C9F28E600F1FE93 /* MapPinCallout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapPinCallout.swift; sourceTree = "<group>"; };
 		9E7869ED1C9F3A1200F1FE93 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		9E7869EF1C9F5CCF00F1FE93 /* DVNPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNPointAnnotation.swift; sourceTree = "<group>"; };
 		9EC72E101BF559E90000D9BF /* Lendivine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lendivine.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -209,8 +205,6 @@
 				9EC72E1C1BF559E90000D9BF /* Assets.xcassets */,
 				9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */,
 				9E7869D21C99291100F1FE93 /* DVNActivityIndicator.swift */,
-				9E7869E91C9F284900F1FE93 /* MapPin.swift */,
-				9E7869EB1C9F28E600F1FE93 /* MapPinCallout.swift */,
 				9E7869ED1C9F3A1200F1FE93 /* CustomView.swift */,
 				9E7869EF1C9F5CCF00F1FE93 /* DVNPointAnnotation.swift */,
 			);
@@ -426,7 +420,6 @@
 				9E1911731C94D6CD004E5FBB /* Countries.swift in Sources */,
 				9E4D85EC1C928A460063DEE5 /* CountriesTableViewController.swift in Sources */,
 				9E4D85E21C9140AC0063DEE5 /* CountriesAPI.swift in Sources */,
-				9E7869EC1C9F28E600F1FE93 /* MapPinCallout.swift in Sources */,
 				9E7869D31C99291100F1FE93 /* DVNActivityIndicator.swift in Sources */,
 				9E3950621BF66E23007BC75E /* KivaCartItem.swift in Sources */,
 				9E7869E51C9EF15100F1FE93 /* LoanDetailViewController.swift in Sources */,
@@ -442,7 +435,6 @@
 				9E39506A1BF66E23007BC75E /* KivaUserAccount.swift in Sources */,
 				9ECEFAFF1C96064E0045E92F /* CountryLoansTableViewController.swift in Sources */,
 				9ECEFB021C97C7710045E92F /* CountryLoanTableViewCell.swift in Sources */,
-				9E7869EA1C9F284900F1FE93 /* MapPin.swift in Sources */,
 				9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */,
 				9E495BDC1BF9050E00E3DEAD /* KivaCartViewController.swift in Sources */,
 				9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */,
