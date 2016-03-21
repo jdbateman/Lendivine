@@ -74,12 +74,13 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         
         let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
         let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
         //        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
         //        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
         
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
         //navigationItem.setRightBarButtonItems([refreshButton], animated: true)
-        navigationItem.setRightBarButtonItems([refreshButton, trashButton, oAuthButton], animated: true)
+        navigationItem.setRightBarButtonItems([mapButton, refreshButton, trashButton, oAuthButton], animated: true)
         
         self.navigationItem.rightBarButtonItems?.first?.enabled = false
     }
@@ -376,6 +377,29 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
 */
     }
     
+    func onMapButton() {
+    
+        // get list of loans displayed in this view controller
+        guard let loans = self.fetchAllLoans() else {
+            return
+        }
+        //presentMapController()
+        
+        // present the map view controller
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
+        controller.loans = loans
+        self.presentViewController(controller, animated: true, completion: nil);
+    }
+    
+//    /* Modally present the MapViewController on the main thread. */
+//    func presentMapController() {
+//        dispatch_async(dispatch_get_main_queue()) {
+//            //self.displayMapViewController()
+//            self.performSegueWithIdentifier("MapSegueID", sender: self)
+//        }
+//    }
+    
     func onCartButton() {
         // Display local Cart VC containing only the loans in the cart.
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
@@ -666,4 +690,30 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
             print("Error saving scratchContext: \(error)")
         }
     }
+    
+//    @IBAction func unwindToVC(segue:UIStoryboardSegue) {
+////        if(segue.sourceViewController .isKindOfClass(ViewController2))
+////        {
+////            let alert = UIAlertView()
+////            alert.title = "UnwindSegue"
+////            alert.message = "Unwind from view 2"
+////            alert.addButtonWithTitle("Ok")
+////            alert.show()
+////        }
+////        if(segue.sourceViewController .isKindOfClass(ViewController3))
+////        {
+////            let alert = UIAlertView()
+////            alert.title = "UnwindSegue"
+////            alert.message = "Unwind from view 3"
+////            alert.addButtonWithTitle("Ok")
+////            alert.show()
+////        }
+//    }
+
+    override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
+        return true
+    }
+    
+
+    
 }

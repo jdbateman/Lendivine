@@ -39,6 +39,10 @@ class CountryLoansTableViewController: UITableViewController{
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        // add the map bar button item
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        navigationItem.setRightBarButtonItem(mapButton, animated: true)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -135,7 +139,7 @@ class CountryLoansTableViewController: UITableViewController{
         cell.countryLabel.text = loan.country
         
         // Set placeholder image
-        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+        cell.loanImageView.image = UIImage(named: "United Nations")
         
         // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
         loan.getImage() {success, error, image in
@@ -367,6 +371,15 @@ class CountryLoansTableViewController: UITableViewController{
                 completionHandler(success: success, error: error, loans: nil)
             }
         }
+    }
+    
+    func onMapButton() {
+        
+        // present the map view controller
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
+        controller.loans = self.loans
+        self.presentViewController(controller, animated: true, completion: nil);
     }
 }
 

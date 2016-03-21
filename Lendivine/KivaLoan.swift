@@ -10,6 +10,7 @@
 import Foundation
 import UIKit
 import CoreData
+import MapKit
 
 // make KivaLoan visible to CoreData
 @objc(KivaLoan)
@@ -441,6 +442,24 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
 //        
 //        return results as? [KivaLoan]
 //    }
+    
+    /* Return mappable coordinates for a KivaLoan object */
+    class func getCoordinatesForLoan(loan: KivaLoan) -> CLLocationCoordinate2D? {
+        
+        // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
+        guard let geo = loan.geo else {return nil}
+        let geoCoordsArray = geo.characters.split{$0 == " "}.map(String.init)
+        
+        guard let latitude = Double(geoCoordsArray[0]) else {return nil}
+        guard let longitude = Double(geoCoordsArray[1]) else {return nil}
+        let lat = CLLocationDegrees(latitude)
+        let long = CLLocationDegrees(longitude)
+        
+        // The lat and long are used to create a CLLocationCoordinates2D instance.
+        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        
+        return coordinate
+    }
 }
 
     
