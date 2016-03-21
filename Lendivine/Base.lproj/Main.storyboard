@@ -160,7 +160,6 @@
         <!--View Controller-->
         <scene sceneID="Mro-Y8-e6i">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iYV-Tq-hQh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="NDb-Lz-wEL" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iBd-7s-k29"/>
@@ -172,6 +171,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYV-Tq-hQh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3946" y="-386"/>
         </scene>
@@ -320,11 +320,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CartTableCellID" rowHeight="176" id="3dS-mj-Ioq" customClass="CartTableViewCell" customModule="Lendivine" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CartTableCellID" rowHeight="176" id="3dS-mj-Ioq" customClass="CartTableViewCell" customModule="Lendivine" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="176"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3dS-mj-Ioq" id="qlg-Ip-XRF">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="175"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="533" height="175"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Net-53-UaY">
@@ -357,8 +357,8 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
-                                            <rect key="frame" x="526" y="62" width="50" height="50"/>
+                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
+                                            <rect key="frame" x="517" y="62" width="50" height="50"/>
                                             <color key="backgroundColor" red="0.1667993425" green="0.70766321409999999" blue="0.13096996690000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="cdi-49-Axx"/>
@@ -617,11 +617,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MyLoansTableViewCellID" rowHeight="160" id="NX9-ZF-AIV" customClass="MyLoansTableViewCell" customModule="Lendivine" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="MyLoansTableViewCellID" rowHeight="160" id="NX9-ZF-AIV" customClass="MyLoansTableViewCell" customModule="Lendivine" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="160"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NX9-ZF-AIV" id="ZIw-7w-tgh">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="159"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="533" height="159"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zlN-ub-Jt1">
@@ -981,13 +981,13 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="4j6-3W-r8g"/>
-                                        <exclude reference="nji-GG-Yf0"/>
-                                        <exclude reference="soV-0p-Zt4"/>
-                                        <exclude reference="6ep-pw-USu"/>
                                         <exclude reference="1nZ-rn-X3c"/>
+                                        <exclude reference="4j6-3W-r8g"/>
+                                        <exclude reference="6ep-pw-USu"/>
                                         <exclude reference="Qeq-DL-eZO"/>
+                                        <exclude reference="nji-GG-Yf0"/>
                                         <exclude reference="qpd-QY-gHn"/>
+                                        <exclude reference="soV-0p-Zt4"/>
                                     </mask>
                                 </variation>
                             </view>

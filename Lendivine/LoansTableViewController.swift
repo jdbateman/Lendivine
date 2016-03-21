@@ -389,7 +389,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
         controller.loans = loans
-        self.presentViewController(controller, animated: true, completion: nil);
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
 //    /* Modally present the MapViewController on the main thread. */
@@ -405,7 +405,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller: CartTableViewController = storyboard.instantiateViewControllerWithIdentifier("CartStoryboardID") as! CartTableViewController
         controller.kivaAPI = self.kivaAPI
-        self.presentViewController(controller, animated: true, completion: nil);
+        self.presentViewController(controller, animated: true, completion: nil)
         
         
         // 2. TODO - modify security keys in info.plist to get kiva.org cart to render correctly. currently <key>NSAllowsArbitraryLoads</key> <true/> is set to get around the security restriction. To fix look at http://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9 and enable appropriate options then remove the workaround above.
@@ -603,7 +603,7 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
             controller.request = self.kivaAPI!.getKivaCartRequest()  // KivaCheckout()
         }
         //controller.webViewDelegate = self
-        self.presentViewController(controller, animated: true, completion: nil);
+        self.presentViewController(controller, animated: true, completion: nil)
     }
 
     /* Refresh button was selected. */

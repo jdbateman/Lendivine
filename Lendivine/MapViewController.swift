@@ -282,7 +282,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     
                     if success {
                         // pointAnnotation.annotationImage = image
-                        pinView!.image = image;
+                        pinView!.image = image
                         
                         dispatch_async(dispatch_get_main_queue()) {
                             self.mapView.setNeedsDisplay()
@@ -480,7 +480,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
-        self.presentViewController(controller, animated: true, completion: nil);
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     /* show activity indicator */

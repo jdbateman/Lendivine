@@ -108,4 +108,28 @@ class MyLoansTableViewController: UITableViewController {
             }
         }
     }
+    
+    
+    // MARK: UITableViewDelegate Accessory Views
+    
+    /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
+    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        
+        let loan = self.loans[indexPath.row]
+        presentLoanDetailViewController(loan)
+    }
+    
+    
+    // MARK: Navigation
+    
+    /* Modally present the LoanDetail view controller. */
+    func presentLoanDetailViewController(loan: KivaLoan?) {
+        guard let loan = loan else {
+            return
+        }
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+        controller.loan = loan
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
 }

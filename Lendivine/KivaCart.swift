@@ -135,7 +135,7 @@ class KivaCart {
                 loansInCart.append(loan)
             }
         }
-        NSLog("loans in Cart: %@", loansInCart);
+        NSLog("loans in Cart: %@", loansInCart)
         return loansInCart
     }
     

@@ -414,10 +414,47 @@ class CartTableViewController: UITableViewController {
         //controller.webViewDelegate = self
         
         // push the webView controller onto the stack modally
-//        self.presentViewController(controller, animated: true, completion: nil);
+//        self.presentViewController(controller, animated: true, completion: nil)
         
         // add the view controller to the navigation controller stack
         self.navigationController?.pushViewController(controller, animated: true)
     }
+    
+    // MARK: UITableViewDelegate Accessory Views
+    
+    /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
+    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        
+        let cartItem = self.cart!.items[indexPath.row]
+        
+        if let loanID = cartItem.loanID {
 
+            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().scratchContext) {
+                self.presentLoanDetailViewController(loan)
+            }
+            
+//            KivaLoan.createKivaLoanFromLoanID(loanID, context: self.sharedContext) {
+//                /*TODO: put this back? CoreDataStackManager.sharedInstance().scratchContext*/
+//                loan, error in
+//
+//                if let loan = loan {
+//                    presentLoanDetailViewController(loan)
+//                }
+//            }
+        }
+    }
+    
+    
+    // MARK: Navigation
+    
+    /* Modally present the LoanDetail view controller. */
+    func presentLoanDetailViewController(loan: KivaLoan?) {
+        guard let loan = loan else {
+            return
+        }
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+        controller.loan = loan
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
 }

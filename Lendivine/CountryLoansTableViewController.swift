@@ -63,7 +63,7 @@ class CountryLoansTableViewController: UITableViewController{
         
         if self.loans.count > 0 {
             
-            self.tableView.backgroundView = nil;
+            self.tableView.backgroundView = nil
             return 1
             
         } else {
@@ -379,7 +379,7 @@ class CountryLoansTableViewController: UITableViewController{
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
         controller.loans = self.loans
-        self.presentViewController(controller, animated: true, completion: nil);
+        self.presentViewController(controller, animated: true, completion: nil)
     }
 }
 
