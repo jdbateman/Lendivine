@@ -53,7 +53,7 @@
                                             </constraints>
                                         </imageView>
                                         <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R9r-rX-l3M">
-                                            <rect key="frame" x="530" y="55" width="62" height="50"/>
+                                            <rect key="frame" x="466" y="55" width="62" height="50"/>
                                             <color key="backgroundColor" red="0.16679934252890205" green="0.70766321408054811" blue="0.13096996691785329" alpha="1" colorSpace="calibratedRGB"/>
                                             <size key="titleShadowOffset" width="1" height="1"/>
                                             <state key="normal" image="Add Shopping Cart-50"/>
@@ -75,7 +75,7 @@
                                         <constraint firstItem="J2F-fO-8hu" firstAttribute="top" secondItem="ZFX-7i-jOM" secondAttribute="bottom" constant="4" id="AYr-fg-vdh"/>
                                         <constraint firstItem="orN-mG-1TS" firstAttribute="top" secondItem="J2F-fO-8hu" secondAttribute="bottom" constant="4" id="Jh6-Cg-18Y"/>
                                         <constraint firstAttribute="bottom" secondItem="ooC-hV-FCj" secondAttribute="bottom" id="MDP-Dp-4uu"/>
-                                        <constraint firstAttribute="trailing" secondItem="R9r-rX-l3M" secondAttribute="trailing" constant="24" id="NU4-A8-dT0"/>
+                                        <constraint firstAttribute="trailing" secondItem="R9r-rX-l3M" secondAttribute="trailing" constant="6" id="NU4-A8-dT0"/>
                                         <constraint firstItem="ZFX-7i-jOM" firstAttribute="top" secondItem="z5d-i8-ZVm" secondAttribute="top" constant="20" id="YUS-F1-hI0"/>
                                         <constraint firstItem="J2F-fO-8hu" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="e3y-LZ-QEW"/>
                                         <constraint firstItem="R9r-rX-l3M" firstAttribute="centerY" secondItem="z5d-i8-ZVm" secondAttribute="centerY" id="faY-m6-OfY"/>
@@ -156,24 +156,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Vy-Wi-6ka" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3151" y="-386"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Mro-Y8-e6i">
-            <objects>
-                <viewController id="NDb-Lz-wEL" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="iBd-7s-k29"/>
-                        <viewControllerLayoutGuide type="bottom" id="LvR-uh-BTZ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="4nu-iY-PkL">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iYV-Tq-hQh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3946" y="-386"/>
         </scene>
         <!--Countries-->
         <scene sceneID="mdF-bS-1VC">
@@ -358,7 +340,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
-                                            <rect key="frame" x="517" y="62" width="50" height="50"/>
+                                            <rect key="frame" x="483" y="62" width="50" height="50"/>
                                             <color key="backgroundColor" red="0.1667993425" green="0.70766321409999999" blue="0.13096996690000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="cdi-49-Axx"/>
@@ -384,7 +366,7 @@
                                         <constraint firstItem="0XM-kn-udv" firstAttribute="leading" secondItem="Net-53-UaY" secondAttribute="trailing" constant="22" id="4k9-Jv-cW8"/>
                                         <constraint firstItem="0XM-kn-udv" firstAttribute="top" secondItem="aEV-4g-zwL" secondAttribute="bottom" constant="4" id="EsT-V4-kbf"/>
                                         <constraint firstItem="pYm-12-Ibb" firstAttribute="top" secondItem="0XM-kn-udv" secondAttribute="bottom" constant="4" id="OiV-aX-FMX"/>
-                                        <constraint firstAttribute="trailing" secondItem="2zr-8W-zSk" secondAttribute="trailing" constant="24" id="TNS-CY-dWD"/>
+                                        <constraint firstAttribute="trailing" secondItem="2zr-8W-zSk" secondAttribute="trailing" constant="6" id="TNS-CY-dWD"/>
                                         <constraint firstAttribute="bottom" secondItem="Net-53-UaY" secondAttribute="bottom" constant="8" id="Xzz-Z6-BGh"/>
                                         <constraint firstItem="Net-53-UaY" firstAttribute="leading" secondItem="qlg-Ip-XRF" secondAttribute="leading" constant="8" id="YRS-fq-myu"/>
                                         <constraint firstItem="E92-og-7Sx" firstAttribute="top" secondItem="pYm-12-Ibb" secondAttribute="bottom" constant="4" id="Yii-Uh-hnb"/>
@@ -801,7 +783,7 @@
                                         <constraint firstItem="RWY-k8-a5K" firstAttribute="leading" secondItem="MAJ-Fe-hVd" secondAttribute="trailing" constant="22" id="lkE-Xc-3hk"/>
                                         <constraint firstAttribute="bottom" secondItem="MAJ-Fe-hVd" secondAttribute="bottom" id="pFp-4H-nXY"/>
                                         <constraint firstItem="MAJ-Fe-hVd" firstAttribute="leading" secondItem="Pz7-1l-hQA" secondAttribute="leading" id="sSo-Te-pVF"/>
-                                        <constraint firstAttribute="trailing" secondItem="Xap-VV-9PF" secondAttribute="trailing" constant="24" id="sdf-FZ-RUp"/>
+                                        <constraint firstAttribute="trailing" secondItem="Xap-VV-9PF" secondAttribute="trailing" constant="6" id="sdf-FZ-RUp"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -1103,7 +1085,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yx7-qA-SAP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3946" y="294"/>
+            <point key="canvasLocation" x="3910" y="-386"/>
         </scene>
     </scenes>
     <resources>
