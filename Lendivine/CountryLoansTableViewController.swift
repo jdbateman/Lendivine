@@ -381,5 +381,31 @@ class CountryLoansTableViewController: UITableViewController{
         controller.loans = self.loans
         self.presentViewController(controller, animated: true, completion: nil)
     }
+    
+    
+    // MARK: UITableViewDelegate Accessory Views
+    
+    /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
+    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        
+        guard indexPath.row < loans.count else {return}
+        
+        let loan = loans[indexPath.row]
+        self.presentLoanDetailViewController(loan)
+    }
+    
+    
+    // MARK: Navigation
+    
+    /* Modally present the LoanDetail view controller. */
+    func presentLoanDetailViewController(loan: KivaLoan?) {
+        guard let loan = loan else {
+            return
+        }
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+        controller.loan = loan
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
 }
 

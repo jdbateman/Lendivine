@@ -64,6 +64,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
     
     @IBAction func onCancelButtonTap(sender: AnyObject) {
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func onBackButtonTap(sender: AnyObject) {
@@ -156,7 +158,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         annotation.coordinate = coordinate
         
         if let name = loan.name {
-            annotation.title = "\(name))"
+            annotation.title = "\(name)"
         }
         if let town = loan.town {
             annotation.subtitle = "\(town)"
