@@ -38,7 +38,10 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         super.viewDidLoad()
 
         // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
-        doOAuth()
+        //doOAuth()
+        
+        let kivaOAuth = KivaOAuth.sharedInstance
+        self.kivaAPI = kivaOAuth.kivaAPI
         
         // Initialize the fetchResultsController from the core data store.
         fetchLoans()

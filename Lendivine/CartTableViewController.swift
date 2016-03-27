@@ -26,9 +26,6 @@ class CartTableViewController: UITableViewController {
 
         self.kivaAPI = KivaAPI.sharedInstance
         
-        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCheckoutButtonTapped")
-        self.navigationItem.rightBarButtonItem = checkoutButton
-        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -252,8 +249,12 @@ class CartTableViewController: UITableViewController {
     /*! Setup the nav bar button items. */
     func configureBarButtonItems() {
         
+        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCheckoutButtonTapped")
+        self.navigationItem.rightBarButtonItem = checkoutButton
+        
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
-        navigationItem.setRightBarButtonItem(mapButton, animated: true)
+        
+        navigationItem.setRightBarButtonItems([checkoutButton, mapButton], animated: true)
     }
     
     
