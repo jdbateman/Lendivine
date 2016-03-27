@@ -21,6 +21,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     /* The collection of KivaLoan objects to map. This value should be set before instantiating an instance of the MapViewController. */
     var loans: [KivaLoan]?
+    var sourceViewController: UIViewController?
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -33,9 +34,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         navigationItem.hidesBackButton = false
         
         // Additional bar button items
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        let pinButton = UIBarButtonItem(image: UIImage(named: "pin"), style: .Plain, target: self, action: "onPinButtonTap")
-        navigationItem.setRightBarButtonItems([refreshButton, pinButton], animated: true)
+        //let pinButton = UIBarButtonItem(image: UIImage(named: "pin"), style: .Plain, target: self, action: "onPinButtonTap")
+        navigationItem.setRightBarButtonItems([loansByListButton, refreshButton], animated: true)
         
         // get a reference to the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -50,6 +52,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // configure mapView
         mapView.showsPointsOfInterest = false
         mapView.showsUserLocation = true
+        
+        createCustomBackButton()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -96,15 +100,38 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // MARK: button handlers
     
     /* Pin button was selected. */
-    func onPinButtonTap() {
-        presentLoanDetailViewController(nil) // todo - probable shouldn't pass nil for the loan
+//    func onPinButtonTap() {
+//        presentLoanDetailViewController(nil) // todo - probable shouldn't pass nil for the loan
+//    }
+    
+    func onLoansByListButtonTap() {
+        popViewController()
     }
     
-    @IBAction func onBackButtonTap(sender: UIBarButtonItem) {
+//    @IBAction func onBackButtonTap(sender: UIBarButtonItem) {
+//    
+//        print("back button tapped")
+//    }
     
-    
+    /* Refresh button was selected. */
+    func onRefreshButtonTap() {
+        
+        UIAlertController(title: "Todo", message: "need to implement", preferredStyle: .Alert)
+        
+        // TODO - move populateLoans and find loans from Loanstableviewcontroller.m or consolidate in KivaApiConvenience (the right way) and call them on that class.
+        // Search Kiva.org for the next page of Loan results.
+//        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+//            if success {
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    //self.fetchLoans()
+//                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
+//                }
+//            } else {
+//                print("failed to populate loans. error: \(error?.localizedDescription)")
+//            }
+//            
+//        }
     }
-    
 // TODO
 //    /* Refresh button was selected. */
 //    func onRefreshButtonTap() {
@@ -588,5 +615,26 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 //        return coordinate
 //    }
 
+//    override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
+//        
+//        print("back button selected")
+//        return true
+//    }
+    
+    func popViewController() {
+        
+        if let src = self.sourceViewController {
+            src.navigationController?.popViewControllerAnimated(true)
+        }
+    }
+    
+    func createCustomBackButton() {
+        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "onCancelButton")
+        navigationItem.setLeftBarButtonItem(customBackButton, animated: true)
+    }
+    
+    func onCancelButton() {
+        popViewController()
+    }
 }
 

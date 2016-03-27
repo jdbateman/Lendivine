@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class LoansTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-
+    
     // a collection of Kiva loans
     var loans = [KivaLoan]() // todo - comment out this line. no longer used.
     
@@ -285,16 +285,6 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     // OAuth button was selected.
     func onTrashButtonTap() {
@@ -383,22 +373,22 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
         guard let loans = self.fetchAllLoans() else {
             return
         }
-        //presentMapController()
+        presentMapController()
         
         // present the map view controller
-        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
-        controller.loans = loans
-        self.presentViewController(controller, animated: true, completion: nil)
+//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+//        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
+//        controller.loans = loans
+//        self.presentViewController(controller, animated: true, completion: nil)
     }
     
-//    /* Modally present the MapViewController on the main thread. */
-//    func presentMapController() {
-//        dispatch_async(dispatch_get_main_queue()) {
-//            //self.displayMapViewController()
-//            self.performSegueWithIdentifier("MapSegueID", sender: self)
-//        }
-//    }
+    /* Modally present the MapViewController on the main thread. */
+    func presentMapController() {
+        //dispatch_async(dispatch_get_main_queue()) {
+            //self.displayMapViewController()
+            self.performSegueWithIdentifier("LoansToMapSegueId", sender: self)
+        //}
+    }
     
     func onCartButton() {
         // Display local Cart VC containing only the loans in the cart.
@@ -713,32 +703,71 @@ class LoansTableViewController: UITableViewController, NSFetchedResultsControlle
     // MARK: UITableViewDelegate Accessory Views
     
     /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
-    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        
-        if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
-            self.presentLoanDetailViewController(loan)
-        }
-    }
+//    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+//        
+//        if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
+//            
+//            self.presentLoanDetailViewController(loan)
+//        }
+//    }
     
     
     // MARK: Navigation
-    
+// TODO - remove? I don't think this is being used now.
     /* Modally present the LoanDetail view controller. */
-    func presentLoanDetailViewController(loan: KivaLoan?) {
-        guard let loan = loan else {
-            return
-        }
-        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
-        controller.loan = loan
-        self.presentViewController(controller, animated: true, completion: nil)
-    }
+//    func presentLoanDetailViewController(loan: KivaLoan?) {
+//        guard let loan = loan else {
+//            return
+//        }
+//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+//        //let controller = storyboard.instantiateViewControllerWithIdentifier("TestStoryboardID") as! UIViewController
+//        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+//        controller.loan = loan
+//        //self.presentViewController(controller, animated: true, completion: nil)
+//        self.navigationController!.presentViewController(controller, animated: true, completion: nil)
+//    }
 
     // TODO
-    override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
-        return true
+//    override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
+//        return true
+//    }
+    
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ShowDetail" {
+            
+//            navigationItem.title = "Loans"
+//            self.navigationController?.setNavigationBarHidden(false, animated: true)
+            
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                let controller = segue.destinationViewController as! LoanDetailViewController
+                
+                if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
+                    controller.loan = loan
+                }
+            }
+        
+        } else if segue.identifier == "LoansToMapSegueId" {
+            
+            //if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                let controller = segue.destinationViewController as! MapViewController
+            
+                controller.sourceViewController = self
+            
+                // get list of loans displayed in this view controller
+                if let loans = self.fetchAllLoans() {
+                    controller.loans = loans
+                }
+            //}
+        }
     }
     
-
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        
+//    }
     
 }
