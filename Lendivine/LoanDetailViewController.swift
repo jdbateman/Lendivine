@@ -61,26 +61,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         let cart = KivaCart.sharedInstance
         cart.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: 25.00, context: self.sharedContext)
     }
-
-    
-    @IBAction func onCancelButtonTap(sender: AnyObject) {
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    @IBAction func onBackButtonTap(sender: AnyObject) {
-    }
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     func setupView() {
         
@@ -150,10 +130,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
             return
         }
         
-//        // The lat and long are used to create a CLLocationCoordinates2D instance.
-//        let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude )
-        
-        // Here we create the annotation and set its coordiate, title, and subtitle properties
+        // Here we create the annotation and set its coordinate, title, and subtitle properties
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         

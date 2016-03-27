@@ -37,7 +37,9 @@ class CartTableViewController: UITableViewController {
         
         cart = KivaCart.sharedInstance
         
-        print("cart = \(cart!.items.count) [viewDidLoad]")
+        configureBarButtonItems()
+        
+        //print("cart = \(cart!.items.count) [viewDidLoad]")
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -247,15 +249,20 @@ class CartTableViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    /*! Setup the nav bar button items. */
+    func configureBarButtonItems() {
+        
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        navigationItem.setRightBarButtonItem(mapButton, animated: true)
     }
-    */
+    
+    
+    // MARK: Actions
+    
+    func onMapButton() {
+        presentMapController()
+    }
+
     
     // The user selected the checkout button.
     func onCheckoutButtonTapped() {
@@ -456,5 +463,47 @@ class CartTableViewController: UITableViewController {
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
         self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    // MARK: Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ShowCartDetail" {
+            
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                let controller = segue.destinationViewController as! LoanDetailViewController
+                
+                let cartItem = self.cart!.items[indexPath.row]
+                
+                if let loanID = cartItem.loanID {
+                    
+                    if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().scratchContext) {
+                        controller.loan = loan
+                    }
+                }
+            }
+            
+        } else if segue.identifier == "CartToMapSegueId" {
+            
+            navigationItem.title = "Cart"
+            
+            let controller = segue.destinationViewController as! MapViewController
+            
+            controller.sourceViewController = self
+            
+            // get list of loans displayed in this view controller
+            if let loans = self.cart!.getLoans2() {
+                controller.loans = loans
+            }
+        }
+    }
+    
+    /* Modally present the MapViewController on the main thread. */
+    func presentMapController() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.performSegueWithIdentifier("CartToMapSegueId", sender: self)
+        }
     }
 }

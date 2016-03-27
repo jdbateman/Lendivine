@@ -372,16 +372,21 @@ class CountryLoansTableViewController: UITableViewController{
             }
         }
     }
+
+    // MARK: Actions
+    
+//    func onMapButton() {
+//        
+//        // present the map view controller
+//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+//        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
+//        controller.loans = self.loans
+//        self.presentViewController(controller, animated: true, completion: nil)
+//    }
     
     func onMapButton() {
-        
-        // present the map view controller
-        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
-        controller.loans = self.loans
-        self.presentViewController(controller, animated: true, completion: nil)
+        presentMapController()
     }
-    
     
     // MARK: UITableViewDelegate Accessory Views
     
@@ -406,6 +411,40 @@ class CountryLoansTableViewController: UITableViewController{
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
         self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    // MARK: Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ShowCountryLoanDetail" {
+            
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                let controller = segue.destinationViewController as! LoanDetailViewController
+                
+                let loan = self.loans[indexPath.row]
+                controller.loan = loan
+            }
+            
+        } else if segue.identifier == "CountryLoanToMapSegueId" {
+            
+            navigationItem.title = "Cart"
+            
+            let controller = segue.destinationViewController as! MapViewController
+            
+            controller.sourceViewController = self
+            
+            // get list of loans displayed in this view controller
+            controller.loans = loans
+        }
+    }
+    
+    /* Modally present the MapViewController on the main thread. */
+    func presentMapController() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.performSegueWithIdentifier("CountryLoanToMapSegueId", sender: self)
+        }
     }
 }
 

@@ -105,7 +105,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pU2-g0-bEL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1562" y="-386"/>
+            <point key="canvasLocation" x="1562" y="-304"/>
         </scene>
         <!--Map-->
         <scene sceneID="yof-6Y-SUB">
@@ -154,7 +154,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Vy-Wi-6ka" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2481" y="-1108"/>
+            <point key="canvasLocation" x="2941" y="-1064"/>
         </scene>
         <!--Countries-->
         <scene sceneID="mdF-bS-1VC">
@@ -165,11 +165,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="CountryTableViewCellID" id="Vu2-7E-aM8" customClass="CountriesTableViewCell" customModule="Lendivine" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CountryTableViewCellID" id="Vu2-7E-aM8" customClass="CountriesTableViewCell" customModule="Lendivine" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="152"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vu2-7E-aM8" id="kPZ-8l-Iyw">
-                                    <rect key="frame" x="0.0" y="0.0" width="567" height="151"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="151"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AwW-rE-Gbs">
@@ -277,7 +277,7 @@
                                     <outlet property="name" destination="AwW-rE-Gbs" id="8iV-Oc-Elh"/>
                                     <outlet property="population" destination="ExZ-MC-i9B" id="LoG-Ol-ldP"/>
                                     <outlet property="region" destination="xjG-TL-tnI" id="VPp-Cb-1vW"/>
-                                    <segue destination="Shz-Gq-j04" kind="show" identifier="CountryLoansSegueID" trigger="accessoryAction" id="oeU-2J-07m"/>
+                                    <segue destination="YfW-JB-BBn" kind="show" identifier="ShowCountryLoans" id="0NG-SK-Ni8"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -301,11 +301,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CartTableCellID" rowHeight="176" id="3dS-mj-Ioq" customClass="CartTableViewCell" customModule="Lendivine" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CartTableCellID" rowHeight="176" id="3dS-mj-Ioq" customClass="CartTableViewCell" customModule="Lendivine" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="176"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3dS-mj-Ioq" id="qlg-Ip-XRF">
-                                    <rect key="frame" x="0.0" y="0.0" width="533" height="175"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="175"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Net-53-UaY">
@@ -380,6 +380,7 @@
                                     <outlet property="loanImageView" destination="Net-53-UaY" id="WfJ-vm-hDe"/>
                                     <outlet property="nameLabel" destination="aEV-4g-zwL" id="aku-lw-gQy"/>
                                     <outlet property="sectorLabel" destination="0XM-kn-udv" id="RrJ-VE-jk0"/>
+                                    <segue destination="oNk-3E-cEf" kind="show" identifier="ShowCartDetail" id="tzc-uF-05p"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -389,6 +390,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="c3w-3q-gsI"/>
+                    <connections>
+                        <segue destination="HRh-kV-WGA" kind="show" identifier="CartToMapSegueId" id="Mi9-Uv-eZW"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HU4-d4-fdG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -549,7 +553,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="750" y="-386"/>
+            <point key="canvasLocation" x="750" y="-304"/>
         </scene>
         <!--My Account-->
         <scene sceneID="43p-8V-z4H">
@@ -717,11 +721,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CountryLoansTableViewCellID" rowHeight="160" id="Rnc-r1-Zi4" customClass="CountryLoanTableViewCell" customModule="Lendivine" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CountryLoansTableViewCellID" rowHeight="160" id="Rnc-r1-Zi4" customClass="CountryLoanTableViewCell" customModule="Lendivine" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="160"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Rnc-r1-Zi4" id="Pz7-1l-hQA">
-                                    <rect key="frame" x="0.0" y="0.0" width="533" height="159"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="159"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hd9-g2-cg6">
@@ -791,6 +795,7 @@
                                     <outlet property="loanImageView" destination="MAJ-Fe-hVd" id="iQx-Jx-Fbf"/>
                                     <outlet property="nameLabel" destination="Hd9-g2-cg6" id="dHf-iV-RR6"/>
                                     <outlet property="sectorLabel" destination="oTU-kv-c0M" id="jm6-14-bXb"/>
+                                    <segue destination="oNk-3E-cEf" kind="show" identifier="ShowCountryLoanDetail" id="bcV-Oj-Wle"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -800,28 +805,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Qlp-bf-baY"/>
+                    <connections>
+                        <segue destination="HRh-kV-WGA" kind="show" identifier="CountryLoanToMapSegueId" id="bNN-cV-Ui5"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RBq-jC-FUn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3072" y="-1829"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="tJ3-qR-YL8">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Shz-Gq-j04" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9U5-FF-duv">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="YfW-JB-BBn" kind="relationship" relationship="rootViewController" id="KEc-Wl-zws"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CPM-eq-b7N" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2314" y="-1829"/>
+            <point key="canvasLocation" x="2495" y="-1829"/>
         </scene>
         <!--Loan Details-->
         <scene sceneID="t8I-C0-dhe">
@@ -838,26 +828,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vm-8f-F7c">
                                 <rect key="frame" x="0.0" y="64" width="600" height="190"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQy-If-nt3">
-                                        <rect key="frame" x="544" y="-49" width="48" height="30"/>
-                                        <state key="normal" title="Cancel">
-                                            <color key="titleColor" red="0.01176470588" green="0.1019607843" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onCancelButtonTap:" destination="oNk-3E-cEf" eventType="touchUpInside" id="uwJ-D0-bPb"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h7f-Bu-dH6">
-                                        <rect key="frame" x="8" y="-49" width="60" height="30"/>
-                                        <state key="normal" title="Back">
-                                            <color key="titleColor" red="0.01176470588" green="0.1019607843" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onBackButtonTap:" destination="oNk-3E-cEf" eventType="touchUpInside" id="y7Q-vF-m5z"/>
-                                        </connections>
-                                    </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RN7-fY-W50">
                                         <rect key="frame" x="12" y="41" width="140" height="140"/>
                                         <constraints>
@@ -894,10 +864,8 @@
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="leading" secondItem="0vm-8f-F7c" secondAttribute="leading" constant="8" id="pas-cD-mTM"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="centerY" secondItem="0vm-8f-F7c" secondAttribute="centerY" id="pge-qv-iQq"/>
                                     <constraint firstItem="yIj-nJ-8Pj" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="16" id="sSU-eq-rJR"/>
-                                    <constraint firstAttribute="trailing" secondItem="fQy-If-nt3" secondAttribute="trailing" constant="8" id="sWl-b3-yAE"/>
                                     <constraint firstItem="Msi-uI-SfW" firstAttribute="top" secondItem="yIj-nJ-8Pj" secondAttribute="bottom" constant="4" id="ta6-wU-dK8"/>
                                     <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="RN7-fY-W50" secondAttribute="bottom" constant="8" id="th8-E0-1i2"/>
-                                    <constraint firstItem="fQy-If-nt3" firstAttribute="top" secondItem="0vm-8f-F7c" secondAttribute="top" constant="15" id="zui-0D-23H"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -1073,7 +1041,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yx7-qA-SAP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2481" y="-386"/>
+            <point key="canvasLocation" x="2449" y="-120"/>
         </scene>
     </scenes>
     <resources>
@@ -1086,4 +1054,8 @@
         <image name="User-32" width="32" height="32"/>
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="bNN-cV-Ui5"/>
+        <segue reference="bcV-Oj-Wle"/>
+    </inferredMetricsTieBreakers>
 </document>

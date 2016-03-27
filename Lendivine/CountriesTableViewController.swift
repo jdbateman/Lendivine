@@ -202,35 +202,36 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-
-        let activityIndicator = DVNActivityIndicator()
-        
-        activityIndicator.startActivityIndicator(tableView)
-        
-        var theCountry: Country?
-        if self.searchController.active {
-        
-            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
-                theCountry = countries[indexPath.row]
-            }
-        } else {
-            
-            // save the selected country
-            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
-            
-            //self.selectedCountry = theCountry
-        }
-        
-        // transition to the CountryLoans view controller
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
-        
-        controller.country = theCountry
-        
-        self.navigationController!.pushViewController(controller, animated: true)
-        
-        activityIndicator.stopActivityIndicator()
-    }
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//
+//        let activityIndicator = DVNActivityIndicator()
+//        
+//        activityIndicator.startActivityIndicator(tableView)
+//        
+//        var theCountry: Country?
+//        if self.searchController.active {
+//        
+//            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+//                theCountry = countries[indexPath.row]
+//            }
+//        } else {
+//            
+//            // save the selected country
+//            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+//            
+//            //self.selectedCountry = theCountry
+//        }
+//        
+//        // transition to the CountryLoans view controller
+//        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
+//        
+//        controller.country = theCountry
+//        
+//        self.navigationController!.pushViewController(controller, animated: true)
+//        
+//        activityIndicator.stopActivityIndicator()
+//    }
+    
     
     /*
     // Override to support conditional editing of the table view.
@@ -423,5 +424,70 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             self.tableView.reloadData()
         }
     }
+    
+    // MARK: Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ShowCountryLoans" {
+            
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                let controller = segue.destinationViewController as! CountryLoansTableViewController
+                
+                let activityIndicator = DVNActivityIndicator()
+                
+                activityIndicator.startActivityIndicator(tableView)
+                
+                var theCountry: Country?
+                if self.searchController.active {
+                    
+                    if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+                        theCountry = countries[indexPath.row]
+                    }
+                } else {
+                    
+                    // save the selected country
+                    theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+                }
+                
+                controller.country = theCountry
+
+                activityIndicator.stopActivityIndicator()
+            }
+        }
+    }
+    
+//    func foo() {
+//        
+//        guard let indexPath = self.tableView.indexPathForSelectedRow else {
+//            return
+//        }
+//        
+//        let activityIndicator = DVNActivityIndicator()
+//        
+//        activityIndicator.startActivityIndicator(tableView)
+//        
+//        var theCountry: Country?
+//        if self.searchController.active {
+//            
+//            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+//                theCountry = countries[indexPath.row]
+//            }
+//        } else {
+//            
+//            // save the selected country
+//            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+//        }
+//        
+//        // transition to the CountryLoans view controller
+//        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
+//        
+//        controller.country = theCountry
+//        
+//        self.navigationController!.pushViewController(controller, animated: true)
+//        
+//        activityIndicator.stopActivityIndicator()
+//    }
     
 }
