@@ -54,8 +54,18 @@ class LoansTableViewCell: UITableViewCell {
         cart.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
 //        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
         
-        self.animateLoanToCart(cell, view: contentView, tableView: tableView, loan: loan)
-
+        // animation:
+        
+        //animateButtonTapped(tableView)
+        
+        if let indexPath = indexPath {
+            
+            pulseAnimation(self.loanImageView) { success in
+            
+                self.animateLoanToCart(tableView /*contentView*/, tableView: tableView, indexPath: indexPath, loan: loan)
+            }
+        }
+        
         // Persist the KivaCartItem object we added to the Core Data shared context
         dispatch_async(dispatch_get_main_queue()) {
             CoreDataStackManager.sharedInstance().saveContext()
@@ -73,118 +83,149 @@ class LoansTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func animateLoanToCart(cell: LoansTableViewCell, view: UIView, tableView: UITableView, loan: KivaLoan) {
+    
+    func pulseAnimation(imageView: UIImageView, completion:(success: Bool) -> Void) {
         
-
-        //let square = UIView()
-//        guard let square = cell.imageView else {
-//            return
-//        }
-        guard let imageView = cell.imageView else {
-            return
-        }
-// this worked when stubbed with an image from .xcassets
-//        guard let image = getImageForLoan(loan) else {
-//            return
-//        }
+        var delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
         
-        // TODO - getImageForloan is not needed. remove and just use the self.loanImageView property
-
-        getImageForLoan(loan) { success, image, error in
+        // grow
+        UIView.animateWithDuration(1.0, animations: {
+            imageView.frame.size.height += 20
+            imageView.frame.size.width += 20
+        })
+   
+        delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+                
+            // shrink
+            UIView.animateWithDuration(1.0, animations: {
+                imageView.frame.size.height -= 60
+                imageView.frame.size.width -= 60
+            })
             
-            if success {
-                
-                let cellImageView =  self.loanImageView // UIImageView(image: image)
-                
-                // resize
-                let resizedWidth = cellImageView.frame.size.width / 2
-                let resizedHeight = cellImageView.frame.size.height / 2
-                cellImageView.frame = CGRectMake(0, 0, resizedWidth, resizedHeight)
-                cellImageView.center = imageView.superview!.center
-                
-                // TODO: trying here to make a copy of the original cell image view and animate the copy
-//                var newCellImageView: UIImageView?
-//                let newCgIm = CGImageCreateCopy(cellImageView.image?.CGImage)
-//                let newImage = UIImage(CGImage: newCgIm!, scale: newCellImageView!.image!.scale, orientation: imageView.image!.imageOrientation)
-//                newCellImageView = UIImageView(image: newImage)
-                
-                
-                let square = /*newCellImageView!*/ cellImageView
-                
-//                TODO START HERE
-//                getCellsCoordinatesIn tableview controller's view. Try animating everything wrt the table VC's view.
-                
-                
-                //square.frame = CGRect(x: 10, y: 10, width: 40, height: 40)
-                square.frame = CGRect(x: 10, y: 10, width: self.loanImageView.frame.size.width, height: self.loanImageView.frame.size.height)
-//                square.frame = CGRect(x: 10, y: 10, width: cellImageView.frame.size.width, height: cellImageView.frame.size.height)
-                print("width, height = \(self.loanImageView.frame.size.width), \(self.loanImageView.frame.size.height)")
-                //square.backgroundColor = UIColor.redColor()
-                //view.addSubview(square)
-                tableView.addSubview(square)
-                
-                //        TODO:
-                //        getPositionOfCellinTableView()
-                //        getSizeOfImage()
-                
-                let visibleRect: CGRect = tableView.convertRect(view.bounds, toView:tableView)
-                print("convert contentView rect \(view.bounds) to tableView rect \(visibleRect)")
-                
-                // create a path that follows a bezier curve
-                let path = UIBezierPath()
-                path.moveToPoint(CGPoint(x: cellImageView.frame.size.width / 2, y: cellImageView.frame.size.height / 2))
-                path.addCurveToPoint(CGPoint(x: 290, y: 600), controlPoint1: CGPoint(x: 120, y: 37), controlPoint2: CGPoint(x: 290, y: 11))
-                
-                // create an animation object to animate our view's position
-                let anim = CAKeyframeAnimation(keyPath: "position")
-                
-                // configure the animation to use the bezier curve
-                anim.path = path.CGPath
-                
-                // rotate the view as it travels along the path
-                anim.rotationMode = kCAAnimationRotateAuto
-                anim.repeatCount = 1 // Float.infinity
-                anim.duration = 1.5
-                
-                // Add the animation to the view
-                square.layer.addAnimation(anim, forKey: "animate position along path")
+            delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+                completion(success:true)
             }
         }
+    }
+    
+    /*!
+    @brief Animate image of selected loan into shopping cart on Toolbar.
+    @discussion 
+    @param (in) animateOnView - The view upon which to draw the animation.
+    @param (in) tableView - The table view for this view controller.
+    @param (in) indexPaht - the index path of the selected cell.
+    @param (in) loan - the loan associated with the selected cell.
+    */
+    func animateLoanToCart(/*cell: LoansTableViewCell,*/ animateOnView: UIView, tableView: UITableView, indexPath: NSIndexPath, loan: KivaLoan) {
         
-//        let cellImageView = UIImageView(image: image)
-//        let square = cellImageView
-//        
-//        //square.frame = CGRect(x: 10, y: 10, width: 40, height: 40)
-//        square.frame = CGRect(x: 10, y: 10, width: cellImageView.frame.size.width, height: cellImageView.frame.size.height)
-//        print("width, height = \(cellImageView.frame.size.width), \(cellImageView.frame.size.height)")
-//        //square.backgroundColor = UIColor.redColor()
-//        //view.addSubview(square)
-//        tableView.addSubview(square)
-//        
-////        TODO:
-////        getPositionOfCellinTableView()
-////        getSizeOfImage()
-//        
-//        let visibleRect: CGRect = tableView.convertRect(tableView.bounds, toView:tableView)
-//        
-//        // create a path that follows a bezier curve
-//        let path = UIBezierPath()
-//        path.moveToPoint(CGPoint(x: 80, y: 80))
-//        path.addCurveToPoint(CGPoint(x: 290, y: 600), controlPoint1: CGPoint(x: 120, y: 37), controlPoint2: CGPoint(x: 290, y: 11))
-//
-//        // create an animation object to animate our view's position
-//        let anim = CAKeyframeAnimation(keyPath: "position")
-//        
-//        // configure the animation to use the bezier curve
-//        anim.path = path.CGPath
-//        
-//        // rotate the view as it travels along the path
-//        anim.rotationMode = kCAAnimationRotateAuto
-//        anim.repeatCount = Float.infinity
-//        anim.duration = 1.5
-//        
-//        // Add the animation to the view
-//        square.layer.addAnimation(anim, forKey: "animate position along path")
+        let cellImageView =  self.loanImageView // UIImageView(image: image)
+        
+        // resize
+        let resizedWidth = cellImageView.frame.size.width // - 60
+        let resizedHeight = cellImageView.frame.size.height // - 60
+//        cellImageView.frame = CGRectMake(0, 0, resizedWidth, resizedHeight)
+//        cellImageView.center = CGPoint(x: animateOnView.bounds.width / 2, y: animateOnView.bounds.height / 2)
+        
+        guard let cgImage = cellImageView.image?.CGImage else {
+            return
+        }
+        
+        // copy the image
+        guard let newCgIm = CGImageCreateCopy(cgImage) else {
+            return
+        }
+        let imageCopy = UIImage(CGImage: newCgIm, scale: cellImageView.image!.scale, orientation: cellImageView.image!.imageOrientation)
+        
+        //let imageCopy: UIImage = UIImage(CGImage: cgImage)
+        let imageViewCopy: UIImageView = UIImageView(image: imageCopy)
+        
+        let animatedObject = imageViewCopy // cellImageView
+        
+        animatedObject.frame = CGRect(x: 0, y: 0, width: resizedWidth, height: resizedHeight)
+        print("width, height = \(animatedObject.frame.size.width), \(animatedObject.frame.size.height)")
+        
+        //tableView.parentViewController?.view.addSubview(animatedObject)
+        animateOnView.addSubview(animatedObject)
+        
+        // Get the coordinates of the cell in the TableView's coordinate space
+        let rectCellInTableViewCoords = tableView.rectForRowAtIndexPath(indexPath)
+        print("cellRect: \(rectCellInTableViewCoords)")
+        
+        let rectCellInScreenCoords = CGRectOffset(rectCellInTableViewCoords, -tableView.contentOffset.x, -tableView.contentOffset.y)
+        print("cellRect with offset: \(rectCellInScreenCoords)")
+        
+        // screen dimensions
+        let screenBounds: CGRect = UIScreen.mainScreen().bounds
+        let widthOfScreen = screenBounds.width
+        let heightOfScreen = screenBounds.height
+        
+        let cellOriginX = rectCellInTableViewCoords.origin.x
+        let cellOriginY = rectCellInTableViewCoords.origin.y
+        let cellWidth = rectCellInTableViewCoords.width
+        let cellHeight = rectCellInTableViewCoords.height
+        let cellToScreenBottom = heightOfScreen - rectCellInScreenCoords.origin.y
+        
+        // create a path that follows a bezier curve
+        let path = UIBezierPath()
+        let startPoint = CGPoint(x: cellOriginX + 8 + resizedWidth / 2, y: cellOriginY + 8 + resizedHeight / 2)
+        let endPoint = CGPoint(x: cellWidth / 2, y: cellOriginY + cellToScreenBottom)
+        
+        // move to start point of path
+        path.moveToPoint(CGPoint(x: startPoint.x, y: startPoint.y))
+        
+        // move along straight line to end point of path
+        // path.addLineToPoint(endPoint)
+
+        path.addCurveToPoint(endPoint,
+            controlPoint1: CGPoint(x: screenBounds.width * 3 / 4, y: cellOriginY + (cellToScreenBottom / 4) ),
+            controlPoint2: CGPoint(x: screenBounds.width / 2, y: cellOriginY + (cellToScreenBottom) / 2 ))
+        
+        // create an animation object to animate our view's position
+        let anim = CAKeyframeAnimation(keyPath: "position")
+        
+        // configure the animation to use the bezier curve
+        anim.path = path.CGPath
+        
+        // rotate the view as it travels along the path
+        anim.rotationMode = kCAAnimationRotateAuto
+        anim.repeatCount = 1 // Float.infinity
+        anim.duration = 1.0
+        
+        // Add the animation to the view
+        animatedObject.layer.addAnimation(anim, forKey: "animate position along path")
+        
+        // todo: cleanup:
+        // send refresh to cell/tabel
+        // hide imageview
+        tableView.reloadData()
+        
+        let delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+            imageViewCopy.hidden = true
+        }
+    }
+    
+    func animateButtonTapped(sender: UIView) {
+        
+        // create a 'tuple' (a pair or more of objects assigned to a single variable)
+        var views : (frontView: UIView, backView: UIView)
+        
+        let cellImageView =  self.loanImageView
+        let test = UIImageView()
+        test.image = UIImage(named: "Donate-50")
+        test.frame = CGRect(x: 50, y: 50, width: 50, height: 50)
+        sender.addSubview(test)
+        
+        views = (frontView: cellImageView, backView: test)
+        
+        // set a transition style
+        let transitionOptions = UIViewAnimationOptions.TransitionFlipFromLeft
+        
+        // with no animation block, and a completion block set to 'nil' this makes a single line of code
+        UIView.transitionFromView(views.frontView, toView: views.backView, duration: 1.0, options: transitionOptions, completion: nil)
+        
     }
     
     func getImageForLoan(loan: KivaLoan, completion:(success:Bool, image:UIImage?, error:NSError?) -> Void) {

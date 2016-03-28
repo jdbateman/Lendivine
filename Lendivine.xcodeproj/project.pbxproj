@@ -199,7 +199,6 @@
 		9E39504F1BF66B2D007BC75E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */,
 				9E495BE11BFA51B500E3DEAD /* CartTableViewCell.swift */,
 				9ECEFB011C97C7710045E92F /* CountryLoanTableViewCell.swift */,
 				9ECEFAF31C9532310045E92F /* CountriesTableViewCell.swift */,
@@ -264,6 +263,7 @@
 		9E7869D91C9E0EAB00F1FE93 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */,
 				9E495BDD1BF9060E00E3DEAD /* CartTableViewController.swift */,
 				9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */,
 				9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */,

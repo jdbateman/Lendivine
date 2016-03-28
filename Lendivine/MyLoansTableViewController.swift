@@ -27,6 +27,8 @@ class MyLoansTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        configureBarButtonItems() 
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -40,6 +42,19 @@ class MyLoansTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    /*! Setup the nav bar button items. */
+    func configureBarButtonItems() {
+        
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        navigationItem.setRightBarButtonItem(mapButton, animated: true)
+    }
+    
+    // MARK: Actions
+    
+    func onMapButton() {
+        presentMapController()
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -113,23 +128,52 @@ class MyLoansTableViewController: UITableViewController {
     // MARK: UITableViewDelegate Accessory Views
     
     /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
-    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        
-        let loan = self.loans[indexPath.row]
-        presentLoanDetailViewController(loan)
-    }
+//    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+//        
+//        let loan = self.loans[indexPath.row]
+//        presentLoanDetailViewController(loan)
+//    }
     
     
     // MARK: Navigation
     
     /* Modally present the LoanDetail view controller. */
-    func presentLoanDetailViewController(loan: KivaLoan?) {
-        guard let loan = loan else {
-            return
+//    func presentLoanDetailViewController(loan: KivaLoan?) {
+//        guard let loan = loan else {
+//            return
+//        }
+//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+//        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+//        controller.loan = loan
+//        self.presentViewController(controller, animated: true, completion: nil)
+//    }
+    
+    // MARK: Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ShowMyLoansDetail" {
+            
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                let controller = segue.destinationViewController as! LoanDetailViewController
+                let loan = self.loans[indexPath.row]
+                controller.loan = loan
+            }
+            
+        } else if segue.identifier == "MyLoansToMapSegueId" {
+            
+            navigationItem.title = "MyLoans"
+            let controller = segue.destinationViewController as! MapViewController
+            controller.sourceViewController = self
+            controller.loans = loans
         }
-        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
-        controller.loan = loan
-        self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    /* Modally present the MapViewController on the main thread. */
+    func presentMapController() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.performSegueWithIdentifier("MyLoansToMapSegueId", sender: self)
+        }
     }
 }
