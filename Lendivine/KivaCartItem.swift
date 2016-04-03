@@ -120,6 +120,7 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
 /*! Support Equatable protocol. Allows KivaCartItem instances to be compared. */
 func ==(lhs: KivaCartItem, rhs: KivaCartItem) -> Bool {
 //    return (lhs.kivaloan?.id == rhs.kivaloan?.id)
+    print("KivaCartItem Equatable: lhs:\(lhs.loanID) rhs:\(rhs.loanID)")
     return (lhs.loanID == rhs.loanID)
 }
 

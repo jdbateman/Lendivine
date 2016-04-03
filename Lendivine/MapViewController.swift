@@ -12,7 +12,7 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: DVNViewController, MKMapViewDelegate {
     
     var appDelegate: AppDelegate!
     
@@ -30,6 +30,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureMapView()
+    }
+    
+    func configureMapView() {
         
         navigationItem.hidesBackButton = false
         
@@ -61,6 +66,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         // Add a notification observer for updates to student location data from Parse.
 //        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onStudentLocationsUpdate", name: studentLocationsUpdateNotificationKey, object: nil)
+        
+        refreshMapPins()
+    }
+    
+    func refreshMapPins() {
         
         // Clear any existing pins before redrawing them (e.g. if navigating back to the map view from the InfoPosting view.)
         removeAllPins()
@@ -113,25 +123,42 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 //        print("back button tapped")
 //    }
     
+//    /* Refresh button was selected. */
+//    func onRefreshButtonTap() {
+//        
+//        UIAlertController(title: "Todo", message: "need to implement", preferredStyle: .Alert)
+//        
+//        // TODO - move populateLoans and find loans from Loanstableviewcontroller.m or consolidate in KivaApiConvenience (the right way) and call them on that class.
+//        // Search Kiva.org for the next page of Loan results.
+////        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+////            if success {
+////                dispatch_async(dispatch_get_main_queue()) {
+////                    //self.fetchLoans()
+////                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
+////                }
+////            } else {
+////                print("failed to populate loans. error: \(error?.localizedDescription)")
+////            }
+////            
+////        }
+//    }
+    
     /* Refresh button was selected. */
     func onRefreshButtonTap() {
         
-        UIAlertController(title: "Todo", message: "need to implement", preferredStyle: .Alert)
-        
-        // TODO - move populateLoans and find loans from Loanstableviewcontroller.m or consolidate in KivaApiConvenience (the right way) and call them on that class.
         // Search Kiva.org for the next page of Loan results.
-//        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
-//            if success {
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    //self.fetchLoans()
-//                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
-//                }
-//            } else {
-//                print("failed to populate loans. error: \(error?.localizedDescription)")
-//            }
-//            
-//        }
+        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+            if success {
+                dispatch_async(dispatch_get_main_queue()) {
+                    //self.fetchLoans()
+                    self.refreshMapPins()
+                }
+            } else {
+                print("failed to populate loans. error: \(error?.localizedDescription)")
+            }
+        }
     }
+    
 // TODO
 //    /* Refresh button was selected. */
 //    func onRefreshButtonTap() {
@@ -507,7 +534,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
-        self.presentViewController(controller, animated: true, completion: nil)
+//        self.presentViewController(controller, animated: true, completion: nil)
+//todo - adding to experiment
+        // add the view controller to the navigation controller stack
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     /* show activity indicator */

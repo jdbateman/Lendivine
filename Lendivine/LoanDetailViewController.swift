@@ -59,7 +59,11 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         }
         
         let cart = KivaCart.sharedInstance
-        cart.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: 25.00, context: self.sharedContext)
+        if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: 25.00, context: self.sharedContext) {
+            
+        } else {
+            showLoanAlreadyInCartAlert(loan, controller: self)
+        }
     }
     
     func setupView() {
@@ -156,5 +160,26 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         
         // Tell the OS that the mapView needs to be refreshed.
         self.mapView.setNeedsDisplay()
+    }
+    
+    /*!
+    @brief Display an alert controller indicating the specified loan has already been added to the cart.
+    @discussion This is a convenience view function used by multiple table view cell classes in the Lendivine app.
+    @param (in) loan - An attempt was made to add this loan to the cart.
+    @param (in) controller - The parent view controller to host the alert.
+    */
+    func showLoanAlreadyInCartAlert(loan: KivaLoan, controller: UIViewController) {
+        
+        var message = "The selected loan has already been added to your cart."
+        if let name = loan.name {
+            message = "The loan requested by \(name) has already been added to your cart."
+        }
+        let alertController = UIAlertController(title: "Already in Cart", message: message, preferredStyle: .Alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+            UIAlertAction in
+            // handle OK pressed in alert controller
+        }
+        alertController.addAction(okAction)
+        controller.presentViewController(alertController, animated: true, completion: nil)
     }
 }

@@ -213,29 +213,55 @@ class KivaCart {
 //        }
     }
     
-    // Add an item to the local cart.
+    /*! 
+        @brief Add a loan to the local cart.
+        @discussion The function fails if a loan with the same id is already in the cart.
+        @param (in) loan - The loan to add to the cart.
+        @param (in) donationAmount - The dollar amount to donate towards the loan.
+        @param (in) context - Core Data context.
+        @return true if loan was successfully added to the cart, else false.
+    */
 //    func KivaAddItemToCart(loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
-    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
+    func KivaAddItemToCart(loan: KivaLoan?, /*loanID: NSNumber?,*/ donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
         if let loan = loan {
 //            if let loanID = loanID {
                 if let donationAmount = donationAmount {
                     let cart = KivaCart.sharedInstance
                     let item = KivaCartItem(loan: loan /*loanID: loanID*/, donationAmount: donationAmount, context: context)
-                    if !cart.items.contains(item) {
+                    if !itemInCart(item) /*!cart.items.contains(item)*/ {
                         cart.add(item)
-                        print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
+                        print("Added item to cart with loan Id: \(loan.id) in amount: \(donationAmount)")
                         
                         // Persist the KivaCartItem object we added to the Core Data shared context
                         dispatch_async(dispatch_get_main_queue()) {
                             CoreDataStackManager.sharedInstance().saveContext()
                         }
+                        return true
                         
                     } else {
-                        print("Item not added to cart. The cart already contains loanId: \(loanID)")
+                        print("Item not added to cart. The cart already contains loanId: \(loan.id)")
+                        return false
                     }
-                    print("cart = \(cart.count) [KivaAddItemToCart]")
+                    //print("cart = \(cart.count) [KivaAddItemToCart]")
                 }
 //            }
         }
+        return false
+    }
+    
+    /*! 
+        @brief Determine if the specified item is in the cart.
+        @discussion Comparison is done by the loanID property. Two items are considered Equatable if their loanID properties match.
+        @param (in) item - The item to find in the cart.
+        @return true if item is in the cart, else false if it is not in the cart.
+    */
+    func itemInCart(item:KivaCartItem) -> Bool {
+        
+        for nextItem in self.items {
+            if item == nextItem {
+                return true
+            }
+        }
+        return false
     }
 }

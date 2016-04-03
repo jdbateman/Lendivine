@@ -10,11 +10,11 @@
 import UIKit
 import CoreData
 
-class LoansTableViewCell: UITableViewCell {
+class LoansTableViewCell: DVNTableViewCell {
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var sectorLabel: UILabel!
-    @IBOutlet weak var amountLabel: UILabel! // loan amount
+    @IBOutlet weak var amountLabel: UILabel!            // The total requested sum of the loan.
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var countryLabel: UILabel!
     
@@ -51,24 +51,30 @@ class LoansTableViewCell: UITableViewCell {
         let amount = 25  // TODO: set default donation amount to user preference.
 //        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
         let cart = KivaCart.sharedInstance
-        cart.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
 //        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
+
+        if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
         
-        // animation:
-        
-        //animateButtonTapped(tableView)
-        
-        if let indexPath = indexPath {
+            // animation:
             
-            pulseAnimation(self.loanImageView) { success in
+            //animateButtonTapped(tableView)
             
-                self.animateLoanToCart(tableView /*contentView*/, tableView: tableView, indexPath: indexPath, loan: loan)
+            if let indexPath = indexPath {
+                
+                pulseAnimation(self.loanImageView) { success in
+                
+                    self.animateLoanToCart(tableView /*contentView*/, tableView: tableView, indexPath: indexPath, loan: loan)
+                }
             }
-        }
-        
-        // Persist the KivaCartItem object we added to the Core Data shared context
-        dispatch_async(dispatch_get_main_queue()) {
-            CoreDataStackManager.sharedInstance().saveContext()
+            
+            // Persist the KivaCartItem object we added to the Core Data shared context
+            dispatch_async(dispatch_get_main_queue()) {
+                CoreDataStackManager.sharedInstance().saveContext()
+            }
+        } else {
+            if let controller = self.parentController {
+                showLoanAlreadyInCartAlert(loan, controller: controller)
+            }
         }
     }
     
@@ -83,6 +89,8 @@ class LoansTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    
+    // MARK: Animation
     
     func pulseAnimation(imageView: UIImageView, completion:(success: Bool) -> Void) {
         
@@ -239,4 +247,19 @@ class LoansTableViewCell: UITableViewCell {
             }
         }
     }
+    
+//    func showLoanAlreadyInCartAlert(loan: KivaLoan, controller: UIViewController) {
+//
+//        var message = "The selected loan has already been added to your cart."
+//        if let name = loan.name {
+//            message = "The loan requested by \(name) has already been added to your cart."
+//        }
+//        let alertController = UIAlertController(title: "Already in Cart", message: message, preferredStyle: .Alert)
+//        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+//            UIAlertAction in
+//            // handle OK pressed in alert controller
+//        }
+//        alertController.addAction(okAction)
+//        controller.presentViewController(alertController, animated: true, completion: nil)
+//    }
 }

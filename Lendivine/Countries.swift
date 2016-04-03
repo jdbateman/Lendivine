@@ -155,6 +155,71 @@ class Countries {
         CoreDataStackManager.sharedInstance().saveContext()
     }
     
+    /*! Return a randomized comma separated string of two letter country codes. */
+    class func getRandomCountries(numberOfCountries:Int = 0) -> String? {
+        
+        var countries = [String]()
+        var randomCountries = [String]()
+        
+//        var error: NSError? = nil
+//        
+//        do {
+//            try fetchedResultsController.performFetch()
+//        } catch let error1 as NSError {
+//            error = error1
+//        }
+//        
+//        if let error = error {
+//            print("fetch of countries failed.")
+//            //LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+//        }
+        
+        //--------
+        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+        
+        //fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
+        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+
+        var results: [AnyObject]?
+        do {
+            results = try sharedContext.executeFetchRequest(fetchRequest)
+            if let results = results {
+                for result in results {
+                    if let result = result as? Country {
+                        if let name = result.name {
+                            countries.append(name)
+                        }
+                    }
+                }
+            }
+        } catch let error1 as NSError {
+            //error!.memory = error1
+            print("Error in fetchLoanByID(): \(error1)")
+            results = nil
+        }
+        
+        // --------
+
+        print("countries: \(countries)")
+        
+        // add 30 random countries
+        for var i = 0; i < numberOfCountries; i++ {
+            let index = Int(arc4random_uniform(UInt32(countries.count)))
+            randomCountries.append(countries[index])
+        }
+        
+        let randomCountriesString = randomCountries.joinWithSeparator(",")
+        
+        print("randomCountries: \(randomCountriesString)")
+        
+        return randomCountriesString
+    }
+    
     // MARK: - Fetched results controller
     
     static var fetchedResultsController: NSFetchedResultsController = {
@@ -173,7 +238,7 @@ class Countries {
         return fetchedResultsController
     } ()
     
-    /* Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store. */
+    /* Perform a fetch of Country objects to update the fetchedResultsController with the current data from the core data store. */
     class func fetchCountries() {
         var error: NSError? = nil
         

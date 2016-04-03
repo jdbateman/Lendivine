@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class CountryLoanTableViewCell: UITableViewCell {
+class CountryLoanTableViewCell:DVNTableViewCell {
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var sectorLabel: UILabel!
@@ -48,16 +48,21 @@ class CountryLoanTableViewCell: UITableViewCell {
         //let loan = tableViewController.fetchedResultsController.objectAtIndexPath(indexPath!) as! KivaLoan
         let loan = tableViewController.loans[indexPath!.row] 
         
-        
         let amount = 25  // TODO: set default donation amount to user preference.
+        
         //        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
         let cart = KivaCart.sharedInstance
-        cart.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: self.sharedContext)
-        //        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
-        
-        // Persist the KivaCartItem object we added to the Core Data shared context
-        dispatch_async(dispatch_get_main_queue()) {
-            CoreDataStackManager.sharedInstance().saveContext()
+        if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
+            //        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
+            
+            // Persist the KivaCartItem object we added to the Core Data shared context
+            dispatch_async(dispatch_get_main_queue()) {
+                CoreDataStackManager.sharedInstance().saveContext()
+            }
+        } else {
+            if let controller = self.parentController {
+                self.showLoanAlreadyInCartAlert(loan, controller: controller)
+            }
         }
     }
     
