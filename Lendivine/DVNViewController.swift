@@ -27,22 +27,77 @@ class DVNViewController: UIViewController {
         self.kivaAPI = kivaOAuth.kivaAPI
     }
     
-    // helper function that searches for loans
-    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    /*!
+        @brief A helper function that searches for loans by randomizing the countries input to the query.
+        @discussion Because the input countries vary on each call, paging does not need to be handled.
+        @param (in) completionHandler
+        @return 
+            success true if query was successful, else false.
+            error nil if query was successful and returned a valid result, else contains error information.
+            loans A list of loans returned by the query, else nil if an error occurred.
+    */
+    func findRandomLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
         print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
         
-        let regions = "ca,sa,af,as,me,ee,we,an,oc"
-        var countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of ocuntries or use user preferences
+        let regions = "na,ca,sa,af,as,me,ee,we,an,oc"
+        var countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of countries or use user preferences
         
-        todo - start here:
-        if let randomCountries = Countries.getRandomCountries(30) {
+        if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
             countries = randomCountries
         }
-
+        
         print("calling kivaSearchLoans with countries = \(countries)")
         
-        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
+        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: countries, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
+            
+            success, error, loanResults, nextPage in
+            
+            print("findLoans returned nextPage = \(nextPage)")
+            
+            if success {
+                // todo: debug
+                if let loanResults = loanResults {
+                    var loanNames: String = ""
+                    for loan in loanResults {
+                        if let name = loan.name {
+                            loanNames.appendContentsOf(name + ",")
+                        }
+                    }
+                    print("loans: \(loanNames)")
+                }
+                
+                completionHandler(success: success, error: error, loans: loanResults)
+            } else {
+                completionHandler(success: success, error: error, loans: nil)
+            }
+        }
+    }
+    
+    /*!
+        @brief A helper function that searches for loans across all regions and countries.
+        @discussion Because the input countries vary on each call, paging does not need to be handled.
+        @param (in) completionHandler
+        @return
+            success true if query was successful, else false.
+            error nil if query was successful and returned a valid result, else contains error information.
+            loans A list of loans returned by the query, else nil if an error occurred.
+    */
+    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+        
+//        print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
+//        
+//        let regions = "na,ca,sa,af,as,me,ee,we,an,oc"
+//        var countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of countries or use user preferences
+//        
+//        //if let randomCountries = Countries.getRandomCountries(30)
+//        if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
+//            countries = randomCountries
+//        }
+//
+//        print("calling kivaSearchLoans with countries = \(countries)")
+        
+        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
             
             success, error, loanResults, nextPage in
             
@@ -89,7 +144,7 @@ class DVNViewController: UIViewController {
     // Find loans from Kiva.org and update this instance's loan collection property.
     func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
         if let kivaAPI = self.kivaAPI {
-            self.findLoans(kivaAPI) { success, error, loanResults in
+            self.findRandomLoans(kivaAPI) { success, error, loanResults in
                 if success {
                     if var loans = loanResults {
                         

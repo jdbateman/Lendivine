@@ -58,7 +58,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         mapView.showsPointsOfInterest = false
         mapView.showsUserLocation = true
         
-        createCustomBackButton()
+        //createCustomBackButton()
     }
     
     override func viewWillAppear(animated: Bool) {

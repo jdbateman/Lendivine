@@ -155,32 +155,15 @@ class Countries {
         CoreDataStackManager.sharedInstance().saveContext()
     }
     
-    /*! Return a randomized comma separated string of two letter country codes. */
-    class func getRandomCountries(numberOfCountries:Int = 0) -> String? {
+    /*! Return a randomized comma separated string of country names. */
+    class func getRandomCountries(numberOfCountries:Int = 20) -> String? {
         
         var countries = [String]()
         var randomCountries = [String]()
         
-//        var error: NSError? = nil
-//        
-//        do {
-//            try fetchedResultsController.performFetch()
-//        } catch let error1 as NSError {
-//            error = error1
-//        }
-//        
-//        if let error = error {
-//            print("fetch of countries failed.")
-//            //LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
-//        }
-        
-        //--------
         let fetchRequest = NSFetchRequest(entityName: Country.entityName)
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
-        
-        //fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
-        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
             CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
@@ -202,12 +185,10 @@ class Countries {
             print("Error in fetchLoanByID(): \(error1)")
             results = nil
         }
-        
-        // --------
 
         print("countries: \(countries)")
         
-        // add 30 random countries
+        // add the requested number of randomly selected countries
         for var i = 0; i < numberOfCountries; i++ {
             let index = Int(arc4random_uniform(UInt32(countries.count)))
             randomCountries.append(countries[index])
@@ -219,6 +200,64 @@ class Countries {
         
         return randomCountriesString
     }
+    
+    enum RandomCountryResultType {
+        case Name, TwoLetterCode
+    }
+    
+    /*! Return a randomized comma separated string of two letter country codes. */
+    class func getRandomCountryCodes(numberOfCountries:Int = 20, resultType:RandomCountryResultType = .Name) -> String? {
+        
+        var countries = [String]()
+        var randomCountries = [String]()
+        
+        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        var results: [AnyObject]?
+        do {
+            results = try sharedContext.executeFetchRequest(fetchRequest)
+            if let results = results {
+                for result in results {
+                    if let result = result as? Country {
+                        if resultType == .Name {
+                            if let name = result.name {
+                                countries.append(name)
+                            }
+                        } else if resultType == .TwoLetterCode {
+                            if let countryCode = result.countryCodeTwoLetter {
+                                countries.append(countryCode)
+                            }
+                        }
+                    }
+                }
+            }
+        } catch let error1 as NSError {
+            //error!.memory = error1
+            print("Error in fetchLoanByID(): \(error1)")
+            results = nil
+        }
+        
+        print("countries: \(countries)")
+        
+        // add the requested number of randomly selected countries
+        for var i = 0; i < numberOfCountries; i++ {
+            let index = Int(arc4random_uniform(UInt32(countries.count)))
+            randomCountries.append(countries[index])
+        }
+        
+        let randomCountriesString = randomCountries.joinWithSeparator(",")
+        
+        print("randomCountries: \(randomCountriesString)")
+        
+        return randomCountriesString
+    }
+    
+    
     
     // MARK: - Fetched results controller
     
