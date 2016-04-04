@@ -36,6 +36,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         //Countries.getCountriesFromWebService()
         initCountriesFromCoreData()
         
+        setupView()
+        
         addSearchBar()
     }
     
@@ -44,6 +46,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         // Add a notification observer for updates to countries from RESTCountries web service.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "onCountriesUpdate", name: countriesUpdateNotificationKey, object: nil)
+        
+        setupView()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -56,6 +60,16 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         // Remove observer for the countries update notification.
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func setupView() {
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    /*! hide the status bar */
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     /*! Initialize countries collection from core data using a scratch context. */

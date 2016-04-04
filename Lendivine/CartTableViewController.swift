@@ -36,6 +36,8 @@ class CartTableViewController: UITableViewController {
         
         configureBarButtonItems()
         
+        navigationItem.title = "Cart"
+        
         //print("cart = \(cart!.items.count) [viewDidLoad]")
     }
     
@@ -522,11 +524,12 @@ class CartTableViewController: UITableViewController {
             
         } else if segue.identifier == "CartToMapSegueId" {
             
-            navigationItem.title = "Cart"
+            //navigationItem.title = "Cart"
             
             let controller = segue.destinationViewController as! MapViewController
             
             controller.sourceViewController = self
+            controller.navigationItem.title = "Cart"
             
             // get list of loans displayed in this view controller
             if let loans = self.cart!.getLoans2() {

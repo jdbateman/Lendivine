@@ -56,6 +56,13 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        navigationItem.title = "Loans"
+    }
+    
+    /*! hide the status bar */
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -74,16 +81,20 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // Additional bar button items
         //TODO - enable let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
         //let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
-        
-        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
+
+        // left bar button items
         let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
+        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
+        navigationItem.setLeftBarButtonItems([trashButton, oAuthButton], animated: true)
+        
+        // right bar button items
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
         //        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
         //        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
         
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
         //navigationItem.setRightBarButtonItems([refreshButton], animated: true)
-        navigationItem.setRightBarButtonItems([mapButton, refreshButton, trashButton, oAuthButton], animated: true)
+        navigationItem.setRightBarButtonItems([mapButton, refreshButton], animated: true)
         
         //self.navigationItem.rightBarButtonItems?.first?.enabled = false
         //self.navigationItem.rightBarButtonItems?[1].enabled = false

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="c1R-Ee-p9U">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="OIG-XH-2zU">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
@@ -107,7 +107,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pU2-g0-bEL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1562" y="-304"/>
+            <point key="canvasLocation" x="2374" y="-304"/>
         </scene>
         <!--Map-->
         <scene sceneID="yof-6Y-SUB">
@@ -403,7 +403,7 @@
                                     <outlet property="loanImageView" destination="Net-53-UaY" id="WfJ-vm-hDe"/>
                                     <outlet property="nameLabel" destination="aEV-4g-zwL" id="aku-lw-gQy"/>
                                     <outlet property="sectorLabel" destination="0XM-kn-udv" id="RrJ-VE-jk0"/>
-                                    <segue destination="3zv-PG-yyv" kind="show" identifier="CartToMapSegueId" id="y54-6H-Mh3"/>
+                                    <segue destination="oNk-3E-cEf" kind="show" identifier="ShowCartDetail" id="e6n-ZL-xAr"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -413,10 +413,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="c3w-3q-gsI"/>
+                    <connections>
+                        <segue destination="3zv-PG-yyv" kind="show" identifier="CartToMapSegueId" id="ydY-vX-XPu"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HU4-d4-fdG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1562" y="-1084"/>
+            <point key="canvasLocation" x="1552" y="-1084"/>
         </scene>
         <!--My Account-->
         <scene sceneID="uRe-AK-t1p">
@@ -554,7 +557,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XuH-BQ-KCg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1562" y="451"/>
+            <point key="canvasLocation" x="2374" y="483"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -576,7 +579,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-24" y="4"/>
+            <point key="canvasLocation" x="788" y="4"/>
         </scene>
         <!--Loans Nav Controller-->
         <scene sceneID="za9-Jm-Dj3">
@@ -595,7 +598,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BbK-Vw-oXR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="-304"/>
+            <point key="canvasLocation" x="1562" y="-304"/>
         </scene>
         <!--My Account-->
         <scene sceneID="43p-8V-z4H">
@@ -614,7 +617,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ELi-vT-JQa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="451"/>
+            <point key="canvasLocation" x="1562" y="459"/>
         </scene>
         <!--Cart-->
         <scene sceneID="mlV-ix-pjZ">
@@ -725,7 +728,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8uh-O5-L9H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1562" y="1200"/>
+            <point key="canvasLocation" x="2374" y="1200"/>
         </scene>
         <!--My Loans-->
         <scene sceneID="E7m-P4-sbc">
@@ -744,7 +747,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Osb-1A-f0r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="1200"/>
+            <point key="canvasLocation" x="1562" y="1200"/>
         </scene>
         <!--Countries-->
         <scene sceneID="0Cf-kz-knd">
@@ -849,7 +852,7 @@
                                     <outlet property="loanImageView" destination="MAJ-Fe-hVd" id="iQx-Jx-Fbf"/>
                                     <outlet property="nameLabel" destination="Hd9-g2-cg6" id="dHf-iV-RR6"/>
                                     <outlet property="sectorLabel" destination="oTU-kv-c0M" id="jm6-14-bXb"/>
-                                    <segue destination="HRh-kV-WGA" kind="show" identifier="CountryLoanToMapSegueId" id="tq8-XV-aPi"/>
+                                    <segue destination="oNk-3E-cEf" kind="show" identifier="ShowCountryLoanDetail" id="7o5-ta-g1w"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -859,6 +862,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Qlp-bf-baY"/>
+                    <connections>
+                        <segue destination="HRh-kV-WGA" kind="show" identifier="CountryLoanToMapSegueId" id="nqk-aM-Sq9"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RBq-jC-FUn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1092,12 +1098,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yx7-qA-SAP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2544" y="-4"/>
+            <point key="canvasLocation" x="3439" y="-304"/>
         </scene>
-        <!--Login View Controller-->
+        <!--Login-->
         <scene sceneID="p12-YJ-qR4">
             <objects>
-                <viewController storyboardIdentifier="LoginStoryboardID" id="c1R-Ee-p9U" customClass="LoginViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginStoryboardID" title="Login" id="c1R-Ee-p9U" customClass="LoginViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ywt-eq-FWf"/>
                         <viewControllerLayoutGuide type="bottom" id="YSN-cr-x9v"/>
@@ -1106,27 +1112,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Lendivine" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="91z-DK-lBh">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Lendivine" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="91z-DK-lBh">
                                 <rect key="frame" x="20" y="47" width="560" height="32"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Donate-50" translatesAutoresizingMaskIntoConstraints="NO" id="pUV-w4-0Wf">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="Donate-50" translatesAutoresizingMaskIntoConstraints="NO" id="pUV-w4-0Wf">
                                 <rect key="frame" x="172" y="87" width="256" height="256"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="256" id="1yI-Rz-w3N"/>
                                     <constraint firstAttribute="width" constant="256" id="i5X-Vt-qyh"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Help hard working people around the world build a better life." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R1m-Qc-eyR">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Help hard working people around the world build a better life." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R1m-Qc-eyR">
                                 <rect key="frame" x="18" y="351" width="562" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="One small loan at a time." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U9s-qz-ulu">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="One small loan at a time." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U9s-qz-ulu">
                                 <rect key="frame" x="16" y="414" width="568" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -1160,6 +1166,7 @@
                                 </state>
                                 <connections>
                                     <action selector="onSignUpButtonTap:" destination="c1R-Ee-p9U" eventType="touchUpInside" id="T77-jW-vD9"/>
+                                    <segue destination="MXW-mX-mRL" kind="show" id="vL1-kc-Np4"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1201,6 +1208,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="7Ak-pj-ItY"/>
                     <connections>
                         <outlet property="loginButton" destination="Qyt-YP-PFj" id="dxN-MG-ipo"/>
                         <segue destination="49e-Tb-3d3" kind="show" identifier="LoginSegueId" id="yQ4-aL-Ga1"/>
@@ -1208,7 +1216,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fD1-8m-MNr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-782" y="4"/>
+            <point key="canvasLocation" x="30" y="4"/>
+        </scene>
+        <!--Kiva Signup View Controller-->
+        <scene sceneID="IPH-ID-jfi">
+            <objects>
+                <viewController storyboardIdentifier="KviaSignupStoryboardID" id="MXW-mX-mRL" customClass="KivaSignupViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1Vi-LX-l4b"/>
+                        <viewControllerLayoutGuide type="bottom" id="Wxe-Ie-49L"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vwp-aA-jyD">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="xAx-l5-jBY"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QpF-Uo-XlU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="30" y="725"/>
         </scene>
         <!--Map-->
         <scene sceneID="FuI-M4-YNT">
@@ -1298,6 +1325,24 @@
             </objects>
             <point key="canvasLocation" x="2273" y="-1084"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="7ez-Qw-7aV">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="OIG-XH-2zU" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Zoj-ys-Mhf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="c1R-Ee-p9U" kind="relationship" relationship="rootViewController" id="zJ5-0h-7Ha"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RdP-np-OxS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-782" y="4"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Add Shopping Cart-50" width="50" height="50"/>
@@ -1312,7 +1357,7 @@
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tq8-XV-aPi"/>
-        <segue reference="DWE-bn-Cim"/>
+        <segue reference="K3P-VK-vgJ"/>
+        <segue reference="y7E-Fm-SAE"/>
     </inferredMetricsTieBreakers>
 </document>

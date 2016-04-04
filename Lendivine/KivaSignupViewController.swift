@@ -28,11 +28,21 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     
     func setupView() {
         
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        //navigationItem.hidesBackButton = false
+        createCustomBackButton()
+        
         self.webView.frame = UIScreen.mainScreen().bounds
         self.webView.scalesPageToFit = true
         self.webView.delegate = self
         
         self.view.addSubview(self.webView)
+    }
+    
+    /*! hide the status bar */
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     override func didReceiveMemoryWarning() {
@@ -64,4 +74,23 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     //        }
     //        return true
     //    }
+    
+    
+    // MARK: Navigation
+    
+    func createCustomBackButton() {
+        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "onCancelButton")
+        navigationItem.setLeftBarButtonItem(customBackButton, animated: true)
+    }
+    
+    func onCancelButton() {
+        popViewController()
+    }
+    
+    func popViewController() {
+        
+       // if let src = self.sourceViewController {
+            navigationController?.popToRootViewControllerAnimated(true)
+       // }
+    }
 }

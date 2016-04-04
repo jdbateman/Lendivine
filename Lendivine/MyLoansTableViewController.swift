@@ -28,7 +28,9 @@ class MyLoansTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        configureBarButtonItems() 
+        configureBarButtonItems()
+        
+        navigationItem.title = "My Loans"
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -163,9 +165,10 @@ class MyLoansTableViewController: UITableViewController {
             
         } else if segue.identifier == "MyLoansToMapSegueId" {
             
-            navigationItem.title = "MyLoans"
+            //navigationItem.title = "MyLoans"
             let controller = segue.destinationViewController as! MapViewController
             controller.sourceViewController = self
+            controller.navigationItem.title = "MyLoans"
             controller.loans = loans
         }
     }

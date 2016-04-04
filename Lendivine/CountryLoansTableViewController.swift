@@ -34,6 +34,8 @@ class CountryLoansTableViewController: UITableViewController{
         //populateLoans()
         onRefreshButtonTap()
         
+        configureView()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -48,6 +50,8 @@ class CountryLoansTableViewController: UITableViewController{
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        configureView()
+        
         self.tableView.reloadData()
     }
     
@@ -56,6 +60,12 @@ class CountryLoansTableViewController: UITableViewController{
         // Dispose of any resources that can be recreated.
     }
     
+    func configureView() {
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        navigationItem.title = loans.first?.country
+    }
     
     // MARK: - Table view data source
     
@@ -429,11 +439,13 @@ class CountryLoansTableViewController: UITableViewController{
             
         } else if segue.identifier == "CountryLoanToMapSegueId" {
             
-            navigationItem.title = "Cart"
+            // navigationItem.title = loans.first?.country
             
             let controller = segue.destinationViewController as! MapViewController
             
             controller.sourceViewController = self
+            
+            controller.navigationItem.title = loans.first?.country
             
             // get list of loans displayed in this view controller
             controller.loans = loans

@@ -20,7 +20,10 @@ class LoginViewController: UIViewController {
     var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50)) as UIActivityIndicatorView
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        setupView()
         
         // get a reference to the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -31,8 +34,17 @@ class LoginViewController: UIViewController {
         }
     }
     
+    func setupView() {
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     override func viewWillAppear(animated: Bool) {
+        
         super.viewWillAppear(animated)
+        
+        setupView()
+        
         self.view.setNeedsDisplay()
     }
     
@@ -46,11 +58,15 @@ class LoginViewController: UIViewController {
 
     /* SignUp button selected. Attempt Kiva.org OAuth. */
     @IBAction func onSignUpButtonTap(sender: AnyObject) {
-        displayKivaSignupInBrowser()
+//        displayKivaSignupInBrowser()
 //        let alert = UIAlertController(title: "TODO", message: "Present Kiva Signup web page in browser", preferredStyle: .Alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
 //        alert.addAction(okAction)
 //        self.presentViewController(alert, animated: true, completion:nil)
+        
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("KviaSignupStoryboardID") as! KivaSignupViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 
     /* User selected the Login button. Attempt to login to Kiva.org. */
@@ -112,13 +128,30 @@ class LoginViewController: UIViewController {
         activityIndicator.stopAnimating()
     }
     
-    /*! Display the Kiva.org signup page in an embedded browser view. */
-    func displayKivaSignupInBrowser() {
-        
-        let controller = KivaSignupViewController()
-        self.presentViewController(controller, animated: true, completion: nil)
-        //self.navigationController?.pushViewController(controller, animated: true)
-    }
+//    /*! Display the Kiva.org signup page in an embedded browser view. */
+//    func displayKivaSignupInBrowser() {
+//        
+//        // create navigation controller
+//        let window = UIWindow(frame: UIScreen.mainScreen().bounds)
+//        let navController = UINavigationController()
+//        let rootController = KivaSignupViewController(nibName: nil, bundle: nil)
+//        navController.viewControllers = [rootController]
+//        window.rootViewController = rootController
+//        window.makeKeyAndVisible()
+//        
+//        let controller = KivaSignupViewController()
+//        self.presentViewController(controller, animated: true, completion: nil)
+//        //self.navigationController?.pushViewController(controller, animated: true)
+//    }
+//    
+//    /* Display url in an embeded webkit browser in the navigation controller. */
+//    func showUrlInEmbeddedBrowser(url: String) {
+//        var storyboard = UIStoryboard (name: "Main", bundle: nil)
+//        var controller = storyboard.instantiateViewControllerWithIdentifier("WebViewStoryboardID") as! WebViewController
+//        controller.url = url
+//        self.navigationController?.pushViewController(controller, animated: true)
+//        
+//    }
     
     
     // MARK: OAuth with Kiva.org
@@ -151,9 +184,11 @@ class LoginViewController: UIViewController {
     
         let resultText: String = success ? "succeeded" : "failed"
         
-        let alert = UIAlertController(title: "Kiva OAuth Complete", message: "The OAuth operation with Kiva.org \(resultText).", preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
-        alert.addAction(okAction)
-        self.presentViewController(alert, animated: true, completion:nil)
+        if !success {
+            let alert = UIAlertController(title: "Kiva OAuth Complete", message: "The OAuth operation with Kiva.org \(resultText).", preferredStyle: .Alert)
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
+            alert.addAction(okAction)
+            self.presentViewController(alert, animated: true, completion:nil)
+        }
     }
 }

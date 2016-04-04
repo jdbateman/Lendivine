@@ -70,6 +70,11 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         refreshMapPins()
     }
     
+    /*! hide the status bar */
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     func refreshMapPins() {
         
         // Clear any existing pins before redrawing them (e.g. if navigating back to the map view from the InfoPosting view.)
