@@ -46,10 +46,11 @@ class LoginViewController: UIViewController {
 
     /* SignUp button selected. Attempt Kiva.org OAuth. */
     @IBAction func onSignUpButtonTap(sender: AnyObject) {
-        let alert = UIAlertController(title: "TODO", message: "Present Kiva Signup web page in browser", preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
-        alert.addAction(okAction)
-        self.presentViewController(alert, animated: true, completion:nil)
+        displayKivaSignupInBrowser()
+//        let alert = UIAlertController(title: "TODO", message: "Present Kiva Signup web page in browser", preferredStyle: .Alert)
+//        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
+//        alert.addAction(okAction)
+//        self.presentViewController(alert, animated: true, completion:nil)
     }
 
     /* User selected the Login button. Attempt to login to Kiva.org. */
@@ -110,6 +111,15 @@ class LoginViewController: UIViewController {
     func stopActivityIndicator() {
         activityIndicator.stopAnimating()
     }
+    
+    /*! Display the Kiva.org signup page in an embedded browser view. */
+    func displayKivaSignupInBrowser() {
+        
+        let controller = KivaSignupViewController()
+        self.presentViewController(controller, animated: true, completion: nil)
+        //self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
     
     // MARK: OAuth with Kiva.org
     
