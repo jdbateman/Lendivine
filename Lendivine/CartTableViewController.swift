@@ -274,10 +274,24 @@ class CartTableViewController: UITableViewController {
     /*! Remove all items from the cart and referesh the view. */
     func onTrashButtonTap() {
 
-        if let cart = cart {
-            cart.empty()
+        // Confirm the delete-all operation with the user via an alert controller.
+        let alertController = UIAlertController(title: "Clear Cart", message: "Select OK to remove all loans from the cart." , preferredStyle: .Alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+            UIAlertAction in
+            if let cart = self.cart {
+                cart.empty()
+            }
+            self.updateCart()
         }
-        updateCart()
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
+            UIAlertAction in
+            // do nothing
+        }
+
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     // The user selected the checkout button.
