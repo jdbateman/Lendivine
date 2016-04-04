@@ -36,7 +36,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     func configureMapView() {
         
-        navigationItem.hidesBackButton = false
+        navigationItem.hidesBackButton = true
         
         // Additional bar button items
         let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")

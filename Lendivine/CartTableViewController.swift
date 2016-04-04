@@ -41,6 +41,10 @@ class CartTableViewController: UITableViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        updateCart()
+    }
+    
+    func updateCart() {
         self.tableView.reloadData()
     }
 
@@ -73,7 +77,7 @@ class CartTableViewController: UITableViewController {
         
         dispatch_async(dispatch_get_main_queue()) {
             
-            // make delete button corners rounded
+            // make donation button corners rounded
             cell.changeDonationButton.layer.cornerRadius = 7
             cell.changeDonationButton.layer.masksToBounds = true
             
@@ -138,7 +142,7 @@ class CartTableViewController: UITableViewController {
 //        
 //        dispatch_async(dispatch_get_main_queue()) {
 //            
-//            // make delete button corners rounded
+//            // make donation button corners rounded
 //            cell.changeDonationButton.layer.cornerRadius = 7
 //            cell.changeDonationButton.layer.masksToBounds = true
 //
@@ -249,12 +253,15 @@ class CartTableViewController: UITableViewController {
     /*! Setup the nav bar button items. */
     func configureBarButtonItems() {
         
+        // left bar button items
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
+        navigationItem.setLeftBarButtonItem(trashButton, animated: true)
+        
+        // right bar button items
         let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCheckoutButtonTapped")
-        self.navigationItem.rightBarButtonItem = checkoutButton
-        
+        //self.navigationItem.rightBarButtonItem = checkoutButton
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
-        
-        navigationItem.setRightBarButtonItems([checkoutButton, mapButton], animated: true)
+        navigationItem.setRightBarButtonItems([mapButton, checkoutButton], animated: true)
     }
     
     
@@ -264,8 +271,21 @@ class CartTableViewController: UITableViewController {
         presentMapController()
     }
 
+    /*! Remove all items from the cart and referesh the view. */
+    func onTrashButtonTap() {
+
+        if let cart = cart {
+            cart.empty()
+        }
+        updateCart()
+    }
     
     // The user selected the checkout button.
+    @IBAction func onCheckoutButtonInViewTapped(sender: AnyObject) {
+        onCheckoutButtonTapped()
+    }
+    
+    // The user selected the checkout bar button item.
     func onCheckoutButtonTapped() {
         print("call KivaAPI.checkout")
         

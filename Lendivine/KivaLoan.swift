@@ -716,6 +716,55 @@ extension KivaLoan {
         }
     }
 
+    /*!
+    @brief Get loans from Kiva.org and confirm the status of each is "fundraising".
+    @return List of loans with fundraising status, and list of loans no longer with fundraining status.
+    */
+    class func getCurrentFundraisingStatus(loans: [KivaLoan]?, completionHandler: (success: Bool, error: NSError?, fundraising: [KivaLoan]?, notFundraising: [KivaLoan]?) -> Void) {
+        
+        // validate loans not nil or empty
+        if loans == nil || loans!.count == 0 {
+            let error = VTError(errorString: "Kiva loan not specified.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+            completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+        }
+        
+        var fundraising = [KivaLoan]()
+        var notFundraising = [KivaLoan]()
+        
+        // accumulate loan IDs
+        var loanIDs = [NSNumber?]()
+        for loan in loans! {
+            if let id = loan.id {
+                loanIDs.append(id)
+            }
+        }
+        //        var loanIDs: NSMutableArray // = [NSNumber]()
+        //        for loan in loans! {
+        //            if let id = loan.id {
+        //                loanIDs.addObject(id) // loanIDs.append(id)
+        //            }
+        //        }
+        
+        // Find loans on Kiva.org
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
+            success, error, loans in
+            if success {
+                if let loans = loans {
+                    for loan in loans {
+                        if loan.status == KivaLoan.Status.fundraising.rawValue {
+                            fundraising.append(loan)
+                        } else {
+                            notFundraising.append(loan)
+                        }
+                    }
+                    completionHandler(success: true, error: nil, fundraising: fundraising, notFundraising: notFundraising)
+                }
+            } else {
+                let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
+                completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+            }
+        }
+    }
 }
 
 func ==(lhs: KivaLoan, rhs: KivaLoan) -> Bool {
