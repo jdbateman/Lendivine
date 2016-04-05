@@ -18,6 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         Countries.persistCountriesFromWebService(nil)
+        
+        UITabBar.appearance().translucent = false
+        UITabBar.appearance().barTintColor = UIColor(rgb:0x122950)
+        UITabBar.appearance().tintColor = UIColor.whiteColor()
+        
         return true
     }
 

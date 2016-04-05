@@ -170,6 +170,7 @@ class MyLoansTableViewController: UITableViewController {
             controller.sourceViewController = self
             controller.navigationItem.title = "MyLoans"
             controller.loans = loans
+            controller.showRefreshButton = false
         }
     }
     

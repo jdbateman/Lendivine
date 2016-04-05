@@ -23,8 +23,9 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     var loans: [KivaLoan]?
     var sourceViewController: UIViewController?
     
-    @IBOutlet weak var mapView: MKMapView!
+    var showRefreshButton = true
     
+    @IBOutlet weak var mapView: MKMapView!
     
     var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50)) as UIActivityIndicatorView
     
@@ -36,13 +37,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     func configureMapView() {
         
-        navigationItem.hidesBackButton = true
-        
-        // Additional bar button items
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
-        let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        //let pinButton = UIBarButtonItem(image: UIImage(named: "pin"), style: .Plain, target: self, action: "onPinButtonTap")
-        navigationItem.setRightBarButtonItems([loansByListButton, refreshButton], animated: true)
+        setupBarButtonItems()
         
         // get a reference to the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -51,7 +46,10 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         mapView.delegate = self
         
         // Set the region to North America
-        setMapRegionToNorthAmerica()
+        if let loans = loans where loans.count > 0 {
+            setMapRegionToCountryForLoan(loans[0])
+        }
+        //setMapRegionToNorthAmerica()
         //setMapRegionToLargestExtent()
         
         // configure mapView
@@ -73,6 +71,25 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     /*! hide the status bar */
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    func setupBarButtonItems() {
+    
+        navigationItem.hidesBackButton = true
+        
+        var barButtonItems = [UIBarButtonItem]()
+        
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
+        barButtonItems.append(loansByListButton)
+        
+        if showRefreshButton {
+            let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
+            barButtonItems.append(refreshButton)
+        }
+        
+        //let pinButton = UIBarButtonItem(image: UIImage(named: "pin"), style: .Plain, target: self, action: "onPinButtonTap")
+        
+        navigationItem.setRightBarButtonItems(barButtonItems, animated: true)
     }
     
     func refreshMapPins() {
@@ -585,6 +602,35 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         )
         // visible span in degrees lat, lon
         let span = MKCoordinateSpanMake(70, 30)
+        let region = MKCoordinateRegion(center: location, span: span)
+        mapView.setRegion(region, animated: true)
+    }
+
+    /* Set the mapview to show the specified country. */
+    func setMapRegionToCountryForLoan(loan:KivaLoan) {
+        
+        // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
+        guard let geo = loan.geo else {return}
+        let geoCoordsArray = geo.characters.split{$0 == " "}.map(String.init)
+
+        guard let latitude = Double(geoCoordsArray[0]) else {return}
+        guard let longitude = Double(geoCoordsArray[1]) else {return}
+        let lat = CLLocationDegrees(latitude)
+        let long = CLLocationDegrees(longitude)
+
+        print("\(loan.country) coordinates: (\(lat), \(long))")
+        
+        // The lat and long are used to create a CLLocationCoordinates2D instance.
+        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        
+        // center
+        let location = CLLocationCoordinate2D(
+            latitude: lat,
+            longitude: long
+        )
+        // visible span in degrees lat, lon
+        let span = MKCoordinateSpanMake(100, 50)  // 70, 30
+        
         let region = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(region, animated: true)
     }

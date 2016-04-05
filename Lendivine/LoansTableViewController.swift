@@ -58,6 +58,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         navigationItem.title = "Loans"
+        
+        navigationController?.navigationBar.barTintColor = UIColor(rgb:0xFFE8A1) // (rgb:0xFFCA56)
+        navigationController?.navigationBar.translucent = false
     }
     
     /*! hide the status bar */
