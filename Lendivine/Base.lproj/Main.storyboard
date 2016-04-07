@@ -52,7 +52,7 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ooC-hV-FCj">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ooC-hV-FCj">
                                             <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="160" id="4mv-Of-eaD"/>
@@ -72,17 +72,26 @@
                                                 <action selector="onAddToCartButtonTap:" destination="Jfe-wp-9uN" eventType="touchUpInside" id="ZIk-0V-Fss"/>
                                             </connections>
                                         </button>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Volunteering-50" translatesAutoresizingMaskIntoConstraints="NO" id="95i-ky-jP6">
+                                            <rect key="frame" x="2" y="103" width="50" height="50"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="50" id="5rc-AK-tHj"/>
+                                                <constraint firstAttribute="width" constant="50" id="bAr-W9-Uvn"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="ZFX-7i-jOM" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="2kZ-aW-Ri6"/>
                                         <constraint firstItem="ooC-hV-FCj" firstAttribute="leading" secondItem="z5d-i8-ZVm" secondAttribute="leading" constant="8" id="3Lh-kq-rSA"/>
                                         <constraint firstItem="S6f-HJ-XUr" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="22" id="4c4-Lp-SDX"/>
+                                        <constraint firstAttribute="bottom" secondItem="95i-ky-jP6" secondAttribute="bottom" constant="6" id="9fr-kx-5WK"/>
                                         <constraint firstItem="orN-mG-1TS" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="9zI-JO-xuv"/>
                                         <constraint firstItem="J2F-fO-8hu" firstAttribute="top" secondItem="ZFX-7i-jOM" secondAttribute="bottom" constant="4" id="AYr-fg-vdh"/>
                                         <constraint firstItem="orN-mG-1TS" firstAttribute="top" secondItem="J2F-fO-8hu" secondAttribute="bottom" constant="4" id="Jh6-Cg-18Y"/>
                                         <constraint firstAttribute="bottom" secondItem="ooC-hV-FCj" secondAttribute="bottom" constant="8" id="MDP-Dp-4uu"/>
                                         <constraint firstAttribute="trailing" secondItem="R9r-rX-l3M" secondAttribute="trailing" constant="6" id="NU4-A8-dT0"/>
                                         <constraint firstItem="ZFX-7i-jOM" firstAttribute="top" secondItem="z5d-i8-ZVm" secondAttribute="top" constant="20" id="YUS-F1-hI0"/>
+                                        <constraint firstItem="95i-ky-jP6" firstAttribute="leading" secondItem="z5d-i8-ZVm" secondAttribute="leading" constant="6" id="bvD-CL-urL"/>
                                         <constraint firstItem="J2F-fO-8hu" firstAttribute="leading" secondItem="ooC-hV-FCj" secondAttribute="trailing" constant="21" id="e3y-LZ-QEW"/>
                                         <constraint firstItem="R9r-rX-l3M" firstAttribute="centerY" secondItem="z5d-i8-ZVm" secondAttribute="centerY" id="faY-m6-OfY"/>
                                         <constraint firstItem="S6f-HJ-XUr" firstAttribute="top" secondItem="orN-mG-1TS" secondAttribute="bottom" constant="4" id="jMF-Rf-hvY"/>
@@ -94,6 +103,7 @@
                                 <connections>
                                     <outlet property="amountLabel" destination="orN-mG-1TS" id="tUM-2j-61A"/>
                                     <outlet property="countryLabel" destination="S6f-HJ-XUr" id="ucU-wu-2n0"/>
+                                    <outlet property="donatedImageView" destination="95i-ky-jP6" id="Iag-h3-6gX"/>
                                     <outlet property="loanImageView" destination="ooC-hV-FCj" id="bVc-J3-hw9"/>
                                     <outlet property="nameLabel" destination="ZFX-7i-jOM" id="Ccy-9H-BeB"/>
                                     <outlet property="sectorLabel" destination="J2F-fO-8hu" id="Is7-p1-LZc"/>
@@ -556,6 +566,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="My Account" id="ZOo-YW-Tva"/>
                     <connections>
+                        <outlet property="avatarImageView" destination="QK1-ay-rHQ" id="f6p-gn-XC8"/>
                         <outlet property="balanceLabel" destination="hNz-WU-QQK" id="bLc-Al-csQ"/>
                         <outlet property="emailLabel" destination="pNu-06-cAA" id="Cn5-NN-thg"/>
                         <outlet property="lenderIDLabel" destination="NIS-6p-r5e" id="xaH-Ge-Xfe"/>
@@ -1334,6 +1345,40 @@
             </objects>
             <point key="canvasLocation" x="2273" y="-1084"/>
         </scene>
+        <!--My Map View Controller-->
+        <scene sceneID="fce-wo-V4m">
+            <objects>
+                <viewController id="yeU-fw-Mj8" customClass="MyMapViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="w88-H1-YfT"/>
+                        <viewControllerLayoutGuide type="bottom" id="DTH-g9-UZE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="e7c-gy-OCY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0e0-DE-KaN">
+                                <rect key="frame" x="180" y="324" width="240" height="128"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0e0-DE-KaN" firstAttribute="centerX" secondItem="e7c-gy-OCY" secondAttribute="centerX" id="64V-LB-vlQ"/>
+                            <constraint firstItem="DTH-g9-UZE" firstAttribute="top" secondItem="0e0-DE-KaN" secondAttribute="bottom" id="C7G-aS-9cu"/>
+                            <constraint firstAttribute="trailing" secondItem="0e0-DE-KaN" secondAttribute="trailing" id="IdO-3Z-QT1"/>
+                            <constraint firstItem="0e0-DE-KaN" firstAttribute="centerY" secondItem="e7c-gy-OCY" secondAttribute="centerY" id="W0m-gf-zo1"/>
+                            <constraint firstItem="0e0-DE-KaN" firstAttribute="leading" secondItem="e7c-gy-OCY" secondAttribute="leading" id="cpi-ha-kdy"/>
+                            <constraint firstItem="0e0-DE-KaN" firstAttribute="top" secondItem="w88-H1-YfT" secondAttribute="bottom" id="i7d-yP-gI0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="0e0-DE-KaN" id="3FJ-CD-fG4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oAl-z1-UJv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-734" y="-842"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="7ez-Qw-7aV">
             <objects>
@@ -1363,10 +1408,11 @@
         <image name="EmptyCart-50" width="50" height="50"/>
         <image name="User-100" width="100" height="100"/>
         <image name="User-32" width="32" height="32"/>
+        <image name="Volunteering-50" width="50" height="50"/>
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YhC-ao-4LW"/>
-        <segue reference="g7a-yH-ptl"/>
+        <segue reference="y7E-Fm-SAE"/>
+        <segue reference="K3P-VK-vgJ"/>
     </inferredMetricsTieBreakers>
 </document>

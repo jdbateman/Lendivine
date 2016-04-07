@@ -134,7 +134,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func configureCell(cell: LoansTableViewCell, indexPath: NSIndexPath) {
         
         //dispatch_async(dispatch_get_main_queue()) {
-            
+        
+            //cell.donatedImageView.hidden = true
+        
             // TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
             let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
             
@@ -162,7 +164,13 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             
             // Set placeholder image
             cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-            
+        
+            // put rounded corners on loan image
+            cell.loanImageView.layer.cornerRadius = 20
+            cell.loanImageView.layer.borderWidth = 0
+            cell.loanImageView.layer.borderColor = UIColor.clearColor().CGColor
+            cell.loanImageView.clipsToBounds = true
+        
     //        if let kivaAPI = self.kivaAPI {
     //            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
     //            kivaAPI.getKivaImage(loan.imageID) {success, error, image in

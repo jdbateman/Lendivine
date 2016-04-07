@@ -17,6 +17,7 @@ class LoansTableViewCell: DVNTableViewCell {
     @IBOutlet weak var amountLabel: UILabel!            // The total requested sum of the loan.
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var countryLabel: UILabel!
+    @IBOutlet weak var donatedImageView: UIImageView!
     
     var KivaLoanId: NSNumber?
     
@@ -61,7 +62,7 @@ class LoansTableViewCell: DVNTableViewCell {
             
             if let indexPath = indexPath {
                 
-                pulseAnimation(self.loanImageView) { success in
+                heartbeatAnimation /*pulseAnimation*/ (self.loanImageView) { success in
                 
                     self.animateLoanToCart(tableView /*contentView*/, tableView: tableView, indexPath: indexPath, loan: loan)
                 }
@@ -71,6 +72,9 @@ class LoansTableViewCell: DVNTableViewCell {
             dispatch_async(dispatch_get_main_queue()) {
                 CoreDataStackManager.sharedInstance().saveContext()
             }
+            
+            donatedImageView.hidden = false
+            
         } else {
             if let controller = self.parentController {
                 showLoanAlreadyInCartAlert(loan, controller: controller)
@@ -91,27 +95,53 @@ class LoansTableViewCell: DVNTableViewCell {
 
     
     // MARK: Animation
+
+    func heartbeatAnimation(imageView: UIImageView, completion:(success: Bool) -> Void) {
+    
+        pulseAnimation(self.loanImageView) { success in
+            
+            var delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+                
+                self.pulseAnimation(self.loanImageView) { success in
+                    
+                    delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.15 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+                        
+                        self.pulseAnimation(self.loanImageView) { success in
+                            
+                            completion(success: success)
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func pulseAnimation(imageView: UIImageView, completion:(success: Bool) -> Void) {
         
-        var delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+        var delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.25 * Double(NSEC_PER_SEC)))
         
-        // grow
-        UIView.animateWithDuration(1.0, animations: {
-            imageView.frame.size.height += 20
-            imageView.frame.size.width += 20
+        // shrink
+        UIView.animateWithDuration(0.4, animations: {
+            let center = imageView.center
+            imageView.frame.size.height -= 20
+            imageView.frame.size.width -= 20
+            imageView.center = center
         })
    
-        delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+        //delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.25 * Double(NSEC_PER_SEC)))
         dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
                 
-            // shrink
-            UIView.animateWithDuration(1.0, animations: {
-                imageView.frame.size.height -= 60
-                imageView.frame.size.width -= 60
+            // grow
+            UIView.animateWithDuration(0.2, animations: {
+                let center = imageView.center
+                imageView.frame.size.height += 20 // 60
+                imageView.frame.size.width += 20 // 60
+                imageView.center = center
             })
             
-            delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+            delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
                 completion(success:true)
             }
