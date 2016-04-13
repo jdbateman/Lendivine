@@ -33,14 +33,21 @@ These view controllers provide additional detail:
 
 ## Technical overview
 
-The project is written and compiled in Swift 2.2 and compiled for an iOS base version of 8.0.
+The project is written and compiled in Swift 2.2 for an iOS base version of 8.0.
 
 Technical highlights:
 * Uses two REST apis: Kiva.org and RESTCountries.
 * Implements OAuth 1.x to authenticate with the kiva.org service.
 * UISearchController in Countries view controller enables search of view controller with a lot of data.
-* Swift exception handling is used.
+* Swift exception handling.
 * MKMapView with annotations displaying a loan image in the annotation callout.
 * Custom animation when loan is selected in the Loans view controller.
+* Persists model data, particularly a user's CartItems. 
+* Persists and refreshes Countries in core data to show how initialization performance can be enhanced while ensuring data is synced from the service.
+* Implemented my own disk and memory cache of web image download to enhance performance.
+* Implemented NSURLConnection based networking.
+* Abstracted both REST APIs and the networking layer in separate classes following the separation of concerns design pattern.
+* MVC design pattern.
+* 
 
 
