@@ -14,6 +14,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
     var loan: KivaLoan?
     
+//    var topViewOffset: Double? = nil
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var loanFlagImageView: UIImageView!
@@ -23,6 +25,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var country: UILabel!
     @IBOutlet weak var status: UILabel!
     @IBOutlet weak var fundedAmount: UILabel!
+    @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var topViewToTopMarginConstraint: NSLayoutConstraint!
     
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
@@ -34,11 +38,26 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
         setupView()
 
+        //NSLayoutConstraint(item: topView, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .TopMargin, multiplier: 1.0, constant: 0.0).active = true
+        
+//        if let topViewOffset = topViewOffset {
+//            self.topViewToTopMarginConstraint.constant = CGFloat(topViewOffset)
+//        }
+        
         // set the mapView delegate to this view controller
         mapView.delegate = self
         
         showPinOnMap()
     }
+    
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        if let topViewOffset = topViewOffset {
+//            self.topViewToTopMarginConstraint.constant = CGFloat(topViewOffset)
+//            self.view.setNeedsDisplay()
+//        }
+//    }
     
     /*! hide the status bar */
     override func prefersStatusBarHidden() -> Bool {

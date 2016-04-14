@@ -416,7 +416,8 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             //pinView!.image = UIImage(named: "pin-map-7")
             
             
-            TODO: 
+//TODO: I should in most cases already have the image (unless refresh is done on a mapview - i can get rid of that). This would make loan.getImage() synchronous. In other cases I could preload the images before loading the imageview....
+//TODO: Wait to return pinView until image is available. Display spinner while waiting. Or, can I queue all requests asynch and when they are done get a callback on the main thread and return the annotation. dispatch_sync on a background queue and dispatch back to a function here on the main queue might be what I want.
             // Display the lendee's image on the annotation
             if let loan = pointAnnotation.loan {
                 loan.getImage() {

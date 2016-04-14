@@ -518,6 +518,7 @@ class CartTableViewController: UITableViewController {
                     
                     if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().scratchContext) {
                         controller.loan = loan
+                        //controller.topViewOffset = 44
                     }
                 }
             }

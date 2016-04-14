@@ -9,13 +9,16 @@
 
 import UIKit
 
-class AccountViewController: UIViewController {
+class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var lenderIDLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
+    
+    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var albumButton: UIButton!
     
     var kivaAPI: KivaAPI?
     
@@ -25,11 +28,14 @@ class AccountViewController: UIViewController {
         // get the kivaAPI handle
         self.kivaAPI = KivaAPI.sharedInstance
         
-        // put rounded corners on account image
-        avatarImageView.layer.cornerRadius = 50
-        avatarImageView.layer.borderWidth = 2
-        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
-        avatarImageView.clipsToBounds = true
+        setupAvatarImage()
+        
+        // camera button
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+            cameraButton.enabled = true
+        } else {
+            cameraButton.enabled = false
+        }
         
         populateAccountData()
     }
@@ -39,8 +45,94 @@ class AccountViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /*! Display default avatar image. */
+    func setupAvatarImage() {
+    
+        // white tint
+        let avatar = UIImage(named: "User-100")
+        let tintedAvatar = avatar?.imageWithRenderingMode(.AlwaysTemplate)
+        avatarImageView.image = tintedAvatar
+        avatarImageView.tintColor = UIColor.whiteColor()
+        
+        // bordered with grey outlined circle
+        avatarImageView.layer.cornerRadius = 100
+        avatarImageView.layer.borderWidth = 2
+        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
+        avatarImageView.clipsToBounds = true
+        
+        avatarImageView.backgroundColor = UIColor.blackColor()
+    }
+    
+    // MARK: Actions
+    
+    // pick an image from the camera
+    @IBAction func onCameraButton(sender: AnyObject) {
+        self.presentImagePicker(UIImagePickerControllerSourceType.Camera)
+    }
+    
+    // pick an image from the photo album
+    @IBAction func onAlbumButton(sender: AnyObject) {
+        self.presentImagePicker(UIImagePickerControllerSourceType.PhotoLibrary)
+    }
+    
+    func presentImagePicker(var sourceType: UIImagePickerControllerSourceType) {
+        var imagePicker: UIImagePickerController = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = sourceType
+        imagePicker.allowsEditing = true
+        self.presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    func setAccountImage(newImage:UIImage) {
+        
+        avatarImageView.image = newImage
+        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.layer.cornerRadius = 100
+        avatarImageView.layer.borderWidth = 2
+        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
+        avatarImageView.clipsToBounds = true
+        avatarImageView.backgroundColor = UIColor.blackColor()
+        
+    }
+    
+    // MARK: UIImagePickerControllerDelegate
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
 
-
+//    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+//        //if let info = editingInfo {
+//            if let image = editingInfo![UIImagePickerControllerOriginalImage] as? UIImage {
+//                avatarImageView.contentMode = .ScaleAspectFit
+//                avatarImageView.image = image
+//            }
+//        //}
+        
+        if let selectedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            setAccountImage(selectedImage)
+        } else if let selectedImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            setAccountImage(selectedImage)
+        } else {
+            return
+        }
+        
+        // dismiss the image picker view controller
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+//        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+//            avatarImageView.contentMode = .ScaleAspectFit
+//            avatarImageView.image = image
+//        }
+//        // dismiss the image picker view controller
+//        dismissViewControllerAnimated(true, completion: nil)
+//    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        // dismiss the image picker view controller
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     
     // Make KivaAPI calls to retrieve and render the user's kiva account information.
     func populateAccountData() {

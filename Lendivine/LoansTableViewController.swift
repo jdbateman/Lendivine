@@ -61,6 +61,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         navigationController?.navigationBar.barTintColor = UIColor(rgb:0xFFE8A1) // (rgb:0xFFCA56)
         navigationController?.navigationBar.translucent = false
+        
+        initRefreshControl()
     }
     
     /*! hide the status bar */
@@ -78,6 +80,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // Dispose of any resources that can be recreated.
     }
 
+    
+    // MARK: view setup
+    
     /*! Setup the nav bar button items. */
     func configureBarButtonItems() {
     
@@ -101,6 +106,16 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         //self.navigationItem.rightBarButtonItems?.first?.enabled = false
         //self.navigationItem.rightBarButtonItems?[1].enabled = false
+    }
+    
+    func initRefreshControl() {
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = UIColor.whiteColor()
+        refreshControl.transform = CGAffineTransformMakeScale(2.0, 2.0)
+        refreshControl.addTarget(self, action: "onPullToRefresh:", forControlEvents: .ValueChanged)
+        self.tableView.addSubview(refreshControl)
+        self.tableView.alwaysBounceVertical = true
     }
 
     // MARK: - Table view data source
@@ -137,6 +152,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
             //cell.donatedImageView.hidden = true
         
+            //todo - remove... cell may be recycled, so remove cart icon
+            //cell.donatedImageView.hidden = true
+        
             // TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
             let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
             
@@ -161,7 +179,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             if let country = loan.country {
                 cell.countryLabel.text = loan.country
             }
-            
+
             // Set placeholder image
             cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
         
@@ -196,6 +214,18 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 }
             }
         //}
+        
+//        let cart = KivaCart.sharedInstance
+//        let item = KivaCartItem(loan: loan /*loanID: loanID*/, donationAmount: donationAmount, context: context)
+//        if !itemInCart(item)
+        
+        let cart = KivaCart.sharedInstance
+        let item = KivaCartItem(loan: loan, donationAmount: 25, context: self.sharedContext)
+        if cart.itemInCart(item) {
+            cell.donatedImageView.hidden = false
+        } else {
+            cell.donatedImageView.hidden = true
+        }
     }
     
     // MARK: - Fetched results controller
@@ -623,17 +653,68 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     /* Refresh button was selected. */
     func onRefreshButtonTap() {
         
+        refreshLoans(nil)
+        
+//        // Search Kiva.org for the next page of Loan results.
+//        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+//            if success {
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    //self.fetchLoans()
+//                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
+//                }
+//            } else {
+//                print("failed to populate loans. error: \(error?.localizedDescription)")
+//            }
+//        }
+    }
+    
+    func onPullToRefresh(refreshControl: UIRefreshControl) {
+        
+//        let myAttributes1 = [ NSFontAttributeName: UIColor.greenColor() ]
+        
+        let myAttribute = [ NSFontAttributeName: UIFont(name: "Georgia", size: 10.0)! ]
+//        let attrString3 = NSAttributedString(string: "Hello.", attributes: myAttribute)
+        
+        refreshControl.attributedTitle =  NSAttributedString(string: "Searching for Loans...", attributes: myAttribute)
+        
+        refreshLoans() {
+            success, error in
+            refreshControl.endRefreshing()
+        }
+        
+//        // Search Kiva.org for the next page of Loan results.
+//        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+//            if success {
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    //self.fetchLoans()
+//                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
+//                    refreshControl.endRefreshing()
+//                }
+//            } else {
+//                print("failed to populate loans. error: \(error?.localizedDescription)")
+//                refreshControl.endRefreshing()
+//            }
+//        }
+    }
+    
+    func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
+        
         // Search Kiva.org for the next page of Loan results.
         self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
                     //self.fetchLoans()
-                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
+                    self.tableView.reloadData()
+                    if let completionHandler = completionHandler {
+                        completionHandler(success:true, error: nil)
+                    }
                 }
             } else {
                 print("failed to populate loans. error: \(error?.localizedDescription)")
+                if let completionHandler = completionHandler {
+                    completionHandler(success:false, error: error)
+                }
             }
-
         }
     }
     
@@ -745,6 +826,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
                 let controller = segue.destinationViewController as! LoanDetailViewController
+                
+                //controller.topViewOffset = 0
                 
                 if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
                     controller.loan = loan
