@@ -243,7 +243,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         if let loans = self.loans {
             
             // A collection of point annotations to be displayed on the map view
-            var annotations = [MKPointAnnotation]()
+            var annotations = [DVNPointAnnotation]()
             
             // Create an annotation for each loan in loans
 //            var loanCount = 0
@@ -325,8 +325,21 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     // MARK: MKMapViewDelegate
     
     // Create an accessory view for the pin annotation callout when it is added to the map view
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func xmapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
+        let reuseID = "myAnnotationView"
+        var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
+        if (annotationView == nil) {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+        }
+        if let annotationView = annotationView {
+            annotationView.image = UIImage(named: "Albania.png")
+        }
+        return annotationView
+    }
+    
+    func XmapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    
         guard annotation .isKindOfClass(DVNPointAnnotation) else {
             return nil
         }
@@ -375,11 +388,101 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         else {
             pinView!.annotation = annotation
         }
-            
-        pinView!.image = UIImage(named:"Albania.png") //placeholder  "pin-map-7.png"
+        
+        if let annotationImage = UIImage(named:"Albania.png") {
+            pinView!.image = annotationImage // getThumbnailForImage(annotationImage)
+        }
         return pinView
     }
     
+    // This is the one that works - todo
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        if annotation is MKUserLocation {
+            //return nil so map view draws "blue dot" for standard user location
+            return nil
+        }
+        
+        guard annotation .isKindOfClass(DVNPointAnnotation) else {
+            return nil
+        }
+        let pointAnnotation: DVNPointAnnotation = annotation as! DVNPointAnnotation
+        
+        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("pin")
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
+            pinView!.canShowCallout = true
+            //pinView!.image = UIImage(named: "pin-map-7")
+            
+            
+//TODO: I should in most cases already have the image (unless refresh is done on a mapview - i can get rid of that). This would make loan.getImage() synchronous. In other cases I could preload the images before loading the imageview....
+//TODO: Wait to return pinView until image is available. Display spinner while waiting. Or, can I queue all requests asynch and when they are done get a callback on the main thread and return the annotation. dispatch_sync on a background queue and dispatch back to a function here on the main queue might be what I want.
+            // Display the lendee's image on the annotation
+            if let loan = pointAnnotation.loan {
+                loan.getImage() {
+                    success, error, image in
+                    
+                    if success {
+                        // pointAnnotation.annotationImage = image
+                        pinView!.leftCalloutAccessoryView = self.getCustomAccessoryViewForImage(image)
+                        
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.mapView.setNeedsDisplay()
+                        }
+                    }
+                }
+            }
+            
+            // Add image to left callout
+            //let mugIconView = UIImageView(image: UIImage(named: "Donate-32"))
+            pinView!.leftCalloutAccessoryView = getCustomAccessoryViewForImageNamed("Albania.png")
+            
+            // Add detail button to right callout
+            //var calloutButton = UIButton(type: .DetailDisclosure) // as UIButton
+            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+        }
+        else {
+            pinView!.annotation = annotation
+        }
+        
+        return pinView
+    }
+
+    func getCustomAccessoryViewForImage(image:UIImage?) -> UIImageView? {
+        if let image = image {
+            if let thumb = getThumbnailForImage(image) {
+                return UIImageView(image: thumb)
+            }
+        }
+        return nil
+    }
+    
+    func getCustomAccessoryViewForImageNamed(imageName:String) -> UIImageView? {
+        
+        if let annotationImage = UIImage(named:imageName) {
+            if let image = getThumbnailForImage(annotationImage) {
+                return UIImageView(image: image)
+            }
+        }
+        return nil
+    }
+    
+    func getThumbnailForImage(fullImage:UIImage) -> UIImage?
+    {
+        let resizedImageView = UIImageView(frame: CGRectMake(0, 0, 45, 45))
+        resizedImageView.layer.borderColor = UIColor.whiteColor().CGColor
+        resizedImageView.layer.borderWidth = 2.2
+        resizedImageView.contentMode = UIViewContentMode.ScaleAspectFit // or ScaleAspectFill
+        resizedImageView.image = fullImage
+        
+        UIGraphicsBeginImageContextWithOptions(resizedImageView.frame.size, false, 0.0)
+        resizedImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let thumbnailImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return thumbnailImage
+    }
+
 /* #1
     // Create an accessory view for the pin annotation callout when it is added to the map view
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
