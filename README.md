@@ -43,12 +43,11 @@ Technical highlights:
 * MKMapView with annotations displaying a loan image in the annotation callout.
 * Custom animation when loan is selected in the Loans view controller.
 * Persists model data, particularly a user's CartItems. 
-* Persists and refreshes Countries in core data to show how initialization performance can be enhanced while ensuring data is synced from the service.
+* Persists and refreshes Countries in core data to show how initialization performance can be enhanced while ensuring data is synced from the service. (We expect such an event to be infrequent in the real world, but here we are interested in the pattern which can be applied to other types of data that might update server side more frequently.  In our case if a new country is created, or another is dissolved, it will be automatically updated in core data by this code.)
 * Implemented my own disk and memory cache of web image download to enhance performance.
 * Implemented NSURLConnection based networking.
 * Abstracted both REST APIs and the networking layer in separate classes following the separation of concerns design pattern.
 * MVC design pattern.
-* 
 
 
 ## Build
@@ -71,8 +70,15 @@ After signing up return to the Login screen and select Login to authenticate wit
 Upon completing login the application will query the Kiva REST API for the 20 most recent loans and display them in the screen associated with the Loans tab. 
 * In this screen the user can select the shopping cart button in a cell to add that cell's loan to the cart. A heartbeat and bezier curve animation as well as a donation icon indicate the addition of the selected loan to the cart.
 * A search for additional loans can be made by selecting the refresh bar button item in the navigation bar at the top of the screen. If additional loans are found they are appendec to the table view's list.
+* Select a loan to display details of the loan.
 
 4. Countries
+Select the Countries tab to view a list of countries queried from the RESTCountries REST API. Because the list of countries is large the user can enter a string of characters in the search bar at the top of the screen. The charcters are used to filter the list of countries displayed in the table view. For example type "nep" in the search bar to filter the list of countries to a single entry: "Nepal". Clear the selection to redisplay all 200 or so countries. A custom cell displays information for each country including an image of the flag, and the population. 
+
+Gini coefficient
+An additional piece of information is displayed for each country that lenders might find useful when determining where to focus their lending. That piece of information is the gini coefficient, which is a measure of income inequality, where 0 is complete equality, and 100 is maximum inequality.
+
+Select a country to display a list of recent loan requests in that country. 
 
 5. Cart
 
@@ -80,4 +86,4 @@ Upon completing login the application will query the Kiva REST API for the 20 mo
 
 7. My Account
 
-
+talk about map views 
