@@ -51,3 +51,33 @@ Technical highlights:
 * 
 
 
+## Build
+
+To build the project you will need Xcode 7.0 or later.
+The application can be run on the iOS simulator or an iPhone device running iOS 8.0 or later.
+
+
+## Run
+
+To run the Lendivine application:
+
+1. Signup
+Signup for a Kiva.org account on www.kiva.org using a web browser on any device. Signup can be accessed right in the app by selecting signup at the bottom of the Login screen. This will display the Kiva.org signup interface in an embedded browser in the Lendivine application.
+
+2. Login
+After signing up return to the Login screen and select Login to authenticate with the Kiva service via OAuth. As part of the OAuth process the Kiva.org service may prompt the user to provide username and password credentials which it will use to authenticate the user. Once the credentials are authenticated the service will redirect the user to the Lendivine application.
+
+3. Loans
+Upon completing login the application will query the Kiva REST API for the 20 most recent loans and display them in the screen associated with the Loans tab. 
+* In this screen the user can select the shopping cart button in a cell to add that cell's loan to the cart. A heartbeat and bezier curve animation as well as a donation icon indicate the addition of the selected loan to the cart.
+* A search for additional loans can be made by selecting the refresh bar button item in the navigation bar at the top of the screen. If additional loans are found they are appendec to the table view's list.
+
+4. Countries
+
+5. Cart
+
+6. My Loans
+
+7. My Account
+
+
