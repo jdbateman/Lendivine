@@ -105,9 +105,17 @@ The My Account screen displays account details acquired from a request to the Ki
 
 I've layed out this screen to accomodate capturing or selecting an image to use as the account Image. (Unfortunately Kiva's REST API does not currently support acquiring or updating the account image so I am presently unable to integrate this feature with the account on Kiva.org.)
 
-Map view
-* When displayed from the My Loans screen the user can select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
+#### 8. Map view
 
+All of the main screens in the app that display a list of loans to the user contain a bar button item that presents a map view of the loans. Each loan is represented by a pin on the map. The map is centered on a specific loan, or group of loans from a particular country. In this screen the following features are available: 
+* Select a pin to display a callout displaying information about the loan.
+* Select the right callout to display the Loan Detail screen for that loan.
+* Select the Checkout button to send the cart to Kiva.org to complete checkout (This feature is only available when the map screen is displayed from the Cart screen).
+
+#### 9. Loan Detail View
+
+* When displayed from the My Loans screen the user can select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
+* Select the Add to Cart button to add the loan to the cart. (This feature is available when the map screen displayed from the Loans, Country Loans, or My Loans screens).
 
 ### Technical highlights
 
