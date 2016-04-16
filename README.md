@@ -117,3 +117,13 @@ The My Loans screen displays a list of the loans previously made with the logged
 7. My Account
 
 talk about map views 
+
+### References
+* Kiva.org API
+* RESTCountries API
+
+### Acknowledgements
+* Icons 8
+
+### License
+Please see the license file for details about the license. This software is provided as is with no warranty.
