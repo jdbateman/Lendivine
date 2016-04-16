@@ -80,27 +80,34 @@ Because the list of countries is large the user can enter a string of characters
 
 ##### Gini coefficient
 
-Income inequality is a topic that has recently gained a lot of mindshare in the United States. I wanted to give users an opportunity to use this information to determine where they make loans. Each cell in this view displays a country's gini coefficient, which is a measure of income inequality. 0 represents complete equality while 100 represents maximum inequality.
+Income inequality is a hot topic in the United States. I wanted to give users an opportunity to use this information to determine where they make loans. Each cell in this view displays a country's gini coefficient, which is a measure of income inequality. 0 represents complete equality while 100 represents maximum inequality.
 
 #### 5. Cart
 
-The Cart screen displays a list of loans that have been added to the cart.
+The Cart screen displays a list of loans that have been added to the cart. The following features are available in the Cart screen:
 
-* Select the Cart icon to change the donation amount.
-* Select the checkout button in the navigation bar to send all loans in the cart to Kiva.org. When the checkout button is selected the user is transferred along with the items in the cart to the Kiva.org site to complete the checkout.
+* Select the Cart icon in an individual cell to change the donation amount for the loan displayed in that cell.
+* Select the checkout button at the bottom of the table view (or the checkout item in the navigation bar) to send all loans in the cart to Kiva.org. When the checkout button is selected the user is transferred along with the items in the cart to the Kiva.org site to complete the checkout.
+* Select a loan to display details of the loan.
+* Select the Map button in the navigation bar to see the loans displayed on a map.
 * Swipe left on a cell to remove the corresponding item from the cart.
 * Select the trash button in the navigation bar at the top of the screen to remove all loans from the cart. 
+
+#### 6. My Loans
+
+The My Loans screen displays a list of the loans previously made under the currently logged in account. The following features are available in this screen:
+* Select a loan to display details of the loan.
 * Select the Map button in the navigation bar to see the loans displayed on a map.
-* Select a loan to display details of the loan.
 
-6. My Loans
-The My Loans screen displays a list of the loans previously made with the logged in account.
-* Select a loan to display details of the loan.
-* Select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
+#### 7. My Account
 
-7. My Account
+The My Account screen displays account details acquired from a request to the Kiva REST api. In this screen the user can see the email address used to login to Kiva.org, their LenderID, and the current account balance.
 
-talk about map views 
+I've layed out this screen to accomodate capturing or selecting an image to use as the account Image. (Unfortunately Kiva's REST API does not currently support acquiring or updating the account image so I am presently unable to integrate this feature with the account on Kiva.org.)
+
+Map view
+* When displayed from the My Loans screen the user can select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
+
 
 ### Technical highlights
 
