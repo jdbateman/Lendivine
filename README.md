@@ -72,21 +72,15 @@ Upon completing login the application will display the screen associated with th
 
 #### 4. Countries
 
-Select the Countries tab to view a list of countries queried from the RESTCountries REST API. 
+Select the Countries tab to view a list of countries queried from the RESTCountries REST API. A custom cell displays information for each country including an image of the flag, and the population. Select a country to display a list of recent loans requested by entreprenuers in that country. 
 
 ##### Search Bar
 
 Because the list of countries is large the user can enter a string of characters in the search bar at the top of the screen. The characters are used to filter the list of countries displayed in the table view. For example type "nep" in the search bar to filter the list of countries to a single entry: "Nepal". Clear the selection to redisplay all 200 or so countries. 
 
-A custom cell displays information for each country including an image of the flag, and the population. 
-
 ##### Gini coefficient
 
-An additional piece of information is displayed for each country that lenders might find useful when determining where to focus their lending. That piece of information is the gini coefficient, which is a measure of income inequality, where 0 is complete equality, and 100 is maximum inequality.
-
-In addition the following features are available in this screen:
-* Select a country to display a list of recent loan requests in that country. 
-* Select a loan to display detailed information about the loan.
+Income inequality is a topic that has recently gained a lot of mindshare in the United States. I wanted to give users an opportunity to use this information to determine where they make loans. Each cell in this view displays a country's gini coefficient, which is a measure of income inequality. 0 represents complete equality while 100 represents maximum inequality.
 
 #### 5. Cart
 
