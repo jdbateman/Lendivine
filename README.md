@@ -2,7 +2,7 @@
 
 ## Summary
 Lendivine is an iOS application targetted for an iPhone running iOS 8 and above. 
-This application enables users to search for and make small loans to entrepreneurs around the world. Yeah baby!
+This application enables users to search for and make small loans to entrepreneurs around the world. Yeah lobaby!
 
 ## UI
 The UI is comprised of over a dozen view controllers. The main view controllers are listed below:
@@ -28,7 +28,7 @@ These view controllers provide additional detail:
 
 * Country Loans - Displays loans queried from the Kiva REST API for a specific country.
 
-* Loan Details - Displays additional information about a specific loan, including the location of the loanee on a map.
+* Loan Details - Displays additional information about a specific loan, including the location of the loan requester on a map.
 
 * Map - Displays a group of loans on a map view. Individual loans are represented by annotations and callouts with images.
 
