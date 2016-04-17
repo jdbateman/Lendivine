@@ -61,6 +61,7 @@ After signing up return to the Login screen and select Login to authenticate wit
 ##### Initial login
 
 Note: I you have created credentials on Kiva on another device and you select Login on the Login screen but you have not previously authenticated on this device / simulator, Kiva will redirect you to the Signup page. 
+
 1. At the top of the Signup page there is a SIGN IN option. Select the SIGN IN option to navigate to the Kiva.org Sign in page. 
 2. On the Sign in page you can enter your Kiva username and password, then select the Sign in button. 
 3. After authenticating your signin credentials Kiva.org will display the Portfolio page for authenticated account. 
