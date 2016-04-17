@@ -232,7 +232,7 @@ class RESTCountries {
 
         do {
             let parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [[String:AnyObject]]
-                    print(parsedResult)
+                    //print(parsedResult)
                     completionHandler(result: parsedResult, error: nil)
         } catch let error as NSError {
             print(error.localizedDescription)

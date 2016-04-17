@@ -93,7 +93,7 @@ class DVNTableViewController: UITableViewController {
                                 
                                 // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
                                 let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataStackManager.sharedInstance().scratchContext)
-                                print("new loan: %@, %d", newLoan.name, newLoan.id)
+                                print("initializing new loan in scratchContext: %@, %d", newLoan.name, newLoan.id)
                                 
                                 // CoreDataStackManager.sharedInstance().saveContext()
                                 

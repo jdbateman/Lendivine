@@ -25,7 +25,11 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         super.viewDidLoad()
 
         // Initialize the fetchResultsController from the core data store.
-        fetchLoans()
+        let loanCount = fetchLoans()
+        if loanCount == 0 {
+            // There are no persisted loans. Let's request some new ones from Kiva.
+            onAddLoansButtonTap()
+        }
         
         // set the NSFetchedResultsControllerDelegate
         fetchedResultsController.delegate = self
@@ -46,8 +50,14 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
     
     override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
         //self.removeAllLoans()
         fetchedResultsController.delegate = nil
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,8 +79,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // right bar button items
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
         
-        let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        navigationItem.setRightBarButtonItems([mapButton, refreshButton], animated: true)
+        let addLoansButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "onAddLoansButtonTap")
+        navigationItem.setRightBarButtonItems([mapButton, addLoansButton], animated: true)
     }
     
     func initRefreshControl() {
@@ -156,7 +166,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
         
         let cart = KivaCart.sharedInstance
-        let item = KivaCartItem(loan: loan, donationAmount: 25, context: self.sharedContext)
+        let item = KivaCartItem(loan: loan, donationAmount: 25, context: CoreDataStackManager.sharedInstance().scratchContext /*self.sharedContext*/)
         if cart.itemInCart(item) {
             cell.donatedImageView.hidden = false
         } else {
@@ -183,7 +193,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     } ()
 
     /* Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store. */
-    func fetchLoans() {
+    func fetchLoans() -> Int {
         var error: NSError? = nil
         
         do {
@@ -194,7 +204,15 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         if let error = error {
             LDAlert(viewController:self).displayErrorAlertView("Error retrieving loans", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+        } else {
+            let sectionInfo = self.fetchedResultsController.sections![0]
+            let count = sectionInfo.numberOfObjects
+            print("Fetched \(count) loans.")
+            
+            navigationItem.title = "\(count) Loans"
+            return count
         }
+        return 0
     }
 
     
@@ -249,7 +267,10 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         refreshLoans() {
             success, error in
             if success {
+                self.fetchLoans()
                 self.tableView.reloadData()
+            } else {
+                print("refreshLoans returned an error: \(error)")
             }
         }
     }
@@ -257,6 +278,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     // OAuth button was selected.
     func onTrashButtonTap() {
         removeAllLoans()
+        self.fetchLoans()
         self.tableView.reloadData()
     }
     
@@ -385,8 +407,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
 
     /* Refresh button was selected. */
-    func onRefreshButtonTap() {
-        refreshLoans(nil)
+    func onAddLoansButtonTap() {
         
         refreshLoans() {
             success, error in
@@ -420,7 +441,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
                     //self.fetchLoans()
-                    self.tableView.reloadData()
+                    //self.tableView.reloadData()
                     if let completionHandler = completionHandler {
                         completionHandler(success:true, error: nil)
                     }

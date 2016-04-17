@@ -37,8 +37,8 @@ class Countries {
                 
                 Countries.persistNewCountries(countries)
                 
-                let countOfCountries = Countries.countCountries()
-                print("Count of countries = \(countOfCountries)")
+                //let countOfCountries = Countries.countCountries()
+                //print("Count of countries = \(countOfCountries)")
                 
                 Countries.sendUpdatedCountriesNotification()
                 
@@ -135,7 +135,7 @@ class Countries {
             //if Countries.doesCountryExistInCoreData(country) {
                 
                 duplicateCountries.append(country)
-                print("added duplicate country = \(country)")
+                //print("added duplicate country = \(country)")
             }
         }
         
@@ -186,7 +186,7 @@ class Countries {
             results = nil
         }
 
-        print("countries: \(countries)")
+        //print("countries: \(countries)")
         
         // add the requested number of randomly selected countries
         for var i = 0; i < numberOfCountries; i++ {
@@ -196,7 +196,7 @@ class Countries {
         
         let randomCountriesString = randomCountries.joinWithSeparator(",")
         
-        print("randomCountries: \(randomCountriesString)")
+        //print("randomCountries: \(randomCountriesString)")
         
         return randomCountriesString
     }
@@ -242,7 +242,7 @@ class Countries {
             results = nil
         }
         
-        print("countries: \(countries)")
+        //print("countries: \(countries)")
         
         // add the requested number of randomly selected countries
         for var i = 0; i < numberOfCountries; i++ {
@@ -252,7 +252,7 @@ class Countries {
         
         let randomCountriesString = randomCountries.joinWithSeparator(",")
         
-        print("randomCountries: \(randomCountriesString)")
+        //print("randomCountries: \(randomCountriesString)")
         
         return randomCountriesString
     }

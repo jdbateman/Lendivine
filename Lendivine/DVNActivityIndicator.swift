@@ -29,7 +29,7 @@ class DVNActivityIndicator {
         activityIndicatorBackView = UIView(frame: CGRectMake(100, 200, 100, 100))
         if let backView = activityIndicatorBackView {
             
-            backView.backgroundColor = UIColor.lightGrayColor()
+            backView.backgroundColor = UIColor(red: 240/255, green: 170/255, blue: 43/255, alpha: 1.0)  // UIColor.lightGrayColor()
             backView.layer.cornerRadius = 10
             backView.layer.borderWidth = 2
             backView.layer.borderColor = UIColor.whiteColor().CGColor
