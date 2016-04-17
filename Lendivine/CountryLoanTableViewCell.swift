@@ -5,6 +5,7 @@
 //  Created by john bateman on 3/14/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This class implements the custom table view cell for a loan displayed in the CountryLoansTableViewController.
 
 import UIKit
 import CoreData
@@ -38,9 +39,6 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         // Get the indexPath associated with this table cell
         let indexPath = tableView.indexPathForCell(cell)
         
-        // Alternatively use the version specific code:
-        //let tableView = cell.superview as! UITableView
-        
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! CountryLoansTableViewController
         
@@ -50,16 +48,15 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         
         let amount = 25  // TODO: set default donation amount to user preference.
         
-        //        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
         let cart = KivaCart.sharedInstance
         if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
-            //        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
-            
+
             // Persist the KivaCartItem object we added to the Core Data shared context
             dispatch_async(dispatch_get_main_queue()) {
                 CoreDataStackManager.sharedInstance().saveContext()
             }
         } else {
+            
             if let controller = self.parentController {
                 self.showLoanAlreadyInCartAlert(loan, controller: controller)
             }

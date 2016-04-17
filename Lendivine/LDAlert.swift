@@ -5,6 +5,7 @@
 //  Created by john bateman on 2/16/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This view class can be used to display an error alert controller.
 
 import UIKit
 import Foundation
@@ -19,9 +20,9 @@ class LDAlert {
     }
     
     /*
-    @brief display an UIAlertView presenting the error to the end user
-    usage:
-    LDAlert(viewController:self).displayErrorAlertView("error_title", message: "error_message \(some_var)")
+        @brief display an UIAlertView presenting the error to the end user
+        usage:
+        LDAlert(viewController:self).displayErrorAlertView("error_title", message: "error_message \(some_var)")
     */
     func displayErrorAlertView(title: String, message: String) {
         // Make the alert controller

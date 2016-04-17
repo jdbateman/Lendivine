@@ -5,44 +5,25 @@
 //  Created by john bateman on 11/12/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This table view controller displays a list of loans queried from the kiva REST API.
 
 import UIKit
 import CoreData
 
+
 class LoansTableViewController: DVNTableViewController, NSFetchedResultsControllerDelegate {
     
     // a collection of Kiva loans
-    var loans = [KivaLoan]() // todo - comment out this line. no longer used.
-    
-//    var kivaAPI: KivaAPI?
+    //var loans = [KivaLoan]() // todo - comment out this line. no longer used.
     
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }()
     
-    /* A core data managed object context that will not be persisted. */
-//todo remove
-//    lazy var scratchContext: NSManagedObjectContext = {
-//        var context = NSManagedObjectContext()
-//        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
-//        return context
-//    }()
-    
-//    var nextPageOfKivaSearchResults = 1
-    
-//    static let KIVA_LOAN_SEARCH_RESULTS_PER_PAGE = 20
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
-        //doOAuth()
- // todo - can remove this it has been moved to the superclass.
-//        let kivaOAuth = KivaOAuth.sharedInstance
-//        self.kivaAPI = kivaOAuth.kivaAPI
-        
         // Initialize the fetchResultsController from the core data store.
         fetchLoans()
         
@@ -51,15 +32,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
 
         configureBarButtonItems()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
         navigationItem.title = "Loans"
         
-        navigationController?.navigationBar.barTintColor = UIColor(rgb:0xFFE8A1) // (rgb:0xFFCA56)
+        navigationController?.navigationBar.barTintColor = UIColor(rgb:0xFFE8A1)
         navigationController?.navigationBar.translucent = false
         
         initRefreshControl()
@@ -86,10 +61,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     /*! Setup the nav bar button items. */
     func configureBarButtonItems() {
     
-        // Additional bar button items
-        //TODO - enable let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        //let oAuthButton = UIBarButtonItem(title: "OAuth", style: .Plain, target: self, action: "onOAuthButton")
-
         // left bar button items
         let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
         let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
@@ -97,15 +68,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         // right bar button items
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
-        //        let cartButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCartButton")
-        //        navigationItem.setRightBarButtonItems([oAuthButton, cartButton], animated: true)
         
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
-        //navigationItem.setRightBarButtonItems([refreshButton], animated: true)
         navigationItem.setRightBarButtonItems([mapButton, refreshButton], animated: true)
-        
-        //self.navigationItem.rightBarButtonItems?.first?.enabled = false
-        //self.navigationItem.rightBarButtonItems?[1].enabled = false
     }
     
     func initRefreshControl() {
@@ -129,6 +94,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         let sectionInfo = self.fetchedResultsController.sections![section]
         let count = sectionInfo.numberOfObjects
+        navigationItem.title = "\(count) Loans"
         return count
     }
 
@@ -148,76 +114,46 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     // Initialize the contents of the cell.
     func configureCell(cell: LoansTableViewCell, indexPath: NSIndexPath) {
         
-        //dispatch_async(dispatch_get_main_queue()) {
+        let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
         
-            //cell.donatedImageView.hidden = true
+        if let name = loan.name {
+            cell.nameLabel.text = name
+        }
         
-            //todo - remove... cell may be recycled, so remove cart icon
-            //cell.donatedImageView.hidden = true
+        if let sector = loan.sector {
+            cell.sectorLabel.text = sector
+        }
         
-            // TODO: loan is a CoreData object now. Use fetchedresultsController to initialize an instance.
-            let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
-            
-            //let loan = self.loans[indexPath.row]
-            
-            if let name = loan.name {
-                cell.nameLabel.text = name
-            }
-            
-            if let sector = loan.sector {
-                cell.sectorLabel.text = sector
-            }
-            
-            var amountString = "$"
-            if let loanAmount = loan.loanAmount {
-                amountString.appendContentsOf(loanAmount.stringValue)
-            } else {
-                amountString.appendContentsOf("0")
-            }
-            cell.amountLabel.text = amountString
-            
-            if let country = loan.country {
-                cell.countryLabel.text = loan.country
-            }
+        var amountString = "$"
+        if let loanAmount = loan.loanAmount {
+            amountString.appendContentsOf(loanAmount.stringValue)
+        } else {
+            amountString.appendContentsOf("0")
+        }
+        cell.amountLabel.text = amountString
+        
+        if let _ = loan.country {
+            cell.countryLabel.text = loan.country
+        }
 
-            // Set placeholder image
-            cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-        
-            // put rounded corners on loan image
-            cell.loanImageView.layer.cornerRadius = 20
-            cell.loanImageView.layer.borderWidth = 0
-            cell.loanImageView.layer.borderColor = UIColor.clearColor().CGColor
-            cell.loanImageView.clipsToBounds = true
-        
-    //        if let kivaAPI = self.kivaAPI {
-    //            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-    //            kivaAPI.getKivaImage(loan.imageID) {success, error, image in
-    //                if success {
-    //                    dispatch_async(dispatch_get_main_queue()) {
-    //                        cell.loanImageView!.image = image
-    //                    }
-    //                } else  {
-    //                    print("error retrieving image: \(error)")
-    //                }
-    //            }
-    //        }
-            
-            // TODO: crashing here
-            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-            loan.getImage() {success, error, image in
-                if success {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        cell.loanImageView!.image = image
-                    }
-                } else  {
-                    print("error retrieving image: \(error)")
+        // Set placeholder image
+        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+    
+        // put rounded corners on loan image
+        cell.loanImageView.layer.cornerRadius = 20
+        cell.loanImageView.layer.borderWidth = 0
+        cell.loanImageView.layer.borderColor = UIColor.clearColor().CGColor
+        cell.loanImageView.clipsToBounds = true
+    
+        loan.getImage() {success, error, image in
+            if success {
+                dispatch_async(dispatch_get_main_queue()) {
+                    cell.loanImageView!.image = image
                 }
+            } else  {
+                print("error retrieving image: \(error)")
             }
-        //}
-        
-//        let cart = KivaCart.sharedInstance
-//        let item = KivaCartItem(loan: loan /*loanID: loanID*/, donationAmount: donationAmount, context: context)
-//        if !itemInCart(item)
+        }
         
         let cart = KivaCart.sharedInstance
         let item = KivaCartItem(loan: loan, donationAmount: 25, context: self.sharedContext)
@@ -298,10 +234,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-            
-        default:
-            return
-            
         }
     }
     
@@ -310,44 +242,22 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         self.tableView.endUpdates()
     }
     
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    // MARK: Actions
+    
+    @IBAction func seeMoreLoans(sender: AnyObject) {
+        refreshLoans() {
+            success, error in
+            if success {
+                self.tableView.reloadData()
+            }
+        }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
     
     // OAuth button was selected.
     func onTrashButtonTap() {
         removeAllLoans()
+        self.tableView.reloadData()
     }
     
     // OAuth button was selected.
@@ -379,7 +289,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
     func oAuthCompleted(success: Bool) {
         print("OAuth completed with success = \(success)")
-        //self.navigationItem.rightBarButtonItems?.first?.enabled = true // todo - can remove: no longer needed. cannot get to this VC if oAuth failed in login screen.
         
 /* TODO - reenable
             
@@ -428,18 +337,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
     
     func onMapButton() {
-    
-        // get list of loans displayed in this view controller
-//        guard let loans = self.fetchAllLoans() else {
-//            return
-//        }
         presentMapController()
-        
-        // present the map view controller
-//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-//        let controller: MapViewController = storyboard.instantiateViewControllerWithIdentifier("MapStoryboardID") as! MapViewController
-//        controller.loans = loans
-//        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     func onCartButton() {
@@ -449,11 +347,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         controller.kivaAPI = self.kivaAPI
         self.presentViewController(controller, animated: true, completion: nil)
         
-        
         // 2. TODO - modify security keys in info.plist to get kiva.org cart to render correctly. currently <key>NSAllowsArbitraryLoads</key> <true/> is set to get around the security restriction. To fix look at http://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9 and enable appropriate options then remove the workaround above.
-        
-        // For now to demonstration checkout functionality call checkout here directly. TODO - move this to local CartVC.
-        //checkout()
     }
     
     // Get the 20 most recent loans from Kiva.org in a Core Data scratch context.
@@ -479,223 +373,45 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-//    // Find loans from Kiva.org and update this instance's loan collection property.
-//    func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
-//        if let kivaAPI = self.kivaAPI {
-//            self.findLoans(kivaAPI) { success, error, loanResults in
-//                if success {
-//                    if var loans = loanResults {
-//                        
-//                        // just keep the first numberOfLoansToAdd loans
-//                        //tood - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
-//                        
-//                        // todo - do i need to maintain this collection anymore?  self.loans = loans
-//                        
-//                        print("fetched loans:")
-//                        for loan in loans {
-//                            print("%@", loan.name)
-//                        }
-//                        
-//                        
-//                        // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-//                        //if let loans = loans {
-//                            for loan in loans where loan.id != nil {
-//                                if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataStackManager.sharedInstance().scratchContext) == nil {
-//                                    
-//                                    print("Need to add loan: %@", loan.name)
-//                                    
-//                                    // The following lines were causing duplicate objects to appear in core data. removing these lines results in owning the existing loan objects being upserted when saveContext is called.
-//                                    
-//                                    // todo duplicate loans 
-//                                    // _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
-//                                    
-//                                    // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
-//                                    let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataStackManager.sharedInstance().scratchContext)
-//                                    print("new loan: %@, %d", newLoan.name, newLoan.id)
-//                                
-//                                    // CoreDataStackManager.sharedInstance().saveContext()
-//                                    
-//                                    self.saveScratchContext()
-//                                }
-//                            }
-//                        //}
-//                        
-////                        for loan in loans {
-////                            // add the  loan to our collection
-////                            self.loans.append(loan)
-////                            
-////                            print("cart contains loanId: \(loanId) in amount: \(amount)")
-////                        }
-//                        
-//                        completionHandler(success: true, error: nil)
-//                    }
-//                } else {
-//                    print("failed")
-//                    completionHandler(success: false, error: error)
-//                }
-//            }
-//        } else {
-//            print("no kivaAPI")
-//            completionHandler(success: false, error: nil)
-//        }
-//    }
-    
-    // MARK: Kiva Test functions
-    
-//    func checkout() {
-//        print("checkout called")
-//        
-//        let numberOfLoans = self.loans.count
-//        putLoansInCart(numberOfLoans) {success, error in
-//            if success {
-//                self.showEmbeddedBrowser()
-//            } else {
-//                print("failed to put any loans in the cart")
-//            }
-//        }
-//        
-//        //    TODO - this is a data class. Need to move this logic to a view class and create a view controller for the web view. Look at code in OnTheMap.
-//        //
-//        //    /* Create a UIWebView the size of the screen and set it's delegate to this view controller. */
-//        //    func showWebView(request: NSURLRequest?) {
-//        //        let webView:UIWebView = UIWebView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height))
-//        //        webView.delegate = self
-//        //        if let url = url {
-//        //            webView.loadRequest(request)
-//        //            self.view.addSubview(webView)
-//        //        }
-//        //    }
-//        
-//    }
-    
-    // Add some randomly selected loans to the cart.
-//    func putLoansInCart(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
-//        if let kivaAPI = self.kivaAPI {
-//            self.findLoans(kivaAPI) { success, error, loanResults in
-//                if success {
-//                    if var loans = loanResults {
-//                        
-//                        // just keep the first numberOfLoansToAdd loans
-//                        loans.removeRange(numberOfLoansToAdd..<loans.count)
-//                        
-//                        print("looping through loans...")
-//                        for loan in loans {
-//                            // put the  loan into the cart
-//                            let loanId = loan.id
-//                            let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5
-//                            print("amount of loan = \(amount)")
-//                            kivaAPI.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount, context: CoreDataStackManager.sharedInstance().scratchContext)
-//                            
-//                            print("cart contains loanId: \(loanId) in amount: \(amount)")
-//                        }
-//                        
-//                        completionHandler(success: true, error: nil)
-//                    }
-//                } else {
-//                    print("failed")
-//                    completionHandler(success: false, error: error)
-//                }
-//            }
-//        } else {
-//            print("no kivaAPI")
-//            completionHandler(success: false, error: nil)
-//        }
-//    }
-    
-    // helper function that searches for loans
-//    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
-//
-//        let regions = "ca,sa,af,as,me,ee,we,an,oc"
-//        let countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of ocuntries or use user preferences
-//        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: regions, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
-//            
-//            success, error, loanResults, nextPage in
-//            
-//            // paging
-//            if nextPage == -1 {
-//                // disable the refresh button
-//                //self.navigationItem.rightBarButtonItems?.first?.enabled = false
-//                self.navigationItem.rightBarButtonItems?[1].enabled = false
-//                //.enabled = false
-//            } else {
-//                // save the nextPage
-//                self.nextPageOfKivaSearchResults = nextPage
-//                    
-//                // enable the refresh button
-//                //self.navigationItem.rightBarButtonItems?.first?.enabled = true
-//                self.navigationItem.rightBarButtonItems?[1].enabled = true
-//                //.enabled = true
-//            }
-//            
-//            if success {
-//                // print("search loans results: \(loanResults)")
-//                completionHandler(success: success, error: error, loans: loanResults)
-//            } else {
-//                // print("kivaSearchLoans failed")
-//                completionHandler(success: success, error: error, loans: nil)
-//            }
-//        }
-//    }
-    
     /* Display url in an embeded webkit browser. */
     func showEmbeddedBrowser() {
+        
         let controller = KivaCartViewController()
-        //        var storyboard = UIStoryboard (name: "Main", bundle: nil)
-        //        var controller = storyboard.instantiateViewControllerWithIdentifier("WebSearchStoryboardID") as! WebSearchViewController
-        //controller.initialURL = url
-        if let kivaAPI = self.kivaAPI {
-            controller.request = self.kivaAPI!.getKivaCartRequest()  // KivaCheckout()
+        if let _ = self.kivaAPI {
+            controller.request = self.kivaAPI!.getKivaCartRequest()
         }
-        //controller.webViewDelegate = self
+
         self.presentViewController(controller, animated: true, completion: nil)
     }
 
     /* Refresh button was selected. */
     func onRefreshButtonTap() {
-        
         refreshLoans(nil)
         
-//        // Search Kiva.org for the next page of Loan results.
-//        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
-//            if success {
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    //self.fetchLoans()
-//                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
-//                }
-//            } else {
-//                print("failed to populate loans. error: \(error?.localizedDescription)")
-//            }
-//        }
+        refreshLoans() {
+            success, error in
+            if success {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func onPullToRefresh(refreshControl: UIRefreshControl) {
         
-//        let myAttributes1 = [ NSFontAttributeName: UIColor.greenColor() ]
-        
         let myAttribute = [ NSFontAttributeName: UIFont(name: "Georgia", size: 10.0)! ]
-//        let attrString3 = NSAttributedString(string: "Hello.", attributes: myAttribute)
         
         refreshControl.attributedTitle =  NSAttributedString(string: "Searching for Loans...", attributes: myAttribute)
         
         refreshLoans() {
             success, error in
             refreshControl.endRefreshing()
+            self.tableView.reloadData()
         }
-        
-//        // Search Kiva.org for the next page of Loan results.
-//        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
-//            if success {
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    //self.fetchLoans()
-//                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
-//                    refreshControl.endRefreshing()
-//                }
-//            } else {
-//                print("failed to populate loans. error: \(error?.localizedDescription)")
-//                refreshControl.endRefreshing()
-//            }
-//        }
     }
+    
+    
+    
+    // MARK: Helpfer functions
     
     func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
         
@@ -717,7 +433,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             }
         }
     }
-    
+    // TODO - why are we using a scratch context? 
     /*! Remove all loans from the scratch context. */
     func removeAllLoans() {
         
@@ -728,24 +444,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             }
         }
     }
-    
-//    /* Query context for all MapRegion objects. Return array of MapRegion instances, or an empty array if no results or query failed. */
-//    func fetchAllLoans() -> [MapRegion] {
-//        let errorPointer: NSErrorPointer = nil
-//        let fetchRequest = NSFetchRequest(entityName: MapRegion.entityName)
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: false), NSSortDescriptor(key: "longitude", ascending: false)]
-//        let results: [AnyObject]?
-//        do {
-//            results = try sharedContext.executeFetchRequest(fetchRequest)
-//        } catch let error as NSError {
-//            errorPointer.memory = error
-//            results = nil
-//        }
-//        if errorPointer != nil {
-//            print("Error in fetchAllMapRegions(): \(errorPointer)")
-//        }
-//        return results as? [MapRegion] ?? [MapRegion]()
-//    }
     
     /* 
         @brief Perform a fetch of all the loan objects in the scratch context. Return array of KivaLoan instances, or an empty array if no results or query failed.
@@ -773,49 +471,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         return results as? [KivaLoan] ?? [KivaLoan]()
     }
     
-//    /* Save the data in the scrach context to the core data store on disk. */
-//    func saveScratchContext() {
-//        
-//        let error: NSErrorPointer = nil
-//        //var results: [AnyObject]?
-//        do {
-//            _ = try CoreDataStackManager.sharedInstance().scratchContext.save()
-//        } catch let error1 as NSError {
-//            error.memory = error1
-//            print("Error saving scratchContext: \(error)")
-//        }
-//    }
-    
-//    @IBAction func unwindToVC(segue:UIStoryboardSegue) {
-////        if(segue.sourceViewController .isKindOfClass(ViewController2))
-////        {
-////            let alert = UIAlertView()
-////            alert.title = "UnwindSegue"
-////            alert.message = "Unwind from view 2"
-////            alert.addButtonWithTitle("Ok")
-////            alert.show()
-////        }
-////        if(segue.sourceViewController .isKindOfClass(ViewController3))
-////        {
-////            let alert = UIAlertView()
-////            alert.title = "UnwindSegue"
-////            alert.message = "Unwind from view 3"
-////            alert.addButtonWithTitle("Ok")
-////            alert.show()
-////        }
-//    }
-
-    // MARK: UITableViewDelegate Accessory Views
-    
-    /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
-//    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-//        
-//        if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
-//            
-//            self.presentLoanDetailViewController(loan)
-//        }
-//    }
-    
     
     // MARK: Navigation
     
@@ -826,8 +481,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
                 let controller = segue.destinationViewController as! LoanDetailViewController
-                
-                //controller.topViewOffset = 0
                 
                 if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
                     controller.loan = loan
@@ -855,28 +508,4 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             self.performSegueWithIdentifier("LoansToMapSegueId", sender: self)
         }
     }
-    
-//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        
-//    }
-    
-// TODO - remove? I don't think this is being used now.
-/* Modally present the LoanDetail view controller. */
-//    func presentLoanDetailViewController(loan: KivaLoan?) {
-//        guard let loan = loan else {
-//            return
-//        }
-//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-//        //let controller = storyboard.instantiateViewControllerWithIdentifier("TestStoryboardID") as! UIViewController
-//        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
-//        controller.loan = loan
-//        //self.presentViewController(controller, animated: true, completion: nil)
-//        self.navigationController!.presentViewController(controller, animated: true, completion: nil)
-//    }
-
-// TODO
-//    override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
-//        return true
-//    }
-    
 }

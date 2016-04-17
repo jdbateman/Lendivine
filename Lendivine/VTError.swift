@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/15/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This convenience class can be used to define an application error.
 
 import Foundation
 

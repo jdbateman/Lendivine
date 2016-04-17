@@ -17,10 +17,6 @@ class CartTableViewCell: UITableViewCell {
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var changeDonationButton: UIButton!
     @IBOutlet weak var countryLabel: UILabel!
-    
-//    @IBAction func onRemoveFromCartButtonTap(sender: UIButton) {
-//            removeFromCart(sender)
-//    }
 
     // User selected the change donation button in the cell. Present donation amount options in an action sheet.
     @IBAction func onChangeDonationButton(sender: AnyObject) {
@@ -78,8 +74,6 @@ class CartTableViewCell: UITableViewCell {
                 // ...
             }
         }
-        
-//        UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
     }
     
     // Update the donation amount of the cart item associated with this cell.
@@ -99,65 +93,23 @@ class CartTableViewCell: UITableViewCell {
     // Set button image to donation amount
     func imageForButton(donationAmount: NSNumber) -> UIImage {
         
-        var xCoord = 14
+        var xCoord = 15
         switch donationAmount.intValue {
         case 0...9:
             xCoord = 14
         case 10...99:
-            xCoord = 14
+            xCoord = 15
         case 100...999:
             xCoord = 10
         default:
-            xCoord = 14
+            xCoord = 15
         }
         
         let buttonText: String = "$" + donationAmount.stringValue
         
-//        let x = donationAmount.characters.count
-//        
-//        if
-//        
-//        let xCoord = CGFloat(x)
-        //let donationImage: UIImage = textToImage(buttonText, inImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(xCoord), 7))
-        let donationImage: UIImage = ViewUtility.createImageFromText(buttonText, backingImage: UIImage(named:"EmptyCart-50")!, atPoint: CGPointMake(CGFloat(xCoord), 4))
+        let donationImage: UIImage = ViewUtility.createImageFromText(buttonText, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(xCoord), 3))
         return donationImage
     }
-    
-    // TODO - remove
-//    func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{
-//        
-//        // Setup the font specific variables
-//        var textColor: UIColor = UIColor.whiteColor()
-//        var textFont: UIFont = UIFont(name: "Helvetica Bold", size: 14)!
-//        
-//        //Setup the image context using the passed image.
-//        UIGraphicsBeginImageContext(inImage.size)
-//        
-//        //Setups up the font attributes that will be later used to dictate how the text should be drawn
-//        let textFontAttributes = [
-//            NSFontAttributeName: textFont,
-//            NSForegroundColorAttributeName: textColor,
-//        ]
-//        
-//        //Put the image into a rectangle as large as the original image.
-//        inImage.drawInRect(CGRectMake(0, 0, inImage.size.width, inImage.size.height))
-//        
-//        // Creating a point within the space that is as bit as the image.
-//        var rect: CGRect = CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
-//        
-//        //Now Draw the text into an image.
-//        drawText.drawInRect(rect, withAttributes: textFontAttributes)
-//        
-//        // Create a new image out of the images we have created
-//        var newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
-//        
-//        // End the context now that we have the image we need
-//        UIGraphicsEndImageContext()
-//        
-//        //And pass it back up to the caller.
-//        return newImage
-//        
-//    }
     
     // Return an index path for the cell containing the specified subview of the cell.
     func getIndexPathForCellContainingSubview(subview: UIView) -> NSIndexPath? {
@@ -215,15 +167,6 @@ class CartTableViewCell: UITableViewCell {
         // Get the indexPath associated with this table cell
         let indexPath = tableView.indexPathForCell(cell)
         
-        // Alternatively use the version specific code:
-        //let tableView = cell.superview as! UITableView
-        
-        //        // Place the loan in the cart.
-        //        let tableViewController = tableView.dataSource as! LoansTableViewController
-        //        let loan = tableViewController.loans[indexPath!.row]
-        //        let amount = ( ( Int(arc4random() % 100) / 5 ) * 5) + 5  // TODO: calculate default amount: ($25 or user set preference)
-        //        tableViewController.kivaAPI!.KivaAddItemToCart(loan, loanID: loan.id, donationAmount: amount)
-        
         // Remove the loan from the cart.
         let cartViewController = tableView.dataSource as! CartTableViewController
         let index = indexPath!.row
@@ -237,19 +180,6 @@ class CartTableViewCell: UITableViewCell {
             tableView.reloadData()
         }
     }
-    
-//    func getViewControllerFromCellSubview(subview: UIView?) -> CartTableViewController? {
-//        
-//        // Find the tableView by walking the view hierarchy until a UITableView class is encountered.
-//        var view = subview
-//        while ( (view != nil) && (view?.isKindOfClass(UITableView) == false) ) {
-//            view = view!.superview
-//        }
-//        let tableView: UITableView = view as! UITableView
-//        let cartViewController: CartTableViewController? = tableView.dataSource // as! CartTableViewController?
-//        return cartViewController
-//    }
-
 }
 
 extension UIView {

@@ -32,6 +32,14 @@ class ViewUtility {
         let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, backingImage.size.width, backingImage.size.height)
         text.drawInRect(rect, withAttributes: fontAttributes)
         
+        
+        let fontAttributes2 = [
+            NSFontAttributeName: font,
+            NSForegroundColorAttributeName: UIColor.blackColor(),
+        ]
+        let rect2: CGRect = CGRectMake(atPoint.x - 1, atPoint.y - 1, backingImage.size.width, backingImage.size.height)
+        text.drawInRect(rect2, withAttributes: fontAttributes2)
+        
         // Make a new image from the image context upon which we've drawn.
         let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

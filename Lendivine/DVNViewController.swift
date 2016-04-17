@@ -5,6 +5,7 @@
 //  Created by john bateman on 4/2/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This file implements a base class for view controllers. It provides helper functions to do search queries for loans against the kiva REST API.
 
 import UIKit
 import CoreData
@@ -19,9 +20,6 @@ class DVNViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
-        //doOAuth()
         
         let kivaOAuth = KivaOAuth.sharedInstance
         self.kivaAPI = kivaOAuth.kivaAPI
@@ -40,9 +38,10 @@ class DVNViewController: UIViewController {
         
         print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
         
-        let regions = "na,ca,sa,af,as,me,ee,we,an,oc"
-        var countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of countries or use user preferences
+        // TODO - in query below pass in nil for sector
+        //_ = "na,ca,sa,af,as,me,ee,we,an,oc" // TODO: remove
         
+        var countries = "TD,TG,TH,TJ,TL,TR,TZ"
         if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
             countries = randomCountries
         }
@@ -85,18 +84,6 @@ class DVNViewController: UIViewController {
     */
     func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
-//        print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
-//        
-//        let regions = "na,ca,sa,af,as,me,ee,we,an,oc"
-//        var countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of countries or use user preferences
-//        
-//        //if let randomCountries = Countries.getRandomCountries(30)
-//        if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
-//            countries = randomCountries
-//        }
-//
-//        print("calling kivaSearchLoans with countries = \(countries)")
-        
         kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
             
             success, error, loanResults, nextPage in
@@ -105,23 +92,16 @@ class DVNViewController: UIViewController {
             
             // paging
             if nextPage == -1 {
-                // disable the refresh button
-                //self.navigationItem.rightBarButtonItems?.first?.enabled = false
                 self.navigationItem.rightBarButtonItems?[1].enabled = false
-                //.enabled = false
             } else {
                 // save the nextPage
                 self.nextPageOfKivaSearchResults = nextPage
                 
                 // enable the refresh button
-                //self.navigationItem.rightBarButtonItems?.first?.enabled = true
                 self.navigationItem.rightBarButtonItems?[1].enabled = true
-                //.enabled = true
             }
             
             if success {
-                // print("search loans results: \(loanResults)")
-                
                 // todo: debug
                 if let loanResults = loanResults {
                     var loanNames: String = ""
@@ -135,7 +115,6 @@ class DVNViewController: UIViewController {
                 
                 completionHandler(success: success, error: error, loans: loanResults)
             } else {
-                // print("kivaSearchLoans failed")
                 completionHandler(success: success, error: error, loans: nil)
             }
         }
@@ -160,7 +139,6 @@ class DVNViewController: UIViewController {
                         
                         
                         // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-                        //if let loans = loans {
                         for loan in loans where loan.id != nil {
                             if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataStackManager.sharedInstance().scratchContext) == nil {
                                 
@@ -180,14 +158,6 @@ class DVNViewController: UIViewController {
                                 self.saveScratchContext()
                             }
                         }
-                        //}
-                        
-                        //                        for loan in loans {
-                        //                            // add the  loan to our collection
-                        //                            self.loans.append(loan)
-                        //
-                        //                            print("cart contains loanId: \(loanId) in amount: \(amount)")
-                        //                        }
                         
                         completionHandler(success: true, error: nil)
                     }
@@ -206,7 +176,6 @@ class DVNViewController: UIViewController {
     func saveScratchContext() {
         
         let error: NSErrorPointer = nil
-        //var results: [AnyObject]?
         do {
             _ = try CoreDataStackManager.sharedInstance().scratchContext.save()
         } catch let error1 as NSError {

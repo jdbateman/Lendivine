@@ -5,18 +5,18 @@
 //  Created by john bateman on 3/10/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+// This table view controller displays a list of countries queried from the RESTCountries REST API.
 
 import UIKit
 import CoreData
 
 let restCountriesAPI = RESTCountries.sharedInstance()
 
-class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating  {
+class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating/*, UISearchBarDelegate*/ {
 
     let searchController = UISearchController(searchResultsController: nil)
     
     var countries = [Country]()
-//    var selectedCountry: Country?
     var filteredTableData = [Country]()
     
     /* The main core data managed object context. This context will be persisted. */
@@ -26,12 +26,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         //Countries.getCountriesFromWebService()
         initCountriesFromCoreData()
@@ -39,6 +33,10 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         setupView()
         
         addSearchBar()
+        
+        //self.edgesForExtendedLayout = .None
+        //todo
+        //self.navigationController?.navigationBar.translucent = false
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -80,20 +78,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         // set the NSFetchedResultsControllerDelegate
         fetchedResultsController.delegate = self
     }
-
-//    /*! Initialize countries collection from web api and persist in core data. */
-//    class func getCountriesFromWebService() {
-//        
-//        // Acquire countries from rest api.
-//        restCountriesAPI.getCountries() { countries, error in
-//            
-//            if let countries = countries {
-//                //self.countries = countries
-//                print("countries:\n\(countries)")
-//            }
-//            //self.tableView.reloadData()
-//        }
-//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -109,10 +93,12 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         self.definesPresentationContext = true
         
         searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = true
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         self.tableView.tableHeaderView = searchController.searchBar
+        
+        //todo searchController.searchBar.delegate = self
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -120,8 +106,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         if filteredTableData.count > 0 {
             filteredTableData.removeAll(keepCapacity: false)
         }
-        
-        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
         
         let array = fetchCountriesFilteredByNameOn(searchController.searchBar.text!)
         
@@ -183,8 +167,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             return
         }
         
-        //let country = self.countries[indexPath.row]
-        
         if let name = country.name {
             cell.name.text = name
             print("\(name)")
@@ -195,7 +177,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
         
         if let population = country.population {
-            cell.population.text = population.stringValue
+            let popFormatter = NSNumberFormatter()
+            popFormatter.numberStyle = .DecimalStyle
+            cell.population.text = popFormatter.stringFromNumber(population)
         }
         
         if let languages = country.languages {
@@ -216,87 +200,40 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
     }
 
-//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//
-//        let activityIndicator = DVNActivityIndicator()
+    
+    // MARK: UISearchBarDelegate
+
+    // TODO remove
+//    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
 //        
-//        activityIndicator.startActivityIndicator(tableView)
-//        
-//        var theCountry: Country?
-//        if self.searchController.active {
-//        
-//            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
-//                theCountry = countries[indexPath.row]
+//        let app = UIApplication.sharedApplication()
+//        if /*searchController.active &&*/ app.statusBarHidden && searchController.searchBar.frame.origin.y == 0 {
+//            if let container = self.searchController.searchBar.superview {
+//                container.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, container.frame.size.width, container.frame.size.height + app.statusBarFrame.height)
 //            }
-//        } else {
-//            
-//            // save the selected country
-//            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
-//            
-//            //self.selectedCountry = theCountry
-//        }
-//        
-//        // transition to the CountryLoans view controller
-//        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
-//        
-//        controller.country = theCountry
-//        
-//        self.navigationController!.pushViewController(controller, animated: true)
-//        
-//        activityIndicator.stopActivityIndicator()
-//    }
-    
-    
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-    // MARK: - Navigation
-
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        // Get the new view controller using segue.destinationViewController.
-//        // Pass the selected object to the new view controller.
-//        
-//        if segue.identifier == "CountryLoansSegueID" {
-//            
-//            // Pass the selected Country object to the CountryLoansTableViewController
-//            let controller = segue.destinationViewController as! CountryLoansTableViewController
-//            controller.country = self.selectedCountry
 //        }
 //    }
-
+    
+//    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
+//        
+//        let app = UIApplication.sharedApplication()
+//        if searchController.active && app.statusBarHidden == false && searchController.searchBar.frame.origin.y == 0 {
+//            if let container = self.searchController.searchBar.superview {
+//                container.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, container.frame.size.width, container.frame.size.height + app.statusBarFrame.height)
+//            }
+//        }
+//    }
+//
+//    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+//        
+//        let app = UIApplication.sharedApplication()
+//        if searchController.active && app.statusBarHidden == false && searchController.searchBar.frame.origin.y == 0 {
+//            if let container = self.searchController.searchBar.superview {
+//                container.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, container.frame.size.width, container.frame.size.height + app.statusBarFrame.height)
+//            }
+//        }
+//    }
+    
 
     // MARK: - Fetched results controller
     
@@ -347,34 +284,14 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
             CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
-        
-//        var error: NSError?
-//        var results: [AnyObject]?
-//        do {
-//            results = try fetchedResultsController.performFetch()
-//        } catch let error1 as NSError {
-//            error = error1
-//        }
-//
-//        if let error = error {
-//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
-//        }
 
-        //let error: NSErrorPointer?
         var results: [AnyObject]?
         do {
             results = try sharedContext.executeFetchRequest(fetchRequest)
         } catch let error1 as NSError {
-            //error!.memory = error1
             print("Error in fetchLoanByID(): \(error1)")
             results = nil
         }
-        
-//        // Check for Errors
-//        if error != nil {
-//            print("Error in fetchLoanByID(): \(error)")
-//            results = nil
-//        }
         
         return results
     }
@@ -471,37 +388,4 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             }
         }
     }
-    
-//    func foo() {
-//        
-//        guard let indexPath = self.tableView.indexPathForSelectedRow else {
-//            return
-//        }
-//        
-//        let activityIndicator = DVNActivityIndicator()
-//        
-//        activityIndicator.startActivityIndicator(tableView)
-//        
-//        var theCountry: Country?
-//        if self.searchController.active {
-//            
-//            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
-//                theCountry = countries[indexPath.row]
-//            }
-//        } else {
-//            
-//            // save the selected country
-//            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
-//        }
-//        
-//        // transition to the CountryLoans view controller
-//        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("CountryLoansStoryboardID") as! CountryLoansTableViewController
-//        
-//        controller.country = theCountry
-//        
-//        self.navigationController!.pushViewController(controller, animated: true)
-//        
-//        activityIndicator.stopActivityIndicator()
-//    }
-    
 }

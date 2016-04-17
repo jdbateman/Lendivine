@@ -17,7 +17,9 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var loginButton: UIButton!
     
-    var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50)) as UIActivityIndicatorView
+//    var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50)) as UIActivityIndicatorView
+    
+    let activityIndicator = DVNActivityIndicator()
     
     override func viewDidLoad() {
         
@@ -59,11 +61,6 @@ class LoginViewController: UIViewController {
 
     /* SignUp button selected. Attempt Kiva.org OAuth. */
     @IBAction func onSignUpButtonTap(sender: AnyObject) {
-//        displayKivaSignupInBrowser()
-//        let alert = UIAlertController(title: "TODO", message: "Present Kiva Signup web page in browser", preferredStyle: .Alert)
-//        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
-//        alert.addAction(okAction)
-//        self.presentViewController(alert, animated: true, completion:nil)
         
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewControllerWithIdentifier("KviaSignupStoryboardID") as! KivaSignupViewController
@@ -73,19 +70,14 @@ class LoginViewController: UIViewController {
     /* User selected the Login button. Attempt to login to Kiva.org. */
     @IBAction func onLoginButtonTap(sender: AnyObject) {
         
-        let success: Bool = false
-        
-        startActivityIndicator()
-        
-//        let alert = UIAlertController(title: "TODO", message: "Perform Kiva OAuth", preferredStyle: .Alert)
-//        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
-//        alert.addAction(okAction)
-//        self.presentViewController(alert, animated: true, completion:nil)
+        //startActivityIndicator()
+        activityIndicator.startActivityIndicator(self.view)
         
         doOAuth() {
             success, error in
             
-            self.stopActivityIndicator()
+            //self.stopActivityIndicator()
+            self.activityIndicator.stopActivityIndicator()
             
             if success {
                 
@@ -114,46 +106,20 @@ class LoginViewController: UIViewController {
 
 
     // MARK: helper functions
-
-    /* show activity indicator */
-    func startActivityIndicator() {
-        activityIndicator.center = self.view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-        view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-    }
-
-    /* hide acitivity indicator */
-    func stopActivityIndicator() {
-        activityIndicator.stopAnimating()
-    }
-    
-//    /*! Display the Kiva.org signup page in an embedded browser view. */
-//    func displayKivaSignupInBrowser() {
-//        
-//        // create navigation controller
-//        let window = UIWindow(frame: UIScreen.mainScreen().bounds)
-//        let navController = UINavigationController()
-//        let rootController = KivaSignupViewController(nibName: nil, bundle: nil)
-//        navController.viewControllers = [rootController]
-//        window.rootViewController = rootController
-//        window.makeKeyAndVisible()
-//        
-//        let controller = KivaSignupViewController()
-//        self.presentViewController(controller, animated: true, completion: nil)
-//        //self.navigationController?.pushViewController(controller, animated: true)
+// todo
+//    /* show activity indicator */
+//    func startActivityIndicator() {
+//        activityIndicator.center = self.view.center
+//        activityIndicator.hidesWhenStopped = true
+//        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+//        view.addSubview(activityIndicator)
+//        activityIndicator.startAnimating()
 //    }
-//    
-//    /* Display url in an embeded webkit browser in the navigation controller. */
-//    func showUrlInEmbeddedBrowser(url: String) {
-//        var storyboard = UIStoryboard (name: "Main", bundle: nil)
-//        var controller = storyboard.instantiateViewControllerWithIdentifier("WebViewStoryboardID") as! WebViewController
-//        controller.url = url
-//        self.navigationController?.pushViewController(controller, animated: true)
-//        
+//
+//    /* hide acitivity indicator */
+//    func stopActivityIndicator() {
+//        activityIndicator.stopAnimating()
 //    }
-    
     
     // MARK: OAuth with Kiva.org
     

@@ -5,7 +5,7 @@
 //  Created by john bateman on 4/3/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
-// This is the Cart Map View Controller.
+// This is the Cart Map View Controller which presents an MKMapView containing pins for each loan in the cart.
 
 import UIKit
 import MapKit
@@ -13,12 +13,6 @@ import MapKit
 class MapWithCheckoutViewController: MapViewController {
 
     var cart:KivaCart? // = KivaCart.sharedInstance
-//    var kivaAPI: KivaAPI?
-    
-//    /* The main core data managed object context. This context will be persisted. */
-//    lazy var sharedContext: NSManagedObjectContext = {
-//        return CoreDataStackManager.sharedInstance().managedObjectContext!
-//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,23 +25,17 @@ class MapWithCheckoutViewController: MapViewController {
     }
     
     func modifyBarButtonItems() {
-        // disable the refresh button
-//        self.navigationItem.rightBarButtonItems?[1].enabled = false
-//        self.navigationItem.rightBarButtonItems?[1].width = 0.1
-//        navigationItem.rightBarButtonItems = []
+
         let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
         navigationItem.setRightBarButtonItems([loansByListButton], animated: true)
         
         // remove back button
-        //self.navigationItem.leftBarButtonItems?.first?.enabled = false
         navigationItem.hidesBackButton = true
     }
     
     @IBAction func onCheckoutButtonTapped(sender: AnyObject) {
 
         print("call KivaAPI.checkout")
-        
-        //cart!.getLoans() { loans, error in
         
         let loans = cart!.getLoans2()
         print("cart count before stripping out non-fundraising loans = \(self.cart!.items.count)")
@@ -89,20 +77,12 @@ class MapWithCheckoutViewController: MapViewController {
                         self.displayKivaWebCartInBrowser()
                     }
                 }
-                
-                // todo: remove debugging code:
-                //                var loanCount = 0
-                //                if let loans = loans {
-                //                    loanCount = loans.count
-                //                }
-                //                print("cart count after stripping out non-fundraising loans = \(self.cart!.items.count). loans count should be the same: \(loanCount)")
             } else {
                 // Even though an error occured just continue on to the cart on Kiva.org and they will handle any invalid loans in the cart.
                 print("Non-fatal error confirming fundraising status of loans.")
                 self.displayKivaWebCartInBrowser()
             }
         }
-        //}
     }
     
     /*! Clear local cart of all items and present the Kiva web cart in the browser. */
@@ -111,23 +91,17 @@ class MapWithCheckoutViewController: MapViewController {
         // Display web cart.
         self.showEmbeddedBrowser()
         
-        // Remove all items from local cart view.
-        //todo cart?.empty()
+        // Note: Enable this line if you want to remove all items from local cart view.
+        // cart?.empty()
     }
     
     /* Display url in an embeded webkit browser. */
     func showEmbeddedBrowser() {
         let controller = KivaCartViewController()
-        //        var storyboard = UIStoryboard (name: "Main", bundle: nil)
-        //        var controller = storyboard.instantiateViewControllerWithIdentifier("WebSearchStoryboardID") as! WebSearchViewController
-        //controller.initialURL = url
+
         if let kivaAPI = self.kivaAPI {
             controller.request = kivaAPI.getKivaCartRequest()  // KivaCheckout()
         }
-        //controller.webViewDelegate = self
-        
-        // push the webView controller onto the stack modally
-        //        self.presentViewController(controller, animated: true, completion: nil)
         
         // add the view controller to the navigation controller stack
         self.navigationController?.pushViewController(controller, animated: true)

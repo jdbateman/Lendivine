@@ -98,15 +98,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     // MARK: UIImagePickerControllerDelegate
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-//        //if let info = editingInfo {
-//            if let image = editingInfo![UIImagePickerControllerOriginalImage] as? UIImage {
-//                avatarImageView.contentMode = .ScaleAspectFit
-//                avatarImageView.image = image
-//            }
-//        //}
         
         if let selectedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             setAccountImage(selectedImage)
@@ -119,14 +110,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         // dismiss the image picker view controller
         dismissViewControllerAnimated(true, completion: nil)
     }
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-//        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-//            avatarImageView.contentMode = .ScaleAspectFit
-//            avatarImageView.image = image
-//        }
-//        // dismiss the image picker view controller
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         // dismiss the image picker view controller
@@ -190,10 +173,10 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     // MARK: Image
     
     /*!
-    @brief Return a String representing the url of the image identified by kivaImageID
-    @param kivaImageID The Kiva image identifier.
-    @return A String representing the url where the image can be downloaded, or nil in case of an error or invalid identifier.
-    example image url: http://www.kiva.org/img/s50/5c43752887e05aabbf90934177d9eacc.jpg
+        @brief Return a String representing the url of the image identified by kivaImageID
+        @param kivaImageID The Kiva image identifier.
+        @return A String representing the url where the image can be downloaded, or nil in case of an error or invalid identifier.
+        example image url: http://www.kiva.org/img/s50/5c43752887e05aabbf90934177d9eacc.jpg
     */
     func getImageUrl(kivaImageID: NSNumber?) -> String? {
         if let kivaImageID = kivaImageID {
@@ -217,15 +200,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     func getImage(kivaImageID: NSNumber, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
         
         let imageUrl = getImageUrl(kivaImageID)
-        
-        // Try loading the image from the image cache.
-//        if let url = imageUrl {
-//            if let theImage: UIImage = NSCache.sharedInstance.objectForKey(url) as? UIImage {
-//                print("image loaded from cache")
-//                completion(success: true, error: nil, image: theImage)
-//                return
-//            }
-//        }
 
         // Load the image from the server asynchronously on a background queue.
         if let url = imageUrl {

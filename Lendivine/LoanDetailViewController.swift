@@ -5,6 +5,7 @@
 //  Created by john bateman on 3/20/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This view controller displays detailed information on the properties of a single loan.
 
 import UIKit
 import MapKit
@@ -13,8 +14,6 @@ import CoreData
 class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
     var loan: KivaLoan?
-    
-//    var topViewOffset: Double? = nil
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var loanImageView: UIImageView!
@@ -37,27 +36,12 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         super.viewDidLoad()
 
         setupView()
-
-        //NSLayoutConstraint(item: topView, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .TopMargin, multiplier: 1.0, constant: 0.0).active = true
-        
-//        if let topViewOffset = topViewOffset {
-//            self.topViewToTopMarginConstraint.constant = CGFloat(topViewOffset)
-//        }
         
         // set the mapView delegate to this view controller
         mapView.delegate = self
         
         showPinOnMap()
     }
-    
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        if let topViewOffset = topViewOffset {
-//            self.topViewToTopMarginConstraint.constant = CGFloat(topViewOffset)
-//            self.view.setNeedsDisplay()
-//        }
-//    }
     
     /*! hide the status bar */
     override func prefersStatusBarHidden() -> Bool {
@@ -182,10 +166,10 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     }
     
     /*!
-    @brief Display an alert controller indicating the specified loan has already been added to the cart.
-    @discussion This is a convenience view function used by multiple table view cell classes in the Lendivine app.
-    @param (in) loan - An attempt was made to add this loan to the cart.
-    @param (in) controller - The parent view controller to host the alert.
+        @brief Display an alert controller indicating the specified loan has already been added to the cart.
+        @discussion This is a convenience view function used by multiple table view cell classes in the Lendivine app.
+        @param (in) loan - An attempt was made to add this loan to the cart.
+        @param (in) controller - The parent view controller to host the alert.
     */
     func showLoanAlreadyInCartAlert(loan: KivaLoan, controller: UIViewController) {
         
@@ -196,7 +180,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         let alertController = UIAlertController(title: "Already in Cart", message: message, preferredStyle: .Alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
             UIAlertAction in
-            // handle OK pressed in alert controller
+            // handle OK pressed in alert controller here
         }
         alertController.addAction(okAction)
         controller.presentViewController(alertController, animated: true, completion: nil)
