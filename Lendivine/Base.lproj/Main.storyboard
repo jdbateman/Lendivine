@@ -18,7 +18,10 @@
                             <rect key="frame" x="0.0" y="252" width="600" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="1" green="0.90980392156862744" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
-                            <state key="normal" title="Button"/>
+                            <state key="normal" title="See More Loans..."/>
+                            <connections>
+                                <action selector="seeMoreLoans:" destination="PvG-uZ-yxW" eventType="touchUpInside" id="S2A-Im-Tj8"/>
+                            </connections>
                         </button>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LoansTableViewCellID" rowHeight="160" id="Jfe-wp-9uN" customClass="LoansTableViewCell" customModule="Lendivine" customModuleProvider="target">
@@ -107,7 +110,7 @@
                                     <outlet property="loanImageView" destination="ooC-hV-FCj" id="bVc-J3-hw9"/>
                                     <outlet property="nameLabel" destination="ZFX-7i-jOM" id="Ccy-9H-BeB"/>
                                     <outlet property="sectorLabel" destination="J2F-fO-8hu" id="Is7-p1-LZc"/>
-                                    <segue destination="dEU-Ox-qx6" kind="show" identifier="ShowDetail" id="A8o-pv-iuX"/>
+                                    <segue destination="oNk-3E-cEf" kind="show" identifier="ShowDetail" id="m3e-5i-rNo"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -378,7 +381,7 @@
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zr-8W-zSk">
                                             <rect key="frame" x="542" y="62" width="50" height="50"/>
-                                            <color key="backgroundColor" red="0.1667993425" green="0.70766321409999999" blue="0.13096996690000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="cdi-49-Axx"/>
                                                 <constraint firstAttribute="height" constant="70" id="znf-KV-w0v"/>
@@ -597,10 +600,10 @@
                                 <exclude reference="A8F-7m-OO9"/>
                                 <exclude reference="d1n-11-QnH"/>
                                 <exclude reference="IP1-yQ-GMG"/>
+                                <exclude reference="x59-pr-Wxj"/>
                                 <exclude reference="ccl-zj-57b"/>
                                 <exclude reference="gdD-4s-bML"/>
                                 <exclude reference="xgr-AL-xaL"/>
-                                <exclude reference="x59-pr-Wxj"/>
                                 <exclude reference="0Un-Im-ACp"/>
                                 <exclude reference="L9h-C6-dt1"/>
                                 <exclude reference="bAE-D5-fDW"/>
@@ -948,7 +951,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vm-8f-F7c">
-                                <rect key="frame" x="0.0" y="84" width="600" height="190"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="190"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RN7-fY-W50">
                                         <rect key="frame" x="12" y="41" width="140" height="140"/>
@@ -1097,6 +1100,7 @@
                             <constraint firstItem="dZ9-sL-AMj" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="6" id="3xJ-m5-fIF"/>
                             <constraint firstItem="GZd-G6-C6Z" firstAttribute="top" secondItem="dZ9-sL-AMj" secondAttribute="bottom" constant="4" id="572-js-XIH"/>
                             <constraint firstItem="spD-Hb-qKA" firstAttribute="leading" secondItem="86e-pc-Wy5" secondAttribute="leading" id="83u-Wt-26g"/>
+                            <constraint firstItem="0vm-8f-F7c" firstAttribute="top" secondItem="nkd-Zd-YYm" secondAttribute="bottom" id="8ti-JL-gMh"/>
                             <constraint firstItem="6PO-NV-Eob" firstAttribute="leading" secondItem="Msi-uI-SfW" secondAttribute="trailing" constant="4" id="D1s-E7-Wh0"/>
                             <constraint firstItem="PHa-we-DE3" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="6" id="D6U-lB-Rsh"/>
                             <constraint firstItem="6PO-NV-Eob" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="16" id="DKU-Ej-vEF"/>
@@ -1135,6 +1139,7 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="Qx4-av-Ls2"/>
+                                <exclude reference="S6W-ud-S9J"/>
                                 <exclude reference="cuG-GL-ZJU"/>
                                 <exclude reference="gUs-X0-sCA"/>
                                 <exclude reference="voJ-Zl-Jjf"/>
@@ -1503,8 +1508,8 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="fut-FD-Kdc"/>
-                                        <exclude reference="jS7-yN-2zi"/>
                                         <exclude reference="B29-cQ-DTA"/>
+                                        <exclude reference="jS7-yN-2zi"/>
                                         <exclude reference="Ede-Lx-6bv"/>
                                     </mask>
                                 </variation>
@@ -1556,17 +1561,17 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="h5s-Sy-vbQ"/>
                                         <exclude reference="MpP-gh-HAr"/>
-                                        <exclude reference="vL9-Om-Aw3"/>
-                                        <exclude reference="SXr-X6-zyo"/>
-                                        <exclude reference="RKC-km-hc0"/>
-                                        <exclude reference="ubA-an-Reh"/>
                                         <exclude reference="QJ4-RY-mDM"/>
+                                        <exclude reference="RKC-km-hc0"/>
+                                        <exclude reference="SXr-X6-zyo"/>
+                                        <exclude reference="h5s-Sy-vbQ"/>
+                                        <exclude reference="ubA-an-Reh"/>
+                                        <exclude reference="vL9-Om-Aw3"/>
                                     </mask>
                                 </variation>
                             </view>
-                            <view alpha="0.5" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mI1-ST-gxK">
+                            <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mI1-ST-gxK">
                                 <rect key="frame" x="0.0" y="520" width="600" height="80"/>
                                 <subviews>
                                     <button contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F6M-OJ-izG">
@@ -1645,17 +1650,17 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="sam-9L-4ZD"/>
-                                <exclude reference="5Ft-GE-c1B"/>
-                                <exclude reference="k9A-dd-jhw"/>
                                 <exclude reference="FT6-Ta-0SR"/>
                                 <exclude reference="UhV-Yx-uGT"/>
+                                <exclude reference="5Ft-GE-c1B"/>
+                                <exclude reference="k9A-dd-jhw"/>
                                 <exclude reference="xdw-US-LzC"/>
-                                <exclude reference="Yzb-iS-6qC"/>
-                                <exclude reference="TiW-7c-NSQ"/>
-                                <exclude reference="pXa-9I-CwE"/>
                                 <exclude reference="CGg-Xk-4ge"/>
-                                <exclude reference="UI9-sK-pWe"/>
+                                <exclude reference="TiW-7c-NSQ"/>
+                                <exclude reference="Yzb-iS-6qC"/>
+                                <exclude reference="pXa-9I-CwE"/>
                                 <exclude reference="NAt-G0-uE0"/>
+                                <exclude reference="UI9-sK-pWe"/>
                                 <exclude reference="fQq-AJ-mak"/>
                             </mask>
                         </variation>
@@ -1693,7 +1698,7 @@
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YhC-ao-4LW"/>
-        <segue reference="g7a-yH-ptl"/>
+        <segue reference="m3e-5i-rNo"/>
+        <segue reference="K3P-VK-vgJ"/>
     </inferredMetricsTieBreakers>
 </document>

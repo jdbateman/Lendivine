@@ -50,15 +50,12 @@ class LoansTableViewCell: DVNTableViewCell {
         let tableViewController = tableView.dataSource as! LoansTableViewController
         let loan = tableViewController.fetchedResultsController.objectAtIndexPath(indexPath!) as! KivaLoan
         let amount = 25  // TODO: set default donation amount to user preference.
-//        let persistedLoan = KivaLoan(fromLoan: loan, context: self.sharedContext)
+
         let cart = KivaCart.sharedInstance
-//        cart.KivaAddItemToCart(loan.id, donationAmount: amount, context: self.sharedContext)
 
         if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
         
             // animation:
-            
-            //animateButtonTapped(tableView)
             
             if let indexPath = indexPath {
                 
@@ -149,12 +146,12 @@ class LoansTableViewCell: DVNTableViewCell {
     }
     
     /*!
-    @brief Animate image of selected loan into shopping cart on Toolbar.
-    @discussion 
-    @param (in) animateOnView - The view upon which to draw the animation.
-    @param (in) tableView - The table view for this view controller.
-    @param (in) indexPaht - the index path of the selected cell.
-    @param (in) loan - the loan associated with the selected cell.
+        @brief Animate image of selected loan into shopping cart on Toolbar.
+        @discussion 
+        @param (in) animateOnView - The view upon which to draw the animation.
+        @param (in) tableView - The table view for this view controller.
+        @param (in) indexPaht - the index path of the selected cell.
+        @param (in) loan - the loan associated with the selected cell.
     */
     func animateLoanToCart(/*cell: LoansTableViewCell,*/ animateOnView: UIView, tableView: UITableView, indexPath: NSIndexPath, loan: KivaLoan) {
         
@@ -163,8 +160,6 @@ class LoansTableViewCell: DVNTableViewCell {
         // resize
         let resizedWidth = cellImageView.frame.size.width // - 60
         let resizedHeight = cellImageView.frame.size.height // - 60
-//        cellImageView.frame = CGRectMake(0, 0, resizedWidth, resizedHeight)
-//        cellImageView.center = CGPoint(x: animateOnView.bounds.width / 2, y: animateOnView.bounds.height / 2)
         
         guard let cgImage = cellImageView.image?.CGImage else {
             return
@@ -179,7 +174,7 @@ class LoansTableViewCell: DVNTableViewCell {
         //let imageCopy: UIImage = UIImage(CGImage: cgImage)
         let imageViewCopy: UIImageView = UIImageView(image: imageCopy)
         
-        let animatedObject = imageViewCopy // cellImageView
+        let animatedObject = imageViewCopy
         
         animatedObject.frame = CGRect(x: 0, y: 0, width: resizedWidth, height: resizedHeight)
         print("width, height = \(animatedObject.frame.size.width), \(animatedObject.frame.size.height)")
@@ -196,13 +191,13 @@ class LoansTableViewCell: DVNTableViewCell {
         
         // screen dimensions
         let screenBounds: CGRect = UIScreen.mainScreen().bounds
-        let widthOfScreen = screenBounds.width
+        _ = screenBounds.width
         let heightOfScreen = screenBounds.height
         
         let cellOriginX = rectCellInTableViewCoords.origin.x
         let cellOriginY = rectCellInTableViewCoords.origin.y
         let cellWidth = rectCellInTableViewCoords.width
-        let cellHeight = rectCellInTableViewCoords.height
+        _ = rectCellInTableViewCoords.height
         let cellToScreenBottom = heightOfScreen - rectCellInScreenCoords.origin.y
         
         // create a path that follows a bezier curve
@@ -234,9 +229,6 @@ class LoansTableViewCell: DVNTableViewCell {
         // Add the animation to the view
         animatedObject.layer.addAnimation(anim, forKey: "animate position along path")
         
-        // todo: cleanup:
-        // send refresh to cell/tabel
-        // hide imageview
         tableView.reloadData()
         
         let delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
@@ -277,19 +269,4 @@ class LoansTableViewCell: DVNTableViewCell {
             }
         }
     }
-    
-//    func showLoanAlreadyInCartAlert(loan: KivaLoan, controller: UIViewController) {
-//
-//        var message = "The selected loan has already been added to your cart."
-//        if let name = loan.name {
-//            message = "The loan requested by \(name) has already been added to your cart."
-//        }
-//        let alertController = UIAlertController(title: "Already in Cart", message: message, preferredStyle: .Alert)
-//        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-//            UIAlertAction in
-//            // handle OK pressed in alert controller
-//        }
-//        alertController.addAction(okAction)
-//        controller.presentViewController(alertController, animated: true, completion: nil)
-//    }
 }

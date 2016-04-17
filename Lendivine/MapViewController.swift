@@ -16,9 +16,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     var appDelegate: AppDelegate!
     
-    /* a reference to the studentLocations singleton */
-//TODO remove>    var studentLocations = StudentLocations.sharedInstance()
-    
     /* The collection of KivaLoan objects to map. This value should be set before instantiating an instance of the MapViewController. */
     var loans: [KivaLoan]?
     var sourceViewController: UIViewController?
@@ -46,24 +43,19 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         mapView.delegate = self
         
         // Set the region to North America
-        if let loans = loans where loans.count > 0 {
-            setMapRegionToCountryForLoan(loans[0])
+        if let theLoans = loans {
+            if theLoans.count > 0 {
+                setMapRegionToCountryForLoan(theLoans[0])
+            }
         }
-        //setMapRegionToNorthAmerica()
-        //setMapRegionToLargestExtent()
         
         // configure mapView
         mapView.showsPointsOfInterest = false
-        mapView.showsUserLocation = true
-        
-        //createCustomBackButton()
+        mapView.showsUserLocation = false
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Add a notification observer for updates to student location data from Parse.
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onStudentLocationsUpdate", name: studentLocationsUpdateNotificationKey, object: nil)
         
         refreshMapPins()
     }
@@ -87,8 +79,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             barButtonItems.append(refreshButton)
         }
         
-        //let pinButton = UIBarButtonItem(image: UIImage(named: "pin"), style: .Plain, target: self, action: "onPinButtonTap")
-        
         navigationItem.setRightBarButtonItems(barButtonItems, animated: true)
     }
     
@@ -103,13 +93,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-
-// TODO
-//        // If not logged in present the LoginViewController.
-//        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-//        if delegate.loggedIn == false {
-//            displayLoginViewController()
-//        }
         
         dispatch_async(dispatch_get_main_queue()) {
             self.mapView.setNeedsDisplay()
@@ -118,9 +101,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Remove observer for the studentLocations update notification.
-//TODO        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -131,39 +111,9 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     // MARK: button handlers
     
-    /* Pin button was selected. */
-//    func onPinButtonTap() {
-//        presentLoanDetailViewController(nil) // todo - probable shouldn't pass nil for the loan
-//    }
-    
     func onLoansByListButtonTap() {
         popViewController()
     }
-    
-//    @IBAction func onBackButtonTap(sender: UIBarButtonItem) {
-//    
-//        print("back button tapped")
-//    }
-    
-//    /* Refresh button was selected. */
-//    func onRefreshButtonTap() {
-//        
-//        UIAlertController(title: "Todo", message: "need to implement", preferredStyle: .Alert)
-//        
-//        // TODO - move populateLoans and find loans from Loanstableviewcontroller.m or consolidate in KivaApiConvenience (the right way) and call them on that class.
-//        // Search Kiva.org for the next page of Loan results.
-////        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
-////            if success {
-////                dispatch_async(dispatch_get_main_queue()) {
-////                    //self.fetchLoans()
-////                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
-////                }
-////            } else {
-////                print("failed to populate loans. error: \(error?.localizedDescription)")
-////            }
-////            
-////        }
-//    }
     
     /* Refresh button was selected. */
     func onRefreshButtonTap() {
@@ -181,59 +131,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         }
     }
     
-// TODO
-//    /* Refresh button was selected. */
-//    func onRefreshButtonTap() {
-//        // refresh the collection of student locations from Parse
-//        studentLocations.reset()
-//        studentLocations.getStudentLocations(0) { success, errorString in
-//            if success == false {
-//                if let errorString = errorString {
-//                    OTMError(viewController:self).displayErrorAlertView("Error retrieving Locations", message: errorString)
-//                } else {
-//                    OTMError(viewController:self).displayErrorAlertView("Error retrieving Locations", message: "Unknown error")
-//                }
-//            }
-//        }
-//        
-//        dispatch_async(dispatch_get_main_queue()) {
-//            self.mapView.setNeedsDisplay()
-//        }
-//    }
-
-// TODO - cleanup
-//    /* logout of Facebook else logout of Udacity session */
-//    @IBAction func onLogoutButtonTap(sender: AnyObject) {
-//        startActivityIndicator()
-//        
-//        // Facebook logout
-//        if (FBSDKAccessToken.currentAccessToken() != nil)
-//        {
-//            // User is logged in with Facebook. Log user out of Facebook.
-//            let loginManager = FBSDKLoginManager()
-//            loginManager.logOut()
-//            if (FBSDKAccessToken.currentAccessToken() == nil)
-//            {
-//                self.appDelegate.loggedIn = false
-//            }
-//            self.stopActivityIndicator()
-//            self.displayLoginViewController()
-//        } else {
-//            // Udacity logout
-//            RESTClient.sharedInstance().logoutUdacity() {result, error in
-//                self.stopActivityIndicator()
-//                if error == nil {
-//                    // successfully logged out
-//                    self.appDelegate.loggedIn = false
-//                    self.displayLoginViewController()
-//                } else {
-//                    println("Udacity logout failed")
-//                    // no display to user
-//                }
-//            }
-//        }
-//    }
-    
     
     // MARK: Manage map annotations
     
@@ -242,28 +139,18 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         
         if let loans = self.loans {
             
+            print("creating Pins for \(loans.count) loans")
+            var i = 0
+            
             // A collection of point annotations to be displayed on the map view
             var annotations = [DVNPointAnnotation]()
             
             // Create an annotation for each loan in loans
-//            var loanCount = 0
             for loan in loans {
                 
                 guard let coordinate = KivaLoan.getCoordinatesForLoan(loan) else {
                     return
                 }
-                
-//                // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
-//                guard let geo = loan.geo else {return}
-//                let geoCoordsArray = geo.characters.split{$0 == " "}.map(String.init)
-//                
-//                guard let latitude = Double(geoCoordsArray[0]) else {return}
-//                guard let longitude = Double(geoCoordsArray[1]) else {return}
-//                let lat = CLLocationDegrees(latitude)
-//                let long = CLLocationDegrees(longitude)
-//                
-//                // The lat and long are used to create a CLLocationCoordinates2D instance.
-//                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
                 
                 // Create the annotation, setting the coordinate, title, and subtitle properties
                 let annotation = DVNPointAnnotation() // MKPointAnnotation()
@@ -272,9 +159,25 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                 if let name = loan.name, country = loan.country {
                     annotation.title = "\(name) in \(country)"
                 }
-
+//todo - remove
+//                if let id = loan.id {
+//                    annotation.subtitle = id.stringValue // Later, when the user selects this pin, do a fetch on this id to get the KivaLoan object.
+//                }
+                
                 if let id = loan.id {
-                    annotation.subtitle = id.stringValue // Later, when the user selects this pin, do a fetch on this id to get the KivaLoan object.
+                    var subtitleText = ""
+                    if let sector = loan.sector {
+                        subtitleText = sector
+                    }
+                    if let amount = loan.loanAmount {
+                        let formatter = NSNumberFormatter()
+                        formatter.numberStyle = .CurrencyStyle
+                        if let amountString = formatter.stringFromNumber(amount) {
+                            subtitleText.appendContentsOf(": ")
+                            subtitleText.appendContentsOf(amountString)
+                        }
+                    }
+                    annotation.subtitle = subtitleText
                 }
 
                 if let imageId = loan.imageID {
@@ -283,27 +186,13 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                 
                 annotation.loan = loan
                 
-//                loan.getImage() {
-//                    success, error, image in
-//                    
-//                    if success {
-//                        annotation.annotationImage = image
-//                    }
-//                    
-//                    loanCount++
-//                }
-                
                 // Add annotation to the annotations collection.
                 annotations.append(annotation)
                 
-//                if loanCount == loans.count {
-//                    
-//                    // Add the annotations to the map.
-//                    self.mapView.addAnnotations(annotations)
-//                    
-//                    self.mapView.setNeedsDisplay()
-//                }
+                print("appended another loan: \(++i)") // todo - remove debug
             }
+            
+            print("Finished appending \(i) annotations. annotations now contains \(annotations.count) annotations")
             
             // Add the annotations to the map.
             self.mapView.addAnnotations(annotations)
@@ -313,8 +202,8 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     }
     
     /*
-    @brief - Remove all annotations from the MKMapView.
-    Acknowledgement:  nielsbot, SO for filter technique to remove all but users current location.
+        @brief - Remove all annotations from the MKMapView.
+        Acknowledgement:  nielsbot, SO for filter technique to remove all but users current location.
     */
     func removeAllPins() {
         let annotationsToRemove = self.mapView.annotations.filter { $0 !== self.mapView.userLocation }
@@ -325,77 +214,78 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     // MARK: MKMapViewDelegate
     
     // Create an accessory view for the pin annotation callout when it is added to the map view
-    func xmapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        let reuseID = "myAnnotationView"
-        var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
-        if (annotationView == nil) {
-            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-        }
-        if let annotationView = annotationView {
-            annotationView.image = UIImage(named: "Albania.png")
-        }
-        return annotationView
-    }
+//    func xmapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+//        
+//        let reuseID = "myAnnotationView"
+//        var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
+//        if (annotationView == nil) {
+//            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+//        }
+//        if let annotationView = annotationView {
+//            annotationView.image = UIImage(named: "Albania.png")
+//        }
+//        return annotationView
+//    }
     
-    func XmapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-    
-        guard annotation .isKindOfClass(DVNPointAnnotation) else {
-            return nil
-        }
-        let pointAnnotation: DVNPointAnnotation = annotation as! DVNPointAnnotation
-        
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView /*MKAnnotationView*/ /*MapPin*/ (annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.enabled = true // todo needed?
-            pinView!.canShowCallout = true // true
-            pinView!.pinColor = .Red
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)  // DetailDisclosure, InfoLight, InfoDark, ContactAdd
-            pinView!.animatesDrop = true
-
-// #1           let btn = UIButton(type: .DetailDisclosure)
-//            pinView!.rightCalloutAccessoryView = btn
+//    func XmapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+//    
+//        guard annotation .isKindOfClass(DVNPointAnnotation) else {
+//            return nil
+//        }
+//        let pointAnnotation: DVNPointAnnotation = annotation as! DVNPointAnnotation
+//        
+//        let reuseId = "pin"
+//        
+//        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+//        
+//        if pinView == nil {
+//            // TODO: in this file finish updating the annotation left callout with loan recipient's image
+//            pinView = MKPinAnnotationView /*MKAnnotationView*/ /*MapPin*/ (annotation: annotation, reuseIdentifier: reuseId)
+//            pinView!.enabled = true // todo needed?
+//            pinView!.canShowCallout = true
+//            pinView!.pinColor = .Red
+//            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+//            pinView!.animatesDrop = false // TODO - change to true
+//
+//// #1           let btn = UIButton(type: .DetailDisclosure)
+////            pinView!.rightCalloutAccessoryView = btn
+////            
+////            //----
+////            pinView = CustomView(annotation: pointAnnotation, reuseIdentifier:reuseId)
+////            //pinView!.image = UIImage(named:"pin-map-7.png")
 //            
-//            //----
-//            pinView = CustomView(annotation: pointAnnotation, reuseIdentifier:reuseId)
-//            //pinView!.image = UIImage(named:"pin-map-7.png")
-            
-            // Display the lendee's image on the annotation
-            if let loan = pointAnnotation.loan {
-                loan.getImage() {
-                    success, error, image in
-                    
-                    if success {
-                        // pointAnnotation.annotationImage = image
-                        pinView!.image = image
-                        
-                        dispatch_async(dispatch_get_main_queue()) {
-                            self.mapView.setNeedsDisplay()
-                        }
-                    }
-                }
-            }
-            
-// #1                let button : UIButton = UIButton(type:.DetailDisclosure)
-//                button.addTarget(self, action: "buttonClicked:", forControlEvents: UIControlEvents.TouchUpInside)
-//                pinView!.rightCalloutAccessoryView=button
-//                pinView!.canShowCallout = false
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        if let annotationImage = UIImage(named:"Albania.png") {
-            pinView!.image = annotationImage // getThumbnailForImage(annotationImage)
-        }
-        return pinView
-    }
+//            // Display the lendee's image on the annotation
+//            if let loan = pointAnnotation.loan {
+//                loan.getImage() {
+//                    success, error, image in
+//                    
+//                    if success {
+//                        // pointAnnotation.annotationImage = image
+//                        pinView!.image = image
+//                        
+//                        dispatch_async(dispatch_get_main_queue()) {
+//                            self.mapView.setNeedsDisplay()
+//                        }
+//                    }
+//                }
+//            }
+//            
+//// #1                let button : UIButton = UIButton(type:.DetailDisclosure)
+////                button.addTarget(self, action: "buttonClicked:", forControlEvents: UIControlEvents.TouchUpInside)
+////                pinView!.rightCalloutAccessoryView=button
+////                pinView!.canShowCallout = false
+//        }
+//        else {
+//            pinView!.annotation = annotation
+//        }
+//        
+//        if let annotationImage = UIImage(named:"Albania.png") {
+//            pinView!.image = annotationImage // getThumbnailForImage(annotationImage)
+//        }
+//        return pinView
+//    }
     
-    // This is the one that works - todo
+    /*! Create an accessory view for the pin annotation callout when it is added to the map view */
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         if annotation is MKUserLocation {
@@ -414,10 +304,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
             pinView!.canShowCallout = true
             //pinView!.image = UIImage(named: "pin-map-7")
-            
-            
-//TODO: I should in most cases already have the image (unless refresh is done on a mapview - i can get rid of that). This would make loan.getImage() synchronous. In other cases I could preload the images before loading the imageview....
-//TODO: Wait to return pinView until image is available. Display spinner while waiting. Or, can I queue all requests asynch and when they are done get a callback on the main thread and return the annotation. dispatch_sync on a background queue and dispatch back to a function here on the main queue might be what I want.
+
             // Display the lendee's image on the annotation
             if let loan = pointAnnotation.loan {
                 loan.getImage() {
@@ -435,8 +322,10 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             }
             
             // Add image to left callout
-            //let mugIconView = UIImageView(image: UIImage(named: "Donate-32"))
-            pinView!.leftCalloutAccessoryView = getCustomAccessoryViewForImageNamed("Albania.png")
+            if let loan = pointAnnotation.loan {
+                let flagImageName = loan.getNameOfFlagImage()
+                pinView!.leftCalloutAccessoryView = getCustomAccessoryViewForImageNamed(flagImageName)
+            }
             
             // Add detail button to right callout
             //var calloutButton = UIButton(type: .DetailDisclosure) // as UIButton
@@ -629,28 +518,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     
     // MARK: Helper functions
-// TODO
-//    /* Received a notification that studentLocations have been updated with new data from Parse. Recreate the pins for all locations. */
-//    func onStudentLocationsUpdate() {
-//        // clear the pins
-//        removeAllPins()
-//        
-//        // redraw the pins
-//        createPins()
-//        
-//        dispatch_async(dispatch_get_main_queue()) {
-//            self.mapView.setNeedsDisplay()
-//        }
-//    }
 
-// TODO
-//    /* Modally present the Login view controller. */
-//    func displayLoginViewController() {
-//        var storyboard = UIStoryboard (name: "Main", bundle: nil)
-//        var controller = storyboard.instantiateViewControllerWithIdentifier("LoginStoryboardID") as! LoginViewController
-//        self.presentViewController(controller, animated: true, completion: nil);
-//    }
-//    
     /* Modally present the LoanDetail view controller. */
     func presentLoanDetailViewController(loan: KivaLoan?) {
         guard let loan = loan else {
@@ -659,8 +527,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
-//        self.presentViewController(controller, animated: true, completion: nil)
-//todo - adding to experiment
+
         // add the view controller to the navigation controller stack
         self.navigationController?.pushViewController(controller, animated: true)
     }
@@ -689,10 +556,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     /* Display url in an embeded webkit browser in the navigation controller. */
     func showUrlInEmbeddedBrowser(url: String) {
         var storyboard = UIStoryboard (name: "Main", bundle: nil)
-//TODO ->        var controller = storyboard.instantiateViewControllerWithIdentifier("WebViewStoryboardID") as! WebViewController
-//        controller.url = url
-//        self.navigationController?.pushViewController(controller, animated: true)
-        
     }
     
     /* Set the mapview to show north america. */
@@ -779,31 +642,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         
         mapView.setRegion(region, animated: true)
     }
-
-//moved to KivaLoan class
-//    /* Return mappable coordinates for a KivaLoan object */
-//    func getCoordinatesForLoan(loan: KivaLoan) -> CLLocationCoordinate2D? {
-//        
-//        // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
-//        guard let geo = loan.geo else {return nil}
-//        let geoCoordsArray = geo.characters.split{$0 == " "}.map(String.init)
-//        
-//        guard let latitude = Double(geoCoordsArray[0]) else {return nil}
-//        guard let longitude = Double(geoCoordsArray[1]) else {return nil}
-//        let lat = CLLocationDegrees(latitude)
-//        let long = CLLocationDegrees(longitude)
-//        
-//        // The lat and long are used to create a CLLocationCoordinates2D instance.
-//        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-//        
-//        return coordinate
-//    }
-
-//    override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
-//        
-//        print("back button selected")
-//        return true
-//    }
     
     func popViewController() {
         

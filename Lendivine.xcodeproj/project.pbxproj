@@ -227,6 +227,7 @@
 				9E7869ED1C9F3A1200F1FE93 /* CustomView.swift */,
 				9E7869EF1C9F5CCF00F1FE93 /* DVNPointAnnotation.swift */,
 				9E6AC0151CB3862700F3476F /* UIColorExtension.swift */,
+				9EE356951C74501400363652 /* LDAlert.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -240,6 +241,7 @@
 				9E495BE31BFAD82000E3DEAD /* NSCache+Singleton.swift */,
 				9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */,
 				9EE356921C71577900363652 /* Model.xcdatamodeld */,
+				9E495BDF1BF9611400E3DEAD /* VTError.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -321,8 +323,6 @@
 				9E7869D91C9E0EAB00F1FE93 /* ViewControllers */,
 				9EC72E131BF559E90000D9BF /* AppDelegate.swift */,
 				9EC72E211BF559E90000D9BF /* Info.plist */,
-				9E495BDF1BF9611400E3DEAD /* VTError.swift */,
-				9EE356951C74501400363652 /* LDAlert.swift */,
 				9E39504F1BF66B2D007BC75E /* View */,
 				9E3950501BF66B34007BC75E /* Model */,
 				9ECEFAF51C9602F10045E92F /* Attributions.swift */,

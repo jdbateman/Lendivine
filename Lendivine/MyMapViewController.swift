@@ -38,22 +38,10 @@ class MyMapViewController: UIViewController, MKMapViewDelegate {
 
         var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier("myAnnotationView")
         if (annotationView == nil) {
-            // use this to set the annotation image
-            // annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-            // annotationView!.image = UIImage(named: "Donate-52")
             
             // use the standard mapkit pin for the annotation image
             var pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myAnnotationView")
             pinView.pinColor = .Purple
-            
-            // customize the annotation's callout
-//            let pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myAnnotationView")
-//            pinView.pinColor = .Purple
-//            pinView.animatesDrop = true
-//            pinView.canShowCallout = true
-//            pinView.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)  // DetailDisclosure, InfoLight, InfoDark, ContactAdd
-//            let myCustomImageView = UIImageView(image: UIImage(named: "Donate-32"))
-//            pinView.leftCalloutAccessoryView = myCustomImageView
             
             return pinView
         }
@@ -76,11 +64,9 @@ class MyMapViewController: UIViewController, MKMapViewDelegate {
             pinView!.image = UIImage(named: "pin-map-7")
             
             // Add image to left callout
-            //let mugIconView = UIImageView(image: UIImage(named: "Donate-32"))
             pinView!.leftCalloutAccessoryView = getCustomAccessoryView("Albania.png") //mugIconView
             
             // Add detail button to right callout
-            //var calloutButton = UIButton(type: .DetailDisclosure) // as UIButton
             pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
         }
         else {
@@ -114,28 +100,4 @@ class MyMapViewController: UIViewController, MKMapViewDelegate {
         UIGraphicsEndImageContext()
         return thumbnailImage
     }
-    
-//    // This code snippet assumes that an annotation for the Golden Gate Bridge has already been added to the map view.
-//    
-//    - (MKAnnotationView *)mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>)annotation
-//    {
-//        // Try to dequeue an existing pin view first (code not shown).
-//        
-//        // If no pin view already exists, create a new one.
-//        MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:BridgeAnnotationIdentifier];
-//        customPinView.pinColor = MKPinAnnotationColorPurple;
-//        customPinView.animatesDrop = YES;
-//        customPinView.canShowCallout = YES;
-//        
-//        // Because this is an iOS app, add the detail disclosure button to display details about the annotation in another view.
-//        UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-//        [rightButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
-//        customPinView.rightCalloutAccessoryView = rightButton;
-//        
-//        // Add a custom image to the left side of the callout.
-//        UIImageView *myCustomImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MyCustomImage.png"]];
-//        customPinView.leftCalloutAccessoryView = myCustomImage;
-//        
-//        return customPinView;
-//    }
 }

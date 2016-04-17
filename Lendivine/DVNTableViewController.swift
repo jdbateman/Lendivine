@@ -5,6 +5,7 @@
 //  Created by john bateman on 4/2/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This view controller is a base class for table view controllers. It provides helper functions that perform search queries against the kiva REST API for loans.
 
 import UIKit
 import CoreData
@@ -20,9 +21,6 @@ class DVNTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
-        //doOAuth()
-        
         let kivaOAuth = KivaOAuth.sharedInstance
         self.kivaAPI = kivaOAuth.kivaAPI
     }
@@ -30,16 +28,7 @@ class DVNTableViewController: UITableViewController {
     // helper function that searches for loans
     func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
-//        print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
-//
-//        let regions = "na,ca,sa,af,as,me,ee,we,an,oc"
-//        var countries = "TD,TG,TH,TJ,TL,TR,TZ" // TODO: expand list of ocuntries or use user preferences
-//        
-//        if let randomCountries = Countries.getRandomCountries(30) {
-//            countries = randomCountries
-//        }
-//        
-//        print("calling kivaSearchLoans with countries = \(countries)")
+        // TODO: expand loan types beyond agriculture
         
         kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
             
@@ -78,10 +67,10 @@ class DVNTableViewController: UITableViewController {
         if let kivaAPI = self.kivaAPI {
             self.findLoans(kivaAPI) { success, error, loanResults in
                 if success {
-                    if var loans = loanResults {
+                    if let loans = loanResults {
                         
                         // just keep the first numberOfLoansToAdd loans
-                        //tood - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
+                        //todo - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
                         
                         // todo - do i need to maintain this collection anymore?  self.loans = loans
                         
@@ -92,7 +81,6 @@ class DVNTableViewController: UITableViewController {
                         
                         
                         // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-                        //if let loans = loans {
                         for loan in loans where loan.id != nil {
                             if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataStackManager.sharedInstance().scratchContext) == nil {
                                 
@@ -112,14 +100,6 @@ class DVNTableViewController: UITableViewController {
                                 self.saveScratchContext()
                             }
                         }
-                        //}
-                        
-                        //                        for loan in loans {
-                        //                            // add the  loan to our collection
-                        //                            self.loans.append(loan)
-                        //
-                        //                            print("cart contains loanId: \(loanId) in amount: \(amount)")
-                        //                        }
                         
                         completionHandler(success: true, error: nil)
                     }

@@ -675,6 +675,37 @@ extension KivaLoan {
         // save the image to the image cache in memory
         self.cacheImage(theImage)
     }
+    
+    /*! Return an image of the flag where this loan resides. */
+    func getFlagImage() -> UIImage? {
+        
+        var flagImage: UIImage?
+        
+        if let country = self.country {
+            
+            if let uiImage = UIImage(named: country) {
+                flagImage = uiImage
+            } else {
+                flagImage = UIImage(named: "United Nations")
+            }
+        }
+        
+        return flagImage
+    }
+    
+    /*! Return the name of this loan's flag image. */
+    func getNameOfFlagImage() -> String {
+        
+        var name: String = "United Nations"
+        
+        if let country = self.country {
+            if let uiImage = UIImage(named: country) {
+                name = country
+            }
+        }
+        
+        return name
+    }
 }
 
 // MARK: helper functions
