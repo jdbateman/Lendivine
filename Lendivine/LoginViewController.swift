@@ -36,6 +36,11 @@ class LoginViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.activityIndicator.stopActivityIndicator()
+    }
+    
     func setupView() {
         
         self.navigationController?.setNavigationBarHidden(true, animated: true)

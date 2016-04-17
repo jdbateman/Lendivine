@@ -131,7 +131,7 @@ class KivaCart {
                 id = loanID
             }
             // NOTE: TODO - the context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
-            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(id, context: CoreDataStackManager.sharedInstance().scratchContext) {
+            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(id, context: sharedContext /* CoreDataStackManager.sharedInstance().scratchContext*/) {
                 loansInCart.append(loan)
             }
         }
@@ -176,6 +176,7 @@ class KivaCart {
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
+        // todo - return CoreDataStackManager.sharedInstance().scratchContext
     }()
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
@@ -223,10 +224,14 @@ class KivaCart {
     */
 //    func KivaAddItemToCart(loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
     func KivaAddItemToCart(loan: KivaLoan?, /*loanID: NSNumber?,*/ donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
+        
+        print("KivaAddItemToCart called for loan \(loan?.name) & \(loan?.id)")
+        
         if let loan = loan {
 //            if let loanID = loanID {
                 if let donationAmount = donationAmount {
                     let cart = KivaCart.sharedInstance
+                    // TODO: cart context - all calls to KivaAddItemToCart use sharedContext
                     let item = KivaCartItem(loan: loan /*loanID: loanID*/, donationAmount: donationAmount, context: context)
                     if !itemInCart(item) /*!cart.items.contains(item)*/ {
                         cart.add(item)

@@ -164,14 +164,15 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 print("error retrieving image: \(error)")
             }
         }
-        
-        let cart = KivaCart.sharedInstance
-        let item = KivaCartItem(loan: loan, donationAmount: 25, context: CoreDataStackManager.sharedInstance().scratchContext /*self.sharedContext*/)
-        if cart.itemInCart(item) {
-            cell.donatedImageView.hidden = false
-        } else {
-            cell.donatedImageView.hidden = true
-        }
+// TODO - find another way to determine if the loan is in the cart and update the donatedImageView.
+//        // TODO: cart context - This is the only place where a cart item is accessed using a scratchContext
+//        let cart = KivaCart.sharedInstance
+//        let item = KivaCartItem(loan: loan, donationAmount: 25, context: CoreDataStackManager.sharedInstance().scratchContext /*self.sharedContext*/) // TODO: cart context
+//        if cart.itemInCart(item) {
+//            cell.donatedImageView.hidden = false
+//        } else {
+//            cell.donatedImageView.hidden = true
+//        }
     }
     
     // MARK: - Fetched results controller
@@ -262,18 +263,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
     
     // MARK: Actions
-    
-    @IBAction func seeMoreLoans(sender: AnyObject) {
-        refreshLoans() {
-            success, error in
-            if success {
-                self.fetchLoans()
-                self.tableView.reloadData()
-            } else {
-                print("refreshLoans returned an error: \(error)")
-            }
-        }
-    }
     
     // OAuth button was selected.
     func onTrashButtonTap() {
@@ -395,7 +384,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-    /* Display url in an embeded webkit browser. */
+    /*! Display url in an embeded webkit browser. */
     func showEmbeddedBrowser() {
         
         let controller = KivaCartViewController()
@@ -406,12 +395,26 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         self.presentViewController(controller, animated: true, completion: nil)
     }
 
-    /* Refresh button was selected. */
+    /*! See More Loans..." button was selected. */
+    @IBAction func seeMoreLoans(sender: AnyObject) {
+        refreshLoans() {
+            success, error in
+            if success {
+                self.fetchLoans()
+                self.tableView.reloadData()
+            } else {
+                print("refreshLoans returned an error: \(error)")
+            }
+        }
+    }
+    
+    /*! Refresh button was selected. */
     func onAddLoansButtonTap() {
         
         refreshLoans() {
             success, error in
             if success {
+                self.fetchLoans()
                 self.tableView.reloadData()
             }
         }
@@ -425,8 +428,13 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         refreshLoans() {
             success, error in
+            
             refreshControl.endRefreshing()
-            self.tableView.reloadData()
+            
+            if success {
+                self.fetchLoans()
+                self.tableView.reloadData()
+            }
         }
     }
     
