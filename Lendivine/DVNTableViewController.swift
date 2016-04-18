@@ -30,7 +30,13 @@ class DVNTableViewController: UITableViewController {
         
         // TODO: expand loan types beyond agriculture
         
-        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
+        var nextPage = self.readNextKivaPage()
+        if nextPage < 1 {
+            nextPage = 1 /*self.nextPageOfKivaSearchResults*/
+        }
+
+        
+        kivaAPI.kivaSearchLoans(queryMatch: "family", status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: nextPage, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
             
             success, error, loanResults, nextPage in
             
@@ -44,7 +50,8 @@ class DVNTableViewController: UITableViewController {
                 //.enabled = false
             } else {
                 // save the nextPage
-                self.nextPageOfKivaSearchResults = nextPage
+                //self.nextPageOfKivaSearchResults = nextPage
+                self.saveNextKivaPage(nextPage)
                 
                 // enable the refresh button
                 //self.navigationItem.rightBarButtonItems?.first?.enabled = true
@@ -125,5 +132,26 @@ class DVNTableViewController: UITableViewController {
             error.memory = error1
             print("Error saving scratchContext: \(error)")
         }
+    }
+    
+    
+    // MARK: Manage next page
+    
+    func saveNextKivaPage(page:Int) {
+        
+        self.nextPageOfKivaSearchResults = page
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        appSettings.setValue(page, forKey: "NextPageOfKivaSearchResults")
+    }
+    
+    func readNextKivaPage() -> Int {
+        
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        let nextPage = appSettings.integerForKey("NextPageOfKivaSearchResults")
+        return nextPage
+    }
+    
+    func resetNextKivaPage() {
+        saveNextKivaPage(1)
     }
 }

@@ -267,6 +267,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     // OAuth button was selected.
     func onTrashButtonTap() {
         removeAllLoans()
+        self.resetNextKivaPage()
         self.fetchLoans()
         self.tableView.reloadData()
     }
