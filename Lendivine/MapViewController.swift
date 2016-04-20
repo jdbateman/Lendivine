@@ -164,7 +164,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
 //                    annotation.subtitle = id.stringValue // Later, when the user selects this pin, do a fetch on this id to get the KivaLoan object.
 //                }
                 
-                if let id = loan.id {
+                if let _ = loan.id {
                     var subtitleText = ""
                     if let sector = loan.sector {
                         subtitleText = sector
@@ -546,17 +546,18 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         activityIndicator.stopAnimating()
     }
     
-    /* Display url in external Safari browser. */
-    func showUrlInExternalWebKitBrowser(url: String) {
-        if let requestUrl = NSURL(string: url) {
-            UIApplication.sharedApplication().openURL(requestUrl)
-        }
-    }
-    
-    /* Display url in an embeded webkit browser in the navigation controller. */
-    func showUrlInEmbeddedBrowser(url: String) {
-        var storyboard = UIStoryboard (name: "Main", bundle: nil)
-    }
+// todo - remove - unused
+//    /* Display url in external Safari browser. */
+//    func showUrlInExternalWebKitBrowser(url: String) {
+//        if let requestUrl = NSURL(string: url) {
+//            UIApplication.sharedApplication().openURL(requestUrl)
+//        }
+//    }
+//    
+//    /* Display url in an embeded webkit browser in the navigation controller. */
+//    func showUrlInEmbeddedBrowser(url: String) {
+//        var storyboard = UIStoryboard (name: "Main", bundle: nil)
+//    }
     
     /* Set the mapview to show north america. */
     func setMapRegionToNorthAmerica() {
@@ -587,7 +588,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         print("\(loan.country) coordinates: (\(lat), \(long))")
         
         // The lat and long are used to create a CLLocationCoordinates2D instance.
-        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        _ = CLLocationCoordinate2D(latitude: lat, longitude: long)
         
         // center
         let location = CLLocationCoordinate2D(

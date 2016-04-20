@@ -173,7 +173,7 @@ class CountryLoansTableViewController: UITableViewController{
     func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
             self.findLoans(self.kivaAPI) { success, error, loanResults in
             if success {
-                if var loans = loanResults {
+                if let loans = loanResults {
                     
                     // just keep the first numberOfLoansToAdd loans
                     //todo - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
@@ -228,9 +228,7 @@ class CountryLoansTableViewController: UITableViewController{
             return
         }
         
-        let regions = "ca,sa,af,as,me,ee,we,an,oc"
-        
-        let countries = self.country?.countryCodeTwoLetter
+        let countries = countryCode
         
         // Lenient criteria to maximimze the possibility that any particular country will return matches.
         kivaAPI.kivaSearchLoans(queryMatch: nil, status: nil, gender: nil, regions: nil, countries: countries, sector: nil, borrowerType: nil, maxPartnerRiskRating: nil, maxPartnerDelinquency: nil, maxPartnerDefaultRate: nil, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {

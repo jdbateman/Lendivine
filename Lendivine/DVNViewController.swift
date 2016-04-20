@@ -125,7 +125,7 @@ class DVNViewController: UIViewController {
         if let kivaAPI = self.kivaAPI {
             self.findRandomLoans(kivaAPI) { success, error, loanResults in
                 if success {
-                    if var loans = loanResults {
+                    if let loans = loanResults {
                         
                         // just keep the first numberOfLoansToAdd loans
                         //tood - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
