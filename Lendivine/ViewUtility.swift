@@ -14,9 +14,12 @@ class ViewUtility {
     // Draw text onto the backingImage and return the composite image as a UIImage.
     static func createImageFromText(text: NSString, backingImage: UIImage, atPoint:CGPoint)->UIImage{
         
+        let backingWidth = backingImage.size.width
+        let backingHeight = backingImage.size.height
+        
         // Setup text font
-        let font: UIFont = UIFont(name: "Helvetica Bold", size: 14)!
-        let color: UIColor = UIColor.whiteColor()
+        let font: UIFont = UIFont(name: "Helvetica Bold", size: 18)!
+        let color: UIColor = UIColor.blackColor()
         let fontAttributes = [
             NSFontAttributeName: font,
             NSForegroundColorAttributeName: color,
@@ -26,18 +29,18 @@ class ViewUtility {
         UIGraphicsBeginImageContext(backingImage.size)
 
         // Draw the image into a rectangle whose size is that of the image itself.
-        backingImage.drawInRect(CGRectMake(0, 0, backingImage.size.width, backingImage.size.height))
+        backingImage.drawInRect(CGRectMake(0, 0, backingWidth, backingHeight))
         
         // Create a rectangle the size of the image and draw the text into it.
-        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, backingImage.size.width, backingImage.size.height)
+        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, backingWidth, backingHeight)
         text.drawInRect(rect, withAttributes: fontAttributes)
         
         
         let fontAttributes2 = [
             NSFontAttributeName: font,
-            NSForegroundColorAttributeName: UIColor.blackColor(),
+            NSForegroundColorAttributeName: UIColor.greenColor(),
         ]
-        let rect2: CGRect = CGRectMake(atPoint.x - 1, atPoint.y - 1, backingImage.size.width, backingImage.size.height)
+        let rect2: CGRect = CGRectMake(atPoint.x - 2, atPoint.y - 2, backingWidth, backingHeight)
         text.drawInRect(rect2, withAttributes: fontAttributes2)
         
         // Make a new image from the image context upon which we've drawn.

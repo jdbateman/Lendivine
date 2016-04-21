@@ -12,11 +12,10 @@ import UIKit
 class CartTableViewCell: UITableViewCell {
 
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var sectorLabel: UILabel!
-    @IBOutlet weak var amountLabel: UILabel! // loan amount
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var changeDonationButton: UIButton!
     @IBOutlet weak var countryLabel: UILabel!
+    @IBOutlet weak var flagImageView: UIImageView!
 
     // User selected the change donation button in the cell. Present donation amount options in an action sheet.
     @IBAction func onChangeDonationButton(sender: AnyObject) {
@@ -107,7 +106,7 @@ class CartTableViewCell: UITableViewCell {
         
         let buttonText: String = "$" + donationAmount.stringValue
         
-        let donationImage: UIImage = ViewUtility.createImageFromText(buttonText, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(xCoord), 3))
+        let donationImage: UIImage = ViewUtility.createImageFromText(buttonText, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(xCoord), 4))
         return donationImage
     }
     

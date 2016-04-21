@@ -19,14 +19,12 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var loanFlagImageView: UIImageView!
     @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var sector: UILabel!
-    @IBOutlet weak var amount: UILabel!
     @IBOutlet weak var country: UILabel!
-    @IBOutlet weak var status: UILabel!
     @IBOutlet weak var fundedAmount: UILabel!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var topViewToTopMarginConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var descriptionLabel: UILabel!
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
@@ -76,15 +74,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
             if let name = loan.name {
                 self.name.text = name
             }
-            
-            if let sector = loan.sector {
-                self.sector.text = sector
-            }
-            
-            if let amount = loan.loanAmount {
-                self.amount.text = "$" + amount.stringValue + " requested"
-            }
-            
+           
             if let country = loan.country {
                 self.country.text = country
                 
@@ -95,27 +85,45 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
                     loanFlagImageView.image = UIImage(named: "United Nations")
                 }
             }
-            
-            if let status = loan.status {
-                self.status.text = "status: \(status)"
-            }
-            
+         
             var fundedText = ""
             if let fundedAmount = loan.fundedAmount {
                 fundedText = "$\(fundedAmount.stringValue)"
             }
             if let lenderCount = loan.lenderCount {
-                fundedText = fundedText + " from \(lenderCount.stringValue) lenders"
+                fundedText = "Received " + fundedText + " from \(lenderCount.stringValue) lenders."
             }
             self.fundedAmount.text = fundedText
+            
+            var statusText = ""
+            if let s = loan.status {
+                statusText = "\(s)"
+            }
+            var sectorText = ""
+            if let s = loan.sector {
+                sectorText = s
+            }
+            var amountText = ""
+            if let a = loan.loanAmount {
+                amountText = "$" + a.stringValue
+            }
+
+            let descriptionText = statusText + " " + amountText + " for " + sectorText
+            descriptionLabel.text = descriptionText
             
             loan.getImage() {success, error, image in
                 if success {
                     dispatch_async(dispatch_get_main_queue()) {
+                        
                         self.loanImageView!.image = image
                         
+                        // draw border around image
+                        self.loanImageView!.layer.borderColor = UIColor.whiteColor().CGColor;
+                        self.loanImageView!.layer.borderWidth = 1.5
+                        self.loanImageView!.layer.cornerRadius = 5.0
+                        self.loanImageView!.clipsToBounds = true
+                        
                         self.view.setNeedsDisplay()
-                        //self.view.setNeedsLayout()
                     }
                 } else  {
                     print("error retrieving loan image: \(error)")

@@ -85,17 +85,16 @@ class CartTableViewController: UITableViewController {
             let cartItem = self.cart!.items[row]
             
                 cell.nameLabel.text = cartItem.name
-                
-                cell.sectorLabel.text = cartItem.sector
-                
-                var amountString = "$"
-                if let loanAmount = cartItem.loanAmount {
-                    amountString.appendContentsOf(loanAmount.stringValue)
-                } else {
-                    amountString.appendContentsOf("0")
+            
+                if let country = cartItem.country {
+                    // flag
+                    if let uiImage = UIImage(named: country) {
+                        cell.flagImageView.image = uiImage
+                    } else {
+                        cell.flagImageView.image = UIImage(named: "United Nations")
+                    }
                 }
-                cell.amountLabel.text = amountString
-                
+            
                 cell.countryLabel.text = cartItem.country
                 
                 // donation amount
@@ -115,6 +114,12 @@ class CartTableViewController: UITableViewController {
                     if success {
                         dispatch_async(dispatch_get_main_queue()) {
                             cell.loanImageView!.image = image
+                            
+                            // draw border around image
+                            cell.loanImageView!.layer.borderColor = UIColor.blueColor().CGColor;
+                            cell.loanImageView!.layer.borderWidth = 2.5
+                            cell.loanImageView!.layer.cornerRadius = 3.0
+                            cell.loanImageView!.clipsToBounds = true
                         }
                     } else  {
                         print("error retrieving image: \(error)")
