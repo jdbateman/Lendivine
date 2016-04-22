@@ -24,10 +24,7 @@ extension RESTCountries {
         // none
         
         // set up http header parameters
-    //    let headerParms = [
-    //        Constants.ParseAppID : "X-Parse-Application-Id",
-    //        Constants.ParseApiKey : "X-Parse-REST-API-Key"
-    //    ]
+        // none
         
         /* 2. Make the request */
         //let apiEndpoint = "name/canada"
@@ -39,17 +36,10 @@ extension RESTCountries {
                 // didn't work. bubble up error.
                 completionHandler(countries: nil, error: error)
             } else {
-                // parse the json response which looks like the following:
-                /*
-                {
-
-                }
-                */
+                // parse the json response
                 var countries = [Country]()
                 
-                
                 if let returnData = JSONResult as! [[String:AnyObject]]? {
-                    //print("\(returnData)")
                     
                     // Ensure cored data operations happen on the main thread.
                     dispatch_async(dispatch_get_main_queue()) {
@@ -57,57 +47,11 @@ extension RESTCountries {
                         // Convert each dictionary in the response data into a Country object.
                         for dictionary in returnData {
                             let country:Country = Country(dictionary: dictionary, context: self.sharedContext)
-                            //print("country: \(country)")
                             countries.append(country)
-                            
-                            //CoreDataStackManager.sharedInstance().saveContext() // todo remove debug
                         }
-                        
-                        // TODO remove this test code
-                        //CoreDataStackManager.sharedInstance().saveContext()
-                        
-                        print("countries in core data = \(Countries.countCountries())")
-                        
                         completionHandler(countries: countries, error: nil)
                     }
                 }
-                
-//                if let returnData = JSONResult {
-//                    RESTCountries.parseJSONWithCompletionHandler(returnData as? NSData, completionHandler: completionHandler)
-//                }
-                
-                //NSData *urlData=[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
-//                
-//                let thedata:NSString = String(NSData:JSONResult, encoding:NSUTF8StringEncoding);
-//                    
-//                let jsonDict: AnyObject! = try? NSJSONSerialization.JSONObjectWithData(thedata, options: [.NSJSONReadingMutableContainers])
-//                if let jsonDict = jsonDict {
-//                    print(jsonDict)
-//                }
-                
-                //NSString *data=[[NSString alloc]initWithData:JSONResult encoding:NSUTF8StringEncoding];
-                
-                //NSDictionary *search = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                
-//                if let userDictionary = JSONResult.valueForKey("user") as? [String: AnyObject] {
-//                    
-//// TODO - parse JSON here and save each country in array for return.
-//                    
-////                    if let lastName = userDictionary["last_name"] as? String {
-////                        userLocation.lastName = lastName
-////                    }
-////                    if let firstName = userDictionary["first_name"] as? String {
-////                        userLocation.firstName = firstName
-////                    }
-////                    if let url = userDictionary["website_url"] as? String{
-////                        userLocation.mediaURL = url
-////                    }
-////                    if let key = userDictionary["key"] as? String {
-////                        userLocation.uniqueKey = key
-////                    }
-//                    
-//                    completionHandler(countries: countries, error: nil)
-//                }
             else {
                     completionHandler(countries: nil, error: error)
                 }

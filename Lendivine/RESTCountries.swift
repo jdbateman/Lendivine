@@ -89,7 +89,7 @@ class RESTCountries {
             mutableParameters = params
         }
         if apiKey != "" {
-            mutableParameters["api_key"/*ParameterKeys.ApiKey*/] = apiKey
+            mutableParameters["api_key"] = apiKey
         }
         
         /* 2/3. Build the URL and configure the request */
@@ -101,7 +101,6 @@ class RESTCountries {
         let request = NSMutableURLRequest(URL: url)
         
         // configure http header
-        //var jsonifyError: NSError? = nil
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -110,7 +109,6 @@ class RESTCountries {
                 request.addValue(key, forHTTPHeaderField: value as! String)
             }
         }
-        //request.HTTPBody = NSJSONSerialization.dataWithJSONObject(jsonBody, options: nil, error: &jsonifyError)
         
         request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(jsonBody, options: [])
         
@@ -174,7 +172,7 @@ class RESTCountries {
                 print("no data found")
                 return
         }
-
+// JSON data structure:
 //        let str = "[
 //            {
 //                "name": "Canada",

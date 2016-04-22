@@ -148,48 +148,47 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             // Create an annotation for each loan in loans
             for loan in loans {
                 
-                guard let coordinate = KivaLoan.getCoordinatesForLoan(loan) else {
-                    return
-                }
-                
-                // Create the annotation, setting the coordinate, title, and subtitle properties
-                let annotation = DVNPointAnnotation() // MKPointAnnotation()
-                annotation.coordinate = coordinate
-                
-                if let name = loan.name, country = loan.country {
-                    annotation.title = "\(name) in \(country)"
-                }
-//todo - remove
-//                if let id = loan.id {
-//                    annotation.subtitle = id.stringValue // Later, when the user selects this pin, do a fetch on this id to get the KivaLoan object.
-//                }
-                
-                if let _ = loan.id {
-                    var subtitleText = ""
-                    if let sector = loan.sector {
-                        subtitleText = sector
+                if let coordinate = KivaLoan.getCoordinatesForLoan(loan) {
+                  
+                    // Create the annotation, setting the coordinate, title, and subtitle properties
+                    let annotation = DVNPointAnnotation() // MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    
+                    if let name = loan.name, country = loan.country {
+                        annotation.title = "\(name) in \(country)"
                     }
-                    if let amount = loan.loanAmount {
-                        let formatter = NSNumberFormatter()
-                        formatter.numberStyle = .CurrencyStyle
-                        if let amountString = formatter.stringFromNumber(amount) {
-                            subtitleText.appendContentsOf(": ")
-                            subtitleText.appendContentsOf(amountString)
+                    //todo - remove
+                    //                if let id = loan.id {
+                    //                    annotation.subtitle = id.stringValue // Later, when the user selects this pin, do a fetch on this id to get the KivaLoan object.
+                    //                }
+                    
+                    if let _ = loan.id {
+                        var subtitleText = ""
+                        if let sector = loan.sector {
+                            subtitleText = sector
                         }
+                        if let amount = loan.loanAmount {
+                            let formatter = NSNumberFormatter()
+                            formatter.numberStyle = .CurrencyStyle
+                            if let amountString = formatter.stringFromNumber(amount) {
+                                subtitleText.appendContentsOf(": ")
+                                subtitleText.appendContentsOf(amountString)
+                            }
+                        }
+                        annotation.subtitle = subtitleText
                     }
-                    annotation.subtitle = subtitleText
+                    
+                    if let imageId = loan.imageID {
+                        annotation.imageID = imageId
+                    }
+                    
+                    annotation.loan = loan
+                    
+                    // Add annotation to the annotations collection.
+                    annotations.append(annotation)
+                    
+                    print("appended another loan: \(++i)") // todo - remove debug
                 }
-
-                if let imageId = loan.imageID {
-                    annotation.imageID = imageId
-                }
-                
-                annotation.loan = loan
-                
-                // Add annotation to the annotations collection.
-                annotations.append(annotation)
-                
-                print("appended another loan: \(++i)") // todo - remove debug
             }
             
             print("Finished appending \(i) annotations. annotations now contains \(annotations.count) annotations")

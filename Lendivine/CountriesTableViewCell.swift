@@ -5,7 +5,7 @@
 //  Created by john bateman on 3/12/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
-// This custom table view cell is used in the MyLoansTableViewController to display summary information about a loan made previously by the user.
+// This custom table view cell is used in the CountriesTableViewController to display information about a country.
 
 import Foundation
 import UIKit

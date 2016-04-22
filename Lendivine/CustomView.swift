@@ -11,22 +11,7 @@ import MapKit
 
 class CustomView: MKAnnotationView {
 
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
-
     var label: UILabel = UILabel()
-//    var lendeeImage: UIImage = UIImage()
-    
-    //var myNames = ["dipen","laxu","anis","aakash","santosh","raaa","ggdds","house"]
-    
-//    override init(){
-//        super.init()
-//    }
     
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)

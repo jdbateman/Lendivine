@@ -447,7 +447,11 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
     class func getCoordinatesForLoan(loan: KivaLoan) -> CLLocationCoordinate2D? {
         
         // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
-        guard let geo = loan.geo else {return nil}
+        guard let geo = loan.geo else {
+            print("loan \(loan.name) has invalid geo coordinates. Here is the entire loan object: \(loan)")
+            return nil
+        }
+        
         let geoCoordsArray = geo.characters.split{$0 == " "}.map(String.init)
         
         guard let latitude = Double(geoCoordsArray[0]) else {return nil}

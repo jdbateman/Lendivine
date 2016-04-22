@@ -5,7 +5,7 @@
 //  Created by john bateman on 4/4/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
-// Acknowledgement: Thanks Bloudermilk on stack overflow for the ide to extend UIColor with a convenience initializer to create a UIColor from an rgb value, and Nate Cook for the original example.
+// Acknowledgement: Thanks Bloudermilk on stack overflow for the idea to extend UIColor with a convenience initializer to create a UIColor from an rgb value, and Nate Cook for the original example.
 
 import Foundation
 import UIKit

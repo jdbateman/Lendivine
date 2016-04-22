@@ -42,26 +42,27 @@ class LoansTableViewCell: DVNTableViewCell {
         
         // Get the indexPath associated with this table cell
         let indexPath = tableView.indexPathForCell(cell)
-
-        // Alternatively use the version specific code:
-        //let tableView = cell.superview as! UITableView
         
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! LoansTableViewController
         let loan = tableViewController.fetchedResultsController.objectAtIndexPath(indexPath!) as! KivaLoan
-        let amount = 25  // TODO: set default donation amount to user preference.
+        
+        // set default donation amount to user preference.
+        var amount = 25
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        amount = appSettings.integerForKey("AccountDefaultDonation")
 
         let cart = KivaCart.sharedInstance
 
-        if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: self.sharedContext) {
         
             // animation:
             
             if let indexPath = indexPath {
                 
-                heartbeatAnimation /*pulseAnimation*/ (self.loanImageView) { success in
+                heartbeatAnimation (self.loanImageView) { success in
                 
-                    self.animateLoanToCart(tableView /*contentView*/, tableView: tableView, indexPath: indexPath, loan: loan)
+                    self.animateLoanToCart(tableView, tableView: tableView, indexPath: indexPath, loan: loan)
                 }
             }
             
@@ -133,8 +134,8 @@ class LoansTableViewCell: DVNTableViewCell {
             // grow
             UIView.animateWithDuration(0.2, animations: {
                 let center = imageView.center
-                imageView.frame.size.height += 20 // 60
-                imageView.frame.size.width += 20 // 60
+                imageView.frame.size.height += 20
+                imageView.frame.size.width += 20
                 imageView.center = center
             })
             
@@ -146,7 +147,7 @@ class LoansTableViewCell: DVNTableViewCell {
     }
     
     /*!
-        @brief Animate image of selected loan into shopping cart on Toolbar.
+        @brief Animate the image belonging to the selected loan into the shopping cart on the Toolbar.
         @discussion 
         @param (in) animateOnView - The view upon which to draw the animation.
         @param (in) tableView - The table view for this view controller.
@@ -155,11 +156,11 @@ class LoansTableViewCell: DVNTableViewCell {
     */
     func animateLoanToCart(/*cell: LoansTableViewCell,*/ animateOnView: UIView, tableView: UITableView, indexPath: NSIndexPath, loan: KivaLoan) {
         
-        let cellImageView =  self.loanImageView // UIImageView(image: image)
+        let cellImageView =  self.loanImageView
         
         // resize
-        let resizedWidth = cellImageView.frame.size.width // - 60
-        let resizedHeight = cellImageView.frame.size.height // - 60
+        let resizedWidth = cellImageView.frame.size.width
+        let resizedHeight = cellImageView.frame.size.height
         
         guard let cgImage = cellImageView.image?.CGImage else {
             return
@@ -171,7 +172,6 @@ class LoansTableViewCell: DVNTableViewCell {
         }
         let imageCopy = UIImage(CGImage: newCgIm, scale: cellImageView.image!.scale, orientation: cellImageView.image!.imageOrientation)
         
-        //let imageCopy: UIImage = UIImage(CGImage: cgImage)
         let imageViewCopy: UIImageView = UIImageView(image: imageCopy)
         
         let animatedObject = imageViewCopy
@@ -179,7 +179,6 @@ class LoansTableViewCell: DVNTableViewCell {
         animatedObject.frame = CGRect(x: 0, y: 0, width: resizedWidth, height: resizedHeight)
         print("width, height = \(animatedObject.frame.size.width), \(animatedObject.frame.size.height)")
         
-        //tableView.parentViewController?.view.addSubview(animatedObject)
         animateOnView.addSubview(animatedObject)
         
         // Get the coordinates of the cell in the TableView's coordinate space

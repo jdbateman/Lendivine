@@ -24,6 +24,7 @@ class CountryLoanTableViewCell:DVNTableViewCell {
     }()
     
     @IBAction func onAddCountryLoanToCartButtonTap(sender: AnyObject) {
+        
         // Find the cell starting from the button.
         let button = sender
         let contentView = button.superview!
@@ -42,11 +43,14 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! CountryLoansTableViewController
         
-// TODO - when switch CountryLoanTableViewController to fetchedResultsController enable this line
+        // NOTE - In the future if we want to change CountryLoanTableViewController to use fetchedResultsController then enable the following line:
         //let loan = tableViewController.fetchedResultsController.objectAtIndexPath(indexPath!) as! KivaLoan
-        let loan = tableViewController.loans[indexPath!.row] 
+        let loan = tableViewController.loans[indexPath!.row]
         
-        let amount = 25  // TODO: set default donation amount to user preference.
+        // set default donation amount to user preference.
+        var amount = 25
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        amount = appSettings.integerForKey("AccountDefaultDonation")
         
         let cart = KivaCart.sharedInstance
         if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {

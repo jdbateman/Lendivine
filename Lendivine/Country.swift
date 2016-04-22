@@ -5,6 +5,8 @@
 //  Created by john bateman on 3/10/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This class implements a core data object that represents a country.
+
 /* example country data: 
     https://github.com/fayder/restcountries/wiki/API-1.x.x 
     http://restcountries.eu/
@@ -17,7 +19,7 @@ import CoreData
 // make Country visible to CoreData
 @objc(Country)
 
-class Country: NSManagedObject /*, Equatable  < todo remove*/  {
+class Country: NSManagedObject {
     
     static let entityName = "Country"
     

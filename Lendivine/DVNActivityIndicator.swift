@@ -5,6 +5,7 @@
 //  Created by john bateman on 3/15/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
+//  This class implements a styled ActivityIndicator to be used in the view.
 
 import Foundation
 import UIKit

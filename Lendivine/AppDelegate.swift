@@ -58,8 +58,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Handle launch by URL scheme.
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        if (url.host == Constants.OAuthValues.consumerCallbackUrlHost /*"oauth-callback"*/) {
-            if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath /*"/kiva"*/)) {
+        
+        /*"oauth-callback"*/
+        if (url.host == Constants.OAuthValues.consumerCallbackUrlHost ) {
+            if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
                 print("")
                 print("****************************************************************************")
                 print("Step 3: Request Access Token")

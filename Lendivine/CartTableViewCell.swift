@@ -172,8 +172,6 @@ class CartTableViewCell: UITableViewCell {
         cartViewController.cart?.removeItemByIndex(index)
         print("cart = \(cartViewController.cart?.items.count) [onRemoveFromCartButtonTap]")
         
-        //cartViewController.cart.items.removeAtIndex(indexPath!.row)
-        
         // refresh the table view
         dispatch_async(dispatch_get_main_queue()) {
             tableView.reloadData()

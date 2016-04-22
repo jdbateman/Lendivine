@@ -19,6 +19,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var albumButton: UIButton!
+    @IBOutlet weak var defaultDonationSegmentedControl: UISegmentedControl!
     
     var kivaAPI: KivaAPI?
     
@@ -36,6 +37,10 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         } else {
             cameraButton.enabled = false
         }
+        
+        // Default donation
+        let defaultDonation = readDefaultDonation()
+        setDefaultDonation(defaultDonation)
         
         populateAccountData()
     }
@@ -75,8 +80,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.presentImagePicker(UIImagePickerControllerSourceType.PhotoLibrary)
     }
     
-    func presentImagePicker(var sourceType: UIImagePickerControllerSourceType) {
-        var imagePicker: UIImagePickerController = UIImagePickerController()
+    func presentImagePicker(sourceType: UIImagePickerControllerSourceType) {
+        let imagePicker: UIImagePickerController = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = sourceType
         imagePicker.allowsEditing = true
@@ -94,6 +99,39 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         avatarImageView.backgroundColor = UIColor.blackColor()
         
     }
+    
+    /*! The value changed on the Default Donation segmented control. */
+    @IBAction func defaultDonationChangedAction(sender: AnyObject) {
+        
+        switch sender.selectedSegmentIndex
+        {
+        case 0:
+            writeDefaultDonation(25)
+        case 1:
+            writeDefaultDonation(50)
+        case 2:
+            writeDefaultDonation(100)
+        default:
+            break; 
+        }
+    }
+    
+    func setDefaultDonation(amount:Int) {
+        
+        switch amount
+        {
+        case 25:
+            defaultDonationSegmentedControl.selectedSegmentIndex = 0
+        case 50:
+            defaultDonationSegmentedControl.selectedSegmentIndex = 1
+        case 200:
+            defaultDonationSegmentedControl.selectedSegmentIndex = 2
+        default:
+            defaultDonationSegmentedControl.selectedSegmentIndex = 0
+            break;
+        }
+    }
+    
     
     // MARK: UIImagePickerControllerDelegate
     
@@ -254,5 +292,20 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 completion(success: false, error: vtError.error, image: nil)
             }
         })
+    }
+    
+    // MARK: Persist defaults
+    
+    func writeDefaultDonation(amount:Int) {
+        
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        appSettings.setValue(amount, forKey: "AccountDefaultDonation")
+    }
+    
+    func readDefaultDonation() -> Int {
+        
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        let amount = appSettings.integerForKey("AccountDefaultDonation")
+        return amount
     }
 }

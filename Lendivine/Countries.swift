@@ -5,7 +5,7 @@
 //  Created by john bateman on 3/12/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
-//
+//  This class implements a higher level interface to initialize core data with countries queried from the RESTCountries api, and to interact with the collection of countries persisted to core data.
 
 import Foundation
 import CoreData
@@ -32,13 +32,7 @@ class Countries {
             
             if let countries = countries {
                 
-                // todo remove debug
-                //CoreDataStackManager.sharedInstance().saveContext()
-                
                 Countries.persistNewCountries(countries)
-                
-                //let countOfCountries = Countries.countCountries()
-                //print("Count of countries = \(countOfCountries)")
                 
                 Countries.sendUpdatedCountriesNotification()
                 
@@ -181,13 +175,10 @@ class Countries {
                 }
             }
         } catch let error1 as NSError {
-            //error!.memory = error1
             print("Error in fetchLoanByID(): \(error1)")
             results = nil
         }
 
-        //print("countries: \(countries)")
-        
         // add the requested number of randomly selected countries
         for var i = 0; i < numberOfCountries; i++ {
             let index = Int(arc4random_uniform(UInt32(countries.count)))
@@ -195,8 +186,6 @@ class Countries {
         }
         
         let randomCountriesString = randomCountries.joinWithSeparator(",")
-        
-        //print("randomCountries: \(randomCountriesString)")
         
         return randomCountriesString
     }
@@ -242,8 +231,6 @@ class Countries {
             results = nil
         }
         
-        //print("countries: \(countries)")
-        
         // add the requested number of randomly selected countries
         for var i = 0; i < numberOfCountries; i++ {
             let index = Int(arc4random_uniform(UInt32(countries.count)))
@@ -251,8 +238,6 @@ class Countries {
         }
         
         let randomCountriesString = randomCountries.joinWithSeparator(",")
-        
-        //print("randomCountries: \(randomCountriesString)")
         
         return randomCountriesString
     }
@@ -286,17 +271,12 @@ class Countries {
         } catch let error1 as NSError {
             error = error1
         }
-        
-//        if let error = error {
-//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
-//        }
     }
     
     // MARK - notifications
     
-    // Send a notification indicating that any new country obtained from the rest service is now avaiable in core data.
+    /*! Send a notification indicating that any new country obtained from the rest service is now avaiable in core data. */
     class func sendUpdatedCountriesNotification() {
-        
         NSNotificationCenter.defaultCenter().postNotificationName(countriesUpdateNotificationKey, object: self)
     }
     

@@ -12,9 +12,6 @@ let Kiva =
 [
     "consumerKey": "self.JohnBateman.Lendivine",
     "consumerSecret": "eS-rbvgZ7KlqMB7hSyVN4L8dlaAR9AwT"
-    
-    //    "consumerKey": "com.johnbateman.awesomeapp",
-    //    "consumerSecret": "g7wtiF9UjWdkGG6NfGMmzqisQsfa9VoK"
 ]
 
 class Constants {
