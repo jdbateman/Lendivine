@@ -266,39 +266,7 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-        return fetchLoanByID2(fromLoanID, context: context) //{ //loan, error in
-            
-//            if error == nil {
-//                
-//                if let loan = loan {
-//                    
-//                    self.name = loan.name
-//                    self.country = loan.country
-//                    self.geo = loan.geo
-//                    self.town = loan.town
-//                    self.postedDate = loan.postedDate
-//                    self.activity = loan.activity
-//                    self.id = loan.id
-//                    self.use = loan.use
-//                    self.fundedAmount = loan.fundedAmount
-//                    self.partnerID = loan.partnerID
-//                    self.imageID = loan.imageID
-//                    self.imageTemplateID = loan.imageTemplateID
-//                    self.borrowerCount = loan.borrowerCount
-//                    self.lenderCount = loan.lenderCount
-//                    self.loanAmount = loan.loanAmount
-//                    self.status = loan.status
-//                    self.sector = loan.sector
-//                    self.language = loan.language
-//                }
-//            
-//            } else {
-//            
-//                print("init(fromLoanID:, context:) failed to initialize loan properties")
-//            }
-            
-            //completion(loan: loan, error: error)
-        //}
+        return fetchLoanByID2(fromLoanID, context: context)
     }
     
     
@@ -309,44 +277,9 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }()
     
-//    class func fetchedResultsControllerFromLoanID(loanID: NSNumber) -> NSFetchedResultsController {
-//        
-//        // Create the fetch request
-//        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
-//        
-//        // Define the predicate (filter) for the query.
-//        fetchRequest.predicate = NSPredicate(format: "id == %@", loanID)
-//        
-//        // Add a sort descriptor to enforce a sort order on the results.
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
-//        
-//        // Create the Fetched Results Controller
-//        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-//            self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
-//        
-//        // Return the fetched results controller. It will be the value of the lazy variable
-//        return fetchedResultsController
-//    }
-    
     // TODO: can change to a function that returns value instead of async func with competion block
     /* Perform a fetch of the loan object. Updates the fetchedResultsController with the matching data from the core data store. */
     class func fetchLoanByID(loanID: NSNumber, completion: (loan: KivaLoan?, error: NSError?) -> Void) {
-        
-//        var error: NSError? = nil
-////        var kivaLoan: KivaLoan?
-//        
-//        dispatch_async(dispatch_get_main_queue()) {
-//            let frc = self.fetchedResultsControllerFromLoanID(loanID)
-//            do {
-//                try frc.performFetch()
-//            } catch let error1 as NSError {
-//                error = error1
-//                print("fetchCartItems error: \(error)")
-//            }
-//            let kivaLoan = frc.fetchedObjects?.first as? KivaLoan
-//            
-//            completion(loan: kivaLoan, error: nil)
-//        }
 
         let error: NSErrorPointer = nil
         let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
@@ -409,39 +342,15 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
             for loan in results {
                 if let loan = loan as? KivaLoan {
                     if loan.id == loanID {
-                        return loan as? KivaLoan
+                        return loan as KivaLoan
                     }
                 }
             }
-            //return results[0] as? KivaLoan
         } else {
             return nil
         }
         return nil
     }
-    
-//    /* Perform a fetch of all the loan objects current in the main core data context. Updates the fetchedResultsController with the matching data from the core data store. */
-//    class func fetchAllLoans() -> [KivaLoan]? {
-//        
-//        let error: NSErrorPointer = nil
-//        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
-//        var results: [AnyObject]?
-//        do {
-//            results = try sharedContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
-//        } catch let error1 as NSError {
-//            error.memory = error1
-//            print("Error in fetchAllLoans(): \(error)")
-//            return nil
-//        }
-//        
-//        // Check for Errors
-//        if error != nil {
-//            print("Error in fetchAllLoans(): \(error)")
-//        }
-//        
-//        return results as? [KivaLoan]
-//    }
     
     /* Return mappable coordinates for a KivaLoan object */
     class func getCoordinatesForLoan(loan: KivaLoan) -> CLLocationCoordinate2D? {
@@ -703,7 +612,7 @@ extension KivaLoan {
         var name: String = "United Nations"
         
         if let country = self.country {
-            if let uiImage = UIImage(named: country) {
+            if let _ = UIImage(named: country) {
                 name = country
             }
         }
@@ -773,12 +682,6 @@ extension KivaLoan {
                 loanIDs.append(id)
             }
         }
-        //        var loanIDs: NSMutableArray // = [NSNumber]()
-        //        for loan in loans! {
-        //            if let id = loan.id {
-        //                loanIDs.addObject(id) // loanIDs.append(id)
-        //            }
-        //        }
         
         // Find loans on Kiva.org
         KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {

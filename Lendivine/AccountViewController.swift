@@ -243,7 +243,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         if let url = imageUrl {
             self.dowloadImageFrom(url) { success, error, theImage in
                 if success {
-                    if let theImage = theImage {
+                    if let _ = theImage {
                         //self.cacheImageAndWriteToFile(theImage)
                     }
                     print("image downloaded from server")
@@ -253,7 +253,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     // The download failed. Retry the download once.
                     self.dowloadImageFrom(url) { success, error, theImage in
                         if success {
-                            if let theImage = theImage {
+                            if let _ = theImage {
                                 //self.cacheImageAndWriteToFile(theImage)
                             }
                             print("image downloaded from server")

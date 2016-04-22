@@ -159,7 +159,7 @@ class Countries {
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+        _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
             CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
 
         var results: [AnyObject]?
@@ -204,7 +204,7 @@ class Countries {
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+        _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
             CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         var results: [AnyObject]?

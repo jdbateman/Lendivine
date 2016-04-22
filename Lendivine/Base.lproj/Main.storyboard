@@ -590,7 +590,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GKf-AA-hra">
-                                <rect key="frame" x="156" y="495" width="169" height="29"/>
+                                <rect key="frame" x="148" y="494" width="169" height="29"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <segments>
                                     <segment title="$25"/>
@@ -625,7 +625,7 @@
                             <constraint firstAttribute="trailing" secondItem="hNz-WU-QQK" secondAttribute="trailing" constant="20" id="NdO-0B-Ija"/>
                             <constraint firstItem="Fjr-4y-HCu" firstAttribute="leading" secondItem="s3C-0K-U8W" secondAttribute="leading" constant="20" id="X7I-0x-6Hn"/>
                             <constraint firstItem="YJQ-ma-KUd" firstAttribute="leading" secondItem="s3C-0K-U8W" secondAttribute="leading" constant="20" id="XBc-Fs-Nr0"/>
-                            <constraint firstItem="GKf-AA-hra" firstAttribute="leading" secondItem="9CX-Q6-aee" secondAttribute="trailing" constant="16" id="YMl-QU-3FL"/>
+                            <constraint firstItem="GKf-AA-hra" firstAttribute="leading" secondItem="9CX-Q6-aee" secondAttribute="trailing" constant="8" id="YMl-QU-3FL"/>
                             <constraint firstItem="hNz-WU-QQK" firstAttribute="leading" secondItem="NIS-6p-r5e" secondAttribute="leading" id="bAE-D5-fDW"/>
                             <constraint firstItem="NIS-6p-r5e" firstAttribute="leading" secondItem="pNu-06-cAA" secondAttribute="leading" id="ccl-zj-57b"/>
                             <constraint firstItem="AmB-tF-q4D" firstAttribute="leading" secondItem="pNu-06-cAA" secondAttribute="leading" id="d1n-11-QnH"/>
