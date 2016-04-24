@@ -54,7 +54,22 @@ class MyLoansTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        
+        if loans.count > 0 {
+            
+            return 1
+            
+        } else {
+            
+            let noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
+            noDataLabel.text = "This account currently contains no loans."
+            noDataLabel.textColor = UIColor.darkGrayColor()
+            noDataLabel.textAlignment = .Center
+            tableView.backgroundView = noDataLabel
+            tableView.separatorStyle = .None
+            
+            return 0
+        }
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

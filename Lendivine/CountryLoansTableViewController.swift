@@ -78,7 +78,7 @@ class CountryLoansTableViewController: UITableViewController{
                 if let country = self.country, let name = country.name {
                     noDataLabel.text = "No loans available" + " for " + "\(name)"
                 }
-                noDataLabel.textColor = UIColor.blackColor()
+                noDataLabel.textColor = UIColor.darkGrayColor()
                 noDataLabel.textAlignment = .Center
                 tableView.backgroundView = noDataLabel
                 tableView.separatorStyle = .None
