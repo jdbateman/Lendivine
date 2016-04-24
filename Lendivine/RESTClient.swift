@@ -5,8 +5,8 @@
 //  Created by john bateman on 7/24/15.
 //  Copyright (c) 2015 John Bateman. All rights reserved.
 //
-//  This class provides HTTP Get and POST requests to a specified REST service.
-//  Contains methods from The Movie Manager app in the Udacity iOS Nanodegree course, Lesson 3.
+//  This class provides HTTP Get and POST requests to a specified REST service. Networking is implemented using NSURLSession. This class abstracts the lower level networking and can be used by way of the Delegation pattern to handle the low level networking. KivaAPI and RESTCountries are two classes that use RESTClient in this way in this app, each implementing a distinct REST api.
+//  Acknowledgement:  This class is patterned after methods from The Movie Manager app in the Udacity iOS Nanodegree course, Lesson 3.
 
 import Foundation
 
@@ -101,7 +101,6 @@ class RESTClient {
         let request = NSMutableURLRequest(URL: url)
         
         // configure http header
-        var jsonifyError: NSError? = nil
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -124,6 +123,7 @@ class RESTClient {
             /* 5/6. Parse the data and use the data (happens in completion handler) */
             if let error = downloadError {
                 let newError = RESTClient.errorForData(data, response: response, error: error)
+                print("error in post request: \(newError)")
                 completionHandler(result: nil, error: downloadError)
             } else {
                 // success
@@ -160,7 +160,6 @@ class RESTClient {
         let request = NSMutableURLRequest(URL: url)
         
         // configure http header
-        var jsonifyError: NSError? = nil
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 //TODO        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -173,104 +172,11 @@ class RESTClient {
         // configure the HTTPBody
         request.HTTPBody = httpBody
         
-        //        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(jsonBody, options: nil, error: &jsonifyError)
-        
-//        // TODO: try application/x-www-form-urlencoded instead of application/json for "Content-Type"
-//        let loanIDs = [974236, 961687, 961683, 974236, 973680] // [961687, 961683, 974236, 973680, 974236]
-//        if let body = createHTTPBody(loanIDs, appID: Constants.OAuthValues.consumerKey, donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
-//            request.HTTPBody = body
-//        }
-        
-//        if let body = createHTTPBody() {
-//            request.HTTPBody = body
-//        }
-        
         return request
-
-//        do {
-//            if NSJSONSerialization.isValidJSONObject(jsonBody) {
-//                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(jsonBody, options: NSJSONWritingOptions(rawValue: 0)/*TODO: NSJSONWritingOptions.PrettyPrinted*/)
-//                return request
-//            } else {
-//                return nil
-//            }
-//        } catch let error as NSError {
-//            print(error)
-//            return nil
-//        }
     }
-    
-    //TODO - test this function. may need to move it
-    func createHTTPBody(loanIDs:[NSNumber], appID: String, donation: NSNumber?, callbackURL: String?) -> NSData? {
-    
-        var loanString = "loans=["
-
-//        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=com.johnbateman.awesomeapp&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva",958718,10.00)
-        
-        // loans
-        for id in loanIDs {
-            if id.intValue > 0 {
-                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":25},", id.intValue) // TODO: need to pass in amount for each loan individually
-                loanString.appendContentsOf(loanToAdd)
-            }
-        }
-        loanString.removeAtIndex(loanString.endIndex.predecessor())
-        loanString.appendContentsOf("]")
-        
-        // app_id
-        loanString.appendContentsOf("&app_id=" + Constants.OAuthValues.consumerKey) //("&app_id=com.johnbateman.awesomeapp")
-        
-        // donation
-        if let donation = donation {
-            loanString.appendContentsOf(String(format:"&donation=%0.2f",donation.floatValue))
-        }/* else {
-            loanString.append("&donation=0.00")
-        }*/
-            
-        // callback_url
-        if let callbackUrl = callbackURL {
-            loanString.appendContentsOf(String(format:"&callback_url=%@",callbackUrl))
-        }
-        
-        return loanString.dataUsingEncoding(NSUTF8StringEncoding)
-    
-    }
-
-    // TODO - test function. OK to comment out.
-    func createHTTPBody() -> NSData? {
-        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=%@&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva/Lendivine",974236, Constants.OAuthValues.consumerKey, 10.00)
-
-//        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=%@&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva",974236, Constants.OAuthValues.consumerKey, 10.00)
-        
-        return loanString.dataUsingEncoding(NSUTF8StringEncoding)
-
-        // jsonBody["callback_url"] = "oauth-swift://oauth-callback/kiva"
-        
-        ///////////////////////
-//        NSMutableString *loanString = [NSMutableString stringWithString:@"loans=["];
-//        float donationAmount = 3.75 * self.loadIdsSet.count;
-//        
-//        for (NSNumber *loadId in self.loadIdsSet) {
-//            NSString *stringToappend = [NSString stringWithFormat:@"{\"id\":%ld,\"amount\":25},", [loadId integerValue]];
-//            [loanString appendString:stringToappend];
-//            
-//        }
-//        [loanString deleteCharactersInRange:NSMakeRange([loanString length]-1, 1)];
-//        [loanString appendString:[NSString stringWithFormat:@"]&app_id=com.drrajan.cp-kiva-app&donation=%0.2f", donationAmount]];
-//        
-//        NSData* data = [loanString dataUsingEncoding:NSUTF8StringEncoding];
-//        
-//        NSMutableURLRequest * request =[NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.kiva.org/basket/set"]];
-//        [request setHTTPMethod:@"POST"];
-//        [request setHTTPBody:data];
-    }
-    
     
     /* Helper: Given a response with error, see if a status_message is returned, otherwise return the previous error */
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
-
-// TODO: remove legacy code
-//        if let parsedResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String : AnyObject] {
         
         guard let data = data else {
             return NSError(domain: "REST service Error", code: 1, userInfo: [NSLocalizedDescriptionKey : "no json data in response"])
@@ -289,12 +195,8 @@ class RESTClient {
         } catch let error as NSError? {
             return error!
         }
-            
-            
-// TODO: remove legacy code
-//        }
         
-        return error  // TODO - should re-throw the error
+        return error
     }
     
     /* Helper: Given raw JSON, return a usable Foundation object */
@@ -309,10 +211,6 @@ class RESTClient {
         let dataAsUTF8String = String(data: data, encoding: NSUTF8StringEncoding)
         print("raw json data: \(dataAsUTF8String)")
         
-// TODO: remove legacy code
-//        var parsingError: NSError? = nil
-//        let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
-        
         do {
             let parsedResult: AnyObject? = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
             // here "parsedResult" is the dictionary decoded from JSON data
@@ -321,13 +219,6 @@ class RESTClient {
             print(error)
             completionHandler(result: nil, error: error)
         }
-        
-// TODO: legacy code - remove it
-//        if let error = parsingError {
-//            completionHandler(result: nil, error: error)
-//        } else {
-//            completionHandler(result: parsedResult, error: nil)
-//        }
     }
     
     /* Helper function: Given a dictionary of parameters, convert to a string for a url */
@@ -348,6 +239,6 @@ class RESTClient {
             
         }
         
-        return (!urlVars.isEmpty ? "?" : "") +  urlVars.joinWithSeparator("&") // join("&", urlVars)
+        return (!urlVars.isEmpty ? "?" : "") +  urlVars.joinWithSeparator("&")
     }
 }

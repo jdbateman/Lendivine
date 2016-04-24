@@ -48,7 +48,7 @@ class KivaAPI {
         var parameters =  Dictionary<String, AnyObject>()
         parameters = [
             "oauth_token" : self.oAuthAccessToken!.stringByRemovingPercentEncoding!,
-            "app_id" : Constants.OAuthValues.consumerKey // "com.johnbateman.awesomeapp" // TODO
+            "app_id" : Constants.OAuthValues.consumerKey
         ]
         if let newParameters = parametersDict {
             for (key,value) in newParameters {
@@ -59,16 +59,17 @@ class KivaAPI {
         let consoleOutput = String(format: "\n***** Kiva API request: %@ *****\n", url)
         print(consoleOutput)
         
-        self.oAuth1!.client.get(url,
-            parameters: parameters,
+        self.oAuth1!.client.get(url, parameters: parameters,
+            
             success: { data, response in
                 print("Kiva API request succeeded.")
                 let jsonDict: AnyObject! = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-                if let jsonDict = jsonDict {
-                    print(jsonDict)
-                }
+//                if let jsonDict = jsonDict {
+//                    print(jsonDict)
+//                }
                 completionHandler(success: true, error: nil, jsonData: jsonDict)
             },
+            
             failure: { (error:NSError!) -> Void in
                 print("Kiva API request failed.")
                 print(error)
@@ -99,7 +100,7 @@ extension KivaAPI {
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/account.json", parametersDict: nil) { success, error, jsonData in
             if success {
                 
-                //TODO - instead of rebuilding a separate dictionary, pass the userAccountDict directly to the KivaUserAccount initializer.
+                // TODO: optimization - instead of rebuilding a separate dictionary, pass the userAccountDict directly to the KivaUserAccount initializer.
                 let userAccountDict = jsonData!["user_account"] as? [String: AnyObject]
                 
                 let firstName = userAccountDict?["first_name"] as? String
@@ -135,8 +136,6 @@ extension KivaAPI {
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/balance.json", parametersDict: nil) { success, error, jsonData in
             //parse jsonData to extract user balance
-//            let userBalance = jsonData?.valueForKey("user_balance") as? NSDictionary
-//            let balance = userBalance?.valueForKey("balance") as? String
             
             let userBalanceDict = jsonData!["user_balance"] as? [String: AnyObject]
             let balance = userBalanceDict?["balance"] as? String
@@ -153,8 +152,6 @@ extension KivaAPI {
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/email.json", parametersDict: nil) { success, error, jsonData in
             //parse jsonData to extract user email
-//            let userEmail = jsonData?.valueForKey("user_email") as? NSDictionary
-//            let email = userEmail?.valueForKey("email") as? String
             
             if success {
                 let userEmailDict = jsonData!["user_email"] as? [String: AnyObject]
@@ -184,18 +181,18 @@ extension KivaAPI {
             if let jsonData = jsonData {
                 if jsonData.count > 0 {
                     print("\(jsonData)")
-                    for (key, value) in jsonData as! [String: AnyObject] {
+                    for (_, value) in jsonData as! [String: AnyObject] {
                         if let dict = value as? [String: AnyObject] {
                             let userRepayments = dict["user_repayments"] as? String
                             let promoRepayments = dict["promo_repayments"] as? String
                             let loansMakingRepayments = dict["loans_making_repayments"] as? String
                             let repaymentDate = dict["repayment_date"] as? String
                             
-                            print("loan: \(userRepayments) \(promoRepayments) \(loansMakingRepayments) \(repaymentDate)")
+                            //print("loan: \(userRepayments) \(promoRepayments) \(loansMakingRepayments) \(repaymentDate)")
                         }
                     }
-    //            let paymentsDict = jsonData!["user_email"] as? [String: AnyObject]
-    //            let expectedRepayment = paymentsDict?["email"] as? String
+                    // let paymentsDict = jsonData!["user_email"] as? [String: AnyObject]
+                    // let expectedRepayment = paymentsDict?["email"] as? String
                 }
             }
             
@@ -253,7 +250,7 @@ extension KivaAPI {
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
                         
-                        print("\(jsonData)")
+                        //print("\(jsonData)")
                         
                         // paging
                         if let pagingDict = jsonData["paging"] as? [String: AnyObject] {
@@ -323,10 +320,8 @@ extension KivaAPI {
     }
     
     // TODO: Post to Kiva support. getting 404 no matter what parameters are.
-    func kivaOAuthGetLoanBalances(loanID: NSNumber, completionHandler: (success: Bool, error: NSError?, balances: [String]? /*TODO: change type*/) -> Void ) {
+    func kivaOAuthGetLoanBalances(loanID: NSNumber, completionHandler: (success: Bool, error: NSError?, balances: [String]?) -> Void ) {
     
-        var parametersDict = [/*"ids": 965946, "app_id": Constants.OAuthValues.consumerKey*/] //TODO: ["ids": loanID]
-        
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, balances: nil)
@@ -335,15 +330,15 @@ extension KivaAPI {
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/loans/:ids/balances.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
             
             if success {
-                var balances = [String]() //TODO: change type of array
+                let balances = [String]() //TODO: change type of array
                 
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
                         
-                        print("\(jsonData)")
+                        //print("\(jsonData)")
                         
                         // The jsonData contains a dictionary of loan statistics.
-//                        statistics = KivaLoanBalance(dictionary: jsonData as? [String: AnyObject])
+                        // statistics = KivaLoanBalance(dictionary: jsonData as? [String: AnyObject])
                     }
                 }
                 
@@ -376,7 +371,7 @@ extension KivaAPI {
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
                         
-                        print("teams: \(jsonData)")
+                        //print("teams: \(jsonData)")
                         
                         // paging
                         if let pagingDict = jsonData["paging"] as? [String: AnyObject] {
@@ -396,7 +391,7 @@ extension KivaAPI {
                         
                         // teams
                         if let arrayOfTeamsDictionaries = jsonData["teams"] as? [[String: AnyObject]] {
-                            print("teams: \(arrayOfTeamsDictionaries)")
+                            //print("teams: \(arrayOfTeamsDictionaries)")
                             
                             for team in arrayOfTeamsDictionaries {
                                 let kivaTeam = KivaTeam(dictionary: team as [String: AnyObject])
@@ -492,7 +487,7 @@ extension KivaAPI {
             
                         // partners
                         if let arrayOfPartnersDictionaries = jsonData["partners"] as? [[String: AnyObject]] {
-                            print("partners: \(arrayOfPartnersDictionaries)")
+                            //print("partners: \(arrayOfPartnersDictionaries)")
                             
                             for partner in arrayOfPartnersDictionaries {
                                 let kivaPartner = KivaPartner(dictionary: partner as [String: AnyObject])
@@ -580,17 +575,15 @@ extension KivaAPI {
 
 extension KivaAPI {
     
-
-    
-//    enum LoanStatus: String {
-//        case fundraising = "fundraising"
-//        case funded = "funded"
-//        case in_repayment = "in_repayment"
-//        case paid = "paid"
-//        case defaulted = "defaulted"
-//        case ended_with_loss = "ended_with_loss"
-//        case expired = "expired"
-//    }
+    enum LoanStatus: String {
+        case fundraising = "fundraising"
+        case funded = "funded"
+        case in_repayment = "in_repayment"
+        case paid = "paid"
+        case defaulted = "defaulted"
+        case ended_with_loss = "ended_with_loss"
+        case expired = "expired"
+    }
     
     enum LoanGender: String {
         case male = "male"
@@ -865,11 +858,11 @@ extension KivaAPI {
                 var loans = [KivaLoan]()
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
-                        print("search loans results: \(jsonData)")
+                        //print("search loans results: \(jsonData)")
                             
                         // loans
                         if let arrayOfPartnersDictionaries = jsonData["loans"] as? [[String: AnyObject]] {
-                            print("partners: \(arrayOfPartnersDictionaries)")
+                            //print("partners: \(arrayOfPartnersDictionaries)")
                     
                             for loan in arrayOfPartnersDictionaries {
                                 let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
@@ -897,7 +890,7 @@ extension KivaAPI {
     
     func kivaGetNewestLoans(scratchContext: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
-        makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/newest.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
+        makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/newest.json", parametersDict: nil) { success, error, jsonData in
             
             if success {
                 var loans = [KivaLoan]()
@@ -908,7 +901,7 @@ extension KivaAPI {
                         
                         // loans
                         if let arrayOfPartnersDictionaries = jsonData["loans"] as? [[String: AnyObject]] {
-                            print("partners: \(arrayOfPartnersDictionaries)")
+                            //print("partners: \(arrayOfPartnersDictionaries)")
                             
                             for loan in arrayOfPartnersDictionaries {
                                 let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: scratchContext /*self.sharedContext*/) // todo: 2/26/2016 - trying scratchContext
@@ -945,22 +938,18 @@ extension KivaAPI {
             }
         }
         loanIDsString.removeAtIndex(loanIDsString.endIndex.predecessor())
-//        let parametersDict = ["ids" : loanIDsString]
 
-//       let requestUrl = "http://api.kivaws.org/v1/loans/"
         let requestUrl = String(format: "http://api.kivaws.org/v1/loans/%@.json", loanIDsString /*loanIDs![0]*/) // TODO - append all loan IDs not just the first.
         
-        // TODO - replace url with hardcoded loan id = 2039 with requestURL
-        makeKivaOAuthAPIRequest(urlOfAPI: requestUrl /*TODO: remove - "http://api.kivaws.org/v1/loans/2930.json"*/, parametersDict: nil) { success, error, jsonData in
+        makeKivaOAuthAPIRequest(urlOfAPI: requestUrl, parametersDict: nil) { success, error, jsonData in
             
             if success {
                 var loans = [KivaLoan]()
                 
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
-                        print("newest loans: \(jsonData)")
+                        //print("newest loans: \(jsonData)")
                         
-                        // loans TODO: change arrayOfPartnersDictionaries to loans
                         if let jsonLoans = jsonData["loans"] as? [[String: AnyObject]] {
                             print("loans: \(jsonLoans)")
                             
@@ -985,32 +974,6 @@ extension KivaAPI {
 
 extension KivaAPI {
     
-//    // TODO: move this function, which has no kiva api dependency, to a better place, like in KivaCart
-//    // Add an item to the local cart.
-//    func KivaAddItemToCart(loan: KivaLoan?, loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
-//        if let loan = loan {
-//            if let loanID = loanID {
-//                if let donationAmount = donationAmount {
-//                    let cart = KivaCart.sharedInstance
-//                    let item = KivaCartItem(loan: loan, loanID: loanID, donationAmount: donationAmount, context: context)
-//                    if !cart.items.contains(item) {
-//                        cart.add(item)
-//                        print("Added item to cart with loan Id: \(loanID) in amount: \(donationAmount)")
-//                        
-//                        // Persist the KivaCartItem object we added to the Core Data shared context
-//                        dispatch_async(dispatch_get_main_queue()) {
-//                            CoreDataStackManager.sharedInstance().saveContext()
-//                        }
-//                        
-//                    } else {
-//                        print("Item not added to cart. The cart already contains loanId: \(loanID)")
-//                    }
-//                    print("cart = \(cart.count) [KivaAddItemToCart]")
-//                }
-//            }
-//        }
-//    }
-    
     // Assemble an HTTP POST request containing the cart in the request body.
     func getKivaCartRequest() -> NSMutableURLRequest? {
         let cart = KivaCart.sharedInstance
@@ -1028,18 +991,14 @@ extension KivaAPI {
             let mutableMethod : String = "/basket/set" // TODO: make a constant in RESTClient.Constants.parseGetStudentLocations
             
             // set up http header parameters
-            let headerParms = [String:AnyObject]() /*[
-            Constants.ParseAppID : "X-Parse-Application-Id",
-            Constants.ParseApiKey : "X-Parse-REST-API-Key"
-            ]*/
-            
+            let headerParms = [String:AnyObject]()
+
             // HTTP body
             
             // using directly UTF8 encoded string
             
             var httpBody: NSData?
             var loanIDs = [NSNumber]()
-            //let loanIDs = [974236, 961687, 961683, 974236, 973680] // [961687, 961683, 974236, 973680, 974236]
             for item in cart.items {
                 if let loanID = item.loanID {
                     loanIDs.append(loanID)
@@ -1048,20 +1007,6 @@ extension KivaAPI {
             if let body = createHTTPBody(loanIDs, appID: Constants.OAuthValues.consumerKey /*"com.johnbateman.awesomeapp"*/, donation: 10.00, callbackURL: nil /*"oauth-swift://oauth-callback/kiva"*/) {
                 httpBody = body
             }
-            
-            // using JSON approach
-//            var jsonBody = [String: AnyObject]()
-//
-//            if cart.count > 0 {
-//                let serializableItems: [[String : AnyObject]] = cart.convertCartItemsToSerializableItems()
-//                jsonBody["loans"] = serializableItems
-//            }
-//            jsonBody["app_id"] = Constants.OAuthValues.consumerKey
-//            jsonBody["donation"] = "10.00"
-////            jsonBody["callback_url"] = "oauth-swift://oauth-callback/kiva" // TODO - differentiate this url from oauth callback url
-//            
-//            // TODO: test hardcode of loans
-////            jsonBody["loans"] =  String(format: "[{%@:958201,%@:25}]","id", "amount") // "[{\"id\":958201,\"amount\":25}]"
             
             /* 2. Make the request */
             let restClient = RESTClient()
@@ -1088,8 +1033,6 @@ extension KivaAPI {
         let cart = KivaCart.sharedInstance
         var loanString = "loans=["
         
-        //        var loanString = String(format:"loans=[{\"id\":%ld,\"amount\":25}]&app_id=com.johnbateman.awesomeapp&donation=%0.2f&callback_url=oauth-swift://oauth-callback/kiva",958718,10.00)
-        
         // loans
         for item in cart.items {
             if let loanID = item.loanID, donationAmount = item.donationAmount where loanID.intValue > 0 {
@@ -1097,12 +1040,7 @@ extension KivaAPI {
                 loanString.appendContentsOf(loanToAdd)
             }
         }
-//        for id in loanIDs {
-//            if id.intValue > 0 {
-//                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":25},", id.intValue) // TODO: need to pass in amount for each loan individually
-//                loanString.appendContentsOf(loanToAdd)
-//            }
-//        }
+
         loanString.removeAtIndex(loanString.endIndex.predecessor())
         loanString.appendContentsOf("]")
         
@@ -1112,64 +1050,29 @@ extension KivaAPI {
         // donation
         if let donation = donation {
             loanString.appendContentsOf(String(format:"&donation=%0.2f",donation.floatValue))
-        }/* else {
-        loanString.append("&donation=0.00")
-        }*/
+        }
         
         // callback_url
         if let callbackUrl = callbackURL {
             loanString.appendContentsOf(String(format:"&callback_url=%@",callbackUrl))
         }
         
-        print("loan string = \(loanString)")
+        //print("loan string = \(loanString)")
         
-        print("cart = \(cart.count) [createHTTPBody]")
+        //print("cart = \(cart.count) [createHTTPBody]")
 
         return loanString.dataUsingEncoding(NSUTF8StringEncoding)
         
     }
     
-    // TODO - Check out cart via Kiva.org -> returns an NSURLMutableRequest for the kiva.org basket
+    // Check out cart via Kiva.org -> returns an NSURLMutableRequest for the kiva.org basket
     func KivaCheckout() -> NSMutableURLRequest? {
         let cart = KivaCart.sharedInstance
     
         if cart.count > 0 {
-//            let jsonCart: NSData? = cart.getJSONData()
             print("\n***** http://www.kiva.org/basket/set *****\n")
             let request: NSMutableURLRequest? = postCartToKiva(cart)
             return request
-            
-//            { success, error in
-//                if success {
-//                    print("cart successfully posted to kiva.org")
-//                } else {
-//                    print("error post cart to kiva.org: \(error)")
-//                }
-//            }
-            
-//            makeKivaAPIRequest(urlOfAPI: "http://www.kiva.org/basket/set", parametersDict: parametersDictionary) { success, error, jsonData in
-//                if success {
-//                    var loans = [KivaLoan]()
-//                    if let jsonData = jsonData {
-//                        if jsonData.count > 0 {
-//                            print("search loans results: \(jsonData)")
-//                            
-//                            // loans
-//                            if let arrayOfPartnersDictionaries = jsonData["loans"] as? [[String: AnyObject]] {
-//                                print("partners: \(arrayOfPartnersDictionaries)")
-//                        
-//                                for loan in arrayOfPartnersDictionaries {
-//                                    let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject])
-//                                    loans.append(kivaLoan)
-//                                }
-//                            }
-//                        }
-//                    }
-//                    completionHandler(success: success, error: error, loans: loans)
-//                } else {
-//                    completionHandler(success: success, error: error, loans: nil)
-//                }
-//            }
         } else  {
             return nil
         }
@@ -1188,117 +1091,16 @@ extension KivaAPI {
     func postCartToKiva(cart: KivaCart /*, completionHandler: (result: Bool, error: NSError?) -> NSMutableURLRequest?*/) -> NSMutableURLRequest? {
         
         /* 1. Specify parameters, method (if has {key}) */
-        // none
-        
-        // specify base URL
-        let baseURL = "http://www.kiva.org" // TODO: make a constant in RESTClient.Constants.kivaBaseURL
-        
-        // specify method
-        var mutableMethod : String = "/basket/set" // TODO: make a constant in RESTClient.Constants.parseGetStudentLocations
-        
-        // set up http header parameters
-        let headerParms = [String:AnyObject]() /*[
-            Constants.ParseAppID : "X-Parse-Application-Id",
-            Constants.ParseApiKey : "X-Parse-REST-API-Key"
-        ]*/
         
         // HTTP body
         var jsonBody = [String: AnyObject]()
         if cart.count > 0 {
             let serializableItems: [[String : AnyObject]] = cart.convertCartItemsToSerializableItems()
             jsonBody["loans"] = serializableItems
-
-//            if let cartJsonData: NSData? = cart.getJSONData() {
-//                jsonBody["loans"] = cartJsonData
-//            }
         }
         print("cart = \(cart.items.count) [postCartToKiva]")
         return nil
-        
-        
-        /* 2. Make the request */
-        
-        // TODO - if you want to use this function need to add NSData parameter to the end of the estClient.getPostRequest because we are not sending json mime type anymore.
-//        let restClient = RESTClient()
-//        if let postRequest: NSMutableURLRequest = restClient.getPostRequest(baseURL, method: mutableMethod, headerParameters: headerParms, queryParameters: nil, jsonBody: jsonBody) {
-//            
-//            return postRequest
-//            
-//            
-////            /* 3. Send the desired value(s) to completion handler */
-////            if let error = error {
-////                completionHandler(result: false, error: error)
-////            } else {
-////                // parse the json response which looks like the following:
-////                /*
-////                {
-////                "createdAt":"2015-03-11T02:48:18.321Z",
-////                "objectId":"CDHfAy8sdp"
-////                }
-////                */
-////                if let errorString = JSONResult.valueForKey("error") as? String {
-////                    // a valid response was received from the service, but the response contains an error code like the following:
-////                    /*
-////                    {
-////                    code = 142
-////                    error = "uniqueKey is required for a Student Location"
-////                    }
-////                    */
-////                    let error = NSError(domain: "Parse POST response", code: 0, userInfo: [NSLocalizedDescriptionKey: errorString])
-////                    completionHandler(result: false, error: error)
-////                } else {
-////                    if let dictionary = JSONResult.valueForKey("objectId") as? String {
-////                        completionHandler(result: true, error: nil)
-////                    } else {
-////                        completionHandler(result: false, error: NSError(domain: "parsing Parse POST response", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse postToFavoritesList"]))
-////                    }
-////                }
-////            }
-//        }
-//        else {
-//            return nil
-//        }
     }
-
-    /* Display url in an embeded webkit browser. */
-/*
-    
-    func showEmbeddedBrowser(request: NSMutableURLRequest) {
-        var controller = CartViewController()
-//        var storyboard = UIStoryboard (name: "Main", bundle: nil)
-//        var controller = storyboard.instantiateViewControllerWithIdentifier("WebSearchStoryboardID") as! WebSearchViewController
-        controller.initialURL = url
-        controller.webViewDelegate = self
-        self.presentViewController(controller, animated: true, completion: nil);
-    }
-    func createCartViewController() {
-        let controller = WebViewController()
-        controller.view = UIView(frame: CGRect(x:0, y:0, width: 450, height: 500)) // needed if no nib or not loaded from storyboard
-        controller.viewDidLoad()
-        self.addChildViewController(controller)
-    }
-*/    
-    
-//    TODO - this is a data class. Need to move this logic to a view class and create a view controller for the web view. Look at code in OnTheMap.
-//    
-//    /* Create a UIWebView the size of the screen and set it's delegate to this view controller. */
-//    func showWebView(request: NSURLRequest?) {
-//        let webView:UIWebView = UIWebView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height))
-//        webView.delegate = self
-//        if let url = url {
-//            webView.loadRequest(request)
-//            self.view.addSubview(webView)
-//        }
-//    }
-    
-
-    
-//    func get_url_handler() -> OAuthSwiftURLHandlerType {
-//        // Create a WebViewController with default behaviour from OAuthWebViewController
-//        let controller = createWebViewController()
-//        self.addChildViewController(controller) // allow WebViewController to use this ViewController as parent to be presented
-//        return controller
-//    }
 }
 
 // MARK: KivaAPI helper functions.

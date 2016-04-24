@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/18/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This helper class contains paging information contained in certain Kiva API responses.
 
 import Foundation
 

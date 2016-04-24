@@ -5,6 +5,7 @@
 //  Created by Dongri Jin on 7/17/14.
 //  Copyright (c) 2014 Dongri Jin. All rights reserved.
 //
+// This class contains constant values used in the Oauth exchange with the Kiva.org service.
 
 import Foundation
 

@@ -22,8 +22,6 @@
 		9E39506A1BF66E23007BC75E /* KivaUserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39505B1BF66E23007BC75E /* KivaUserAccount.swift */; };
 		9E39506B1BF66E23007BC75E /* MySingleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39505C1BF66E23007BC75E /* MySingleton.swift */; };
 		9E39506C1BF66E23007BC75E /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39505D1BF66E23007BC75E /* RESTClient.swift */; };
-		9E39506D1BF66E23007BC75E /* RESTConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39505E1BF66E23007BC75E /* RESTConstants.swift */; };
-		9E39506E1BF66E23007BC75E /* RESTConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39505F1BF66E23007BC75E /* RESTConvenience.swift */; };
 		9E3950711BF670F4007BC75E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950701BF670F4007BC75E /* Constants.swift */; };
 		9E495BDC1BF9050E00E3DEAD /* KivaCartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BDB1BF9050E00E3DEAD /* KivaCartViewController.swift */; };
 		9E495BDE1BF9060E00E3DEAD /* CartTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E495BDD1BF9060E00E3DEAD /* CartTableViewController.swift */; };
@@ -37,6 +35,7 @@
 		9E4D85E81C914D5A0063DEE5 /* RESTCountries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */; };
 		9E4D85EA1C927FDE0063DEE5 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E91C927FDE0063DEE5 /* Country.swift */; };
 		9E4D85EC1C928A460063DEE5 /* CountriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */; };
+		9E6815D71CCA8384006DDE1A /* AcknowledgementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */; };
 		9E6AC0031CB1CE2C00F3476F /* DVNTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0001CB1CE2C00F3476F /* DVNTableViewCell.swift */; };
 		9E6AC0041CB1CE2C00F3476F /* DVNTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */; };
 		9E6AC0051CB1CE2C00F3476F /* DVNViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0021CB1CE2C00F3476F /* DVNViewController.swift */; };
@@ -120,8 +119,6 @@
 		9E39505B1BF66E23007BC75E /* KivaUserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaUserAccount.swift; sourceTree = "<group>"; };
 		9E39505C1BF66E23007BC75E /* MySingleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySingleton.swift; sourceTree = "<group>"; };
 		9E39505D1BF66E23007BC75E /* RESTClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
-		9E39505E1BF66E23007BC75E /* RESTConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTConstants.swift; sourceTree = "<group>"; };
-		9E39505F1BF66E23007BC75E /* RESTConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTConvenience.swift; sourceTree = "<group>"; };
 		9E3950701BF670F4007BC75E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9E3950831BF68405007BC75E /* OAuthSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OAuthSwift.xcodeproj; path = "../../OAuthSwift-master/OAuthSwift.xcodeproj"; sourceTree = "<group>"; };
 		9E495BDB1BF9050E00E3DEAD /* KivaCartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaCartViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +133,7 @@
 		9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTCountries.swift; sourceTree = "<group>"; };
 		9E4D85E91C927FDE0063DEE5 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesTableViewController.swift; sourceTree = "<group>"; };
+		9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcknowledgementsViewController.swift; sourceTree = "<group>"; };
 		9E6AC0001CB1CE2C00F3476F /* DVNTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNTableViewCell.swift; sourceTree = "<group>"; };
 		9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNTableViewController.swift; sourceTree = "<group>"; };
 		9E6AC0021CB1CE2C00F3476F /* DVNViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNViewController.swift; sourceTree = "<group>"; };
@@ -248,8 +246,6 @@
 			isa = PBXGroup;
 			children = (
 				9E39505D1BF66E23007BC75E /* RESTClient.swift */,
-				9E39505E1BF66E23007BC75E /* RESTConstants.swift */,
-				9E39505F1BF66E23007BC75E /* RESTConvenience.swift */,
 			);
 			name = REST;
 			sourceTree = "<group>";
@@ -280,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				9E495BE51BFB76EF00E3DEAD /* AccountViewController.swift */,
+				9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */,
 				9E495BDD1BF9060E00E3DEAD /* CartTableViewController.swift */,
 				9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */,
 				9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */,
@@ -451,6 +448,7 @@
 				9E7869E51C9EF15100F1FE93 /* LoanDetailViewController.swift in Sources */,
 				9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */,
 				9E79FBBD1CA84AD4008B96B1 /* LoginViewController.swift in Sources */,
+				9E6815D71CCA8384006DDE1A /* AcknowledgementsViewController.swift in Sources */,
 				9E3950691BF66E23007BC75E /* KivaTeam.swift in Sources */,
 				9E7869E21C9E0F6100F1FE93 /* MapViewController.swift in Sources */,
 				9EC72E281BF55A7D0000D9BF /* LoansTableViewController.swift in Sources */,
@@ -458,7 +456,6 @@
 				9E7869EE1C9F3A1200F1FE93 /* CustomView.swift in Sources */,
 				9E3950651BF66E23007BC75E /* KivaLoan.swift in Sources */,
 				9E495BE41BFAD82000E3DEAD /* NSCache+Singleton.swift in Sources */,
-				9E39506D1BF66E23007BC75E /* RESTConstants.swift in Sources */,
 				9E39506A1BF66E23007BC75E /* KivaUserAccount.swift in Sources */,
 				9ECEFAFF1C96064E0045E92F /* CountryLoansTableViewController.swift in Sources */,
 				9ECEFB021C97C7710045E92F /* CountryLoanTableViewCell.swift in Sources */,
@@ -469,7 +466,6 @@
 				9ECEC3F91CA77D75005EE6D3 /* KivaApiConvenience.swift in Sources */,
 				9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */,
 				9E3950711BF670F4007BC75E /* Constants.swift in Sources */,
-				9E39506E1BF66E23007BC75E /* RESTConvenience.swift in Sources */,
 				9E6AC0051CB1CE2C00F3476F /* DVNViewController.swift in Sources */,
 				9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */,
 				9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */,

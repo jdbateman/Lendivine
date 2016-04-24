@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/7/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This moel object describes a group of lenders that make loans in the Kiva network focussed on a specific topic.
 
 import Foundation
 

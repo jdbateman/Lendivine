@@ -5,6 +5,7 @@
 //  Created by john bateman on 10/30/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model class describes detailed statistics on a particular loan on the Kiva service.
 
 import Foundation
 
