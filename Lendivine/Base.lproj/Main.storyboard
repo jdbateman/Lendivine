@@ -1401,7 +1401,7 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="Login to Kiva.org">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <state key="selected">
                                     <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1469,6 +1469,7 @@
                     <navigationItem key="navigationItem" id="7Ak-pj-ItY"/>
                     <connections>
                         <outlet property="loginButton" destination="Qyt-YP-PFj" id="dxN-MG-ipo"/>
+                        <outlet property="signupButton" destination="x4p-FW-Asf" id="HLI-QL-HRT"/>
                         <segue destination="49e-Tb-3d3" kind="show" identifier="LoginSegueId" id="yQ4-aL-Ga1"/>
                     </connections>
                 </viewController>

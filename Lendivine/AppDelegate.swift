@@ -130,10 +130,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName(appDidBecomeActiveNotificationKey, object: self)
     }
     
-    /*! Post a notification indicating that the Kiva OAuth deep link was received. */
-    func postKivaDeepLinkNotification() {
-        
-        NSNotificationCenter.defaultCenter().postNotificationName(KivaOAuthDeepLinkNotificationKey, object: self)
-    }
+//    /*! Post a notification indicating that the Kiva OAuth deep link was received. */
+//    func postKivaDeepLinkNotification() {
+//        
+//        NSNotificationCenter.defaultCenter().postNotificationName(KivaOAuthDeepLinkNotificationKey, object: self)
+//    }
 }
 
