@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
             
-            writeOAuth(url)
+//            writeOAuth(url)
             
             print("")
             print("****************************************************************************")
@@ -106,21 +106,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    // MARK: Persist OAuth access token
-    
-    func writeOAuth(url:NSURL) {
-        
-        print("appDelegate saved OAuth url  = \(url)")
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        appSettings.setURL(url, forKey: "KivaOAuthUrl")
-    }
-    
-    func readOAuth() -> NSURL? {
-        
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        let nsurl = appSettings.URLForKey("KivaOAuthUrl")
-        return nsurl
-    }
+//    // MARK: Persist OAuth access token
+//    
+//    func writeOAuth(url:NSURL) {
+//        
+//        print("appDelegate saved OAuth url  = \(url)")
+//        let appSettings = NSUserDefaults.standardUserDefaults()
+//        appSettings.setURL(url, forKey: "KivaOAuthUrl")
+//    }
+//    
+//    func readOAuth() -> NSURL? {
+//        
+//        let appSettings = NSUserDefaults.standardUserDefaults()
+//        let nsurl = appSettings.URLForKey("KivaOAuthUrl")
+//        return nsurl
+//    }
     
     // MARK - notifications
     

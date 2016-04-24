@@ -30,39 +30,11 @@ class LoginViewController: UIViewController {
         // get a reference to the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        if let url = readOAuth() {
-            
-            let kivaOAuth = KivaOAuth.sharedInstance
-            kivaOAuth.prepareShortcutLogin() {
-                success, error, kivaAPI in
-                
-                if success {
-                    self.kivaAPI = kivaOAuth.kivaAPI
-                    self.appDelegate.loggedIn = success
-                    
-                    print("kivaOAuth.prepareShortcutLogin() succeeded. kivaAPI handle acquired.")
-                    
-                    // If already logged in to Kiva.org present the Loans view controller.
-                    if self.appDelegate.loggedIn == true {
-                        loginSessionActive = false
-                        self.presentLoansController()
-                    }
-                    
-                } else {
-                    print("kivaOAuth.prepareShortcutLogin() failed. Unable to acquire kivaAPI handle.")
-                }
-
-            }
-            
-            print("Login is calling handleOAuthDeepLink with url = \(url)")
-            appDelegate.handleOAuthDeepLink(openURL:url)
+        // If already logged in to Kiva.org present the Loans view controller.
+        if appDelegate.loggedIn == true {
+            loginSessionActive = false
+            presentLoansController()
         }
-        
-//        // If already logged in to Kiva.org present the Loans view controller.
-//        if appDelegate.loggedIn == true {
-//            loginSessionActive = false
-//            presentLoansController()
-//        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -334,14 +306,5 @@ class LoginViewController: UIViewController {
     func onKivaOAuthDeepLinkNotification() {
         
         loginSessionActive = false
-    }
-    
-    // MARK: Persisted OAuth access token
-    
-    func readOAuth() -> NSURL? {
-        
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        let nsurl = appSettings.URLForKey("KivaOAuthUrl")
-        return nsurl
     }
 }
