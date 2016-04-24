@@ -30,11 +30,39 @@ class LoginViewController: UIViewController {
         // get a reference to the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        // If already logged in to Kiva.org present the Loans view controller.
-        if appDelegate.loggedIn == true {
-            loginSessionActive = false
-            presentLoansController()
+        if let url = readOAuth() {
+            
+            let kivaOAuth = KivaOAuth.sharedInstance
+            kivaOAuth.prepareShortcutLogin() {
+                success, error, kivaAPI in
+                
+                if success {
+                    self.kivaAPI = kivaOAuth.kivaAPI
+                    self.appDelegate.loggedIn = success
+                    
+                    print("kivaOAuth.prepareShortcutLogin() succeeded. kivaAPI handle acquired.")
+                    
+                    // If already logged in to Kiva.org present the Loans view controller.
+                    if self.appDelegate.loggedIn == true {
+                        loginSessionActive = false
+                        self.presentLoansController()
+                    }
+                    
+                } else {
+                    print("kivaOAuth.prepareShortcutLogin() failed. Unable to acquire kivaAPI handle.")
+                }
+
+            }
+            
+            print("Login is calling handleOAuthDeepLink with url = \(url)")
+            appDelegate.handleOAuthDeepLink(openURL:url)
         }
+        
+//        // If already logged in to Kiva.org present the Loans view controller.
+//        if appDelegate.loggedIn == true {
+//            loginSessionActive = false
+//            presentLoansController()
+//        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -43,8 +71,7 @@ class LoginViewController: UIViewController {
         
         setupView()
         
-        // Add a notification observer for the app becoming active.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onAppDidBecomeActive", name: appDidBecomeActiveNotificationKey, object: nil)
+        setupNotificationObservers()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -58,7 +85,7 @@ class LoginViewController: UIViewController {
         
         super.viewWillDisappear(animated)
         
-        // Remove observer for the countries update notification.
+        // Remove observer for all notifications.
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -232,33 +259,42 @@ class LoginViewController: UIViewController {
     }
     
     // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
-    func doOAuthRound2() {
-        
-        let kivaOAuth = KivaOAuth.sharedInstance // = KivaOAuth()
-        
-        // Do the oauth in a background queue.
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-            
-            print("try poking KivaOauth()")
-            
-            kivaOAuth.pokeKivaOAuth() {success, error, kivaAPI in
-                if success {
-                    print("pokeKivaOauth() succeeded.")
-                } else {
-                    print("pokeKivaOauth() failed.")
-                }
-                
-//                // Call oAuthCompleted on main queue.
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    self.oAuthCompleted(success) {
-//                        print("completed second doOAuthRound2")
-//                    }
+//    func doOAuthRound2() {
+//        
+//        let kivaOAuth = KivaOAuth.sharedInstance // = KivaOAuth()
+//        
+//        // Do the oauth in a background queue.
+//        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+//            
+//            print("try poking KivaOauth()")
+//            
+//            kivaOAuth.pokeKivaOAuth() {success, error, kivaAPI in
+//                if success {
+//                    print("pokeKivaOauth() succeeded.")
+//                } else {
+//                    print("pokeKivaOauth() failed.")
 //                }
-            }
-        }
-    }
+//                
+////                // Call oAuthCompleted on main queue.
+////                dispatch_async(dispatch_get_main_queue()) {
+////                    self.oAuthCompleted(success) {
+////                        print("completed second doOAuthRound2")
+////                    }
+////                }
+//            }
+//        }
+//    }
     
     // MARK: Notifications
+    
+    func setupNotificationObservers() {
+        
+        // Add a notification observer for the app becoming active.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onAppDidBecomeActive", name: appDidBecomeActiveNotificationKey, object: nil)
+        
+        // Add a notification observer for when the app receives a Kiva OAuth deep link.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onKivaOAuthDeepLinkNotification", name: KivaOAuthDeepLinkNotificationKey, object: nil)
+    }
     
     /* Received a notification that the app has become active. */
     func onAppDidBecomeActive() {
@@ -292,5 +328,20 @@ class LoginViewController: UIViewController {
             
             
         }
+    }
+    
+    /*! Receive a notificat that the app received a Kiva OAuth deep link. */
+    func onKivaOAuthDeepLinkNotification() {
+        
+        loginSessionActive = false
+    }
+    
+    // MARK: Persisted OAuth access token
+    
+    func readOAuth() -> NSURL? {
+        
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        let nsurl = appSettings.URLForKey("KivaOAuthUrl")
+        return nsurl
     }
 }

@@ -12,6 +12,10 @@ import OAuthSwift
 /* A custom NSNotification that indicates any updated country data from the web service is now available in core data. */
 let appDidBecomeActiveNotificationKey = "com.lendivine.appdelegate.appdidbecomeactive"
 
+/* A custom NSNotification that indicates an OAuth deep link was received from Kiva.org. */
+let KivaOAuthDeepLinkNotificationKey = "com.lendivine.appdelegate.kivaoauthdeeplink"
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -84,19 +88,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func handleOAuthDeepLink(openURL url: NSURL) {
         
         if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
+            
+            writeOAuth(url)
+            
             print("")
             print("****************************************************************************")
             print("Step 3: Request Access Token")
             print("")
             print("Parsing redirect url and params from Kiva:")
             print("url: \(url)")
+            
             let mySing = MySingleton.sharedInstance
             mySing.timeStampInHeader = false
             print("timestampInHeader = \(mySing.timeStampInHeader) in AppDelegate")
+            
             OAuth1Swift.handleOpenURL(url)
         }
     }
 
+    // MARK: Persist OAuth access token
+    
+    func writeOAuth(url:NSURL) {
+        
+        print("appDelegate saved OAuth url  = \(url)")
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        appSettings.setURL(url, forKey: "KivaOAuthUrl")
+    }
+    
+    func readOAuth() -> NSURL? {
+        
+        let appSettings = NSUserDefaults.standardUserDefaults()
+        let nsurl = appSettings.URLForKey("KivaOAuthUrl")
+        return nsurl
+    }
     
     // MARK - notifications
     
@@ -104,6 +128,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func postAppDidBecomeActiveNotification() {
         
         NSNotificationCenter.defaultCenter().postNotificationName(appDidBecomeActiveNotificationKey, object: self)
+    }
+    
+    /*! Post a notification indicating that the Kiva OAuth deep link was received. */
+    func postKivaDeepLinkNotification() {
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(KivaOAuthDeepLinkNotificationKey, object: self)
     }
 }
 
