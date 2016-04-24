@@ -52,27 +52,18 @@ This section describes how an end user can find and fund loans using the Lendivi
 
 #### 1. Signup
 
-First, signup for a Kiva.org account on www.kiva.org using a web browser on any device. Conveniently, signup can be accessed right in the app by selecting signup at the bottom of the Login screen. This will display the Kiva.org signup interface in an embedded browser in the Lendivine application.
+1. First, select the Login to Kiva.org button on the Login screen. 
+2. The Kiva.org Signup page is presented. Enter the information you wish to use for your new Kiva account: first, last name, email and password, select the privacy policy / terms of use checkbox, and then select the Register button.
+3. Kiva displays the "Authorize 3rd Party Application: Lendivine is requesting permission to access your Kiva account"
+Scroll to the bottom of the page and select the "Allow" button.
+Select "Open" in the "Open in Lendivine?" Alert.
+You are now logged in and should see a list of current loans.
 
 #### 2. Login
 
-After signing up return to the Login screen and select Login to authenticate with the Kiva service via the OAuth protocol. As part of the OAuth process the Kiva.org service may prompt the user to provide their username and password. Kiva will use these credentials to authenticate the user with the Kiva service. Once the credentials are authenticated the service will prompt the user if they want to "Open in Lendivine? [Open] [Cancel]". If the user responds by selecting the "Open" button, Kiva redirects the user to the Lendivine application.
-
-##### Initial login
-
-Note: I you have created credentials on Kiva on another device and you select Login on the Login screen but you have not previously authenticated on this device / simulator, Kiva will redirect you to the Signup page. 
-
-1. At the top of the Signup page there is a SIGN IN option. Select the SIGN IN option to navigate to the Kiva.org Sign in page. 
-2. On the Sign in page you can enter your Kiva username and password, then select the Sign in button. 
-3. After authenticating your signin credentials Kiva.org will display the Portfolio page for authenticated account. 
-4. Select "Back to Lendivine" in the status bar at the top left of your screen to return to the Lendivine application. 
-5. Select "Login to Kiva.org" on the Login page in the Lendivine app.
-6. Kiva authenticates the user and displays the alert: Open in "Lendivine"? [Open] [Cancel]
-7. Select the "Open" button.
-8. Kiva redirects the user to the Lendivine application and displays the Loans screen.
-
-Subsequent logins on the device are substantially less complicated.
-
+On subsequent sessions, select the Login button on the Login screen.
+Select "Open" in the "Open in Lendivine?" Alert.
+You are now logged in and should see a list of current loans.
 
 #### 3. Loans
 
@@ -150,11 +141,13 @@ All of the main screens in the app that display a list of loans to the user cont
 * MVC design pattern.
 
 ### References
-* Kiva references: The [Kiva.org REST API](https://build.kiva.org/api), and the [Kiva Developer Guide](http://build.kiva.org/)
-* RESTCountries reference: The [RESTCountries API](https://restcountries.eu/)
+* Kiva: The [Kiva.org REST API](https://build.kiva.org/api), and the [Kiva Developer Guide](http://build.kiva.org/)
+* RESTCountries: The [RESTCountries API](https://restcountries.eu/)
+* OAuthSwift: https://github.com/OAuthSwift/OAuthSwift
 
 ### Acknowledgements
-* Icons 8
+* Icons 8: https://icons8.com
+* The Noun Project: https://thenounproject.com
 
 ### License
 Please see the license file for details about the license. This software is provided as is with no warranty.
