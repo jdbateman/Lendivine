@@ -80,6 +80,22 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.presentImagePicker(UIImagePickerControllerSourceType.PhotoLibrary)
     }
     
+    @IBAction func onLogoutButton(sender: AnyObject) {
+        
+        // reset any user defaults
+        writeDefaultDonation(25)
+        
+        // reset login state
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.loggedIn = false
+        
+        // present login controller as the root view controller
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let rootController:LoginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginStoryboardID") as! LoginViewController
+        let navigationController = UINavigationController(rootViewController: rootController)
+        appDelegate.window?.rootViewController = navigationController
+    }
+    
     func presentImagePicker(sourceType: UIImagePickerControllerSourceType) {
         let imagePicker: UIImagePickerController = UIImagePickerController()
         imagePicker.delegate = self
@@ -124,7 +140,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             defaultDonationSegmentedControl.selectedSegmentIndex = 0
         case 50:
             defaultDonationSegmentedControl.selectedSegmentIndex = 1
-        case 200:
+        case 100:
             defaultDonationSegmentedControl.selectedSegmentIndex = 2
         default:
             defaultDonationSegmentedControl.selectedSegmentIndex = 0
