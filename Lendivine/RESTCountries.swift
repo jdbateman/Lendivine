@@ -167,7 +167,7 @@ class RESTCountries {
     /* Helper: Given raw JSON, return a usable Foundation object */
     class func parseJSONWithCompletionHandler(data: NSData?, completionHandler: (result: AnyObject?, error: NSError?) -> Void) {
         
-        guard var data = data
+        guard let data = data
             else {
                 print("no data found")
                 return

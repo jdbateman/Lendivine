@@ -29,22 +29,3 @@ class MySingleton {
         }
     }
 }
-
-//class MySingleton {
-//    
-//    var timestampInHeader: Bool
-//    
-//    /* Get a shared instance */
-//    static func sharedInstance() -> MySingleton {
-//        struct Static {
-//            static let instance = MySingleton()
-//        }
-//        print("returning Static.instance. timestampInHeader = \(Static.instance.timestampInHeader)")
-//        return Static.instance
-//    }
-//    
-//    init () {
-//        self.timestampInHeader = true
-//        print("timestampInHeader.init() in MySingleton.init() sets timestampInHeader = true")
-//    }
-//}

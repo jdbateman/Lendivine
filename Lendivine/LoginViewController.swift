@@ -9,6 +9,8 @@
 
 import UIKit
 
+var loginSessionActive = false
+
 class LoginViewController: UIViewController {
     
     var appDelegate: AppDelegate!
@@ -16,8 +18,6 @@ class LoginViewController: UIViewController {
     var kivaAPI: KivaAPI?
     
     @IBOutlet weak var loginButton: UIButton!
-    
-//    var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50)) as UIActivityIndicatorView
     
     let activityIndicator = DVNActivityIndicator()
     
@@ -32,19 +32,9 @@ class LoginViewController: UIViewController {
         
         // If already logged in to Kiva.org present the Loans view controller.
         if appDelegate.loggedIn == true {
+            loginSessionActive = false
             presentLoansController()
         }
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        self.activityIndicator.stopActivityIndicator()
-    }
-    
-    func setupView() {
-        
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        loginButton.layer.cornerRadius = 3
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -53,12 +43,39 @@ class LoginViewController: UIViewController {
         
         setupView()
         
-        self.view.setNeedsDisplay()
+        // Add a notification observer for the app becoming active.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onAppDidBecomeActive", name: appDidBecomeActiveNotificationKey, object: nil)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        super.viewDidAppear(animated)
+        
+        self.activityIndicator.stopActivityIndicator()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        
+        super.viewWillDisappear(animated)
+        
+        // Remove observer for the countries update notification.
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    // MARK: Setup view
+    
+    func setupView() {
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        loginButton.layer.cornerRadius = 3
+        
+        self.view.setNeedsDisplay()
     }
     
 
@@ -75,29 +92,7 @@ class LoginViewController: UIViewController {
     /* User selected the Login button. Attempt to login to Kiva.org. */
     @IBAction func onLoginButtonTap(sender: AnyObject) {
         
-        //startActivityIndicator()
-        activityIndicator.startActivityIndicator(self.view)
-        
-        doOAuth() {
-            success, error in
-            
-            //self.stopActivityIndicator()
-            self.activityIndicator.stopActivityIndicator()
-            
-            if success {
-                
-                self.presentLoansController()
-                
-                
-            } else {
-                
-            }
-            
-            // Provide feedback on Oauth completion status to end user.
-            dispatch_async(dispatch_get_main_queue()) {
-                self.oAuthCompleted(success)
-            }
-        }
+        login()
     }
 
     // MARK: Navigation
@@ -126,6 +121,74 @@ class LoginViewController: UIViewController {
 //        activityIndicator.stopAnimating()
 //    }
     
+    func login() {
+     
+        loginSessionActive = true
+        
+        //startActivityIndicator()
+        activityIndicator.startActivityIndicator(self.view)
+        
+        doOAuth() {
+            success, error in
+            
+            //self.stopActivityIndicator()
+            self.activityIndicator.stopActivityIndicator()
+            
+            if success {
+                
+                print("doOAuth() succeeded")
+                self.activityIndicator.stopActivityIndicator()
+                loginSessionActive = false
+                print("presentLoansController()")
+                self.presentLoansController()
+                
+            } else {
+                
+                self.activityIndicator.stopActivityIndicator()
+                print("doOAuth() failed")
+            }
+            
+            self.afterLogin(success)
+        }
+    }
+    
+    func afterLogin(success:Bool) {
+        
+        if success {
+            
+            self.oAuthCompleted(success) {
+                print("login process is complete!")
+            }
+            
+        } else {
+            
+            if loginSessionActive {
+                
+                print("retry login()")
+                
+                self.login()
+            }
+        }
+        
+//        // Provide feedback on Oauth completion status to end user.
+//        dispatch_async(dispatch_get_main_queue()) {
+//            
+//            print("oAuthCompleted() failed")
+//            
+//            self.oAuthCompleted(success) {
+//                
+//                print("completed first doOAuthRound2")
+//                
+//                if loginSessionActive {
+//                    
+//                    print("logging in again with login()")
+//                    
+//                    self.login()
+//                }
+//            }
+//        }
+    }
+    
     // MARK: OAuth with Kiva.org
     
     // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
@@ -143,8 +206,10 @@ class LoginViewController: UIViewController {
                     self.kivaAPI = kivaOAuth.kivaAPI
                     self.appDelegate.loggedIn = success
                     
+                    print("kivaOAuth.doOAuthKiva() succeeded. kivaAPI handle acquired.")
+                    
                 } else {
-                    print("kivaOAuth failed. Unable to acquire kivaAPI handle.")
+                    print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")
                 }
                 
                 completionHandler(success: success, error: error)
@@ -152,7 +217,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func oAuthCompleted(success: Bool) {
+    func oAuthCompleted(success: Bool, completionHandler:(Void)->Void) {
     
         let resultText: String = success ? "succeeded" : "failed"
         
@@ -160,7 +225,72 @@ class LoginViewController: UIViewController {
             let alert = UIAlertController(title: "Kiva OAuth Complete", message: "The OAuth operation with Kiva.org \(resultText).", preferredStyle: .Alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
             alert.addAction(okAction)
-            self.presentViewController(alert, animated: true, completion:nil)
+            self.presentViewController(alert, animated: true) {
+                completionHandler()
+            }
+        }
+    }
+    
+    // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
+    func doOAuthRound2() {
+        
+        let kivaOAuth = KivaOAuth.sharedInstance // = KivaOAuth()
+        
+        // Do the oauth in a background queue.
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+            
+            print("try poking KivaOauth()")
+            
+            kivaOAuth.pokeKivaOAuth() {success, error, kivaAPI in
+                if success {
+                    print("pokeKivaOauth() succeeded.")
+                } else {
+                    print("pokeKivaOauth() failed.")
+                }
+                
+//                // Call oAuthCompleted on main queue.
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    self.oAuthCompleted(success) {
+//                        print("completed second doOAuthRound2")
+//                    }
+//                }
+            }
+        }
+    }
+    
+    // MARK: Notifications
+    
+    /* Received a notification that the app has become active. */
+    func onAppDidBecomeActive() {
+    
+        print("received AppDidBecomeActive notification.")
+        
+        if loginSessionActive {
+            
+            // We will only go through this login flow once per session: meaning the AppDidBecomeActive will only be fired once during a login session per app session. This call will disable the notification after it has been received once during a login session.
+            NSNotificationCenter.defaultCenter().removeObserver(self)
+            
+            self.activityIndicator.stopActivityIndicator()
+            
+            let alert = UIAlertController(title: "Login", message: "Select Login to continue, else Cancel.", preferredStyle: .Alert)
+            let okAction = UIAlertAction(title: "Login", style: UIAlertActionStyle.Default) {
+                UIAlertAction in
+                self.login()
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
+                UIAlertAction in
+                // do nothing
+            }
+            alert.addAction(okAction)
+            alert.addAction(cancelAction)
+
+            self.presentViewController(alert, animated: true, completion: nil)
+            
+//            self.login()
+            
+//            doOAuthRound2()
+            
+            
         }
     }
 }

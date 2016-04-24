@@ -1,11 +1,14 @@
-    //
+//
 //  KivaLoan.swift
 //  OAuthSwift
 //
 //  Created by john bateman on 10/29/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model class describes and allows manipulation of properties of a loan on the Kiva service. Instances of this class are cored data objects.
+
 /* example loan data: http://build.kiva.org/docs/data/loans */
+
 
 import Foundation
 import UIKit
@@ -15,7 +18,7 @@ import MapKit
 // make KivaLoan visible to CoreData
 @objc(KivaLoan)
 
-class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
+class KivaLoan: NSManagedObject  {
     
     static let entityName = "KivaLoan"
     
@@ -81,119 +84,6 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
-    
-//    /*! Init instance with a dictionary of values, and a core data context. */
-//    init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
-//        
-//        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
-//        super.init(entity: entity, insertIntoManagedObjectContext: context)
-//        
-//        self.name = dictionary[InitKeys.name] as? String
-//        self.country = dictionary[InitKeys.country] as? String
-//        self.geo = dictionary[InitKeys.geo] as? String
-//        self.town = dictionary[InitKeys.town] as? String
-//        self.postedDate = dictionary[InitKeys.postedDate] as? String
-//        self.activity = dictionary[InitKeys.activity] as? String
-//        self.id = dictionary[InitKeys.id] as? NSNumber
-//        self.use = dictionary[InitKeys.use] as? String
-//        self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
-//        self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
-//        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
-//        //self.templateID = (dictionary[InitKeys.image])?.objectForKey("template_id") as? NSNumber
-//        self.imageTemplateID = dictionary[InitKeys.imageTemplateID] as? NSNumber
-//        self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
-//        self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
-//        self.status = dictionary[InitKeys.status] as? String
-//        self.sector = dictionary[InitKeys.sector] as? String
-//    }
-    
-//    // designated initializer
-//    init() {
-//        // just use defaults
-//    }
-//    
-//    // designated initializer
-//    init(dictionary: [String: AnyObject]?) {
-//        
-//        if let dictionary = dictionary {
-//
-//            if let n = dictionary["name"] as? String {
-//                name = n
-//            }
-//            
-//            // location
-//            if let locationDict = dictionary["location"] as? [String: AnyObject] {
-//                if let countryName = locationDict["country"] as? String {
-//                    country = countryName
-//                }
-//                if let geoDict = locationDict["geo"] as? [String: AnyObject] {
-//                    if let coordinateString = geoDict["pairs"] as? String {
-//                        geo = coordinateString
-//                    }
-//                    // geoDict["level"] example value = "town"
-//                    // geoDict["type"] example value = "point"
-//                }
-//                if let t = locationDict["town"] as? String {
-//                    town = t
-//                }
-//            }
-//            
-//            if let date = dictionary["posted_date"] as? String {
-//                postedDate = date
-//            }
-//            if let act = dictionary["activity"] as? String {
-//                activity = act
-//            }
-//            if let ID = dictionary["id"] as? NSNumber {
-//                id = ID
-//            }
-//            if let u = dictionary["use"] as? String {
-//                use = u
-//            }
-//
-//// TODO: reenable if want to figure out how to store an array of strings in core data
-//            // description
-////            if let descriptionDict = dictionary["description"] as? [String: AnyObject] {
-////                if let languagesArray = descriptionDict["languages"] as? [String] {
-////                    for language in languagesArray {
-////                        languages.append(language)
-////                    }
-////                }
-////            }
-//            
-//            if let funded = dictionary["funded_amount"] as? NSNumber {
-//                fundedAmount = funded
-//            }
-//            if let partnerId = dictionary["partner_id"] as? NSNumber {
-//                partnerID = partnerId
-//            }
-//            
-//            // image
-//            if let imageDict = dictionary["image"] as? [String: AnyObject] {
-//                if let templateId = imageDict["template_id"] as? NSNumber {
-//                    imageTemplateID = templateId
-//                }
-//                if let imgId = imageDict["id"] as? NSNumber {
-//                    imageID = imgId
-//                }
-//            }
-//
-//            if let count = dictionary["borrower_count"] as? NSNumber {
-//                borrowerCount = count
-//            }
-//            if let l = dictionary["loan_amount"] as? NSNumber {
-//                loanAmount = l
-//            }
-//            
-//            if let s = dictionary["status"] as? String {
-//                status = s
-//            }
-//            if let s = dictionary["sector"] as? String {
-//                sector = s
-//            }
-//        }
-//    }
-
 
     /*! Init instance with a dictionary of values, and a core data context. */
     init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
@@ -374,8 +264,6 @@ class KivaLoan: NSManagedObject /*, Equatable  < todo remove*/  {
         return coordinate
     }
 }
-
-    
 
 
 // MARK: image management functions

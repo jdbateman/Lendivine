@@ -5,6 +5,7 @@
 //  Created by john bateman on 10/29/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model object describes a user account on the Kiva service. There is currently no Kiva.org REST API support for transferring the user's profile image between the client and server in either direction.
 
 import Foundation
 

@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/8/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This class provides methods to manage a cart of items that can be purchased on the Kiva service.
 
 import Foundation
 import CoreData
@@ -12,8 +13,7 @@ import CoreData
 class KivaCart {
     
     // make the cart a Singleton
-    static let sharedInstance = KivaCart()
-    // usage:  KivaCart.sharedInstance
+    static let sharedInstance = KivaCart()  // usage:  KivaCart.sharedInstance
     
     // items in the cart
     var items = [KivaCartItem]()
@@ -27,7 +27,7 @@ class KivaCart {
     init() {
         print("KivaCart init called")
         
-        // TODO: load all cart items here from the core data shared context
+        // load all cart items from the core data shared context
         fetchCartItems()
     }
     
@@ -103,19 +103,6 @@ class KivaCart {
         return itemsArray
     }
     
-    /*!
-    @brief Return a list of all the KivaLoan objects in the cart.
-    */
-//    func getLoans() -> [KivaLoan]? {
-//        var loansInCart = [KivaLoan]()
-//        for item in self.items {
-//            if let loan = item.kivaloan {
-//                loansInCart.append(loan)
-//            }
-//        }
-//        return loansInCart
-//    }
-    
     /*! 
         @brief return an array of KivaLoan objects representing each loan ID stored in the cart.
         @discussion Loans are contructed from the main core data context.
@@ -130,7 +117,7 @@ class KivaCart {
             if let loanID = item.loanID {
                 id = loanID
             }
-            // NOTE: TODO - the context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
+            // NOTE: The context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
             if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(id, context: sharedContext /* CoreDataStackManager.sharedInstance().scratchContext*/) {
                 loansInCart.append(loan)
             }
@@ -138,38 +125,7 @@ class KivaCart {
         NSLog("loans in Cart: %@", loansInCart)
         return loansInCart
     }
-    
-//    func getLoans(completion:(loans:[KivaLoan]?, error: NSError?) -> Void) {
-////    func getLoans() -> [KivaLoan]? {
-//        var loansInCart = [KivaLoan]()
-//        var count = self.items.count
-//        
-//        for item in self.items {
-//            //if let loanID = item.loanID {
-//                //let loan = KivaLoan(fromLoanID: loanID, context: self.sharedContext)
-//            
-//            var id:NSNumber = 0
-//            if let loanID = item.loanID {
-//                id = loanID
-//            }
-//            
-//            KivaLoan.createKivaLoanFromLoanID(id, context: CoreDataStackManager.sharedInstance().scratchContext) {
-//                loan, error in
-//                
-//                count--
-//                
-//                if let loan = loan {
-//                    loansInCart.append(loan)
-//                }
-//                
-//                if count == 0 {
-//                    completion(loans: loansInCart, error: nil)
-//                }
-//            }
-//            //}
-//        }
-//        //return loansInCart
-//    }
+
     
     // MARK: - Fetched results controller
     
@@ -208,10 +164,6 @@ class KivaCart {
             }
             self.items = self.fetchedResultsController.fetchedObjects as! [KivaCartItem]
         }
-        
-//        if let error = error {
-//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving loans", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
-//        }
     }
     
     /*! 
@@ -222,13 +174,12 @@ class KivaCart {
         @param (in) context - Core Data context.
         @return true if loan was successfully added to the cart, else false.
     */
-//    func KivaAddItemToCart(loanID: NSNumber?, donationAmount: NSNumber?, context: NSManagedObjectContext) {
     func KivaAddItemToCart(loan: KivaLoan?, /*loanID: NSNumber?,*/ donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
         
         print("KivaAddItemToCart called for loan \(loan?.name) & \(loan?.id)")
         
         if let loan = loan {
-//            if let loanID = loanID {
+
                 if let donationAmount = donationAmount {
                     let cart = KivaCart.sharedInstance
                     // TODO: cart context - all calls to KivaAddItemToCart use sharedContext
@@ -247,9 +198,7 @@ class KivaCart {
                         print("Item not added to cart. The cart already contains loanId: \(loan.id)")
                         return false
                     }
-                    //print("cart = \(cart.count) [KivaAddItemToCart]")
                 }
-//            }
         }
         return false
     }

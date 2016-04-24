@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/7/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model object describes an entity that sources loans in the Kiva network.
 
 import Foundation
 

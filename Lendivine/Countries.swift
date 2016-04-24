@@ -264,12 +264,12 @@ class Countries {
     
     /* Perform a fetch of Country objects to update the fetchedResultsController with the current data from the core data store. */
     class func fetchCountries() {
-        var error: NSError? = nil
         
         do {
             try fetchedResultsController.performFetch()
         } catch let error1 as NSError {
-            error = error1
+            let error = error1
+            print("\(error)")
         }
     }
     

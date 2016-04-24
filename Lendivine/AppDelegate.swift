@@ -9,6 +9,9 @@
 import UIKit
 import OAuthSwift
 
+/* A custom NSNotification that indicates any updated country data from the web service is now available in core data. */
+let appDidBecomeActiveNotificationKey = "com.lendivine.appdelegate.appdidbecomeactive"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -38,10 +41,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        print("applicationWillEnterForeground")
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        print("applicationDidBecomeActive")
+        
+        postAppDidBecomeActiveNotification()
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -60,25 +67,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         
         /*"oauth-callback"*/
+        
         if (url.host == Constants.OAuthValues.consumerCallbackUrlHost ) {
-            if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
-                print("")
-                print("****************************************************************************")
-                print("Step 3: Request Access Token")
-                print("")
-                print("Parsing redirect url and params from Kiva:")
-                print("url: \(url)")
-                let mySing = MySingleton.sharedInstance
-                mySing.timeStampInHeader = false
-                print("timestampInHeader = \(mySing.timeStampInHeader) in AppDelegate")
-                OAuth1Swift.handleOpenURL(url)
-            }
+            
+            handleOAuthDeepLink(openURL:url)
+            /* The Kiva OAuth deep link url is:
+            oauth-swift://oauth-callback/kiva/Lendivine?oauth_verifier=KV-Q8wmUyTv&oauth_token=xZ7vISo4Sw8.4EC6NYC7teRlMisLDb0I%3Bself.JohnBateman.Lendivine&scope=access%2Cuser_balance%2Cuser_email%2Cuser_expected_repayments%2Cuser_anon_lender_data%2Cuser_anon_lender_loans%2Cuser_stats%2Cuser_loan_balances%2Cuser_anon_lender_teams&state=6ED1279AB3340E9
+            */
+            
         } else {
-            print("Error: unexpected: not Oauth1")
+            print("Error: unexpected. Not Oauth1")
         }
         return true
     }
+    
+    func handleOAuthDeepLink(openURL url: NSURL) {
+        
+        if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
+            print("")
+            print("****************************************************************************")
+            print("Step 3: Request Access Token")
+            print("")
+            print("Parsing redirect url and params from Kiva:")
+            print("url: \(url)")
+            let mySing = MySingleton.sharedInstance
+            mySing.timeStampInHeader = false
+            print("timestampInHeader = \(mySing.timeStampInHeader) in AppDelegate")
+            OAuth1Swift.handleOpenURL(url)
+        }
+    }
 
-
+    
+    // MARK - notifications
+    
+    /*! Post a notification indicating that the application became active. */
+    func postAppDidBecomeActiveNotification() {
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(appDidBecomeActiveNotificationKey, object: self)
+    }
 }
 

@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/7/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model class describes a Country.
 
 import Foundation
 

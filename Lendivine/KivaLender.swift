@@ -5,6 +5,7 @@
 //  Created by john bateman on 10/29/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model class describes a lender on the kiva service.
 
 import Foundation
 

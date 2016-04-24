@@ -5,6 +5,7 @@
 //  Created by john bateman on 11/8/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
+//  This model class describes an item in the cart. Instances of this class are core data objects. The object contains data from a loan that are useful for the Cart view to render. The object contains the loan Id, which can be used to fetch the actual loan from core data if necessary.
 
 import Foundation
 import CoreData
@@ -13,7 +14,7 @@ import UIKit
 // make KivaCartItem visible to CoreData
 @objc(KivaCartItem)
 
-class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
+class KivaCartItem: NSManagedObject {
     
     static let entityName = "KivaCartItem"
     
@@ -37,38 +38,11 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
     @NSManaged var loanAmount: NSNumber?
     @NSManaged var imageID: NSNumber? // default: -1
     
-//    convenience init(loan: KivaLoan, /*loanID: NSNumber,*/ donationAmount: NSNumber, context: NSManagedObjectContext) {
-//        
-//        var dictionary = [String: AnyObject]()
-//        dictionary[InitKeys.loanId] = loan.id
-//        dictionary[InitKeys.donationAmount] = donationAmount
-//        
-//        dictionary[InitKeys.name] = loan.name
-//        dictionary[InitKeys.sector] = loan.sector
-//        dictionary[InitKeys.country] = loan.country
-//        dictionary[InitKeys.loanAmount] = loan.loanAmount
-//        dictionary[InitKeys.imageID] = loan.imageID
-//        
-//        //dictionary[InitKeys.kivaLoan] = loan
-//        
-//        self.init(dictionary: dictionary, context: context)
-//    }
-    
-    init(loan: KivaLoan, /*loanID: NSNumber,*/ donationAmount: NSNumber, context: NSManagedObjectContext) {
+    init(loan: KivaLoan, donationAmount: NSNumber, context: NSManagedObjectContext) {
         
         let entity = NSEntityDescription.entityForName("KivaCartItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-//        dictionary[InitKeys.loanId] = loan.id
-//        dictionary[InitKeys.donationAmount] = donationAmount
-//        
-//        dictionary[InitKeys.name] = loan.name
-//        dictionary[InitKeys.sector] = loan.sector
-//        dictionary[InitKeys.country] = loan.country
-//        dictionary[InitKeys.loanAmount] = loan.loanAmount
-//        dictionary[InitKeys.imageID] = loan.imageID
-        
-        //
         self.loanID = loan.id
         self.donationAmount = donationAmount
         self.name = loan.name
@@ -100,15 +74,6 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
         self.loanID = dictionary[InitKeys.loanId] as? NSNumber
         self.donationAmount = dictionary[InitKeys.donationAmount] as? NSNumber
         
-        //dispatch_async(dispatch_get_main_queue()) {
-//        if let loan = dictionary[InitKeys.kivaLoan] as? KivaLoan {
-//            print("kivaLoan: \(loan)")
-//            let persistedLoan = KivaLoan(fromLoan: loan, context: self.managedObjectContext!) //todo
-//            self.kivaloan = persistedLoan // loan
-//        }
-        //todo > self.loan = dictionary[InitKeys.kivaLoan] as? KivaLoan
-        //}
-        
         self.name = dictionary[InitKeys.name] as? String
         self.country = dictionary[InitKeys.country] as? String
         self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
@@ -119,8 +84,6 @@ class KivaCartItem: NSManagedObject /*, Equatable  < todo remove*/ {
 
 /*! Support Equatable protocol. Allows KivaCartItem instances to be compared. */
 func ==(lhs: KivaCartItem, rhs: KivaCartItem) -> Bool {
-//    return (lhs.kivaloan?.id == rhs.kivaloan?.id)
-    //print("KivaCartItem Equatable: lhs:\(lhs.loanID) rhs:\(rhs.loanID)")
     return (lhs.loanID == rhs.loanID)
 }
 
