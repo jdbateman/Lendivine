@@ -30,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().barTintColor = UIColor(rgb:0x122950)
         UITabBar.appearance().tintColor = UIColor.whiteColor()
         
+        UINavigationBar.appearance().barTintColor = UIColor(rgb:0xFFE8A1)
+        
         return true
     }
 

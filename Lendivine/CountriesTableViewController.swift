@@ -96,6 +96,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         searchController.hidesNavigationBarDuringPresentation = true
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
+        searchController.searchBar.barTintColor = UIColor(rgb:0xFFE8A1)
+        
         self.tableView.tableHeaderView = searchController.searchBar
         
         //todo searchController.searchBar.delegate = self
@@ -282,7 +284,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
         //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+        _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
             CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
 
         var results: [AnyObject]?
@@ -334,9 +336,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
             
-        default:
-            return
-            
         }
     }
     
@@ -379,7 +378,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
                 } else {
                     
                     // save the selected country
-                    theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Country
+                    theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Country
                 }
                 
                 controller.country = theCountry

@@ -12,6 +12,7 @@ class AcknowledgementsViewController: UIViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var acknowledgementsLabel: UILabel!
+    @IBOutlet weak var acknowledgements: UIScrollView!
     
     
     override func viewDidLoad() {
@@ -56,8 +57,10 @@ class AcknowledgementsViewController: UIViewController, UIScrollViewDelegate {
     
     func setupScroll() {
         
+        scrollView.contentSize.height = acknowledgementsLabel.bounds.size.height + acknowledgements.bounds.size.height
         scrollView.delegate = self
         scrollView.scrollEnabled = true
-        scrollView.directionalLockEnabled = true
+        scrollView.directionalLockEnabled = false
+        scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     }
 }

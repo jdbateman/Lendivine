@@ -17,6 +17,7 @@ class CountryLoanTableViewCell:DVNTableViewCell {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var countryLabel: UILabel!
+    @IBOutlet weak var addToCartButton: UIButton!
     
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {

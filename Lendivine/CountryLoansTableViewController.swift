@@ -131,6 +131,13 @@ class CountryLoansTableViewController: UITableViewController{
                 print("error retrieving image: \(error)")
             }
         }
+        
+        cell.addToCartButton.layer.cornerRadius = 19.2 // 24
+        if let cart = UIImage(named: "Add Shopping Cart-50") {
+            let tintedCart = cart.imageWithRenderingMode(.AlwaysTemplate)
+            cell.addToCartButton.imageView!.image = tintedCart
+            cell.addToCartButton.imageView!.tintColor = UIColor.blueColor()
+        }
     }
     
     /*! 

@@ -83,7 +83,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         if let image = account.getImage() {
-            updateAvatarImage(image)
+            updateAvatarImageInView(image)
         }
     }
     
@@ -91,7 +91,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func setAccountImage(newImage:UIImage) {
         
-        updateAvatarImageInView(newimage)
+        updateAvatarImageInView(newImage)
         
         // save the new image to disk
         if let account = _account {

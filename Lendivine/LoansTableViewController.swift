@@ -73,8 +73,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
         // left bar button items
         let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
-        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
-        navigationItem.setLeftBarButtonItems([trashButton, oAuthButton], animated: true)
+//        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
+        navigationItem.setLeftBarButtonItems([trashButton/*, oAuthButton*/], animated: true)
         
         // right bar button items
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
@@ -273,9 +273,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
     
     // OAuth button was selected.
-    func onOAuthButtonTap() {
-        doOAuth()
-    }
+//    func onOAuthButtonTap() {
+//        doOAuth()
+//    }
     
     // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
     func doOAuth() {
@@ -438,7 +438,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             }
         }
     }
-    
     
     
     // MARK: Helpfer functions
