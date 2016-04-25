@@ -83,8 +83,34 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         if let image = account.getImage() {
-            self.avatarImageView.image = image
+            updateAvatarImage(image)
         }
+    }
+    
+    // MARK: Avatar image
+    
+    func setAccountImage(newImage:UIImage) {
+        
+        updateAvatarImageInView(newimage)
+        
+        // save the new image to disk
+        if let account = _account {
+            account.saveImage(newImage)
+        }
+    }
+    
+    /*! Set and style the avatar image */
+    func updateAvatarImageInView(image: UIImage) {
+        
+        avatarImageView.image = image
+        
+        // bordered with grey outlined circle, scale to fill
+        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.layer.cornerRadius = 90
+        avatarImageView.layer.borderWidth = 2
+        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
+        avatarImageView.clipsToBounds = true
+        avatarImageView.backgroundColor = UIColor.blackColor()
     }
     
     /*! Display default avatar image. */
@@ -97,11 +123,10 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         avatarImageView.tintColor = UIColor.whiteColor()
         
         // bordered with grey outlined circle
-        avatarImageView.layer.cornerRadius = 100
+        avatarImageView.layer.cornerRadius = 90
         avatarImageView.layer.borderWidth = 2
         avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
         avatarImageView.clipsToBounds = true
-        
         avatarImageView.backgroundColor = UIColor.blackColor()
     }
     
@@ -140,23 +165,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         imagePicker.sourceType = sourceType
         imagePicker.allowsEditing = true
         self.presentViewController(imagePicker, animated: true, completion: nil)
-    }
-    
-    func setAccountImage(newImage:UIImage) {
-        
-        // update the view with the new image
-        avatarImageView.image = newImage
-        avatarImageView.contentMode = .ScaleAspectFill
-        avatarImageView.layer.cornerRadius = 100
-        avatarImageView.layer.borderWidth = 2
-        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
-        avatarImageView.clipsToBounds = true
-        avatarImageView.backgroundColor = UIColor.blackColor()
-        
-        // save the new image to disk
-        if let account = _account {
-            account.saveImage(newImage)
-        }
     }
     
     /*! The value changed on the Default Donation segmented control. */
@@ -214,63 +222,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     
-    // Make KivaAPI calls to retrieve and render the user's kiva account information.
-//    func populateAccountData() {
-//        // account name and lender ID
-//        kivaAPI!.kivaOAuthGetUserAccount() {success, error, account in
-//            if success {
-//                if let firstName = account?.firstName {
-//                    if let lastName = account?.lastName {
-//                        self.nameLabel.text = firstName + " " + lastName
-//                    }
-//                }
-//                if let lenderID = account?.lenderID {
-//                    self.lenderIDLabel.text = lenderID
-//                }
-//                if let accountId = account?.id {
-//                    
-//                    self.getImage(accountId) {
-//                        success, error, image in
-//                        if success {
-//                            if let image = image {
-//                                self.avatarImageView.image = image
-//                            }
-//                        }
-//                    }
-//                }
-//            } else {
-//                print("error retrieving user account: \(error?.localizedDescription)")
-//            }
-//        }
-//        
-//        // email
-//        kivaAPI!.kivaOAuthGetUserEmail(){ success, error, email in
-//            if success {
-//                if let email = email {
-//                    self.emailLabel.text = email
-//                }
-//            } else {
-//                print("error retrieving user email: \(error?.localizedDescription)")
-//            }
-//        }
-//        
-//        // balance
-//        kivaAPI!.kivaOAuthGetUserBalance(){ success, error, balance in
-//            if success {
-//                if let balance = balance {
-//                    self.balanceLabel.text = balance
-//                }
-//            } else {
-//                print("error retrieving user balance: \(error?.localizedDescription)")
-//            }
-//        }
-//        
-//        // Default donation
-//        let defaultDonation = readDefaultDonation()
-//        setDefaultDonation(defaultDonation)
-//    }
-    
-    
     // Data
     
     func populateAccountData() {
@@ -309,34 +260,18 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             if success {
                 if let firstName = kivaAccount?.firstName {
                     if let lastName = kivaAccount?.lastName {
-//                        self.nameLabel.text = firstName + " " + lastName
                         account[KivaAccount.InitKeys.name] = firstName + " " + lastName
                     }
                 }
                 
                 if let lenderID = kivaAccount?.lenderID {
-//                    self.lenderIDLabel.text = lenderID
                     account[KivaAccount.InitKeys.lenderId] = lenderID
                 }
-                
-//                if let accountId = kivaAccount?.id {
-//                    
-//                    // TODO
-////                    self.getImage(accountId) {
-////                        success, error, image in
-////                        if success {
-////                            if let image = image {
-////                                self.avatarImageView.image = image
-////                            }
-////                        }
-////                    }
-//                }
                 
                 // email
                 self.kivaAPI!.kivaOAuthGetUserEmail(){ success, error, email in
                     if success {
                         if let email = email {
-//                            self.emailLabel.text = email
                             account[KivaAccount.InitKeys.email] = email
                         }
                         
@@ -344,7 +279,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                         self.kivaAPI!.kivaOAuthGetUserBalance(){ success, error, balance in
                             if success {
                                 if let balance = balance {
-//                                    self.balanceLabel.text = balance
                                     account[KivaAccount.InitKeys.balance] = balance
                                 }
                                 
@@ -367,20 +301,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 completionHandler(success:false, error:error, accountData: account)
             }
         }
-//        
-//
-//        
-//
-//        
-//        return account
-//        
-//        
-//        // persist to core data on disk
-//        if let account = account {
-//            let newAccount = KivaAccount.init(dictionary: account, context: sharedContext)
-//            CoreDataStackManager.sharedInstance().saveContext()
-//            print("new account: %@", account)
-//        }
     }
     
     /*! Upload account data to Kiva.org */
@@ -441,92 +361,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         return newAccount
     }
     
-    
-    // MARK: Image
-    
-//    /*!
-//        @brief Return a String representing the url of the image identified by kivaImageID
-//        @param kivaImageID The Kiva image identifier.
-//        @return A String representing the url where the image can be downloaded, or nil in case of an error or invalid identifier.
-//        example image url: http://www.kiva.org/img/s50/5c43752887e05aabbf90934177d9eacc.jpg
-//    */
-//    func getImageUrl(kivaImageID: NSNumber?) -> String? {
-//        if let kivaImageID = kivaImageID {
-//            let imageUrlString = String(format:"http://www.kiva.org/img/s50/%@.jpg", kivaImageID.stringValue)
-//            return imageUrlString
-//        }
-//        return nil
-//    }
-//    
-//    /*
-//        @brief Acquire the UIImage for this Loan object.
-//        @discussion The image is retrieved using the following sequence:
-//            1. todo - cache
-//            2. todo - filesystem
-//            3. download the image from self.imageUrl.
-//        @param completion (in)
-//        @param success (out) - true if image successfully acquired, else false.
-//        @param error (out) - NSError object if an error occurred, else nil.
-//        @param image (out) - the retrieved UIImage. May be nil if no image was found, or if an error occurred.
-//    */
-//    func getImage(kivaImageID: NSNumber, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
-//        
-//        let imageUrl = getImageUrl(kivaImageID)
-//
-//        // Load the image from the server asynchronously on a background queue.
-//        if let url = imageUrl {
-//            self.dowloadImageFrom(url) { success, error, theImage in
-//                if success {
-//                    if let _ = theImage {
-//                        //self.cacheImageAndWriteToFile(theImage)
-//                    }
-//                    print("image downloaded from server")
-//                    completion(success: true, error: nil, image: theImage)
-//                    return
-//                } else {
-//                    // The download failed. Retry the download once.
-//                    self.dowloadImageFrom(url) { success, error, theImage in
-//                        if success {
-//                            if let _ = theImage {
-//                                //self.cacheImageAndWriteToFile(theImage)
-//                            }
-//                            print("image downloaded from server")
-//                            completion(success: true, error: nil, image: theImage)
-//                            return
-//                        } else {
-//                            let vtError = VTError(errorString: "Image download from Kiva service failed.", errorCode: VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR)
-//                            completion(success: false, error: vtError.error, image: nil)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    
-//    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
-//    func dowloadImageFrom(imageUrlString: String?, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
-//        
-//        let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
-//        dispatch_async(backgroundQueue, {
-//            // get the binary image data
-//            let imageURL:NSURL? = NSURL(string: imageUrlString!)
-//            if let imageData = NSData(contentsOfURL: imageURL!) {
-//                
-//                // Convert the image data to a UIImage object and append to the array to be returned.
-//                if let picture = UIImage(data: imageData) {
-//                    completion(success: true, error: nil, image: picture)
-//                }
-//                else {
-//                    let vtError = VTError(errorString: "Cannot convert image data.", errorCode: VTError.ErrorCodes.IMAGE_CONVERSION_ERROR)
-//                    completion(success: false, error: vtError.error, image: nil)
-//                }
-//                
-//            } else {
-//                let vtError = VTError(errorString: "Image does not exist at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
-//                completion(success: false, error: vtError.error, image: nil)
-//            }
-//        })
-//    }
     
     // MARK: Persist defaults
     
