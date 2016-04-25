@@ -14,6 +14,8 @@ let cartDonationImageName:String = String("EmptyCart-50")
 
 class CartTableViewController: UITableViewController {
 
+    var noDataLabel: UILabel?
+    
     var cart:KivaCart? // = KivaCart.sharedInstance
     var kivaAPI: KivaAPI?
     
@@ -60,16 +62,23 @@ class CartTableViewController: UITableViewController {
         
         if cart!.items.count > 0 {
         
+            noDataLabel?.text = ""
+            noDataLabel?.hidden = true
+            
             return 1
             
         } else {
-                
-            let noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
-            noDataLabel.text = "The cart is empty."
-            noDataLabel.textColor = UIColor.darkGrayColor()
-            noDataLabel.textAlignment = .Center
-            tableView.backgroundView = noDataLabel
-            tableView.separatorStyle = .None
+            
+            noDataLabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
+            
+            if let noDataLabel = noDataLabel {
+                noDataLabel.hidden = false
+                noDataLabel.text = "The cart is empty."
+                noDataLabel.textColor = UIColor.darkGrayColor()
+                noDataLabel.textAlignment = .Center
+                tableView.backgroundView = noDataLabel
+                tableView.separatorStyle = .None
+            }
             
             return 0
         }

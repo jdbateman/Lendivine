@@ -11,6 +11,8 @@ import UIKit
 
 class MyLoansTableViewController: UITableViewController {
 
+    var noDataLabel: UILabel?
+    
     var kivaAPI: KivaAPI = KivaAPI.sharedInstance
     
     // a collection of the Kiva loans the user has made
@@ -57,16 +59,23 @@ class MyLoansTableViewController: UITableViewController {
         
         if loans.count > 0 {
             
+            noDataLabel?.text = ""
+            noDataLabel?.hidden = true
+            
             return 1
             
         } else {
             
-            let noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
-            noDataLabel.text = "This account currently contains no loans."
-            noDataLabel.textColor = UIColor.darkGrayColor()
-            noDataLabel.textAlignment = .Center
-            tableView.backgroundView = noDataLabel
-            tableView.separatorStyle = .None
+            noDataLabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
+            
+            if let noDataLabel = noDataLabel {
+                noDataLabel.hidden = false
+                noDataLabel.text = "This account currently contains no loans."
+                noDataLabel.textColor = UIColor.darkGrayColor()
+                noDataLabel.textAlignment = .Center
+                tableView.backgroundView = noDataLabel
+                tableView.separatorStyle = .None
+            }
             
             return 0
         }

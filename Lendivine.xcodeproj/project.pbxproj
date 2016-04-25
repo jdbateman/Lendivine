@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9E1911731C94D6CD004E5FBB /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1911721C94D6CD004E5FBB /* Countries.swift */; };
 		9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */; };
+		9E36CC171CCD773C006402C4 /* KivaAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36CC161CCD773C006402C4 /* KivaAccount.swift */; };
 		9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950511BF66E23007BC75E /* KivaAPI.swift */; };
 		9E3950611BF66E23007BC75E /* KivaCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950521BF66E23007BC75E /* KivaCart.swift */; };
 		9E3950621BF66E23007BC75E /* KivaCartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3950531BF66E23007BC75E /* KivaCartItem.swift */; };
@@ -106,6 +107,7 @@
 /* Begin PBXFileReference section */
 		9E1911721C94D6CD004E5FBB /* Countries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countries.swift; sourceTree = "<group>"; };
 		9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtility.swift; sourceTree = "<group>"; };
+		9E36CC161CCD773C006402C4 /* KivaAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaAccount.swift; sourceTree = "<group>"; };
 		9E3950511BF66E23007BC75E /* KivaAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaAPI.swift; sourceTree = "<group>"; };
 		9E3950521BF66E23007BC75E /* KivaCart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaCart.swift; sourceTree = "<group>"; };
 		9E3950531BF66E23007BC75E /* KivaCartItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaCartItem.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */,
 				9EE356921C71577900363652 /* Model.xcdatamodeld */,
 				9E495BDF1BF9611400E3DEAD /* VTError.swift */,
+				9E36CC161CCD773C006402C4 /* KivaAccount.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -482,6 +485,7 @@
 				9E3950601BF66E23007BC75E /* KivaAPI.swift in Sources */,
 				9E3950641BF66E23007BC75E /* KivaLender.swift in Sources */,
 				9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */,
+				9E36CC171CCD773C006402C4 /* KivaAccount.swift in Sources */,
 				9E495BDE1BF9060E00E3DEAD /* CartTableViewController.swift in Sources */,
 				9E39506C1BF66E23007BC75E /* RESTClient.swift in Sources */,
 				9ECEFAF41C9532310045E92F /* CountriesTableViewCell.swift in Sources */,

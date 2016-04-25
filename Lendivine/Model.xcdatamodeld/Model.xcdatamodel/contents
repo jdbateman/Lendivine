@@ -8,6 +8,12 @@
         <attribute name="population" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="region" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="KivaAccount" representedClassName="KivaAccount" syncable="YES">
+        <attribute name="balance" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lenderId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="KivaCartItem" representedClassName="KivaCartItem" syncable="YES">
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="donationAmount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -39,6 +45,7 @@
     </entity>
     <elements>
         <element name="Country" positionX="-54" positionY="135" width="128" height="135"/>
+        <element name="KivaAccount" positionX="-54" positionY="135" width="128" height="105"/>
         <element name="KivaCartItem" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="KivaLoan" positionX="-54" positionY="9" width="128" height="315"/>
     </elements>
