@@ -34,7 +34,7 @@ These view controllers provide additional detail:
 
 ## Technical overview
 
-The project is written and compiled in Swift 2.2 for an iOS base version of 8.4.
+The project is written and compiled in Swift 2.0 for an iOS base version of 8.4. using XCode version 7.1.
 
 ### Build Lendivine
 
@@ -44,6 +44,7 @@ To build the Lendivine project you will need Xcode 7.0 or later. The application
 2. Open the project in Xcode by selecting the Lendivine.xcodeproj project file.
 3. To build the application select the Lendivine scheme and then select Product > Run (alternatively select the Command + R keys).
 4. The application can be built and run on either an iOS simulator target or an iPhone device running iOS 8.4 or later.
+5. Credentials for the OAuth exchange are baked into the app. (See Constants.swift in the OAuth folder.) 
 
 
 ### Run Lendivine
@@ -51,6 +52,10 @@ To build the Lendivine project you will need Xcode 7.0 or later. The application
 This section describes how an end user can find and fund loans using the Lendivine application:
 
 #### 1. Signup
+
+A user must sign in with a Kiva.org account to access many features in the application. Access to signup and login are provided directly in the Lendivine app which implement the OAuth 1.0a authorization flow.
+
+To Signup:
 
 1. First, select the Login to Kiva.org button on the Login screen. 
 2. The Kiva.org Signup page is presented. Enter the information you wish to use for your new Kiva account: first, last name, email and password, select the privacy policy / terms of use checkbox, and then select the Register button.
@@ -67,19 +72,23 @@ You are now logged in and should see a list of current loans.
 
 #### 3. Loans
 
-Upon completing login the application will display the screen associated with the first tab. This is the loans screen. The app will query the Kiva REST API for the 20 most recent loans and display them in a table view. The user can access the following features in this screen:
+Upon completing login the application will display the loans screen. The app will query the Kiva REST API for the 20 most recent loans and display them in a table view. The user can access the following features in this screen:
 
-* The user can select the shopping cart button in a cell to add that cell's loan to the cart. A heartbeat and bezier curve animation as well as a donation icon indicate the addition of the selected loan to the cart.
-* A search for additional loans can be made by selecting the refresh bar button item in the navigation bar at the top of the screen. If additional loans are found they are appendec to the table view's list.
-* Pull to refresh:  Pull down on the table view to conveniently search for additional loans. (A refresh item is also available in the tab bar to provide access to the same functionality.)
+* The user can select the shopping cart button in a table view cell to add that cell's loan to the cart. A heartbeat and bezier curve animation as well as a donation icon indicate the addition of the selected loan to the cart.
+* There are three ways to search for additional loans:
+
+1. A search for additional loans can be made by selecting the '+' bar button item in the navigation bar at the top of the screen. If additional loans are found they are added to the table view's list.
+2. Pull to refresh:  Pull down on the table view to conveniently search for additional loans. (A refresh item is also available in the tab bar to provide access to the same functionality.)
+3. Select the "See More Loans..." button at the bottom of the table view.
+
+* Loans can also be viewed geographically. Selecting the Map bar button item (rightmost bar button item) presents loans represented by pins on a map. (See the Map View below for more details.) This ability to switch between the map and list views of loans is available from several screens in the app that present loans.
 * Select a loan to display details of the loan.
 * Select the Map item in the navigation bar to see the loans displayed on a map.
 * Select the Trash item to remove all loans from the list.
-* Select the Play icon to re-authenticate with Kiva.org. (This feature is exposed as a convenience to developers. It would not be exposed to end users in a version of the application deployed on the App store.)
 
 #### 4. Countries
 
-Select the Countries tab to view a list of countries queried from the RESTCountries REST API. A custom cell displays information for each country including an image of the flag, and the population. Select a country to display a list of recent loans requested by entreprenuers in that country. 
+Select the Countries tab to view a list of countries queried from the RESTCountries REST API. A custom cell displays information for each country including an image of the flag, and the population. Select a country to display a list of recent loans requested by entreprenuers in that country. (See the Country Loans screen below for more details.)
 
 ##### Search Bar
 
@@ -98,7 +107,7 @@ The Cart screen displays a list of loans that have been added to the cart. The f
 * Select a loan to display details of the loan.
 * Select the Map button in the navigation bar to see the loans displayed on a map.
 * Swipe left on a cell to remove the corresponding item from the cart.
-* Select the trash button in the navigation bar at the top of the screen to remove all loans from the cart. 
+* Select the trash button (left bar button item) to remove all loans from the cart. 
 
 #### 6. My Loans
 
@@ -108,11 +117,13 @@ The My Loans screen displays a list of the loans previously made under the curre
 
 #### 7. My Account
 
-The My Account screen displays account details acquired from a request to the Kiva REST api. In this screen the user can see the email address used to login to Kiva.org, their LenderID, and the current account balance.
+The My Account screen displays account details acquired from a request to the Kiva REST api. In this screen the user can see the account first and last name, email address used to login to Kiva.org, their LenderID, and the current account balance. The user's default donation preference is presented as a segmented control and persisted to user defaults.
 
 I've layed out this screen to accomodate capturing or selecting an image to use as the account Image. (Unfortunately Kiva's REST API does not currently support acquiring or updating the account image so I am presently unable to integrate this feature with the account on Kiva.org.)
 
-#### 8. Map view
+Account information acquired from kiva.org through the REST API is created/updated as a KivaAccount object in core data, and the UI is updated with any new data. The account image is stored on the local disk and named based upon the unique loanId (meaning only the loanId is stored in core data).
+
+#### 8. Map View
 
 All of the main screens in the app that display a list of loans to the user contain a bar button item that presents a map view of the loans. Each loan is represented by a pin on the map. The map is centered on a specific loan, or group of loans from a particular country. In this screen the following features are available: 
 * Select a pin to display a callout displaying information about the loan.
@@ -123,6 +134,16 @@ All of the main screens in the app that display a list of loans to the user cont
 
 * When displayed from the My Loans screen the user can select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
 * Select the Add to Cart button to add the loan to the cart. (This feature is available when the map screen displayed from the Loans, Country Loans, or My Loans screens).
+
+#### 10. Country Loans View
+
+The Country Loans view displays a list of the most recent loan requests posted in a single country.
+
+* Select a Loan to see details of the loan. 
+* Select the Map right bar button item to switch to a map view of the loans.
+* Select the Cart button in a particular table view cell to add the loan to the cart.
+* Select the Back bar button item to navigate back to the Countries screen.
+
 
 ### Technical highlights
 
