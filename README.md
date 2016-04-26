@@ -77,9 +77,9 @@ Upon completing login the application will display the loans screen. The app wil
 * The user can select the shopping cart button in a table view cell to add that cell's loan to the cart. A heartbeat and bezier curve animation as well as a donation icon indicate the addition of the selected loan to the cart.
 * There are three ways to search for additional loans:
 
-1. A search for additional loans can be made by selecting the '+' bar button item in the navigation bar at the top of the screen. If additional loans are found they are added to the table view's list.
-2. Pull to refresh:  Pull down on the table view to conveniently search for additional loans. (A refresh item is also available in the tab bar to provide access to the same functionality.)
-3. Select the "See More Loans..." button at the bottom of the table view.
+  1. A search for additional loans can be made by selecting the '+' bar button item in the navigation bar at the top of the screen. If additional loans are found they are added to the table view's list.
+  2. Pull to refresh:  Pull down on the table view to conveniently search for additional loans. (A refresh item is also available in the tab bar to provide access to the same functionality.)
+  3. Select the "See More Loans..." button at the bottom of the table view.
 
 * Loans can also be viewed geographically. Selecting the Map bar button item (rightmost bar button item) presents loans represented by pins on a map. (See the Map View below for more details.) This ability to switch between the map and list views of loans is available from several screens in the app that present loans.
 * Select a loan to display details of the loan.
@@ -102,16 +102,16 @@ Income inequality is a hot topic in the United States. I wanted to give users an
 
 The Cart screen displays a list of loans that have been added to the cart. The following features are available in the Cart screen:
 
-* Select the Cart icon in an individual cell to change the donation amount for the loan displayed in that cell.
+* Select the Cart icon in an individual cell to change the donation amount for the associated loan.
 * Select the checkout button at the bottom of the table view (or the checkout item in the navigation bar) to send all loans in the cart to Kiva.org. When the checkout button is selected the user is transferred along with the items in the cart to the Kiva.org site to complete the checkout.
-* Select a loan to display details of the loan.
-* Select the Map button in the navigation bar to see the loans displayed on a map.
+* Select a loan to display details of the loan in the Loan Detail View (see below).
+* Select the Map button in the navigation bar to see the loans displayed on a map (see the Map View below).
 * Swipe left on a cell to remove the corresponding item from the cart.
 * Select the trash button (left bar button item) to remove all loans from the cart. 
 
 #### 6. My Loans
 
-The My Loans screen displays a list of the loans previously made under the currently logged in account. The following features are available in this screen:
+The My Loans screen displays a list of the loans made with the currently logged in account. The following features are available in this screen:
 * Select a loan to display details of the loan.
 * Select the Map button in the navigation bar to see the loans displayed on a map.
 
@@ -131,9 +131,10 @@ All of the main screens in the app that display a list of loans to the user cont
 * Select the Checkout button to send the cart to Kiva.org to complete checkout (This feature is only available when the map screen is displayed from the Cart screen).
 
 #### 9. Loan Detail View
+This view displays details about a specific loan.
 
 * When displayed from the My Loans screen the user can select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
-* Select the Add to Cart button to add the loan to the cart. (This feature is available when the map screen displayed from the Loans, Country Loans, or My Loans screens).
+* Select the Add to Cart button to add the loan to the cart.
 
 #### 10. Country Loans View
 
@@ -148,18 +149,19 @@ The Country Loans view displays a list of the most recent loan requests posted i
 ### Technical highlights
 
 * Uses two REST apis: Kiva.org and RESTCountries.
-* Implements OAuth 1.x to authenticate with the kiva.org service.
+* Core data to persist models.
+* Implements OAuth 1.0a protocol to authenticate with the kiva.org service.
 * Deep linking to redirect the user to the Lendivine app following login.
 * UISearchController in Countries view controller enables search of view controller with a lot of data.
-* Swift exception handling.
-* MKMapView with annotations displaying a loan image in the annotation callout.
-* Custom animation when loan is selected in the Loans view controller.
+* MKMapView with annotations displaying a loan specific data including an image in the annotation callout.
+* Custom animation when loan is added to the cart in the Loans view controller.
 * Persists model data, particularly a user's CartItems. 
 * Persists and refreshes Countries in core data to show how initialization performance can be enhanced while ensuring data is synced from the service. (We expect such an event to be infrequent in the real world, but here we are interested in the pattern which can be applied to other types of data that might update server side more frequently.  In our case if a new country is created, or another is dissolved, it will be automatically updated in core data by this code.)
 * Implemented my own disk and memory cache of web image download to enhance performance.
 * Implemented NSURLConnection based networking.
 * Abstracted both REST APIs and the networking layer in separate classes following the separation of concerns design pattern.
 * MVC design pattern.
+* Swift exception handling.
 
 ### References
 * Kiva: The [Kiva.org REST API](https://build.kiva.org/api), and the [Kiva Developer Guide](http://build.kiva.org/)
