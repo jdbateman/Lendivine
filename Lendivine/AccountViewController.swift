@@ -5,10 +5,10 @@
 //  Created by john bateman on 11/17/15.
 //  Copyright © 2015 John Bateman. All rights reserved.
 //
-//  This view controller displays the user's account information such as name, email, lender Id, and balance.
+//  This view controller displays the user's account information such as name, email, lender Id, balance, and account image.
 //  Account data is synced from Kiva.org through the Kiva REST API, and persisted or updated to core data.
 //  The user's preferred donation amount is persisted to NSUserDefaults.
-//  The user's image is saved to disk. (Kiva does not have an interface to acquire or update the account image yet.)
+//  The user's image is saved to disk. (Kiva does not have an interface to update the account image on the server yet.)
 
 import UIKit
 import CoreData
@@ -282,7 +282,46 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                     account[KivaAccount.InitKeys.balance] = balance
                                 }
                                 
-                                completionHandler(success:true, error:nil, accountData: account)
+                                
+                                self.kivaAPI!.kivaOAuthGetLender() { success, error, lender in
+                                    if success {
+                                        
+                                        if let mylender = lender {
+                                            
+                                            let lenderImageId = mylender.imageID
+                                            let accountImage = KivaImage(imageId: lenderImageId)
+                                            
+                                            accountImage.getImage() {success, error, image in
+                                                
+                                                if success {
+                                                    dispatch_async(dispatch_get_main_queue()) {
+                                                        self.avatarImageView.image = image
+                                                        if let image = image {
+                                                            self.setAccountImage(image)
+                                                            
+                                                            // save the new image to disk
+//                                                            if let account = self._account {
+//                                                                account.saveImage(image)
+//                                                            }
+                                                        }
+                                                    }
+                                                } else  {
+                                                    print("error retrieving image: \(error)")
+                                                }
+                                            }
+                                            
+                                        }
+                                        
+                                        completionHandler(success:true, error:nil, accountData: account)
+                                    } else {
+                                        
+                                        print("error retrieving lender: \(error?.localizedDescription)")
+                                        completionHandler(success:false, error:error, accountData: account)
+                                    }
+                                
+                                }
+                                
+                                
                                 
                             } else {
                                 print("error retrieving user balance: \(error?.localizedDescription)")

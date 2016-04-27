@@ -405,6 +405,8 @@ class CartTableViewController: UITableViewController {
                 
                 let controller = segue.destinationViewController as! LoanDetailViewController
                 
+                controller.showAddToCart = false
+                
                 let cartItem = self.cart!.items[indexPath.row]
                 
                 if let loanID = cartItem.loanID {

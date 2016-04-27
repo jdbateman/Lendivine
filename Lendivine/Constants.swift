@@ -17,11 +17,11 @@ let Kiva =
 
 class Constants {
     
-    struct OAuthKeys {
-        static let consumerKey: String = "consumerKey"
-        static let consumerSecret: String = "consumerSecret"
-        
-    }
+//    struct OAuthKeys {
+//        static let consumerKey: String = "consumerKey"
+//        static let consumerSecret: String = "consumerSecret"
+//        
+//    }
     
     struct OAuthValues {
         static let consumerKey: String = "self.JohnBateman.Lendivine"

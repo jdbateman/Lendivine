@@ -5,11 +5,11 @@
 //  Created by john bateman on 3/13/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
-// This table view controller displays a list of current loans available in a particular country as returned in a response to a country specific search against the Kiva REST API.
+// This table view controller displays a list of current loans available in a particular country as returned in a response to a country specific search against the Kiva REST API. The loans are not persisted.
 
 import UIKit
 
-class CountryLoansTableViewController: UITableViewController{
+class CountryLoansTableViewController: UITableViewController {
     
     var country: Country?
     
@@ -60,11 +60,16 @@ class CountryLoansTableViewController: UITableViewController{
         navigationItem.title = loans.first?.country
     }
     
+    
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         if self.loans.count > 0 {
+            
+            if let countryName = self.country?.name {
+                navigationItem.title = String(format:"\(self.loans.count) in %@", countryName)
+            }
             
             self.tableView.backgroundView = nil
             return 1
@@ -159,9 +164,8 @@ class CountryLoansTableViewController: UITableViewController{
         self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
-                    //self.fetchLoans()
                     
-                    self.tableView.reloadData() // self.tableView.setNeedsDisplay()
+                    self.tableView.reloadData()
                     
                     if self.loans.count == 0 {
                         self.showNoResults = true
@@ -178,42 +182,18 @@ class CountryLoansTableViewController: UITableViewController{
     
     // Find loans from Kiva.org and update this instance's loan collection property.
     func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
+        
             self.findLoans(self.kivaAPI) { success, error, loanResults in
+                
             if success {
                 if let loans = loanResults {
                     
-                    // just keep the first numberOfLoansToAdd loans
-                    //todo - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
+                    // Append any new loans returned by the Kiva api to our existing collection.
+                    self.loans.appendContentsOf(loans)
                     
-                    // todo - do i need to maintain this collection anymore?  Not after I upgrade this view controller to core data
-                    self.loans = loans
-                    
-                    print("fetched loans:")
+                    print("new list after appending fetched loans:")
                     for loan in loans {
                         print("%@", loan.name)
-                    }
-                    
-                    
-                    // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-                    //if let loans = loans {
-                    for loan in loans where loan.id != nil {
-                        if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataStackManager.sharedInstance().scratchContext) == nil {
-                            
-                            print("Need to add loan: %@", loan.name)
-                            
-                            // The following lines were causing duplicate objects to appear in core data. removing these lines results in owning the existing loan objects being upserted when saveContext is called.
-                            
-                            // todo duplicate loans
-                            // _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
-                            
-                            // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
-                            let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataStackManager.sharedInstance().scratchContext)
-                            print("new loan: %@, %d", newLoan.name, newLoan.id)
-                            
-                            // CoreDataStackManager.sharedInstance().saveContext()
-                            
-                            // TODO self.saveScratchContext()
-                        }
                     }
                     
                     completionHandler(success: true, error: nil)
@@ -239,7 +219,7 @@ class CountryLoansTableViewController: UITableViewController{
         
         // Lenient criteria to maximimze the possibility that any particular country will return matches.
         kivaAPI.kivaSearchLoans(queryMatch: nil, status: nil, gender: nil, regions: nil, countries: countries, sector: nil, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: nil, maxPartnerDelinquency: nil, maxPartnerDefaultRate: nil, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
-            
+
             success, error, loanResults, nextPage in
             
             // paging
@@ -266,10 +246,23 @@ class CountryLoansTableViewController: UITableViewController{
         }
     }
 
+    
     // MARK: Actions
     
     func onMapButton() {
         presentMapController()
+    }
+    
+    @IBAction func onSeeMoreLoansButton(sender: AnyObject) {
+
+        refreshLoans() {
+            success, error in
+            if success {
+                self.tableView.reloadData()
+            } else {
+                print("refreshLoans returned an error: \(error)")
+            }
+        }
     }
     
     // MARK: UITableViewDelegate Accessory Views
@@ -330,6 +323,28 @@ class CountryLoansTableViewController: UITableViewController{
     func presentMapController() {
         dispatch_async(dispatch_get_main_queue()) {
             self.performSegueWithIdentifier("CountryLoanToMapSegueId", sender: self)
+        }
+    }
+
+    // MARK: Helper
+
+    func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
+        
+        // Search Kiva.org for the next page of Loan results.
+        populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+            if success {
+                dispatch_async(dispatch_get_main_queue()) {
+
+                    if let completionHandler = completionHandler {
+                        completionHandler(success:true, error: nil)
+                    }
+                }
+            } else {
+                print("failed to populate loans. error: \(error?.localizedDescription)")
+                if let completionHandler = completionHandler {
+                    completionHandler(success:false, error: error)
+                }
+            }
         }
     }
 }

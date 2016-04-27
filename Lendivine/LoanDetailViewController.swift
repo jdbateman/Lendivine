@@ -14,7 +14,9 @@ import CoreData
 class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
     var loan: KivaLoan?
+    var showAddToCart: Bool = true
     
+    @IBOutlet weak var addToCartButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var loanImageView: UIImageView!
     @IBOutlet weak var loanFlagImageView: UIImageView!
@@ -22,7 +24,10 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var country: UILabel!
     @IBOutlet weak var fundedAmount: UILabel!
     @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var bottomView: UIView!
     @IBOutlet weak var topViewToTopMarginConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var useLabel: UILabel!
     
     @IBOutlet weak var descriptionLabel: UILabel!
     /* The main core data managed object context. This context will be persisted. */
@@ -129,7 +134,16 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
                     print("error retrieving loan image: \(error)")
                 }
             }
+            
+            var useText = ""
+            if let u = loan.use {
+                useText = u
+            }
+            useLabel.text = useText
         }
+        
+        addToCartButton.hidden = !showAddToCart
+        bottomView.hidden = !showAddToCart
     }
 
     

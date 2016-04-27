@@ -462,6 +462,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             }
         }
     }
+    
     // TODO - why are we using a scratch context? 
     /*! Remove all loans from the scratch context. */
     func removeAllLoans() {

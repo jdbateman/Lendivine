@@ -45,8 +45,8 @@ class KivaOAuth {
     func doOAuthKiva(completionHandler: (success: Bool, error: NSError?, kivaAPI: KivaAPI?) -> Void){
         
         let oauthswift = OAuth1Swift(
-            consumerKey:    Kiva["consumerKey"]!,
-            consumerSecret: Kiva["consumerSecret"]!,
+            consumerKey:    Constants.OAuthValues.consumerKey, // Kiva["consumerKey"]!,
+            consumerSecret: Constants.OAuthValues.consumerSecret , // Kiva["consumerSecret"]!,
             requestTokenUrl: "https://api.kivaws.org/oauth/request_token",
             authorizeUrl:    "https://www.kiva.org/oauth/authorize",
             accessTokenUrl:  "https://api.kivaws.org/oauth/access_token" 

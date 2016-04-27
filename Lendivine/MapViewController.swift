@@ -45,7 +45,17 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         // Set the region to North America
         if let theLoans = loans {
             if theLoans.count > 0 {
-                setMapRegionToCountryForLoan(theLoans[0])
+                
+                // NOTE: Bug in Kiva REST api is returning Country level coordinates of 0,0 as of 4/25/2016. Need to search for a loan with good coordinates to center in the map view.
+                
+                var firstLoanWithGoodCoordinates = theLoans[0]
+                for loan in theLoans {
+                    if let coordinate = KivaLoan.getCoordinatesForLoan(loan) where coordinate.latitude != 0 && coordinate.longitude != 0 {
+                        firstLoanWithGoodCoordinates = loan
+                    }
+                }
+                
+                setMapRegionToCountryForLoan(firstLoanWithGoodCoordinates ) // (theLoans[0])
             }
         }
         
