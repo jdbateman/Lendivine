@@ -14,7 +14,12 @@ import CoreData
 class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
     var loan: KivaLoan?
+    var kivaAPI: KivaAPI?
     var showAddToCart: Bool = true
+    var textAnimationTimer:NSTimer?
+    var balanceDescription:String?
+    var fundedString:String?
+//    var nextText:String?
     
     @IBOutlet weak var addToCartButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
@@ -26,10 +31,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet weak var topViewToTopMarginConstraint: NSLayoutConstraint!
-
     @IBOutlet weak var useLabel: UILabel!
-    
     @IBOutlet weak var descriptionLabel: UILabel!
+    
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
@@ -38,12 +42,18 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // get the kivaAPI handle
+        self.kivaAPI = KivaAPI.sharedInstance
+        
         setupView()
         
         // set the mapView delegate to this view controller
         mapView.delegate = self
         
         showPinOnMap()
+        
+        // TODO - only call if coming from my loans because otherwise we have no loan info for these. Could also just call it and fail gracefully without updating the ui.
+        getLoanBalancesFromKiva()
     }
     
     /*! hide the status bar */
@@ -51,6 +61,15 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         return true
     }
 
+    override func viewWillAppear(animated: Bool) {
+        
+        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(3.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        textAnimationTimer?.invalidate()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -99,6 +118,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
                 fundedText = "Received " + fundedText + " from \(lenderCount.stringValue) lenders."
             }
             self.fundedAmount.text = fundedText
+            self.fundedString = fundedText
             
             var statusText = ""
             if let s = loan.status {
@@ -115,6 +135,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
             let descriptionText = statusText + " " + amountText + " for " + sectorText
             descriptionLabel.text = descriptionText
+//            nextText = descriptionText
+            
             
             loan.getImage() {success, error, image in
                 if success {
@@ -206,5 +228,76 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         }
         alertController.addAction(okAction)
         controller.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    // TODO
+    func getLoanBalancesFromKiva() {
+        
+        if let loanId = self.loan?.id {
+            self.kivaAPI!.kivaOAuthGetLoanBalance(loanId) { success, error, balance in
+                if success {
+                    
+                    if let balance = balance {
+                        
+                        self.balanceDescription =  String(format: "Repaid $%.2f of your $%.2f loan", balance.amountRepaidToLender.doubleValue, balance.amountPurchasedByLender.doubleValue)
+                        
+                        if let balText = self.balanceDescription {
+                            self.fundedAmount.text = balText
+                        }
+                        
+//                        dispatch_async(dispatch_get_main_queue()) {
+//                            // update ui
+//                            
+//                        }
+                    }
+                    
+                    //completionHandler(success:true, error:nil, expectedRepayment: account)
+                } else {
+                    
+                    print("error retrieving balances information: \(error?.localizedDescription)")
+                    //completionHandler(success:false, error:error, accountData: account)
+                }
+            }
+        }
+    }
+    
+    func animateTextChange() {
+       
+        guard let funded = self.fundedString else {return}
+        guard let theBalance = self.balanceDescription else {return}
+        
+        if let amount = self.fundedAmount.text {
+            if amount == funded {
+                self.fundedAmount.text = theBalance
+            } else {
+                self.fundedAmount.text = funded
+            }
+        }
+//        if let nextText = self.nextText {
+//            
+//            print("label text = \(self.fundedAmount.text),  nextText = \(nextText)")
+//            
+//            let tempText = self.fundedAmount.text
+//            self.fundedAmount.text = nextText
+//            self.nextText = tempText
+//            
+////            UIView.animateWithDuration(0.3, delay: 0.3, options: [], animations: {
+////                
+////                //self.descriptionLabel.frame.size.width = self.descriptionLabel.frame.size.width - 20
+////                
+////                self.descriptionLabel.alpha = 1.0
+////                if let nextText = self.nextText {
+////                    let tempText = self.descriptionLabel.text
+////                    self.descriptionLabel.text = nextText
+////                    self.nextText = tempText
+////                    
+////                    self.view.setNeedsDisplay()
+////                }
+////            }, completion: nil)
+//        } else {
+//            if let amount = self.fundedAmount.text {
+//                self.nextText = amount
+//            }
+//        }
     }
 }

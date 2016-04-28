@@ -201,12 +201,15 @@ extension KivaAPI {
     }
     
     func kivaOAuthGetLender(completionHandler: (success: Bool, error: NSError?, lender: KivaLender?) -> Void ) {
+        
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
             completionHandler(success: false, error: vtError.error, lender: nil)
             return
         }
+        
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/lender.json", parametersDict: nil) { success, error, jsonData in
+            
             if success {
                 var lender: KivaLender? = nil
                 if let jsonData = jsonData {
@@ -319,32 +322,65 @@ extension KivaAPI {
         }
     }
     
-    // TODO: Post to Kiva support. getting 404 no matter what parameters are.
-    func kivaOAuthGetLoanBalances(loanID: NSNumber, completionHandler: (success: Bool, error: NSError?, balances: [String]?) -> Void ) {
+    /*! Get the balance data for the loan identied by loanID. */
+    func kivaOAuthGetLoanBalance(loanID: NSNumber, completionHandler: (success: Bool, error: NSError?, balance: KivaLoanBalance?) -> Void ) {
     
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, balances: nil)
+            completionHandler(success: false, error: vtError.error, balance: nil)
             return
         }
-        makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/loans/:ids/balances.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
+        
+        let requestUrl = String(format: "https://api.kivaws.org/v1/my/loans/%@/balances.json", loanID)
+        
+        makeKivaOAuthAPIRequest(urlOfAPI: requestUrl, parametersDict: nil /*parametersDict*/) { success, error, jsonData in
             
             if success {
-                let balances = [String]() //TODO: change type of array
+                var balances = [KivaLoanBalance]() //TODO: change type of array
                 
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
                         
-                        //print("\(jsonData)")
+                        print("\(jsonData)")
                         
-                        // The jsonData contains a dictionary of loan statistics.
-                        // statistics = KivaLoanBalance(dictionary: jsonData as? [String: AnyObject])
+                        /* example json:
+                            {
+                                balances =     (
+                                    {
+                                        "amount_purchased_by_lender" = 25;
+                                        "amount_purchased_by_promo" = 0;
+                                        "amount_repaid_to_lender" = "9.279999999999999";
+                                        "amount_repaid_to_promo" = 0;
+                                        "arrears_amount" = 0;
+                                        "currency_loss_to_lender" = 0;
+                                        "currency_loss_to_promo" = 0;
+                                        id = 965946;
+                                        "latest_share_purchase_time" = 1446232901;
+                                        status = "in_repayment";
+                                        "total_amount_purchased" = 25;
+                                    }
+                                );
+                            }
+                        */
+                        
+                        if let balancesArray = jsonData["balances"] as? [AnyObject] { // or as? [[String: AnyObject]]
+                            for balanceDict in balancesArray {
+                                let balance = KivaLoanBalance(dictionary: balanceDict as? [String: AnyObject])
+                                if balance.id == loanID {
+                                    balances.append(balance)
+                                }
+                            }
+                        }
                     }
                 }
                 
-                completionHandler(success: success, error: error, balances: balances)
+                var returnBalance:KivaLoanBalance? = nil
+                if balances.count > 0 {
+                    returnBalance = balances[0]
+                }
+                completionHandler(success: success, error: error, balance: returnBalance)
             } else {
-                completionHandler(success: success, error: error, balances: nil)
+                completionHandler(success: success, error: error, balance: nil)
             }
         }
     }

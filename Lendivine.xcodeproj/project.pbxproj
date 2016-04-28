@@ -36,6 +36,7 @@
 		9E4D85E81C914D5A0063DEE5 /* RESTCountries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */; };
 		9E4D85EA1C927FDE0063DEE5 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85E91C927FDE0063DEE5 /* Country.swift */; };
 		9E4D85EC1C928A460063DEE5 /* CountriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */; };
+		9E59E4071CD251E5007C704B /* KivaRepayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E59E4061CD251E5007C704B /* KivaRepayment.swift */; };
 		9E6815D71CCA8384006DDE1A /* AcknowledgementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */; };
 		9E6AC0031CB1CE2C00F3476F /* DVNTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0001CB1CE2C00F3476F /* DVNTableViewCell.swift */; };
 		9E6AC0041CB1CE2C00F3476F /* DVNTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */; };
@@ -61,6 +62,7 @@
 		9ECEFAFF1C96064E0045E92F /* CountryLoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */; };
 		9ECEFB021C97C7710045E92F /* CountryLoanTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFB011C97C7710045E92F /* CountryLoanTableViewCell.swift */; };
 		9ED33F231CD0920800C4871D /* KivaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED33F221CD0920800C4871D /* KivaImage.swift */; };
+		9ED33F281CD1C18100C4871D /* KivaLoanBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED33F271CD1C18000C4871D /* KivaLoanBalance.swift */; };
 		9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */; };
 		9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */; };
 		9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356921C71577900363652 /* Model.xcdatamodeld */; };
@@ -136,6 +138,7 @@
 		9E4D85E71C914D5A0063DEE5 /* RESTCountries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTCountries.swift; sourceTree = "<group>"; };
 		9E4D85E91C927FDE0063DEE5 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesTableViewController.swift; sourceTree = "<group>"; };
+		9E59E4061CD251E5007C704B /* KivaRepayment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaRepayment.swift; sourceTree = "<group>"; };
 		9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcknowledgementsViewController.swift; sourceTree = "<group>"; };
 		9E6AC0001CB1CE2C00F3476F /* DVNTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNTableViewCell.swift; sourceTree = "<group>"; };
 		9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNTableViewController.swift; sourceTree = "<group>"; };
@@ -163,6 +166,7 @@
 		9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryLoansTableViewController.swift; sourceTree = "<group>"; };
 		9ECEFB011C97C7710045E92F /* CountryLoanTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryLoanTableViewCell.swift; sourceTree = "<group>"; };
 		9ED33F221CD0920800C4871D /* KivaImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaImage.swift; sourceTree = "<group>"; };
+		9ED33F271CD1C18000C4871D /* KivaLoanBalance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaLoanBalance.swift; sourceTree = "<group>"; };
 		9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaPaging.swift; sourceTree = "<group>"; };
 		9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		9EE356931C71577900363652 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -207,6 +211,8 @@
 				9E39506F1BF66E49007BC75E /* REST */,
 				9EDF2E371BFD660800E6EF9B /* KivaPaging.swift */,
 				9ED33F221CD0920800C4871D /* KivaImage.swift */,
+				9ED33F271CD1C18000C4871D /* KivaLoanBalance.swift */,
+				9E59E4061CD251E5007C704B /* KivaRepayment.swift */,
 			);
 			name = Kiva;
 			sourceTree = "<group>";
@@ -450,6 +456,7 @@
 				9E4D85E21C9140AC0063DEE5 /* CountriesAPI.swift in Sources */,
 				9E6AC00C1CB1D6CB00F3476F /* MapWithCheckoutViewController.swift in Sources */,
 				9E7869D31C99291100F1FE93 /* DVNActivityIndicator.swift in Sources */,
+				9ED33F281CD1C18100C4871D /* KivaLoanBalance.swift in Sources */,
 				9E3950621BF66E23007BC75E /* KivaCartItem.swift in Sources */,
 				9E7869E51C9EF15100F1FE93 /* LoanDetailViewController.swift in Sources */,
 				9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */,
@@ -481,6 +488,7 @@
 				9E6AC0041CB1CE2C00F3476F /* DVNTableViewController.swift in Sources */,
 				9E6AC0161CB3862700F3476F /* UIColorExtension.swift in Sources */,
 				9E495BE21BFA51B500E3DEAD /* CartTableViewCell.swift in Sources */,
+				9E59E4071CD251E5007C704B /* KivaRepayment.swift in Sources */,
 				9ED33F231CD0920800C4871D /* KivaImage.swift in Sources */,
 				9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */,
 				9E6AC00F1CB1F3EA00F3476F /* KivaSignupViewController.swift in Sources */,
