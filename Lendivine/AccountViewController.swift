@@ -225,12 +225,37 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     // Data
     
     func populateAccountData() {
+ // TODO
+        getRepaymentInfoFromKiva()
         
         syncAccountFromKivaToCoreData()
         
         // Initi default donation from NSUserDefaults
         let defaultDonation = readDefaultDonation()
         setDefaultDonation(defaultDonation)
+    }
+    
+// TODO
+    func getRepaymentInfoFromKiva() {
+        
+        self.kivaAPI!.kivaOAuthGetUserExpectedRepayment() { success, error, expectedRepayment in
+            if success {
+                
+                if let repayment = expectedRepayment {
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                       // update ui
+                        print("repayment: \(repayment)")
+                    }
+                }
+                
+                //completionHandler(success:true, error:nil, expectedRepayment: account)
+            } else {
+                
+                print("error retrieving repayment information: \(error?.localizedDescription)")
+                //completionHandler(success:false, error:error, accountData: account)
+            }
+        }
     }
     
     func syncAccountFromKivaToCoreData() {
@@ -246,7 +271,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             }
         }
     }
-    
     
     /*! Retrieve account data from Kiva.org. */
     func getAccountFromKiva(completionHandler: (success: Bool, error: NSError?, accountData: [String:AnyObject]?) -> Void) {
