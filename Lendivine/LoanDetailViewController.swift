@@ -19,7 +19,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     var textAnimationTimer:NSTimer?
     var balanceDescription:String?
     var fundedString:String?
-//    var nextText:String?
     
     @IBOutlet weak var addToCartButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
@@ -33,6 +32,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var topViewToTopMarginConstraint: NSLayoutConstraint!
     @IBOutlet weak var useLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var statusLabel: UILabel!
+
     
     /* The main core data managed object context. This context will be persisted. */
     lazy var sharedContext: NSManagedObjectContext = {
@@ -63,7 +64,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
 
     override func viewWillAppear(animated: Bool) {
         
-        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(3.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
+        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(5.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -122,20 +123,28 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
             
             var statusText = ""
             if let s = loan.status {
-                statusText = "\(s)"
+                var cleanString = String(s.characters.map {
+                    $0 == "_" ? " " : $0
+                    })
+                cleanString.replaceRange(cleanString.startIndex...cleanString.startIndex, with: String(cleanString[cleanString.startIndex]).capitalizedString)
+                statusText = "\(cleanString)"
             }
+            self.statusLabel.text = statusText
+            
             var sectorText = ""
             if let s = loan.sector {
                 sectorText = s
             }
+            
             var amountText = ""
             if let a = loan.loanAmount {
                 amountText = "$" + a.stringValue
             }
 
-            let descriptionText = statusText + " " + amountText + " for " + sectorText
-            descriptionLabel.text = descriptionText
-//            nextText = descriptionText
+            //let descriptionText = statusText + " " + amountText + " for " + sectorText
+            var description = amountText + " for " + sectorText //+ "\n" + statusText
+            description.replaceRange(description.startIndex...description.startIndex, with: String(description[description.startIndex]).capitalizedString)
+            descriptionLabel.text = description
             
             
             loan.getImage() {success, error, image in
@@ -160,6 +169,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
             var useText = ""
             if let u = loan.use {
                 useText = u
+                useText.replaceRange(useText.startIndex...useText.startIndex, with: String(useText[useText.startIndex]).capitalizedString)
             }
             useLabel.text = useText
         }
@@ -266,13 +276,37 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         guard let funded = self.fundedString else {return}
         guard let theBalance = self.balanceDescription else {return}
         
-        if let amount = self.fundedAmount.text {
-            if amount == funded {
-                self.fundedAmount.text = theBalance
-            } else {
-                self.fundedAmount.text = funded
+//        self.fundedAmount.fadeOutAnimation(1.5, delay: 0) { finished in }
+//        if let amount = self.fundedAmount.text {
+//            if amount == funded {
+//                self.fundedAmount.text = theBalance
+//            } else {
+//                self.fundedAmount.text = funded
+//            }
+//        }
+//        self.fundedAmount.fadeInAnimation(1.0, delay: 1.0) {finished in}
+        
+        
+        
+        self.fundedAmount.fadeOutAnimation(1.5, delay: 0) {
+            finished in
+            
+            self.fundedAmount.center = CGPoint(x: self.fundedAmount.center.x + 600, y: self.fundedAmount.center.y)
+            
+            if let amount = self.fundedAmount.text {
+                if amount == funded {
+                    self.fundedAmount.text = theBalance
+                } else {
+                    self.fundedAmount.text = funded
+                }
             }
+            
+            self.fundedAmount.fadeInAnimation(1.0, delay: 0)  {finished in}
         }
+        
+        
+        
+        
 //        if let nextText = self.nextText {
 //            
 //            print("label text = \(self.fundedAmount.text),  nextText = \(nextText)")

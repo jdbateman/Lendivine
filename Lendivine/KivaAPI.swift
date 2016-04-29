@@ -180,8 +180,11 @@ extension KivaAPI {
             //TODO: update parsing code when I get some real repayment data in my account
             if let jsonData = jsonData {
                 if jsonData.count > 0 {
+                    
                     print("\(jsonData)")
+                    
                     for (_, value) in jsonData as! [String: AnyObject] {
+                        
                         if let dict = value as? [String: AnyObject] {
                             let userRepayments = dict["user_repayments"] as? String
                             let promoRepayments = dict["promo_repayments"] as? String
@@ -191,6 +194,21 @@ extension KivaAPI {
                             //print("loan: \(userRepayments) \(promoRepayments) \(loansMakingRepayments) \(repaymentDate)")
                         }
                     }
+                    //TODO: try this
+                    for (key, value) in jsonData as! [String: AnyObject] {
+                        
+                        let repayment:KivaRepayment? = KivaRepayment(key: key, dictionary: value as? [String: AnyObject])
+                        
+                    }
+                    
+                    // repayments are is an array of dictionaries
+//                    if let repaymentsArray = jsonData["repayments"] as? [AnyObject] {
+//                        for repaymentDict in repaymentsArray {
+//                            repayment = KivaRepayment(dictionary: repaymentDict as? [String: AnyObject])
+//                        }
+//                    }
+                    
+                    
                     // let paymentsDict = jsonData!["user_email"] as? [String: AnyObject]
                     // let expectedRepayment = paymentsDict?["email"] as? String
                 }

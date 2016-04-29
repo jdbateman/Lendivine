@@ -744,7 +744,7 @@
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -1184,8 +1184,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                             </mask>
                                         </variation>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yIj-nJ-8Pj">
-                                        <rect key="frame" x="154" y="10" width="438" height="22"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yIj-nJ-8Pj">
+                                        <rect key="frame" x="154" y="10" width="238" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="22" id="x8p-bD-w7u"/>
                                         </constraints>
@@ -1199,7 +1199,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                             <constraint firstAttribute="height" constant="44" id="n3Q-Eb-IKl"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="use" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PUq-e4-vli">
@@ -1208,9 +1208,19 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="status" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f7B-cT-M2G">
+                                        <rect key="frame" x="400" y="10" width="192" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="Y84-LI-Ujz"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.94117647059999998" green="0.66666666669999997" blue="0.16751254560000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="f7B-cT-M2G" firstAttribute="leading" secondItem="yIj-nJ-8Pj" secondAttribute="trailing" constant="8" id="24d-Ec-wxY"/>
                                     <constraint firstItem="PUq-e4-vli" firstAttribute="top" secondItem="4Ii-mP-h4J" secondAttribute="bottom" constant="4" id="5NF-R2-vpE"/>
                                     <constraint firstAttribute="height" constant="190" id="6nh-53-IlI"/>
                                     <constraint firstAttribute="bottom" secondItem="RN7-fY-W50" secondAttribute="bottom" id="DLg-ee-Uvj"/>
@@ -1230,9 +1240,11 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                     <constraint firstAttribute="trailing" secondItem="yIj-nJ-8Pj" secondAttribute="trailing" constant="8" id="nHr-Rr-pgE"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="leading" secondItem="0vm-8f-F7c" secondAttribute="leading" constant="8" id="pas-cD-mTM"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="centerY" secondItem="0vm-8f-F7c" secondAttribute="centerY" id="pge-qv-iQq"/>
+                                    <constraint firstItem="f7B-cT-M2G" firstAttribute="centerY" secondItem="yIj-nJ-8Pj" secondAttribute="centerY" id="qJb-2L-qkw"/>
                                     <constraint firstItem="PUq-e4-vli" firstAttribute="top" secondItem="yIj-nJ-8Pj" secondAttribute="bottom" constant="8" id="rZO-tv-0UL"/>
                                     <constraint firstItem="yIj-nJ-8Pj" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="16" id="sSU-eq-rJR"/>
                                     <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="RN7-fY-W50" secondAttribute="bottom" id="th8-E0-1i2"/>
+                                    <constraint firstAttribute="trailing" secondItem="f7B-cT-M2G" secondAttribute="trailing" constant="8" id="xMg-3S-tnl"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -1240,6 +1252,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                         <exclude reference="Kev-Ai-eAN"/>
                                         <exclude reference="aOO-de-eQg"/>
                                         <exclude reference="fz1-ey-Vhe"/>
+                                        <exclude reference="nHr-Rr-pgE"/>
                                         <exclude reference="sSU-eq-rJR"/>
                                         <exclude reference="FPT-Tu-HQ6"/>
                                         <exclude reference="gsK-Wr-LVb"/>
@@ -1414,6 +1427,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                         <outlet property="loanImageView" destination="RN7-fY-W50" id="Ib6-gs-F6m"/>
                         <outlet property="mapView" destination="nu8-Pr-Pxb" id="PWm-6b-9dj"/>
                         <outlet property="name" destination="yIj-nJ-8Pj" id="EoC-KH-pdT"/>
+                        <outlet property="statusLabel" destination="f7B-cT-M2G" id="wcI-5U-MJG"/>
                         <outlet property="topView" destination="0vm-8f-F7c" id="TtV-9W-o31"/>
                         <outlet property="topViewToTopMarginConstraint" destination="cuG-GL-ZJU" id="pv0-Oj-kb9"/>
                         <outlet property="useLabel" destination="PUq-e4-vli" id="DUU-ls-XqM"/>
@@ -1441,7 +1455,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                     <constraint firstAttribute="height" constant="32" id="m7D-nh-MFs"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="36"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Donate-50" translatesAutoresizingMaskIntoConstraints="NO" id="pUV-w4-0Wf">
@@ -1464,7 +1478,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                     <constraint firstAttribute="height" constant="21" id="DnJ-Ks-zNQ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qyt-YP-PFj">

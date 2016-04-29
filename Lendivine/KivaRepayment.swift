@@ -5,46 +5,39 @@
 //  Created by john bateman on 4/28/16.
 //  Copyright © 2016 John Bateman. All rights reserved.
 //
-
-import Foundation
-
-//
-//  KivaLoanBalance.swift
-//  Lendivine
-//
-//  Created by john bateman on 4/27/16.
-//  Copyright © 2016 John Bateman. All rights reserved.
-//
-//  This model class describes information about the balance on a Kiva Loan.
+//  This model class describes information about the future repayment schedule for all Kiva Loans associated with a Kiva account.
 
 import Foundation
 
 class KivaRepayment {
     
-    var amountPurchasedByLender: NSNumber = -1
-    var amountRepaidToLender: NSNumber = -1
-    var arrearsAmount: NSNumber = -1
-    var status: String = ""
-    var id: NSNumber = -1
+    var userRepayments: String = ""
+    var promoRepayments: String = ""
+    var loansMakingRepayments: String = ""
+    var repaymentDate: String = ""
+    var repaymentId: String = ""
     
     // designated initializer
-    init(dictionary: [String: AnyObject]?) {
+    init(key:String, dictionary: [String: AnyObject]?) {
+        
         if let dictionary = dictionary {
-            if let identifier = dictionary["id"] as? NSNumber {
-                id = identifier
+            
+            if let k = key as? String {
+                repaymentId = k
             }
-            if let purchased = dictionary["amount_purchased_by_lender"] as? NSNumber {
-                amountPurchasedByLender = purchased
-            }
-            if let repaid = dictionary["amount_repaid_to_lender"] as? NSNumber {
-                amountRepaidToLender = repaid
-            }
-            if let arrears = dictionary["arrears_amount"] as? NSNumber {
-                arrearsAmount = arrears
-            }
-            if let s = dictionary["status"] as? String {
-                status = s
-            }
+            
+//            if let repayments = dict["user_repayments"] as? String {
+//                userRepayments = repayments
+//            }
+//            if let promo = dict["promo_repayments"] as? String {
+//                promoRepayments = promo
+//            }
+//            if let numloans = dict["loans_making_repayments"] as? String {
+//                loansMakingRepayments = numloans
+//            }
+//            if let date = dict["repayment_date"] as? String {
+//                repaymentDate = date
+//            }
         }
     }
 }
