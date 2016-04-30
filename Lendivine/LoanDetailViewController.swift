@@ -53,7 +53,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         
         showPinOnMap()
         
-        // TODO - only call if coming from my loans because otherwise we have no loan info for these. Could also just call it and fail gracefully without updating the ui.
         getLoanBalancesFromKiva()
     }
     
@@ -240,7 +239,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         controller.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    // TODO
     func getLoanBalancesFromKiva() {
         
         if let loanId = self.loan?.id {
@@ -254,18 +252,11 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
                         if let balText = self.balanceDescription {
                             self.fundedAmount.text = balText
                         }
-                        
-//                        dispatch_async(dispatch_get_main_queue()) {
-//                            // update ui
-//                            
-//                        }
                     }
-                    
-                    //completionHandler(success:true, error:nil, expectedRepayment: account)
+
                 } else {
                     
                     print("error retrieving balances information: \(error?.localizedDescription)")
-                    //completionHandler(success:false, error:error, accountData: account)
                 }
             }
         }
@@ -275,18 +266,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
        
         guard let funded = self.fundedString else {return}
         guard let theBalance = self.balanceDescription else {return}
-        
-//        self.fundedAmount.fadeOutAnimation(1.5, delay: 0) { finished in }
-//        if let amount = self.fundedAmount.text {
-//            if amount == funded {
-//                self.fundedAmount.text = theBalance
-//            } else {
-//                self.fundedAmount.text = funded
-//            }
-//        }
-//        self.fundedAmount.fadeInAnimation(1.0, delay: 1.0) {finished in}
-        
-        
         
         self.fundedAmount.fadeOutAnimation(1.5, delay: 0) {
             finished in
@@ -303,35 +282,5 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
             
             self.fundedAmount.fadeInAnimation(1.0, delay: 0)  {finished in}
         }
-        
-        
-        
-        
-//        if let nextText = self.nextText {
-//            
-//            print("label text = \(self.fundedAmount.text),  nextText = \(nextText)")
-//            
-//            let tempText = self.fundedAmount.text
-//            self.fundedAmount.text = nextText
-//            self.nextText = tempText
-//            
-////            UIView.animateWithDuration(0.3, delay: 0.3, options: [], animations: {
-////                
-////                //self.descriptionLabel.frame.size.width = self.descriptionLabel.frame.size.width - 20
-////                
-////                self.descriptionLabel.alpha = 1.0
-////                if let nextText = self.nextText {
-////                    let tempText = self.descriptionLabel.text
-////                    self.descriptionLabel.text = nextText
-////                    self.nextText = tempText
-////                    
-////                    self.view.setNeedsDisplay()
-////                }
-////            }, completion: nil)
-//        } else {
-//            if let amount = self.fundedAmount.text {
-//                self.nextText = amount
-//            }
-//        }
-    }
+     }
 }

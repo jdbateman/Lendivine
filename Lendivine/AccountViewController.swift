@@ -24,6 +24,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var albumButton: UIButton!
     @IBOutlet weak var defaultDonationSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var calendarImageView: UIImageView!
+    @IBOutlet weak var repaymentLabel: UILabel!
     
     var kivaAPI: KivaAPI?
     
@@ -33,6 +35,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }()
     
     var _account: KivaAccount?
+    
+    var loanRepaymentSchedule:[KivaRepayment]?
+    
+    var _repaymentIndex:Int?
+    
+    var textAnimationTimer:NSTimer?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +54,22 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         populateAccountData()
     }
 
+    override func viewWillAppear(animated: Bool) {
+        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(4.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        textAnimationTimer?.invalidate()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     func setupView() {
+        
+        _repaymentIndex = 0
         
         setupDefaultAvatarImage()
         
@@ -222,11 +241,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     
-    // Data
+    // MARK: Populate Account Data
     
     func populateAccountData() {
- // TODO
-        getRepaymentInfoFromKiva()
+
+        getRepaymentScheduleForAllLoans()
         
         syncAccountFromKivaToCoreData()
         
@@ -235,18 +254,16 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         setDefaultDonation(defaultDonation)
     }
     
-// TODO
-    func getRepaymentInfoFromKiva() {
+    func getRepaymentScheduleForAllLoans() {
         
-        self.kivaAPI!.kivaOAuthGetUserExpectedRepayment() { success, error, expectedRepayment in
+        self.kivaAPI!.kivaOAuthGetUserExpectedRepayment() { success, error, expectedRepayments in
+            
             if success {
-                
-                if let repayment = expectedRepayment {
+             
+                if let repayments = expectedRepayments {
                     
-                    dispatch_async(dispatch_get_main_queue()) {
-                       // update ui
-                        print("repayment: \(repayment)")
-                    }
+                    let sortedRepayments = repayments.sort { $0.repaymentDate < $1.repaymentDate }
+                    self.loanRepaymentSchedule = sortedRepayments
                 }
                 
                 //completionHandler(success:true, error:nil, expectedRepayment: account)
@@ -438,5 +455,35 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let appSettings = NSUserDefaults.standardUserDefaults()
         let amount = appSettings.integerForKey("AccountDefaultDonation")
         return amount
+    }
+    
+    
+    // MARK: Animation
+    
+    func animateTextChange() {
+        print("animation fired")
+        guard let loanRepaymentSchedule = self.loanRepaymentSchedule where loanRepaymentSchedule.count > 0 else {return}
+        guard let repaymentIndex = _repaymentIndex else {return}
+        let repaymentAmount = loanRepaymentSchedule[repaymentIndex].userRepayments
+        let repaymentDate = loanRepaymentSchedule[repaymentIndex].repaymentDate
+        _repaymentIndex = (repaymentIndex < loanRepaymentSchedule.count - 1) ? repaymentIndex + 1 : 0
+
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        guard let date = dateFormatter.dateFromString(repaymentDate) else {return}
+        
+        dateFormatter.locale = NSLocale.currentLocale()
+        dateFormatter.dateStyle = NSDateFormatterStyle.LongStyle
+        let convertedDate = dateFormatter.stringFromDate(date)
+        
+        self.repaymentLabel.fadeOutAnimation(1.0, delay: 0) {
+            finished in
+            
+            self.repaymentLabel.center = CGPoint(x: self.repaymentLabel.center.x + 600, y: self.repaymentLabel.center.y)
+            
+            self.repaymentLabel.text = "Repayment of $\(repaymentAmount) on \(convertedDate)"
+            
+            self.repaymentLabel.fadeInAnimation(0.8, delay: 0)  {finished in}
+        }
     }
 }

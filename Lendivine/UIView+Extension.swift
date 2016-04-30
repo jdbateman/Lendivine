@@ -14,7 +14,7 @@ import UIKit
 extension UIView {
 
     func fadeOutAnimation(duration: NSTimeInterval = 1.0, delay: NSTimeInterval = 0.0, completion: ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
-        UIView.animateWithDuration(duration, delay: delay, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+        UIView.animateWithDuration(duration, delay: delay, options: UIViewAnimationOptions.CurveEaseIn, animations: {
         self.alpha = 0.0
         self.center = CGPoint(x: self.center.x, y: self.center.y)
         }, completion: completion)

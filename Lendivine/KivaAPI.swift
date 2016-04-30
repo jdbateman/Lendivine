@@ -165,56 +165,66 @@ extension KivaAPI {
     }
     
     
-    func kivaOAuthGetUserExpectedRepayment(completionHandler: (success: Bool, error: NSError?, expectedRepayment: String?) -> Void ) {
+    func kivaOAuthGetUserExpectedRepayment(completionHandler: (success: Bool, error: NSError?, expectedRepayments: [KivaRepayment]?) -> Void ) {
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, expectedRepayment: nil)
+            completionHandler(success: false, error: vtError.error, expectedRepayments: nil)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/expected_repayments.json", parametersDict: nil) { success, error, jsonData in
-            //parse jsonData to extract repayment information
             
             // JSON data format:
             //{ "1685602800000": { "user_repayments": "159.01", "promo_repayments": "7.43", "loans_making_repayments": "98","repayment_date": "2015-02-01 00:00:00" } }
             
-            //TODO: update parsing code when I get some real repayment data in my account
-            if let jsonData = jsonData {
-                if jsonData.count > 0 {
+            /*
+                {
+                    1462086000000 =     {
+                        "loans_making_repayments" = 1;
+                        "promo_repayments" = "0.00";
+                        "repayment_date" = "2016-05-01 00:00:00";
+                        "user_repayments" = "1.97";
+                    };
+                    1464764400000 =     {
+                        "loans_making_repayments" = 1;
+                        "promo_repayments" = "0.00";
+                        "repayment_date" = "2016-06-01 00:00:00";
+                        "user_repayments" = "2.03";
+                    };
+            
+                    ...
+            
+                    1480579200000 =     {
+                        "loans_making_repayments" = 1;
+                        "promo_repayments" = "0.00";
+                        "repayment_date" = "2016-12-01 00:00:00";
+                        "user_repayments" = "2.46";
+                    };
+                }
+            */
+            
+            
+            if success {
+                
+                var repayments = [KivaRepayment]()
+                
+                if let jsonData = jsonData {
                     
-                    print("\(jsonData)")
-                    
-                    for (_, value) in jsonData as! [String: AnyObject] {
+                    if jsonData.count > 0 {
                         
-                        if let dict = value as? [String: AnyObject] {
-                            let userRepayments = dict["user_repayments"] as? String
-                            let promoRepayments = dict["promo_repayments"] as? String
-                            let loansMakingRepayments = dict["loans_making_repayments"] as? String
-                            let repaymentDate = dict["repayment_date"] as? String
+                        for (key, value) in jsonData as! [String: AnyObject] {
                             
-                            //print("loan: \(userRepayments) \(promoRepayments) \(loansMakingRepayments) \(repaymentDate)")
+                            if let repayment:KivaRepayment = KivaRepayment(key: key, dictionary: value as? [String: AnyObject]) {
+                                repayments.append(repayment)
+                            }
                         }
                     }
-                    //TODO: try this
-                    for (key, value) in jsonData as! [String: AnyObject] {
-                        
-                        let repayment:KivaRepayment? = KivaRepayment(key: key, dictionary: value as? [String: AnyObject])
-                        
-                    }
-                    
-                    // repayments are is an array of dictionaries
-//                    if let repaymentsArray = jsonData["repayments"] as? [AnyObject] {
-//                        for repaymentDict in repaymentsArray {
-//                            repayment = KivaRepayment(dictionary: repaymentDict as? [String: AnyObject])
-//                        }
-//                    }
-                    
-                    
-                    // let paymentsDict = jsonData!["user_email"] as? [String: AnyObject]
-                    // let expectedRepayment = paymentsDict?["email"] as? String
                 }
+                
+                completionHandler(success: success, error: error, expectedRepayments: repayments)
             }
-            
-            completionHandler(success: success, error: error, expectedRepayment: "") //TODO - return string
+            else {
+                completionHandler(success: success, error: error, expectedRepayments: nil)
+            }
         }
     }
     

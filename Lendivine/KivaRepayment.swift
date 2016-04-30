@@ -26,18 +26,18 @@ class KivaRepayment {
                 repaymentId = k
             }
             
-//            if let repayments = dict["user_repayments"] as? String {
-//                userRepayments = repayments
-//            }
-//            if let promo = dict["promo_repayments"] as? String {
-//                promoRepayments = promo
-//            }
-//            if let numloans = dict["loans_making_repayments"] as? String {
-//                loansMakingRepayments = numloans
-//            }
-//            if let date = dict["repayment_date"] as? String {
-//                repaymentDate = date
-//            }
+            if let repayments = dictionary["user_repayments"] as? String {
+                userRepayments = repayments
+            }
+            if let promo = dictionary["promo_repayments"] as? String {
+                promoRepayments = promo
+            }
+            if let numloans = dictionary["loans_making_repayments"] as? String {
+                loansMakingRepayments = numloans
+            }
+            if let date = dictionary["repayment_date"] as? String {
+                repaymentDate = date
+            }
         }
     }
 }
