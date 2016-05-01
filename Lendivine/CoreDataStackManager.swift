@@ -118,4 +118,14 @@ class CoreDataStackManager {
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
         return context
     }()
+    
+    
+    // MARK: - Scratch context
+    
+    /* A core data managed object context that will not be persisted. Use it to work with myLoans. */
+    lazy var myLoansContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+    }()
 }

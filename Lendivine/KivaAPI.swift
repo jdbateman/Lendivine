@@ -304,7 +304,7 @@ extension KivaAPI {
                             for loanDict in loansArray {
                                 var loan:KivaLoan?
                                 if let loanDict = loanDict as? [String: AnyObject] {
-                                    loan = KivaLoan(dictionary: loanDict, context:self.sharedContext)
+                                    loan = KivaLoan(dictionary: loanDict, context:CoreDataStackManager.sharedInstance().myLoansContext) // self.sharedContext
                                 }
                                 if let loan = loan {
                                     loans.append(loan)

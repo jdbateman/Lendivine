@@ -65,8 +65,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let controller: LoansTableViewController = storyboard.instantiateViewControllerWithIdentifier("LoansTableViewControllerStoryboardID") as! LoansTableViewController
         controller.removeAllLoans()
         
+        
         // Save changes in the application's managed object context before the application terminates.
-        CoreDataStackManager.sharedInstance().saveContext()
+//TODO        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     // Handle launch by URL scheme.
