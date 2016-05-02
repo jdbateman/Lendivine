@@ -126,6 +126,12 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
         
+        if loan.id == -1 {
+            print("loan id == -1 in LoansTableViewcontroller.configureCell")
+            CoreDataStackManager.sharedInstance().scratchContext.deleteObject(loan)
+            return
+        }
+        
         if let name = loan.name {
             cell.nameLabel.text = name
         }
@@ -363,27 +369,27 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
     
     // Get the 20 most recent loans from Kiva.org in a Core Data scratch context.
-    func getMostRecentLoans(completionHandler: (success: Bool, loans: [KivaLoan]?, error: NSError?) -> Void) {
-        if let kivaAPI = self.kivaAPI {
-            kivaAPI.kivaGetNewestLoans(CoreDataStackManager.sharedInstance().scratchContext) {
-                success, error, loans in
-                if success {
-                    if let loans = loans {
-                        // todo: duplicate loans.  remove permanently?     self.loans = loans
-                        completionHandler(success: true, loans: loans, error: nil)
-                    } else {
-                        // TODO - display "no loans" in view controller
-                        let error = VTError(errorString: "No Kiva loans found.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-                        completionHandler(success: false, loans: nil, error: error.error)
-                    }
-                } else {
-                    // TODO - display error, then "no loans" in view controller
-                    let error = VTError(errorString: "Error searching for newest Kiva loans.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-                    completionHandler(success: false, loans: nil, error: error.error)
-                }
-            }
-        }
-    }
+//    func getMostRecentLoans(completionHandler: (success: Bool, loans: [KivaLoan]?, error: NSError?) -> Void) {
+//        if let kivaAPI = self.kivaAPI {
+//            kivaAPI.kivaGetNewestLoans(CoreDataStackManager.sharedInstance().scratchContext) {
+//                success, error, loans in
+//                if success {
+//                    if let loans = loans {
+//                        // todo: duplicate loans.  remove permanently?     self.loans = loans
+//                        completionHandler(success: true, loans: loans, error: nil)
+//                    } else {
+//                        // TODO - display "no loans" in view controller
+//                        let error = VTError(errorString: "No Kiva loans found.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+//                        completionHandler(success: false, loans: nil, error: error.error)
+//                    }
+//                } else {
+//                    // TODO - display error, then "no loans" in view controller
+//                    let error = VTError(errorString: "Error searching for newest Kiva loans.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
+//                    completionHandler(success: false, loans: nil, error: error.error)
+//                }
+//            }
+//        }
+//    }
     
     /*! Display url in an embeded webkit browser. */
     func showEmbeddedBrowser() {

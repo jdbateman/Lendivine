@@ -52,12 +52,16 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         var amount = 25
         let appSettings = NSUserDefaults.standardUserDefaults()
         amount = appSettings.integerForKey("AccountDefaultDonation")
+        if amount == 0 {
+            amount = 25
+        }
         
         let cart = KivaCart.sharedInstance
         if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
 
             // Persist the KivaCartItem object we added to the Core Data shared context
             dispatch_async(dispatch_get_main_queue()) {
+                print("saveContext: CountryLoanTableViewCell.onAddCountryLoanToCartButtonTap()")
                 CoreDataStackManager.sharedInstance().saveContext()
             }
         } else {

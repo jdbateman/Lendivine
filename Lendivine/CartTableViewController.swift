@@ -29,13 +29,9 @@ class CartTableViewController: UITableViewController {
 
         self.kivaAPI = KivaAPI.sharedInstance
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
         cart = KivaCart.sharedInstance
+        
+        updateCart()
         
         configureBarButtonItems()
         
@@ -48,6 +44,9 @@ class CartTableViewController: UITableViewController {
     }
     
     func updateCart() {
+        if let cart = cart {
+            cart.update()
+        }
         self.tableView.reloadData()
     }
 
@@ -80,7 +79,7 @@ class CartTableViewController: UITableViewController {
                 tableView.separatorStyle = .None
             }
             
-            return 0
+            return 1
         }
     }
 

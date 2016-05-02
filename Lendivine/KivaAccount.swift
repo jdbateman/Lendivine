@@ -58,7 +58,7 @@ class KivaAccount: NSManagedObject {
         // Try loading the data from the file system.
         if let id = self.lenderId {
             if let image = getImageFromFileSystem(id) {
-                print("image loaded from file system")
+                //print("image loaded from file system")
                 return image
             }
         }

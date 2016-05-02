@@ -177,6 +177,7 @@ class DVNViewController: UIViewController {
         
         let error: NSErrorPointer = nil
         do {
+            print("saveContext: DVNViewController.saveScratchContext()")
             _ = try CoreDataStackManager.sharedInstance().scratchContext.save()
         } catch let error1 as NSError {
             error.memory = error1

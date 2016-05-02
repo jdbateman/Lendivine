@@ -422,14 +422,16 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     managedObject.setValue(balance, forKey: KivaAccount.InitKeys.balance)
                 }
                 
-                CoreDataStackManager.sharedInstance().saveContext()
+                print("saveContext:Update AccountViewController.persistAccountDataToCoreData()")
+                //CoreDataStackManager.sharedInstance().saveContext()
                 
                 print("updated existing account object in core data: %@", account)
                 
             } else {
                 // no matches to exiting core data objects on disk. save the new object in core data.
                 CoreDataStackManager.sharedInstance().saveContext()
-                print("new account object saved to core data: %@", account)
+                print("saveContext:Save AccountViewController.persistAccountDataToCoreData()")
+                //print("new account object saved to core data: %@", account)
             }
             
         } catch let error as NSError {

@@ -127,6 +127,7 @@ class DVNTableViewController: UITableViewController {
         let error: NSErrorPointer = nil
         //var results: [AnyObject]?
         do {
+            print("saveContext: DVNTableViewController.saveScratchContext()")
             _ = try CoreDataStackManager.sharedInstance().scratchContext.save()
         } catch let error1 as NSError {
             error.memory = error1

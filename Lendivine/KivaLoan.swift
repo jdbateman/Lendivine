@@ -83,6 +83,7 @@ class KivaLoan: NSManagedObject  {
     /*! Core Data init method */
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        print("init KivaLoan - 1")
     }
 
     /*! Init instance with a dictionary of values, and a core data context. */
@@ -109,6 +110,8 @@ class KivaLoan: NSManagedObject  {
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
         self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
+        
+        print("init KivaLoan - 2")
     }
 
     /*! 
@@ -141,6 +144,8 @@ class KivaLoan: NSManagedObject  {
         self.status = fromLoan.status
         self.sector = fromLoan.sector
         self.language = fromLoan.language
+        
+        print("init KivaLoan - 3")
     }
     
     /*!
@@ -153,6 +158,8 @@ class KivaLoan: NSManagedObject  {
     */
     class func createKivaLoanFromLoanID(fromLoanID: NSNumber, context: NSManagedObjectContext) /*, completion: (loan: KivaLoan?, error: NSError?) -> Void)*/ -> KivaLoan? {
     
+        print("init KivaLoan - 4")
+        
         let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
@@ -288,7 +295,7 @@ extension KivaLoan {
         // Try loading the image from the image cache.
         if let url = imageUrl {
             if let theImage: UIImage = NSCache.sharedInstance.objectForKey(url) as? UIImage {
-                print("image loaded from cache")
+                //print("image loaded from cache")
                 completion(success: true, error: nil, image: theImage)
                 return
             }
@@ -297,7 +304,7 @@ extension KivaLoan {
         // Try loading the data from the file system.
         if let imageID = self.imageID {
             if let image = getImageFromFileSystem(imageID.stringValue) {
-                print("image loaded from file system")
+                //print("image loaded from file system")
                 
                 // Cache the image in memory.
                 self.cacheImage(image)
@@ -314,7 +321,7 @@ extension KivaLoan {
                     if let theImage = theImage {
                         self.cacheImageAndWriteToFile(theImage)
                     }
-                    print("image downloaded from server")
+                    //print("image downloaded from server")
                     completion(success: true, error: nil, image: theImage)
                     return
                 } else {
@@ -324,7 +331,7 @@ extension KivaLoan {
                             if let theImage = theImage {
                                 self.cacheImageAndWriteToFile(theImage)
                             }
-                            print("image downloaded from server")
+                            //print("image downloaded from server")
                             completion(success: true, error: nil, image: theImage)
                             return
                         } else {

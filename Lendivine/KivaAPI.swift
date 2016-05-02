@@ -930,7 +930,12 @@ extension KivaAPI {
                     
                             for loan in arrayOfPartnersDictionaries {
                                 let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
-                                loans.append(kivaLoan)
+                                
+                                if kivaLoan.id != -1 {
+                                    loans.append(kivaLoan)
+                                } else {
+                                    print("Error: kiva api returned an invalid loan")
+                                }
                             }
                         }
                         

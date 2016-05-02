@@ -41,6 +41,11 @@ class KivaCart {
         self.items = items
     }
     
+    // update the cart
+    func update() {
+        fetchCartItems()
+    }
+    
     // add an item to the cart
     func add(item: KivaCartItem) {
         items.append(item)
@@ -71,6 +76,7 @@ class KivaCart {
             
             // remove the item from the core data store
             sharedContext.deleteObject(item)
+            print("saveContext: KivaCart.removeItemByIndex()")
             CoreDataStackManager.sharedInstance().saveContext()
             
             // remove the item from the array
@@ -189,9 +195,11 @@ class KivaCart {
                         print("Added item to cart with loan Id: \(loan.id) in amount: \(donationAmount)")
                         
                         // Persist the KivaCartItem object we added to the Core Data shared context
-                        dispatch_async(dispatch_get_main_queue()) {
-                            CoreDataStackManager.sharedInstance().saveContext()
-                        }
+// TODO - looks like we don't need this call here. Instead, persist from the viewcontroller where add to cart button was selected. TODO - go review them.
+//                        dispatch_async(dispatch_get_main_queue()) {
+//                            print("saveContext: KivaCart.KivaAddItemToCart()")
+//                            CoreDataStackManager.sharedInstance().saveContext()
+//                        }
                         return true
                         
                     } else {

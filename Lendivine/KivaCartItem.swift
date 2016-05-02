@@ -109,7 +109,7 @@ extension KivaCartItem {
         // Try loading the image from the image cache.
         if let url = imageUrl {
             if let theImage: UIImage = NSCache.sharedInstance.objectForKey(url) as? UIImage {
-                print("image loaded from cache")
+                //print("image loaded from cache")
                 completion(success: true, error: nil, image: theImage)
                 return
             }
@@ -118,7 +118,7 @@ extension KivaCartItem {
         // Try loading the data from the file system.
         if let imageID = self.imageID {
             if let image = getImageFromFileSystem(imageID.stringValue) {
-                print("image loaded from file system")
+                //print("image loaded from file system")
                 
                 // Cache the image in memory.
                 self.cacheImage(image)
@@ -135,7 +135,7 @@ extension KivaCartItem {
                     if let theImage = theImage {
                         self.cacheImageAndWriteToFile(theImage)
                     }
-                    print("image downloaded from server")
+                    //print("image downloaded from server")
                     completion(success: true, error: nil, image: theImage)
                     return
                 } else {
@@ -145,7 +145,7 @@ extension KivaCartItem {
                             if let theImage = theImage {
                                 self.cacheImageAndWriteToFile(theImage)
                             }
-                            print("image downloaded from server")
+                            //print("image downloaded from server")
                             completion(success: true, error: nil, image: theImage)
                             return
                         } else {

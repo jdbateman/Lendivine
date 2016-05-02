@@ -135,6 +135,7 @@ class Countries {
         
         // When the Country NSManaged objects were created they were saved to the in-memory version of the core data context.
         // Here will save all countries from core data memory to the core data sqlite store on disk.
+        print("saveContext: Countries.persistNewCountries()")
         CoreDataStackManager.sharedInstance().saveContext()
         
         // remove all duplicates
@@ -146,6 +147,7 @@ class Countries {
         }
         
         // commit the deletes to the core data sqlite data store on disk
+        print("saveContext: Countries.persistNewCountries()")
         CoreDataStackManager.sharedInstance().saveContext()
     }
     
