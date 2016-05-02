@@ -179,6 +179,11 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
 //        } else {
 //            cell.donatedImageView.hidden = true
 //        }
+        
+        let cart = KivaCart.sharedInstance
+        if let id = loan.id {
+            cell.donatedImageView.hidden = cart.containsLoanId(id) ? false : true
+        }
     }
     
     // MARK: - Fetched results controller
@@ -474,10 +479,21 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func removeAllLoans() {
         
         if let loans = self.fetchAllLoans() {
+            
+            let cart = KivaCart.sharedInstance
+            var inCartCount = 0
+            
             for loan: KivaLoan in loans {
-                CoreDataStackManager.sharedInstance().scratchContext.deleteObject(loan)
+                
+                if let id = loan.id where (cart.containsLoanId(id) == false) {
+                    CoreDataStackManager.sharedInstance().scratchContext.deleteObject(loan)
+                } else {
+                    inCartCount += 1
+                }
                 saveScratchContext()
             }
+            
+            LDAlert(viewController:self).displayErrorAlertView("Loans in Cart", message: "Loans in the cart were not deleted.\n\n Once a loan is removed from the cart it can be removed from the Loans screen.")
         }
     }
     

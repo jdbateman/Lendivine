@@ -139,7 +139,7 @@ class DVNViewController: UIViewController {
                         
                         
                         // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-                        for loan in loans where loan.id != nil {
+                        for loan in loans where (loan.id != nil) && (loan.id != -1) {
                             if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataStackManager.sharedInstance().scratchContext) == nil {
                                 
                                 print("Need to add loan: %@", loan.name)

@@ -84,6 +84,15 @@ class KivaCart {
         }
     }
     
+    func containsLoanId(id:NSNumber) -> Bool {
+        for item in items {
+            if item.loanID == id {
+                return true
+            }
+        }
+        return false
+    }
+    
     // get JSON representation of the cart.
     func getJSONData() -> NSData? {
         do {
@@ -187,7 +196,14 @@ class KivaCart {
         if let loan = loan {
 
                 if let donationAmount = donationAmount {
+                    
                     let cart = KivaCart.sharedInstance
+                    
+                    // check if loan id is already in the cart
+                    if let id = loan.id where cart.containsLoanId(id) {
+                        return false
+                    }
+                    
                     // TODO: cart context - all calls to KivaAddItemToCart use sharedContext
                     let item = KivaCartItem(loan: loan /*loanID: loanID*/, donationAmount: donationAmount, context: context)
                     if !itemInCart(item) /*!cart.items.contains(item)*/ {

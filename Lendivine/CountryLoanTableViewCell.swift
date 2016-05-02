@@ -57,13 +57,15 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         }
         
         let cart = KivaCart.sharedInstance
-        if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: amount, context: self.sharedContext) {
-
+        
+        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: self.sharedContext) {
+            
             // Persist the KivaCartItem object we added to the Core Data shared context
-            dispatch_async(dispatch_get_main_queue()) {
-                print("saveContext: CountryLoanTableViewCell.onAddCountryLoanToCartButtonTap()")
-                CoreDataStackManager.sharedInstance().saveContext()
-            }
+            saveCartItem()
+//            dispatch_async(dispatch_get_main_queue()) {
+//                print("saveContext: CountryLoanTableViewCell.onAddCountryLoanToCartButtonTap()")
+//                CoreDataStackManager.sharedInstance().saveContext()
+//            }
         } else {
             
             if let controller = self.parentController {

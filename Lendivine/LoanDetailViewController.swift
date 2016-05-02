@@ -84,7 +84,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         }
         
         let cart = KivaCart.sharedInstance
-        if cart.KivaAddItemToCart(loan, /*loanID: loan.id,*/ donationAmount: 25.00, context: self.sharedContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: self.sharedContext) {
             
         } else {
             showLoanAlreadyInCartAlert(loan, controller: self)

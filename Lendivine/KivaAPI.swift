@@ -934,7 +934,7 @@ extension KivaAPI {
                                 if kivaLoan.id != -1 {
                                     loans.append(kivaLoan)
                                 } else {
-                                    print("Error: kiva api returned an invalid loan")
+                                    print("Error: http://api.kivaws.org/v1/loans/search.json returned an invalid loan")
                                 }
                             }
                         }
