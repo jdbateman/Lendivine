@@ -126,6 +126,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
         
+        
+        // TODO - REVIEW USE OF SCRACH CONTEXT
         if loan.id == -1 {
             print("loan id == -1 in LoansTableViewcontroller.configureCell")
             CoreDataStackManager.sharedInstance().scratchContext.deleteObject(loan)
@@ -170,21 +172,14 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 print("error retrieving image: \(error)")
             }
         }
-// TODO - find another way to determine if the loan is in the cart and update the donatedImageView.
-//        // TODO: cart context - This is the only place where a cart item is accessed using a scratchContext
-//        let cart = KivaCart.sharedInstance
-//        let item = KivaCartItem(loan: loan, donationAmount: 25, context: CoreDataStackManager.sharedInstance().scratchContext /*self.sharedContext*/) // TODO: cart context
-//        if cart.itemInCart(item) {
-//            cell.donatedImageView.hidden = false
-//        } else {
-//            cell.donatedImageView.hidden = true
-//        }
         
         let cart = KivaCart.sharedInstance
         if let id = loan.id {
             cell.donatedImageView.hidden = cart.containsLoanId(id) ? false : true
         }
     }
+    
+    // TODO - REVIEW USE OF SCRATCH CONTEXT FOR FETCHEDRESULTSCONTROLLER
     
     // MARK: - Fetched results controller
     
@@ -312,51 +307,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
     func oAuthCompleted(success: Bool) {
         print("OAuth completed with success = \(success)")
-        
-/* TODO - reenable
-            
-        // load loans from core data
-        //todo KivaLoan.fetchAllLoans()
-        
-        // fetch loans from Kiva.org
-        // populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
-        self.getMostRecentLoans() {
-            success, loans, error in
-            if success {
-                dispatch_async(dispatch_get_main_queue()) {
-                    
-                    // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-                    if let loans = loans {
-                        for loan in loans where loan.id != nil {
-                            if KivaLoan.fetchLoanByID2(loan.id!) == nil {
-                                
-                                // The following lines were causing duplicate objects to appear in core data. removing these lines results in owning the existing loan objects being upserted when saveContext is called.
-                                
-                                // todo duplicate loans 
-                                //_ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
-                                
-                                //_ = KivaLoan.init(fromLoan: loan, context: CoreDataStackManager.sharedInstance().scratchContext)
-                                
-                                // todo... CoreDataStackManager.sharedInstance().saveContext()
-                                
-                                saveScratchContext()
-                            }
-                        }
-                    }
-                    
-                    // call reloadData to trigger the fetchedResultController to pickup the newly added loans and add them to the table
-                    // TODO: have we added this code yet or are we still using the self.loans array?
-                    
-                    (self.tableView.reloadData()) // self.tableView.setNeedsDisplay()
-                    
-                    // TODO: enable cart button
-                    self.navigationItem.rightBarButtonItems?.first?.enabled = true
-                }
-            } else {
-                // TODO - handle error
-            }
-        }
-*/
     }
     
     func onMapButton() {
@@ -372,29 +322,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         // 2. TODO - modify security keys in info.plist to get kiva.org cart to render correctly. currently <key>NSAllowsArbitraryLoads</key> <true/> is set to get around the security restriction. To fix look at http://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9 and enable appropriate options then remove the workaround above.
     }
-    
-    // Get the 20 most recent loans from Kiva.org in a Core Data scratch context.
-//    func getMostRecentLoans(completionHandler: (success: Bool, loans: [KivaLoan]?, error: NSError?) -> Void) {
-//        if let kivaAPI = self.kivaAPI {
-//            kivaAPI.kivaGetNewestLoans(CoreDataStackManager.sharedInstance().scratchContext) {
-//                success, error, loans in
-//                if success {
-//                    if let loans = loans {
-//                        // todo: duplicate loans.  remove permanently?     self.loans = loans
-//                        completionHandler(success: true, loans: loans, error: nil)
-//                    } else {
-//                        // TODO - display "no loans" in view controller
-//                        let error = VTError(errorString: "No Kiva loans found.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-//                        completionHandler(success: false, loans: nil, error: error.error)
-//                    }
-//                } else {
-//                    // TODO - display error, then "no loans" in view controller
-//                    let error = VTError(errorString: "Error searching for newest Kiva loans.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-//                    completionHandler(success: false, loans: nil, error: error.error)
-//                }
-//            }
-//        }
-//    }
     
     /*! Display url in an embeded webkit browser. */
     func showEmbeddedBrowser() {
@@ -474,7 +401,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-    // TODO - why are we using a scratch context? 
+    // TODO - why are we using a scratch context? - TODO: MIGHT NEED TO RE-EVALUATE USE OF SCRATCH CONTEXT HERE
     /*! Remove all loans from the scratch context. */
     func removeAllLoans() {
         
@@ -496,6 +423,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             LDAlert(viewController:self).displayErrorAlertView("Loans in Cart", message: "Loans in the cart were not deleted.\n\n Once a loan is removed from the cart it can be removed from the Loans screen.")
         }
     }
+    
+    // TODO - USING SCRATCH CONTEXT. REVIEW CODE. THIS MIGHT NOT BE WHAT IS REQUIRED NOW.
     
     /* 
         @brief Perform a fetch of all the loan objects in the scratch context. Return array of KivaLoan instances, or an empty array if no results or query failed.

@@ -8,6 +8,7 @@
 // This table view controller displays a list of current loans available in a particular country as returned in a response to a country specific search against the Kiva REST API. The loans are not persisted.
 
 import UIKit
+import CoreData
 
 class CountryLoansTableViewController: UITableViewController {
     
@@ -24,6 +25,11 @@ class CountryLoansTableViewController: UITableViewController {
     
     // Set to true if No Results message should be displayed.
     var showNoResults: Bool = false
+    
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +110,9 @@ class CountryLoansTableViewController: UITableViewController {
         
         // Configure the cell...
         configureCell(cell, row: indexPath.row)
+        
+        cell.parentTableView = tableView
+        cell.parentController = self
         
         return cell
     }
@@ -216,6 +225,8 @@ class CountryLoansTableViewController: UITableViewController {
         }
         
         let countries = countryCode
+        
+        
         
         // Lenient criteria to maximimze the possibility that any particular country will return matches.
         kivaAPI.kivaSearchLoans(queryMatch: nil, status: nil, gender: nil, regions: nil, countries: countries, sector: nil, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: nil, maxPartnerDelinquency: nil, maxPartnerDefaultRate: nil, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
@@ -346,6 +357,32 @@ class CountryLoansTableViewController: UITableViewController {
                 }
             }
         }
+    }
+    
+    /*
+    @brief Perform a fetch of all the loan objects in the shared context. Return array of KivaLoan instances, or an empty array if no results or query failed.
+    @discussion Updates the fetchedResultsController with the matching data from the core data store.
+    */
+    func fetchAllLoans() -> [KivaLoan]? {
+        
+        let error: NSErrorPointer = nil
+        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+        var results: [AnyObject]?
+        do {
+            results = try self.sharedContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
+        } catch let error1 as NSError {
+            error.memory = error1
+            print("Error in fetchAllLoans(): \(error)")
+            return nil
+        }
+        
+        // Check for Errors
+        if error != nil {
+            print("Error in fetchAllLoans(): \(error)")
+        }
+        
+        return results as? [KivaLoan] ?? [KivaLoan]()
     }
 }
 
