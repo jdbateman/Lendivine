@@ -40,7 +40,7 @@ class MapWithCheckoutViewController: MapViewController {
         let loans = cart!.getLoans2()
         print("cart count before stripping out non-fundraising loans = \(self.cart!.items.count)")
         print("loans: %@", loans)
-        KivaLoan.getCurrentFundraisingStatus(loans) {
+        KivaLoan.getCurrentFundraisingStatus(loans, context: CoreDataStackManager.sharedInstance().cartScratchContext) {
             success, error, fundraising, notFundraising in
             if success {
                 // remove notFundraising loans from the cart

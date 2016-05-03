@@ -19,11 +19,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     var countries = [Country]()
     var filteredTableData = [Country]()
     
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -249,7 +244,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Return the fetched results controller. It will be the value of the lazy variable
         return fetchedResultsController
@@ -270,7 +265,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
     }
 
-    /*! Perform a fetch of Country objects from the scratchContext filtered for those that contain the specified userInput string. */
+    /*! Perform a fetch of Country objects from the countriesScratchContext filtered for those that contain the specified userInput string. */
     func fetchCountriesFilteredByNameOn(userInput: String?) -> [AnyObject]? {
         
         guard let userInput = userInput else {
@@ -285,11 +280,11 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
         
         _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
 
         var results: [AnyObject]?
         do {
-            results = try sharedContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataStackManager.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
         } catch let error1 as NSError {
             print("Error in fetchLoanByID(): \(error1)")
             results = nil

@@ -16,11 +16,6 @@ let countriesUpdateNotificationKey = "com.lendivine.countries.update"
 
 class Countries {
     
-    /* The main core data managed object context. This context will be persisted. */
-    static var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
-    
     /*!
         @brief Initialize Core data with all countries from the RESTCountries.eu api. Country objects are persisted in core data. 
         @discussion This is an asynchronous method that interacts with a REST service. Objects are persisted to the shared core data context. No duplicate country objects are persisted.
@@ -56,7 +51,7 @@ class Countries {
         
         let fetchRequest = NSFetchRequest(entityName: Country.entityName)
         
-        let count = sharedContext.countForFetchRequest(fetchRequest, error:&error)
+        let count = CoreDataStackManager.sharedInstance().countriesContext.countForFetchRequest(fetchRequest, error:&error)
         
         if (count == NSNotFound) {
             print("Error: \(error)")
@@ -79,7 +74,7 @@ class Countries {
         
         fetchRequest.predicate = NSPredicate(format: "name == %@", country.name!)
         
-        let count = sharedContext.countForFetchRequest(fetchRequest, error:&error)
+        let count = CoreDataStackManager.sharedInstance().countriesContext.countForFetchRequest(fetchRequest, error:&error)
         
         if (count == NSNotFound) {
             print("Error: \(error)")
@@ -102,7 +97,7 @@ class Countries {
         
         fetchRequest.predicate = NSPredicate(format: "name == %@", country.name!)
         
-        let count = sharedContext.countForFetchRequest(fetchRequest, error:&error)
+        let count = CoreDataStackManager.sharedInstance().countriesContext.countForFetchRequest(fetchRequest, error:&error)
         
         if (count == NSNotFound) {
             print("Error: \(error)")
@@ -136,19 +131,19 @@ class Countries {
         // When the Country NSManaged objects were created they were saved to the in-memory version of the core data context.
         // Here will save all countries from core data memory to the core data sqlite store on disk.
         print("saveContext: Countries.persistNewCountries()")
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance().saveCountriesContext()
         
         // remove all duplicates
         print("removing \(duplicateCountries.count) duplicate countries")
         for dupCountry in duplicateCountries {
             
             // delete the object from core data memory
-            sharedContext.deleteObject(dupCountry)
+            CoreDataStackManager.sharedInstance().countriesContext.deleteObject(dupCountry)
         }
         
         // commit the deletes to the core data sqlite data store on disk
         print("saveContext: Countries.persistNewCountries()")
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance().saveCountriesContext()
     }
     
     /*! Return a randomized comma separated string of country names. */
@@ -162,11 +157,11 @@ class Countries {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
         _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
 
         var results: [AnyObject]?
         do {
-            results = try sharedContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataStackManager.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
             if let results = results {
                 for result in results {
                     if let result = result as? Country {
@@ -207,11 +202,11 @@ class Countries {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
         _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         var results: [AnyObject]?
         do {
-            results = try sharedContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataStackManager.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
             if let results = results {
                 for result in results {
                     if let result = result as? Country {
@@ -258,7 +253,7 @@ class Countries {
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Return the fetched results controller. It will be the value of the lazy variable
         return fetchedResultsController

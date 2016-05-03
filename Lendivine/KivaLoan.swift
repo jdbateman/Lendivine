@@ -527,10 +527,10 @@ extension KivaLoan {
         (out) result - true if loan status matches the specified input, else false.
         (out) error - nil if loan status successfully determined, else contains an NSError.
     */
-    func confirmLoanStatus(statusToMatch: KivaLoan.Status, completionHandler: (result: Bool, error: NSError?) -> Void ) {
+    func confirmLoanStatus(statusToMatch: KivaLoan.Status, context: NSManagedObjectContext, completionHandler: (result: Bool, error: NSError?) -> Void ) {
         // get loan from server and check it's status
         let loanIDs = [self.id]
-        KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs, context: context) {
             success, error, loans in
             if success {
                 if let loans = loans {
@@ -559,7 +559,7 @@ extension KivaLoan {
     @brief Get loans from Kiva.org and confirm the status of each is "fundraising".
     @return List of loans with fundraising status, and list of loans no longer with fundraining status.
     */
-    class func getCurrentFundraisingStatus(loans: [KivaLoan]?, completionHandler: (success: Bool, error: NSError?, fundraising: [KivaLoan]?, notFundraising: [KivaLoan]?) -> Void) {
+    class func getCurrentFundraisingStatus(loans: [KivaLoan]?, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, fundraising: [KivaLoan]?, notFundraising: [KivaLoan]?) -> Void) {
         
         // validate loans not nil or empty
         if loans == nil || loans!.count == 0 {
@@ -579,7 +579,7 @@ extension KivaLoan {
         }
         
         // Find loans on Kiva.org
-        KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs, context:context) {
             success, error, loans in
             if success {
                 if let loans = loans {

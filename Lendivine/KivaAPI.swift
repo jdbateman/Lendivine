@@ -987,7 +987,7 @@ extension KivaAPI {
         }
     }
     
-    func kivaGetLoans(loanIDs: [NSNumber?]?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func kivaGetLoans(loanIDs: [NSNumber?]?, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
         // ensure at least one loan ID was passed in
         if loanIDs == nil || loanIDs!.count == 0 {
@@ -1023,7 +1023,7 @@ extension KivaAPI {
                             print("loans: \(jsonLoans)")
                             
                             for loan in jsonLoans {
-                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: context /*self.sharedContext*/ )
                                 loans.append(kivaLoan)
                             }
                         }

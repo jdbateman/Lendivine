@@ -19,11 +19,6 @@ class CartTableViewController: UITableViewController {
     var cart:KivaCart? // = KivaCart.sharedInstance
     var kivaAPI: KivaAPI?
     
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -309,8 +304,8 @@ class CartTableViewController: UITableViewController {
             }
         }
         
-        // Find loans on Kiva.org
-        KivaAPI.sharedInstance.kivaGetLoans(loanIDs) {
+        // Find loans on Kiva.org. Create temporary loan objects in order to extract funraising status.
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs, context: CoreDataStackManager.sharedInstance().cartScratchContext) {
             success, error, loans in
             if success {
                 if let loans = loans {
@@ -340,7 +335,7 @@ class CartTableViewController: UITableViewController {
     func confirmLoanIsAvailable(loan: KivaLoan?, completionHandler: (result: Bool, error: NSError?) -> Void) {
         
         if let loan = loan {
-            loan.confirmLoanStatus(KivaLoan.Status.fundraising) {
+            loan.confirmLoanStatus(KivaLoan.Status.fundraising, context: CoreDataStackManager.sharedInstance().cartContext) {
                 result, error in
                 if error == nil {
                     // successfully determined status of loan
@@ -374,7 +369,7 @@ class CartTableViewController: UITableViewController {
         
         if let loanID = cartItem.loanID {
 
-            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().scratchContext) {
+            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().cartContext) {
                 self.presentLoanDetailViewController(loan)
             }
         }
@@ -410,7 +405,7 @@ class CartTableViewController: UITableViewController {
                 
                 if let loanID = cartItem.loanID {
                     
-                    if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().scratchContext) {
+                    if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().cartContext) {
                         controller.loan = loan
                     }
                 }

@@ -183,13 +183,14 @@ class KivaCart {
     
     /*! 
         @brief Add a loan to the local cart.
-        @discussion The function fails if a loan with the same id is already in the cart.
-        @param (in) loan - The loan to add to the cart.
+        @discussion The function fails if a loan with the same id is already in the cart. The loan is not persisted to the specified context. Rather, a new KivaCartItem is created in the Cart Context and the loan properties are copied to the KivaCartItem instance.
+        @note It is the responsibility of the caller to save the cart item to the cartContext (if desired).
+        @param (in) loan - The loan to add to the cart. Loan properties are read from the loan and set on the new KivaCartItem.
         @param (in) donationAmount - The dollar amount to donate towards the loan.
-        @param (in) context - Core Data context.
+        @param (in) context - Core Data context in which the KivaCartItem is created.
         @return true if loan was successfully added to the cart, else false.
     */
-    func KivaAddItemToCart(loan: KivaLoan?, /*loanID: NSNumber?,*/ donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
+    func KivaAddItemToCart(loan: KivaLoan?, donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
         
         print("KivaAddItemToCart called for loan \(loan?.name) & \(loan?.id)")
         
@@ -204,9 +205,9 @@ class KivaCart {
                         return false
                     }
                     
-                    // TODO: cart context - all calls to KivaAddItemToCart use sharedContext
-                    let item = KivaCartItem(loan: loan /*loanID: loanID*/, donationAmount: donationAmount, context: context)
-                    if !itemInCart(item) /*!cart.items.contains(item)*/ {
+                    // TODO: cart context - all calls to KivaAddItemToCart need to change from sharedContext to cartContext
+                    let item = KivaCartItem(loan: loan, donationAmount: donationAmount, context: context)
+                    if !itemInCart(item) {
                         cart.add(item)
                         print("Added item to cart with loan Id: \(loan.id) in amount: \(donationAmount)")
                         

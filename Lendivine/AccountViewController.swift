@@ -29,11 +29,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     var kivaAPI: KivaAPI?
     
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
-    
     var _account: KivaAccount?
     
     var loanRepaymentSchedule:[KivaRepayment]?
@@ -394,7 +389,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         guard let account = account else {return nil}
         guard let lenderId = account[KivaAccount.InitKeys.lenderId] as? String else {return nil}
         
-        let newAccount = KivaAccount(dictionary: account, context: sharedContext)
+        let newAccount = KivaAccount(dictionary: account, context: CoreDataStackManager.sharedInstance().accountContext)
                 
         // Determine if this account already exist in core data.
 
@@ -403,7 +398,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         
         do {
-            let fetchResults = try sharedContext.executeFetchRequest(fetchRequest)
+            let fetchResults = try CoreDataStackManager.sharedInstance().accountContext.executeFetchRequest(fetchRequest)
             
             // success ...
             if fetchResults.count != 0 {
@@ -423,13 +418,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 }
                 
                 print("saveContext:Update AccountViewController.persistAccountDataToCoreData()")
-                //CoreDataStackManager.sharedInstance().saveContext()
+                CoreDataStackManager.sharedInstance().saveAccountContext()
                 
                 print("updated existing account object in core data: %@", account)
                 
             } else {
                 // no matches to exiting core data objects on disk. save the new object in core data.
-                CoreDataStackManager.sharedInstance().saveContext()
+                CoreDataStackManager.sharedInstance().saveAccountContext()
                 print("saveContext:Save AccountViewController.persistAccountDataToCoreData()")
                 //print("new account object saved to core data: %@", account)
             }

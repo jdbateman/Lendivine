@@ -28,11 +28,6 @@ class RESTCountries {
         return Singleton.sharedInstance
     }
     
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
-    
     /* default initializer */
     init() {
         session = NSURLSession.sharedSession()

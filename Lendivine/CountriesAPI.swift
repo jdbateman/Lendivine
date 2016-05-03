@@ -46,7 +46,7 @@ extension RESTCountries {
                         
                         // Convert each dictionary in the response data into a Country object.
                         for dictionary in returnData {
-                            let country:Country = Country(dictionary: dictionary, context: self.sharedContext)
+                            let country:Country = Country(dictionary: dictionary, context: CoreDataStackManager.sharedInstance().countriesContext)
                             countries.append(country)
                         }
                         completionHandler(countries: countries, error: nil)

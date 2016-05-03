@@ -33,12 +33,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var useLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
-
-    
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,8 +78,12 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         }
         
         let cart = KivaCart.sharedInstance
-        if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: self.sharedContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: CoreDataStackManager.sharedInstance().cartContext) {
             
+            dispatch_async(dispatch_get_main_queue()) {
+                // TODO - potential duplicates if we don't delete existing records before save? Shouldn't core data figure this out itself?
+                CoreDataStackManager.sharedInstance().saveCartContext()
+            }
         } else {
             showLoanAlreadyInCartAlert(loan, controller: self)
         }
