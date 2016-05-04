@@ -78,11 +78,11 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         }
         
         let cart = KivaCart.sharedInstance
-        if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: CoreDataStackManager.sharedInstance().cartContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: CoreDataContext.sharedInstance().cartContext) {
             
             dispatch_async(dispatch_get_main_queue()) {
                 // TODO - potential duplicates if we don't delete existing records before save? Shouldn't core data figure this out itself?
-                CoreDataStackManager.sharedInstance().saveCartContext()
+                CoreDataContext.sharedInstance().saveCartContext()
             }
         } else {
             showLoanAlreadyInCartAlert(loan, controller: self)

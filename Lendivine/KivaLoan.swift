@@ -156,16 +156,42 @@ class KivaLoan: NSManagedObject  {
         loan - the new KivaLoan instance, or nil if an error occurred.
         error - nil if KivaLoan was successfully created, else NSError object if an error occurred.
     */
-    class func createKivaLoanFromLoanID(fromLoanID: NSNumber, context: NSManagedObjectContext) /*, completion: (loan: KivaLoan?, error: NSError?) -> Void)*/ -> KivaLoan? {
+//    class func createKivaLoanFromLoanID(fromLoanID: NSNumber, context: NSManagedObjectContext) /*, completion: (loan: KivaLoan?, error: NSError?) -> Void)*/ -> KivaLoan? {
+//    
+//        print("init KivaLoan - 4")
+//        
+//        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
+//        super.init(entity: entity, insertIntoManagedObjectContext: context)
+//        
+//        return fetchLoanByID2(fromLoanID, context: context)
+//    }
     
-        print("init KivaLoan - 4")
+    init(fromCartItem: KivaCartItem, context: NSManagedObjectContext) {
         
         let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-        return fetchLoanByID2(fromLoanID, context: context)
+        self.name = fromCartItem.name
+        self.country = fromCartItem.country
+        self.geo = fromCartItem.geo
+        self.town = fromCartItem.town
+        self.postedDate = fromCartItem.postedDate
+        self.activity = fromCartItem.activity
+        self.id = fromCartItem.id
+        self.use = fromCartItem.use
+        self.fundedAmount = fromCartItem.fundedAmount
+        self.partnerID = fromCartItem.partnerID
+        self.imageID = fromCartItem.imageID
+        self.imageTemplateID = fromCartItem.imageTemplateID
+        self.borrowerCount = fromCartItem.borrowerCount
+        self.lenderCount = fromCartItem.lenderCount
+        self.loanAmount = fromCartItem.loanAmount
+        self.status = fromCartItem.status
+        self.sector = fromCartItem.sector
+        self.language = fromCartItem.language
+        
+        print("init KivaLoan - 4")
     }
-    
     
     // MARK: - Fetched results controller
     

@@ -304,7 +304,7 @@ extension KivaAPI {
                             for loanDict in loansArray {
                                 var loan:KivaLoan?
                                 if let loanDict = loanDict as? [String: AnyObject] {
-                                    loan = KivaLoan(dictionary: loanDict, context:CoreDataStackManager.sharedInstance().myLoansContext) // self.sharedContext
+                                    loan = KivaLoan(dictionary: loanDict, context:CoreDataContext.sharedInstance().myLoansContext) // self.sharedContext
                                 }
                                 if let loan = loan {
                                     loans.append(loan)
@@ -840,7 +840,7 @@ extension KivaAPI {
         loans (out) An Array of KivaLoan objects. Nil if an error occurred or no loans were found.
         nextPage (out) -1 if there is no next page, else the number of the next page of results to request.
     */
-    func kivaSearchLoans(queryMatch queryMatch: String?, status: String?, gender: LoanGender?, regions: String?, countries: String?, sector: LoanSector?, borrowerType: String?, maxPartnerRiskRating: PartnerRiskRatingMaximum?, maxPartnerDelinquency: PartnerDelinquencyMaximum?, maxPartnerDefaultRate: PartnerDefaultRateMaximum?, includeNonRatedPartners: Bool?, includedPartnersWithCurrencyRisk: Bool?, page: NSNumber?, perPage: NSNumber?, sortBy: String?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?, nextPage: Int) -> Void) {
+    func kivaSearchLoans(queryMatch queryMatch: String?, status: String?, gender: LoanGender?, regions: String?, countries: String?, sector: LoanSector?, borrowerType: String?, maxPartnerRiskRating: PartnerRiskRatingMaximum?, maxPartnerDelinquency: PartnerDelinquencyMaximum?, maxPartnerDefaultRate: PartnerDefaultRateMaximum?, includeNonRatedPartners: Bool?, includedPartnersWithCurrencyRisk: Bool?, page: NSNumber?, perPage: NSNumber?, sortBy: String?, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?, nextPage: Int) -> Void) {
         
         var nextPage = -1
         var parametersDictionary = [String: AnyObject]()
@@ -929,7 +929,7 @@ extension KivaAPI {
                             //print("partners: \(arrayOfPartnersDictionaries)")
                     
                             for loan in arrayOfPartnersDictionaries {
-                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: self.sharedContext)
+                                let kivaLoan = KivaLoan(dictionary: loan as [String: AnyObject], context: context /*self.sharedContext*/)
                                 
                                 if kivaLoan.id != -1 {
                                     loans.append(kivaLoan)
@@ -1069,7 +1069,7 @@ extension KivaAPI {
             var httpBody: NSData?
             var loanIDs = [NSNumber]()
             for item in cart.items {
-                if let loanID = item.loanID {
+                if let loanID = item.id {
                     loanIDs.append(loanID)
                 }
             }
@@ -1104,7 +1104,7 @@ extension KivaAPI {
         
         // loans
         for item in cart.items {
-            if let loanID = item.loanID, donationAmount = item.donationAmount where loanID.intValue > 0 {
+            if let loanID = item.id, donationAmount = item.donationAmount where loanID.intValue > 0 {
                 let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", loanID.intValue, donationAmount.floatValue)
                 loanString.appendContentsOf(loanToAdd)
             }

@@ -18,6 +18,11 @@ class DVNTableViewController: UITableViewController {
     
     static let KIVA_LOAN_SEARCH_RESULTS_PER_PAGE = 20
     
+    /* The main core data managed object context. This context will be persisted. */
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,7 +41,7 @@ class DVNTableViewController: UITableViewController {
         }
 
         
-        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: nil /*KivaAPI.LoanSector.Agriculture*/, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: nextPage, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue) {
+        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: nil /*KivaAPI.LoanSector.Agriculture*/, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: nextPage, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext ) {
             
             success, error, loanResults, nextPage in
             
@@ -89,7 +94,7 @@ class DVNTableViewController: UITableViewController {
                         // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
                         for loan in loans where (loan.id != nil) && (loan.id != -1) {
                             
-                            if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataStackManager.sharedInstance().scratchContext) == nil {
+                            if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataContext.sharedInstance().scratchContext) == nil {
                                 
                                 print("Need to add loan: %@", loan.name)
                                 
@@ -99,7 +104,7 @@ class DVNTableViewController: UITableViewController {
                                 // _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
                                 
                                 // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
-                                let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataStackManager.sharedInstance().scratchContext)
+                                let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataContext.sharedInstance().scratchContext)
                                 print("initializing new loan in scratchContext: %@, %d", newLoan.name, newLoan.id)
                                 
                                 // CoreDataStackManager.sharedInstance().saveContext()
@@ -128,7 +133,7 @@ class DVNTableViewController: UITableViewController {
         //var results: [AnyObject]?
         do {
             print("saveContext: DVNTableViewController.saveScratchContext()")
-            _ = try CoreDataStackManager.sharedInstance().scratchContext.save()
+            _ = try CoreDataContext.sharedInstance().scratchContext.save()
         } catch let error1 as NSError {
             error.memory = error1
             print("Error saving scratchContext: \(error)")

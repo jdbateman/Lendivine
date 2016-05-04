@@ -16,10 +16,10 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     // a collection of Kiva loans
     //var loans = [KivaLoan]() // todo - comment out this line. no longer used.
     
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }()
+//    /* The main core data managed object context. This context will be persisted. */
+//    lazy var sharedContext: NSManagedObjectContext = {
+//        return CoreDataStackManager.sharedInstance().managedObjectContext!
+//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -130,7 +130,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // TODO - REVIEW USE OF SCRACH CONTEXT
         if loan.id == -1 {
             print("loan id == -1 in LoansTableViewcontroller.configureCell")
-            CoreDataStackManager.sharedInstance().scratchContext.deleteObject(loan)
+            CoreDataContext.sharedInstance().scratchContext.deleteObject(loan)
             return
         }
         
@@ -193,7 +193,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataContext.sharedInstance().scratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Return the fetched results controller. It will be the value of the lazy variable
         return fetchedResultsController
@@ -413,7 +413,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             for loan: KivaLoan in loans {
                 
                 if let id = loan.id where (cart.containsLoanId(id) == false) {
-                    CoreDataStackManager.sharedInstance().scratchContext.deleteObject(loan)
+                    CoreDataContext.sharedInstance().scratchContext.deleteObject(loan)
                 } else {
                     inCartCount += 1
                 }
@@ -437,7 +437,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
         var results: [AnyObject]?
         do {
-            results = try CoreDataStackManager.sharedInstance().scratchContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
+            results = try CoreDataContext.sharedInstance().scratchContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
         } catch let error1 as NSError {
             error.memory = error1
             print("Error in fetchAllLoans(): \(error)")

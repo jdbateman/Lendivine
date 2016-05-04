@@ -26,7 +26,7 @@ class CartTableViewController: UITableViewController {
         
         cart = KivaCart.sharedInstance
         
-        updateCart()
+        //updateCart()
         
         configureBarButtonItems()
         
@@ -40,9 +40,10 @@ class CartTableViewController: UITableViewController {
     
     func updateCart() {
         if let cart = cart {
-            cart.update()
+            cart.update() {
+                self.tableView.reloadData()
+            }
         }
-        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -305,7 +306,7 @@ class CartTableViewController: UITableViewController {
         }
         
         // Find loans on Kiva.org. Create temporary loan objects in order to extract funraising status.
-        KivaAPI.sharedInstance.kivaGetLoans(loanIDs, context: CoreDataStackManager.sharedInstance().cartScratchContext) {
+        KivaAPI.sharedInstance.kivaGetLoans(loanIDs, context: CoreDataContext.sharedInstance().cartScratchContext) {
             success, error, loans in
             if success {
                 if let loans = loans {
@@ -335,7 +336,7 @@ class CartTableViewController: UITableViewController {
     func confirmLoanIsAvailable(loan: KivaLoan?, completionHandler: (result: Bool, error: NSError?) -> Void) {
         
         if let loan = loan {
-            loan.confirmLoanStatus(KivaLoan.Status.fundraising, context: CoreDataStackManager.sharedInstance().cartContext) {
+            loan.confirmLoanStatus(KivaLoan.Status.fundraising, context: CoreDataContext.sharedInstance().cartContext) {
                 result, error in
                 if error == nil {
                     // successfully determined status of loan
@@ -367,12 +368,12 @@ class CartTableViewController: UITableViewController {
         
         let cartItem = self.cart!.items[indexPath.row]
         
-        if let loanID = cartItem.loanID {
+//        if let loanID = cartItem.id {
 
-            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().cartContext) {
+            if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
                 self.presentLoanDetailViewController(loan)
             }
-        }
+//        }
     }
     
     
@@ -403,12 +404,13 @@ class CartTableViewController: UITableViewController {
                 
                 let cartItem = self.cart!.items[indexPath.row]
                 
-                if let loanID = cartItem.loanID {
+//                if let loanID = cartItem.id {
                     
-                    if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().cartContext) {
+//                    if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().cartContext) {
+                    if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
                         controller.loan = loan
                     }
-                }
+//                }
             }
             
         } else if segue.identifier == "CartToMapSegueId" {

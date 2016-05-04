@@ -27,7 +27,7 @@ class KivaCart {
     init() {
         print("KivaCart init called")
         
-        // load all cart items from the core data shared context
+        // load all cart items from the core data cart context
         fetchCartItems()
     }
     
@@ -42,13 +42,17 @@ class KivaCart {
     }
     
     // update the cart
-    func update() {
-        fetchCartItems()
+    func update(completion: () -> Void)  {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.fetchCartItems()
+            completion()
+        }
     }
     
     // add an item to the cart
     func add(item: KivaCartItem) {
         items.append(item)
+        CoreDataContext.sharedInstance().saveCartContext()
     }
     
     // remove all items from the cart
@@ -75,9 +79,9 @@ class KivaCart {
             let item = items[index]
             
             // remove the item from the core data store
-            sharedContext.deleteObject(item)
+            CoreDataContext.sharedInstance().cartContext.deleteObject(item)
             print("saveContext: KivaCart.removeItemByIndex()")
-            CoreDataStackManager.sharedInstance().saveContext()
+            CoreDataContext.sharedInstance().saveCartContext()
             
             // remove the item from the array
             items.removeAtIndex(index)
@@ -86,7 +90,7 @@ class KivaCart {
     
     func containsLoanId(id:NSNumber) -> Bool {
         for item in items {
-            if item.loanID == id {
+            if item.id == id {
                 return true
             }
         }
@@ -120,7 +124,7 @@ class KivaCart {
     
     /*! 
         @brief return an array of KivaLoan objects representing each loan ID stored in the cart.
-        @discussion Loans are contructed from the main core data context.
+        @discussion Loans are contructed from the Cart context.
     */
     func getLoans2() -> [KivaLoan]? {
 
@@ -128,12 +132,12 @@ class KivaCart {
     
         for item in self.items {
     
-            var id:NSNumber = 0
-            if let loanID = item.loanID {
-                id = loanID
-            }
+//            var id:NSNumber = 0
+//            if let loanID = item.id {
+//                id = loanID
+//            }
             // NOTE: The context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
-            if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(id, context: sharedContext /* CoreDataStackManager.sharedInstance().scratchContext*/) {
+            if let loan:KivaLoan = KivaLoan(fromCartItem: item, context: CoreDataContext.sharedInstance().cartContext) {
                 loansInCart.append(loan)
             }
         }
@@ -144,33 +148,30 @@ class KivaCart {
     
     // MARK: - Fetched results controller
     
-    /* The main core data managed object context. This context will be persisted. */
-    lazy var sharedContext: NSManagedObjectContext = {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-        // todo - return CoreDataStackManager.sharedInstance().scratchContext
-    }()
-    
     lazy var fetchedResultsController: NSFetchedResultsController = {
         
         // Create the fetch request
         let fetchRequest = NSFetchRequest(entityName: KivaCartItem.entityName)
         
         // Add a sort descriptor to enforce a sort order on the results.
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "loanID", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataContext.sharedInstance().cartContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Return the fetched results controller. It will be the value of the lazy variable
         return fetchedResultsController
     } ()
     
-    /* Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store. */
+    /* 
+        @brief Perform a fetch of Loan objects to update the fetchedResultsController with the current data from the core data store.
+        @discussion Caller must make this call on the main thread.
+    */
     func fetchCartItems() {
         var error: NSError? = nil
         
-        dispatch_async(dispatch_get_main_queue()) {
+//        dispatch_async(dispatch_get_main_queue()) {
             do {
                 try self.fetchedResultsController.performFetch()
             } catch let error1 as NSError {
@@ -178,7 +179,7 @@ class KivaCart {
                 print("fetchCartItems error: \(error)")
             }
             self.items = self.fetchedResultsController.fetchedObjects as! [KivaCartItem]
-        }
+//        }
     }
     
     /*! 
@@ -207,8 +208,15 @@ class KivaCart {
                     
                     // TODO: cart context - all calls to KivaAddItemToCart need to change from sharedContext to cartContext
                     let item = KivaCartItem(loan: loan, donationAmount: donationAmount, context: context)
+                    
                     if !itemInCart(item) {
+                        
                         cart.add(item)
+                        
+                        // Persist the loan to which the cart item refers.
+                        CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().cartContext) // TODO beware this might create cart duplicates. may need to use scratch context here to only persist a copy of the single loan.
+                        
+                        
                         print("Added item to cart with loan Id: \(loan.id) in amount: \(donationAmount)")
                         
                         // Persist the KivaCartItem object we added to the Core Data shared context
@@ -217,6 +225,7 @@ class KivaCart {
 //                            print("saveContext: KivaCart.KivaAddItemToCart()")
 //                            CoreDataStackManager.sharedInstance().saveContext()
 //                        }
+                        
                         return true
                         
                     } else {

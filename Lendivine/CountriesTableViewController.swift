@@ -244,7 +244,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Return the fetched results controller. It will be the value of the lazy variable
         return fetchedResultsController
@@ -280,11 +280,11 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
         
         _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataStackManager.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
+            CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
 
         var results: [AnyObject]?
         do {
-            results = try CoreDataStackManager.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
         } catch let error1 as NSError {
             print("Error in fetchLoanByID(): \(error1)")
             results = nil

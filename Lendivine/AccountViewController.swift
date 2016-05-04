@@ -389,7 +389,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         guard let account = account else {return nil}
         guard let lenderId = account[KivaAccount.InitKeys.lenderId] as? String else {return nil}
         
-        let newAccount = KivaAccount(dictionary: account, context: CoreDataStackManager.sharedInstance().accountContext)
+        let newAccount = KivaAccount(dictionary: account, context: CoreDataContext.sharedInstance().accountContext)
                 
         // Determine if this account already exist in core data.
 
@@ -398,7 +398,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         
         do {
-            let fetchResults = try CoreDataStackManager.sharedInstance().accountContext.executeFetchRequest(fetchRequest)
+            let fetchResults = try CoreDataContext.sharedInstance().accountContext.executeFetchRequest(fetchRequest)
             
             // success ...
             if fetchResults.count != 0 {
@@ -418,13 +418,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 }
                 
                 print("saveContext:Update AccountViewController.persistAccountDataToCoreData()")
-                CoreDataStackManager.sharedInstance().saveAccountContext()
+                CoreDataContext.sharedInstance().saveAccountContext()
                 
                 print("updated existing account object in core data: %@", account)
                 
             } else {
                 // no matches to exiting core data objects on disk. save the new object in core data.
-                CoreDataStackManager.sharedInstance().saveAccountContext()
+                CoreDataContext.sharedInstance().saveAccountContext()
                 print("saveContext:Save AccountViewController.persistAccountDataToCoreData()")
                 //print("new account object saved to core data: %@", account)
             }

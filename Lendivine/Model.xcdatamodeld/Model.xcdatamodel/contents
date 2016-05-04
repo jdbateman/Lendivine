@@ -15,13 +15,25 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="KivaCartItem" representedClassName="KivaCartItem" syncable="YES">
-        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="donationAmount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="activity" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="borrowerCount" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="donationAmount" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="fundedAmount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="geo" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
         <attribute name="imageID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
-        <attribute name="loanAmount" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
-        <attribute name="loanID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageTemplateID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <attribute name="language" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lenderCount" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="loanAmount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="partnerID" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <attribute name="postedDate" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
         <attribute name="sector" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="town" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="use" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
     </entity>
     <entity name="KivaLoan" representedClassName="KivaLoan" syncable="YES">
         <attribute name="activity" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
@@ -46,7 +58,7 @@
     <elements>
         <element name="Country" positionX="-54" positionY="135" width="128" height="135"/>
         <element name="KivaAccount" positionX="-54" positionY="135" width="128" height="105"/>
-        <element name="KivaCartItem" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="KivaLoan" positionX="-54" positionY="9" width="128" height="315"/>
+        <element name="KivaCartItem" positionX="-54" positionY="135" width="128" height="330"/>
     </elements>
 </model>
