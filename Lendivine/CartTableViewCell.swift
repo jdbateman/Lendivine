@@ -85,7 +85,9 @@ class CartTableViewCell: UITableViewCell {
             let cartItem = cartViewController.cart!.items[index]
             let donationAmountOriginal = cartItem.donationAmount
             cartItem.donationAmount = donationAmount
-            print("cartItem donation amount changed from \(donationAmountOriginal) to \(cartItem.donationAmount)")
+            
+            // save the context to persist the updated cart property to core data
+            CoreDataContext.sharedInstance().saveCartContext()
         }
     }
     
@@ -97,7 +99,7 @@ class CartTableViewCell: UITableViewCell {
         case 0...9:
             xCoord = 14
         case 10...99:
-            xCoord = 15
+            xCoord = 18
         case 100...999:
             xCoord = 10
         default:

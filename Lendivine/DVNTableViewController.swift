@@ -126,7 +126,7 @@ class DVNTableViewController: UITableViewController {
         }
     }
     
-    /* Save the data in the scrach context to the core data store on disk. */
+    /* Save the data in the scratch context to the core data store on disk. */
     func saveScratchContext() {
         
         let error: NSErrorPointer = nil
@@ -138,6 +138,8 @@ class DVNTableViewController: UITableViewController {
             error.memory = error1
             print("Error saving scratchContext: \(error)")
         }
+        
+        CoreDataLoanHelper.cleanup()
     }
     
     

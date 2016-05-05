@@ -33,7 +33,8 @@ class ViewUtility {
         backingImage.drawInRect(CGRectMake(0, 0, backingWidth, backingHeight))
         
         // Create a rectangle the size of the image and draw the text into it.
-        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, backingWidth, backingHeight)
+        let x = atPoint.x - 6
+        let rect: CGRect = CGRectMake(x, atPoint.y, backingWidth, backingHeight)
         text.drawInRect(rect, withAttributes: fontAttributes)
         
         
@@ -41,7 +42,7 @@ class ViewUtility {
             NSFontAttributeName: font,
             NSForegroundColorAttributeName: UIColor.greenColor(),
         ]
-        let rect2: CGRect = CGRectMake(atPoint.x - 2, atPoint.y - 2, backingWidth, backingHeight)
+        let rect2: CGRect = CGRectMake(x - 2, atPoint.y - 2, backingWidth, backingHeight)
         text.drawInRect(rect2, withAttributes: fontAttributes2)
         
         // Make a new image from the image context upon which we've drawn.

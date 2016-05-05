@@ -66,7 +66,7 @@ class CoreDataLoanHelper {
             let fetchResults = try context.executeFetchRequest(fetchRequest)
             
             // a match was found
-            if fetchResults.count != 0 {
+            if fetchResults.count > 0 {
                 
                 // update existing object
                 
@@ -119,4 +119,89 @@ class CoreDataLoanHelper {
             }
         }
     }
+    
+    // TODO - decide which context to use to do the cleanup. decide if we should reset the context once cleanup is complete or maybe do another fetch of all entities. That should probably be the responsibility of the caller.
+    /*! 
+        @brief Scrub for duplicate loans and remove any duplicate objects from the persistant store.
+        @discussion This function is not responsible for cleaning up duplicates in a context. It uses it's own internal context in order to clean up duplicates in the core data store.
+    */
+    class func cleanup() {
+        
+        let context = CoreDataContext.sharedInstance().coreDataLoanHelperScratchContext
+        
+        // fetch request for all KivaLoan objects
+        let fetchRequest = NSFetchRequest(entityName: "KivaLoan")
+        
+        do {
+            let fetchResults = try context.executeFetchRequest(fetchRequest)
+            
+            let results = fetchResults
+            for result in results {
+                if let loan = result as? KivaLoan {
+                    CoreDataLoanHelper.removeDuplicatesForLoan(loan)
+                }
+            }
+        } catch let error as NSError {
+            
+            // failure
+            print("Fetch failed during a clean: \(error.localizedDescription).")
+        }
+    }
+    
+    /*! 
+        @brief Delete duplicates of the loan object in the context and persistant store.
+        @discussion Duplicates are determined by a match of the Kiva loan entities' id property. This call uses it's own context.
+    */
+    class func removeDuplicatesForLoan(loan: KivaLoan?) {
+    
+        let context = CoreDataContext.sharedInstance().coreDataLoanHelperCleanupContext
+        context.reset()
+        
+        guard let loan = loan else {return}
+        
+        let fetchRequest = NSFetchRequest(entityName: "KivaLoan")
+        
+        if let id = loan.id {
+            
+            fetchRequest.predicate = NSPredicate(format: "id = %@", id)
+            
+            do {
+                var error:NSError?
+                let count = context.countForFetchRequest(fetchRequest, error:&error)
+                
+                if (count != NSNotFound && count > 1) {
+
+                    // Found duplicates. Remove them.
+                    
+                    // Fetch loan with duplicates by id and elete all after first item.
+                    
+                    let dupFetchRequest = NSFetchRequest(entityName: "KivaLoan")
+                    dupFetchRequest.predicate = NSPredicate(format: "id = %@", id)
+                    let dupFetchResults = try context.executeFetchRequest(dupFetchRequest)
+                    let dupResults = dupFetchResults
+                    let count = dupResults.count
+                    var i:Int = 1
+                    for (i; i < count; i++) {
+                        if let loan = dupResults[i] as? KivaLoan {
+                            assert(false,"Should not have duplicate loans! Found duplicate: \(loan)")
+                            print("cleaning up duplicate loan \(loan)")
+                            context.deleteObject(loan)
+                        }
+                    }
+                    
+                    // Save the context in order to update the persistent store.
+                    CoreDataContext.sharedInstance().saveCoreDataLoanHelperCleanupContext()
+                    
+                } else {
+                    // no duplicates.
+                }
+                
+            } catch let error as NSError {
+                
+                // failure
+                print("Fetch failed: \(error.localizedDescription). Aborting save of account object to core data.")
+            }
+        }
+    }
+    
 }

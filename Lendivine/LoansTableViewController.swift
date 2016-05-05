@@ -24,6 +24,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        CoreDataLoanHelper.cleanup()
+        
         // Initialize the fetchResultsController from the core data store.
         let loanCount = fetchLoans()
         if loanCount == 0 {
@@ -401,6 +403,11 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
+    /*! Reload loans from Core Data. */
+    func reloadLoansFromCoreData() {
+        //TODO
+    }
+    
     // TODO - why are we using a scratch context? - TODO: MIGHT NEED TO RE-EVALUATE USE OF SCRATCH CONTEXT HERE
     /*! Remove all loans from the scratch context. */
     func removeAllLoans() {
@@ -420,7 +427,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 saveScratchContext()
             }
             
-            LDAlert(viewController:self).displayErrorAlertView("Loans in Cart", message: "Loans in the cart were not deleted.\n\n Once a loan is removed from the cart it can be removed from the Loans screen.")
+            if inCartCount > 0 {
+                LDAlert(viewController:self).displayErrorAlertView("Loans in Cart", message: "Loans in the cart were not deleted.\n\n Once a loan is removed from the cart it can be removed from the Loans screen.")
+            }
         }
     }
     

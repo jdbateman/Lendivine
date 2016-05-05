@@ -141,4 +141,32 @@ class CoreDataContext {
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
         return context
     }()
+    
+    // MARK: - CoreDataLoanHelper contexts
+    
+    /* A core data managed object context that will not be used to persist objects. The CoreDataLoanHelper uses this context to fetch  temporary Loan objects. */
+    lazy var coreDataLoanHelperCleanupContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+    }()
+    
+    /* Save the data in the coreDataLoanHelperCleanupContext context to the core data store on disk. */
+    func saveCoreDataLoanHelperCleanupContext() {
+        
+        let error: NSErrorPointer = nil
+        do {
+            _ = try CoreDataContext.sharedInstance().coreDataLoanHelperCleanupContext.save()
+            
+        } catch let error1 as NSError {
+            error.memory = error1
+            print("Error saving coreDataLoanHelperCleanupContext: \(error)")
+        }
+    }
+    
+    lazy var coreDataLoanHelperScratchContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+    }()
 }

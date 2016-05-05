@@ -59,7 +59,7 @@ class LoansTableViewCell: DVNTableViewCell {
 
         let cart = KivaCart.sharedInstance
 
-        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: self.sharedContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: CoreDataContext.sharedInstance().cartContext) { // self.sharedContext
         
             // animation:
             
@@ -72,7 +72,7 @@ class LoansTableViewCell: DVNTableViewCell {
             }
             
             // Persist the KivaCartItem object we added to the Core Data shared context
-            saveCartItem()
+//todo: remove            saveCartItem()
 //            dispatch_async(dispatch_get_main_queue()) {
 //                print("saveContext: LoansTableViewCell.onAddToCartButtonTap()")
 //                CoreDataStackManager.sharedInstance().saveContext()
@@ -276,54 +276,54 @@ class LoansTableViewCell: DVNTableViewCell {
         }
     }
     
-    /*!
-    @brief Save cart item to persistent data store using core data shared context.
-    @discussion Update any loans already in the database to avoid adding duplicates.
-    */
-    func saveCartItem() {
-        
-        dispatch_async(dispatch_get_main_queue()) {
-            
-            // fetch all core data objects from persistent store to memory
-            guard let controller = self.parentController as? LoansTableViewController else { return }
-            
-            if let loans = controller.fetchAllLoans() {
-                
-                for loan in loans {
-                    
-                    // If any of the loans already exist in core data memory then delete them before saving the context
-                    
-                    //let error: NSError?
-                    let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
-                    fetchRequest.predicate = NSPredicate(format: "id == %@", loan.id!)
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
-                    
-                    var results: [AnyObject]?
-                    do {
-                        results = try controller.sharedContext.executeFetchRequest(fetchRequest)
-                        if let results = results {
-                            for result in results {
-                                if let matchedLoan = result as? KivaLoan {
-                                    controller.sharedContext.deleteObject(matchedLoan)
-                                }
-                            }
-                        }
-                    } catch let error1 as NSError {
-                        print("Error in fetchLoanByID(): \(error1)")
-                        results = nil
-                    }
-                    
-                }
-                
-                // commit the deletes to the core data sqlite data store on disk
-                CoreDataStackManager.sharedInstance().saveContext()
-                
-                for loan in loans {
-                    _ = KivaLoan(fromLoan: loan, context: controller.sharedContext)
-                }
-                // save all loans to disk
-                CoreDataStackManager.sharedInstance().saveContext()
-            }
-        }
-    }
+//    /*!
+//    @brief Save cart item to persistent data store using core data shared context.
+//    @discussion Update any loans already in the database to avoid adding duplicates.
+//    */
+//    func saveCartItem() {
+//        
+//        dispatch_async(dispatch_get_main_queue()) {
+//            
+//            // fetch all core data objects from persistent store to memory
+//            guard let controller = self.parentController as? LoansTableViewController else { return }
+//            
+//            if let loans = controller.fetchAllLoans() {
+//                
+//                for loan in loans {
+//                    
+//                    // If any of the loans already exist in core data memory then delete them before saving the context
+//                    
+//                    //let error: NSError?
+//                    let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+//                    fetchRequest.predicate = NSPredicate(format: "id == %@", loan.id!)
+//                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+//                    
+//                    var results: [AnyObject]?
+//                    do {
+//                        results = try controller.sharedContext.executeFetchRequest(fetchRequest)
+//                        if let results = results {
+//                            for result in results {
+//                                if let matchedLoan = result as? KivaLoan {
+//                                    controller.sharedContext.deleteObject(matchedLoan)
+//                                }
+//                            }
+//                        }
+//                    } catch let error1 as NSError {
+//                        print("Error in fetchLoanByID(): \(error1)")
+//                        results = nil
+//                    }
+//                    
+//                }
+//                
+//                // commit the deletes to the core data sqlite data store on disk
+//                CoreDataStackManager.sharedInstance().saveContext()
+//                
+//                for loan in loans {
+//                    _ = KivaLoan(fromLoan: loan, context: controller.sharedContext)
+//                }
+//                // save all loans to disk
+//                CoreDataStackManager.sharedInstance().saveContext()
+//            }
+//        }
+//    }
 }
