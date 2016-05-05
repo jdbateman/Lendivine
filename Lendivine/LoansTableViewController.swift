@@ -181,7 +181,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-    // TODO - REVIEW USE OF SCRATCH CONTEXT FOR FETCHEDRESULTSCONTROLLER
+    // TODO - REVIEW USE OF SCRATCH CONTEXT FOR FETCHEDRESULTSCONTROLLER - I think this is easily changed to the sharedContext.
     
     // MARK: - Fetched results controller
     
@@ -341,8 +341,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         refreshLoans() {
             success, error in
             if success {
-                self.fetchLoans()
-                self.tableView.reloadData()
+//                self.fetchLoans()
+//                self.tableView.reloadData()
             } else {
                 print("refreshLoans returned an error: \(error)")
             }
@@ -354,10 +354,10 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         refreshLoans() {
             success, error in
-            if success {
-                self.fetchLoans()
-                self.tableView.reloadData()
-            }
+//            if success {
+//                self.fetchLoans()
+//                self.tableView.reloadData()
+//            }
         }
     }
     
@@ -372,20 +372,30 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             
             refreshControl.endRefreshing()
             
-            if success {
-                self.fetchLoans()
-                self.tableView.reloadData()
-            }
+//            if success {
+//                self.fetchLoans()
+//                self.tableView.reloadData()
+//            }
         }
     }
     
     
     // MARK: Helpfer functions
     
+    /*! 
+        @brief Get loans from Kiva.org.
+        @discussion Loans are persisted to disk and refetched into the sharedContext.
+    */
     func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
         
         // Search Kiva.org for the next page of Loan results.
-        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
+        self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) {
+            success, error in
+            
+            // refetch irrespective or result.
+            self.fetchLoans()
+            self.tableView.reloadData()
+            
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
                     //self.fetchLoans()
@@ -403,10 +413,10 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-    /*! Reload loans from Core Data. */
-    func reloadLoansFromCoreData() {
-        //TODO
-    }
+//    /*! Reload loans from Core Data. */
+//    func reloadLoansFromCoreData() {
+//        //TODO
+//    }
     
     // TODO - why are we using a scratch context? - TODO: MIGHT NEED TO RE-EVALUATE USE OF SCRATCH CONTEXT HERE
     /*! Remove all loans from the scratch context. */
@@ -424,7 +434,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 } else {
                     inCartCount += 1
                 }
-                saveScratchContext()
+                CoreDataContext.sharedInstance().saveScratchContext()
+                //CoreDataLoanHelper.sharedInstance().cleanup()
             }
             
             if inCartCount > 0 {

@@ -49,7 +49,7 @@ class CoreDataLoanHelper {
         return persistedLoan
     }
     
-    /*! Create the loan in the context and save it if it doesn't exist, else update it if it does, then save the context. */
+    /*! Create the loan in the context and save it to the persistent store on disk if it doesn't exist, else update it if it does, then save the context. */
     class func upsert(loan: KivaLoan?, toContext context: NSManagedObjectContext) -> KivaLoan? {
         
         var persistedLoan: KivaLoan?
@@ -76,7 +76,7 @@ class CoreDataLoanHelper {
                         fetchedLoan.setValue(name, forKey: KivaLoan.InitKeys.name)
                     }
                     
-                    // TODO .... finish copying properties from loan to fetchedLoan
+                    fetchedLoan.update(fromLoan:loan)
                     
                     persistedLoan = fetchedLoan
                 }
@@ -183,7 +183,7 @@ class CoreDataLoanHelper {
                     var i:Int = 1
                     for (i; i < count; i++) {
                         if let loan = dupResults[i] as? KivaLoan {
-                            assert(false,"Should not have duplicate loans! Found duplicate: \(loan)")
+                            //assert(false,"Should not have duplicate loans! Found duplicate: \(loan)")
                             print("cleaning up duplicate loan \(loan)")
                             context.deleteObject(loan)
                         }

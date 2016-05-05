@@ -30,8 +30,43 @@ class DVNTableViewController: UITableViewController {
         self.kivaAPI = kivaOAuth.kivaAPI
     }
     
-    // helper function that searches for loans
-    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    /*!
+        @brief Find loans from Kiva.org and save to the Core data persistant store on disk.
+        @discussion The caller should refetch after calling this function. Loans found on Kiva are insantiated in the sharedContext. Updates of the persistent store are done using an internal scratch context that is reset upon completion of processing.
+    */
+    func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
+        
+        guard let kivaAPI = self.kivaAPI else {
+            completionHandler(success: false, error: NSError(domain: "kivaAPI is nil.", code: 2019, userInfo: [NSLocalizedDescriptionKey: "kivaAPI is nil in populateLoans in DVNTableViewController."]))
+            return
+        }
+        
+        // Get a collection of loans from Kiva into the sharedContext, but not yet saved to disk.
+        self.findLoans(kivaAPI, context: self.sharedContext) {
+            
+            success, error, loanResults in
+            
+            if success {
+                if let loans = loanResults {
+                    for loan in loans where (loan.id != nil) && (loan.id != -1) {
+                        // persist the loan
+                        CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().loansScratchContext)
+                    }
+                    CoreDataContext.sharedInstance().loansScratchContext.reset()
+                    completionHandler(success: true, error: nil)
+                }
+            }
+            
+            completionHandler(success: false, error: error)
+        }
+    }
+    
+    /*!
+        @brief This helper function searches for loans on Kiva.org.
+        @discussion KivaLoan objects are instantiated in the specified context but not saved to the persistent store.
+        @return A collection of KivaLoan objects.
+    */
+    func findLoans(kivaAPI: KivaAPI, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
         // TODO: expand loan types beyond agriculture
         
@@ -74,73 +109,79 @@ class DVNTableViewController: UITableViewController {
         }
     }
     
-    // Find loans from Kiva.org and update this instance's loan collection property.
-    func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
-        if let kivaAPI = self.kivaAPI {
-            self.findLoans(kivaAPI) { success, error, loanResults in
-                if success {
-                    if let loans = loanResults {
-                        
-                        // just keep the first numberOfLoansToAdd loans
-                        //todo - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
-                        
-                        // todo - do i need to maintain this collection anymore?  self.loans = loans
-                        
-                        print("fetched loans:")
-                        for loan in loans {
-                            print("%@", loan.name)
-                        }
-                                                
-                        // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
-                        for loan in loans where (loan.id != nil) && (loan.id != -1) {
-                            
-                            if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataContext.sharedInstance().scratchContext) == nil {
-                                
-                                print("Need to add loan: %@", loan.name)
-                                
-                                // The following lines were causing duplicate objects to appear in core data. removing these lines results in owning the existing loan objects being upserted when saveContext is called.
-                                
-                                // todo duplicate loans
-                                // _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
-                                
-                                // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
-                                let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataContext.sharedInstance().scratchContext)
-                                print("initializing new loan in scratchContext: %@, %d", newLoan.name, newLoan.id)
-                                
-                                // CoreDataStackManager.sharedInstance().saveContext()
-                                
-                                self.saveScratchContext()
-                            }
-                        }
-                        
-                        completionHandler(success: true, error: nil)
-                    }
-                } else {
-                    print("failed")
-                    completionHandler(success: false, error: error)
-                }
-            }
-        } else {
-            print("no kivaAPI")
-            completionHandler(success: false, error: nil)
-        }
-    }
     
-    /* Save the data in the scratch context to the core data store on disk. */
-    func saveScratchContext() {
-        
-        let error: NSErrorPointer = nil
-        //var results: [AnyObject]?
-        do {
-            print("saveContext: DVNTableViewController.saveScratchContext()")
-            _ = try CoreDataContext.sharedInstance().scratchContext.save()
-        } catch let error1 as NSError {
-            error.memory = error1
-            print("Error saving scratchContext: \(error)")
-        }
-        
-        CoreDataLoanHelper.cleanup()
-    }
+//    // Find loans from Kiva.org and update this instance's loan collection property.
+//    func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
+//        if let kivaAPI = self.kivaAPI {
+//            self.findLoans(kivaAPI) { success, error, loanResults in  // NOTE: USES SHARED CONTEXT
+//                if success {
+//                    if let loans = loanResults {
+//                        
+//                        // just keep the first numberOfLoansToAdd loans
+//                        //todo - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
+//                        
+//                        // todo - do i need to maintain this collection anymore?  self.loans = loans
+//                        
+//                        print("fetched loans:")
+//                        for loan in loans {
+//                            print("%@", loan.name)
+//                        }
+//                                                
+//                        // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
+//                        for loan in loans where (loan.id != nil) && (loan.id != -1) {
+//                            
+//                            if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataContext.sharedInstance().scratchContext) == nil {
+//                                
+//                                print("Need to add loan: %@", loan.name)
+//                                
+//                                // The following lines were causing duplicate objects to appear in core data. removing these lines results in owning the existing loan objects being upserted when saveContext is called.
+//                                
+//                                // todo duplicate loans
+//                                // _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
+//                                
+//// NOTE: replacing below with an upsert to try and avoid duplication:
+//                                
+////                                // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
+////                                let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataContext.sharedInstance().scratchContext)
+////                                print("initializing new loan in scratchContext: %@, %d", newLoan.name, newLoan.id)
+////                                
+////                                // CoreDataStackManager.sharedInstance().saveContext()
+////                                
+////                                self.saveScratchContext()
+//                                //TODO - monitor. may need to back out this change.
+//                                CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().scratchContext)
+//                                
+//                            }
+//                        }
+//                        
+//                        completionHandler(success: true, error: nil)
+//                    }
+//                } else {
+//                    print("failed")
+//                    completionHandler(success: false, error: error)
+//                }
+//            }
+//        } else {
+//            print("no kivaAPI")
+//            completionHandler(success: false, error: nil)
+//        }
+//    }
+    
+//    /* Save the data in the scratch context to the core data store on disk. */
+//    func saveScratchContext() {
+//        
+//        let error: NSErrorPointer = nil
+//        //var results: [AnyObject]?
+//        do {
+//            print("saveContext: DVNTableViewController.saveScratchContext()")
+//            _ = try CoreDataContext.sharedInstance().scratchContext.save()
+//        } catch let error1 as NSError {
+//            error.memory = error1
+//            print("Error saving scratchContext: \(error)")
+//        }
+//        
+//        CoreDataLoanHelper.cleanup()
+//    }
     
     
     // MARK: Manage next page

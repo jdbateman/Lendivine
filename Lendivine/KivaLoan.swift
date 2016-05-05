@@ -193,6 +193,67 @@ class KivaLoan: NSManagedObject  {
         print("init KivaLoan - 4")
     }
     
+    /*! Update this instance's properties with that from the specified object. */
+    func update(fromLoan fromLoan: KivaLoan?) {
+        
+        guard let fromLoan = fromLoan else {return}
+        
+        if let name = fromLoan.name {
+            self.setValue(name, forKey: KivaLoan.InitKeys.name)
+        }
+        if let geo = fromLoan.geo {
+            self.setValue(geo, forKey: KivaLoan.InitKeys.geo)
+        }
+        if let country = fromLoan.country {
+            self.setValue(country, forKey: KivaLoan.InitKeys.country)
+        }
+        if let town = fromLoan.town {
+            self.setValue(town, forKey: KivaLoan.InitKeys.town)
+        }
+        if let activity = fromLoan.activity {
+            self.setValue(activity, forKey: KivaLoan.InitKeys.activity)
+        }
+        if let id = fromLoan.id {
+            self.setValue(id, forKey: KivaLoan.InitKeys.id)
+        }
+        if let use = fromLoan.use {
+            self.setValue(use, forKey: KivaLoan.InitKeys.use)
+        }
+        if let imageID = fromLoan.imageID {
+            self.setValue(imageID, forKey: KivaLoan.InitKeys.imageId)
+        }
+        if let status = fromLoan.status {
+            self.setValue(status, forKey: KivaLoan.InitKeys.status)
+        }
+        if let sector = fromLoan.sector {
+            self.setValue(sector, forKey: KivaLoan.InitKeys.sector)
+        }
+        if let postedDate = fromLoan.postedDate {
+            self.postedDate = postedDate
+        }
+        if let fundedAmount = fromLoan.fundedAmount {
+            self.fundedAmount = fundedAmount
+        }
+        if let partnerID = fromLoan.partnerID {
+            self.partnerID = partnerID
+        }
+        if let imageTemplateID = fromLoan.imageTemplateID {
+            self.imageTemplateID = imageTemplateID
+        }
+        if let borrowerCount = fromLoan.borrowerCount {
+            self.borrowerCount = borrowerCount
+        }
+        if let lenderCount = fromLoan.lenderCount {
+            self.lenderCount = lenderCount
+        }
+        if let loanAmount = fromLoan.loanAmount {
+            self.loanAmount = loanAmount
+        }
+        if let languages = fromLoan.language {
+            self.language = languages
+        }
+    }
+    
     // MARK: - Fetched results controller
     
     /* The main core data managed object context. This context will be persisted. */

@@ -29,6 +29,27 @@ class CoreDataContext {
         return context
     }()
     
+    /* Save the data in the Scratch context to the core data store on disk. */
+    func saveScratchContext() {
+        
+        let error: NSErrorPointer = nil
+        do {
+            _ = try CoreDataContext.sharedInstance().scratchContext.save()
+            
+        } catch let error1 as NSError {
+            error.memory = error1
+            print("Error saving cartContext: \(error)")
+        }
+    }
+    
+    // MARK: - Loans scratch context
+    
+    /* A core data managed object context that will not be used to persist objects. The DVNTableViewController uses this context to work with the user's loans retrieved from the Kiva API. */
+    lazy var loansScratchContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+    }()
     
     // MARK: - myLoans context
     

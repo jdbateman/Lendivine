@@ -27,6 +27,7 @@ class VTError {
         case KIVA_OAUTH_ERROR = 9006
         case KIVA_API_NO_LOANS = 9007
         case KIVA_API_LOAN_NOT_FOUND = 9008
+        case KIVA_API_HANDLE_NIL = 9009
     }
     
     init(errorString: String, errorCode: ErrorCodes) {

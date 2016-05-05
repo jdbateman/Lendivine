@@ -63,8 +63,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // remove all the loans from the scratch context
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let controller: LoansTableViewController = storyboard.instantiateViewControllerWithIdentifier("LoansTableViewControllerStoryboardID") as! LoansTableViewController
-        controller.removeAllLoans()
-        
+        //controller.removeAllLoans()  // TODO - call cleanup instead
+        CoreDataLoanHelper.cleanup()
         
         // Save changes in the application's managed object context before the application terminates.
 //TODO        CoreDataStackManager.sharedInstance().saveContext()
