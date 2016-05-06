@@ -120,10 +120,9 @@ class CoreDataLoanHelper {
         }
     }
     
-    // TODO - decide which context to use to do the cleanup. decide if we should reset the context once cleanup is complete or maybe do another fetch of all entities. That should probably be the responsibility of the caller.
     /*! 
         @brief Scrub for duplicate loans and remove any duplicate objects from the persistant store.
-        @discussion This function is not responsible for cleaning up duplicates in a context. It uses it's own internal context in order to clean up duplicates in the core data store.
+        @discussion This function is not responsible for cleaning up duplicates in a context. It uses it's own internal context in order to clean up duplicates in the core data persistent store. It is the perogative of the caller to do a new fetch after this function finishes.
     */
     class func cleanup() {
         

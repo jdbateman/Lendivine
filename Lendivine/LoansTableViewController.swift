@@ -438,7 +438,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 }
             }
             CoreDataContext.sharedInstance().saveScratchContext()
-            //CoreDataLoanHelper.sharedInstance().cleanup()
+            CoreDataLoanHelper.cleanup()
             
             if inCartCount > 0 {
                 LDAlert(viewController:self).displayErrorAlertView("Loans in Cart", message: "Loans in the cart were not deleted.\n\n Once a loan is removed from the cart it can be removed from the Loans screen.")

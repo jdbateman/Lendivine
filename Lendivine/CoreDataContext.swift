@@ -24,8 +24,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be persisted. */
     lazy var scratchContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -46,15 +47,17 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be used to persist objects. The DVNTableViewController uses this context to work with the user's loans retrieved from the Kiva API. */
     lazy var loansScratchContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
     /* A core data managed object context that will not be used to persist objects. The DVNTableViewController uses this context to work with the user's loans retrieved from the Kiva API. */
     lazy var loansScratchContext2: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -62,8 +65,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be used to persist objects. The MyLoans view controller uses this context to work with the user's loans retrieved from the Kiva API. */
     lazy var myLoansContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -71,8 +75,9 @@ class CoreDataContext {
     
     /* A core data managed object context that wil be used to persist objects. The Cart view controller uses this context it to create, manage, and save KivaCartItems contstructed from the properties of KivaLoan objects. Other view controllers use this context to save KivaLoan objects to the cart and to persist them to disk. (See LoanDetailViewController for an example.) */
     lazy var cartContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -93,8 +98,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be used to persist objects. The Cart view controller uses this context to create temporary KivaLoan objects. Each temporary KivaLoan object is used to evaluate the payment status of a loan represented by a KivaCartItem object. */
     lazy var cartScratchContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -102,8 +108,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will be used to persist objects. The Account view controller uses this context to create KivaAccount objects that are persisted to the core data store on disk.*/
     lazy var accountContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -124,8 +131,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will be used to persist objects. The Countries table view controller uses this context to persist Country objects. */
     lazy var countriesContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -146,8 +154,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be used to persist objects. The Countries table view controller uses this context to fetch  temporary Country objects. */
     lazy var countriesScratchContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -156,8 +165,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will be used to persist objects. The CountryLoans table view controller uses this context to persist Country objects. */
     lazy var countryLoanContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -165,8 +175,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be used to persist objects. The CountryLoans table view controller uses this context to fetch  temporary Country objects. */
     lazy var countryLoanScratchContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -174,8 +185,9 @@ class CoreDataContext {
     
     /* A core data managed object context that will not be used to persist objects. The CoreDataLoanHelper uses this context to fetch  temporary Loan objects. */
     lazy var coreDataLoanHelperCleanupContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
     
@@ -193,8 +205,9 @@ class CoreDataContext {
     }
     
     lazy var coreDataLoanHelperScratchContext: NSManagedObjectContext = {
-        var context = NSManagedObjectContext()
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        context.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         return context
     }()
 }
