@@ -205,6 +205,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func fetchLoans() -> Int {
         var error: NSError? = nil
         
+        CoreDataContext.sharedInstance().scratchContext.reset()
+        
         do {
             try fetchedResultsController.performFetch()
         } catch let error1 as NSError {
@@ -434,9 +436,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 } else {
                     inCartCount += 1
                 }
-                CoreDataContext.sharedInstance().saveScratchContext()
-                //CoreDataLoanHelper.sharedInstance().cleanup()
             }
+            CoreDataContext.sharedInstance().saveScratchContext()
+            //CoreDataLoanHelper.sharedInstance().cleanup()
             
             if inCartCount > 0 {
                 LDAlert(viewController:self).displayErrorAlertView("Loans in Cart", message: "Loans in the cart were not deleted.\n\n Once a loan is removed from the cart it can be removed from the Loans screen.")

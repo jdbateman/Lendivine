@@ -45,7 +45,7 @@ class KivaCartItem: NSManagedObject {
         static let fundedAmount: String = "funded_amount"
         static let partnerID: String = "partner_id"
         static let image: String = "image"
-        static let imageId: String = "id"
+        static let imageId: String = "id"  // todo: is this somehow causing imageId to be saved to id?
         static let imageTemplateID: String = "template_id"
         static let borrowerCount: String = "borrower_count"
         static let lenderCount: String = "lender_count"
@@ -122,11 +122,15 @@ class KivaCartItem: NSManagedObject {
         self.status = loan.status
         self.sector = loan.sector
         self.language = loan.language
+        
+        debugValidateTODORemove()
     }
     
     /*! Core Data init method */
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        debugValidateTODORemove()
     }
     
     /*! Return a dictionary representation of a portion of the data in this KivaCartItem instance. 
@@ -136,6 +140,8 @@ class KivaCartItem: NSManagedObject {
         var dictionary = [String: AnyObject]()
         dictionary[InitKeys.id] = id
         dictionary[InitKeys.donationAmount] = donationAmount
+        
+        debugValidateTODORemove()
         return dictionary
     }
     
@@ -173,6 +179,12 @@ class KivaCartItem: NSManagedObject {
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
         self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
+        
+        debugValidateTODORemove()
+    }
+    
+    func debugValidateTODORemove() {
+        assert(self.id != self.imageID, "KivaCartItem id == imageID. \(self.id) == \(self.imageID)")
     }
 }
 

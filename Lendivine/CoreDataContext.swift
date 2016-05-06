@@ -51,6 +51,13 @@ class CoreDataContext {
         return context
     }()
     
+    /* A core data managed object context that will not be used to persist objects. The DVNTableViewController uses this context to work with the user's loans retrieved from the Kiva API. */
+    lazy var loansScratchContext2: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+    }()
+    
     // MARK: - myLoans context
     
     /* A core data managed object context that will not be used to persist objects. The MyLoans view controller uses this context to work with the user's loans retrieved from the Kiva API. */

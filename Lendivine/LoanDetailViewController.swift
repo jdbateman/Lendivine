@@ -42,6 +42,11 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         
         setupView()
         
+        // TODO - debug
+        if let loan = loan {
+            print("loan details: \(loan) name:\(loan.name) country:\(loan.country) id:\(loan.id)")
+        }
+        
         // set the mapView delegate to this view controller
         mapView.delegate = self
         

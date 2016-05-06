@@ -286,7 +286,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         do {
             results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
         } catch let error1 as NSError {
-            print("Error in fetchLoanByID(): \(error1)")
+            print("Error in fetchCountriesFilteredByNameOn(): \(error1)")
             results = nil
         }
         

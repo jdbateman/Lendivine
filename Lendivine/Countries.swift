@@ -172,7 +172,7 @@ class Countries {
                 }
             }
         } catch let error1 as NSError {
-            print("Error in fetchLoanByID(): \(error1)")
+            print("Error in getRandomCountries(): \(error1)")
             results = nil
         }
 
@@ -224,7 +224,7 @@ class Countries {
             }
         } catch let error1 as NSError {
             //error!.memory = error1
-            print("Error in fetchLoanByID(): \(error1)")
+            print("Error in getRandomCountryCodes(): \(error1)")
             results = nil
         }
         

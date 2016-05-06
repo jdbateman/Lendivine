@@ -84,6 +84,8 @@ class KivaLoan: NSManagedObject  {
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         print("init KivaLoan - 1")
+        
+        debugValidateTODORemove()
     }
 
     /*! Init instance with a dictionary of values, and a core data context. */
@@ -112,6 +114,7 @@ class KivaLoan: NSManagedObject  {
         self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
         
         print("init KivaLoan - 2")
+        debugValidateTODORemove()
     }
 
     /*! 
@@ -146,6 +149,7 @@ class KivaLoan: NSManagedObject  {
         self.language = fromLoan.language
         
         print("init KivaLoan - 3")
+        debugValidateTODORemove()
     }
     
     /*!
@@ -191,6 +195,7 @@ class KivaLoan: NSManagedObject  {
         self.language = fromCartItem.language
         
         print("init KivaLoan - 4")
+        debugValidateTODORemove()
     }
     
     /*! Update this instance's properties with that from the specified object. */
@@ -214,13 +219,14 @@ class KivaLoan: NSManagedObject  {
             self.setValue(activity, forKey: KivaLoan.InitKeys.activity)
         }
         if let id = fromLoan.id {
-            self.setValue(id, forKey: KivaLoan.InitKeys.id)
+            self.id = id
         }
         if let use = fromLoan.use {
             self.setValue(use, forKey: KivaLoan.InitKeys.use)
         }
         if let imageID = fromLoan.imageID {
-            self.setValue(imageID, forKey: KivaLoan.InitKeys.imageId)
+            self.imageID = imageID
+            //self.setValue(imageID, forKey: KivaLoan.InitKeys.imageId)  // This line sets both self.id and self.imageID to fromLoan.imageID
         }
         if let status = fromLoan.status {
             self.setValue(status, forKey: KivaLoan.InitKeys.status)
@@ -252,6 +258,8 @@ class KivaLoan: NSManagedObject  {
         if let languages = fromLoan.language {
             self.language = languages
         }
+        
+        debugValidateTODORemove()
     }
     
     // MARK: - Fetched results controller
@@ -261,44 +269,44 @@ class KivaLoan: NSManagedObject  {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }()
     
-    // TODO: can change to a function that returns value instead of async func with competion block
-    /* Perform a fetch of the loan object. Updates the fetchedResultsController with the matching data from the core data store. */
-    class func fetchLoanByID(loanID: NSNumber, completion: (loan: KivaLoan?, error: NSError?) -> Void) {
-
-        let error: NSErrorPointer = nil
-        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
-        //fetchRequest.predicate = NSPredicate(format: "id == %@", loanID)
-        var results: [AnyObject]?
-        do {
-            results = try sharedContext.executeFetchRequest(fetchRequest)
-        } catch let error1 as NSError {
-            error.memory = error1
-            print("Error in fetchLoanByID(): \(error)")
-            completion(loan: nil, error: error1)
-        }
-        
-        // Check for Errors
-        if error != nil {
-            print("Error in fetchLoanByID(): \(error)")
-        }
-        
-        // Return the first result, or nil
-        if let results = results where results.count > 0 {
-            for loan in results {
-                if let loan = loan as? KivaLoan {
-                    if loan.id == loanID {
-                        completion(loan: loan, error: nil)
-                        return
-                    }
-                }
-            }
-            completion(loan: nil, error: NSError(domain: "fetch error", code: 920, userInfo: nil))
-            // completion(loan: results[0] as? KivaLoan, error: nil)
-        } else {
-            completion(loan: nil, error: NSError(domain: "fetch error", code: 920, userInfo: nil))
-        }
-    }
+//    // TODO: can change to a function that returns value instead of async func with competion block
+//    /* Perform a fetch of the loan object. Updates the fetchedResultsController with the matching data from the core data store. */
+//    class func fetchLoanByID(loanID: NSNumber, completion: (loan: KivaLoan?, error: NSError?) -> Void) {
+//
+//        let error: NSErrorPointer = nil
+//        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+//        //fetchRequest.predicate = NSPredicate(format: "id == %@", loanID)
+//        var results: [AnyObject]?
+//        do {
+//            results = try sharedContext.executeFetchRequest(fetchRequest)
+//        } catch let error1 as NSError {
+//            error.memory = error1
+//            print("Error in fetchLoanByID(): \(error)")
+//            completion(loan: nil, error: error1)
+//        }
+//        
+//        // Check for Errors
+//        if error != nil {
+//            print("Error in fetchLoanByID(): \(error)")
+//        }
+//        
+//        // Return the first result, or nil
+//        if let results = results where results.count > 0 {
+//            for loan in results {
+//                if let loan = loan as? KivaLoan {
+//                    if loan.id == loanID {
+//                        completion(loan: loan, error: nil)
+//                        return
+//                    }
+//                }
+//            }
+//            completion(loan: nil, error: NSError(domain: "fetch error", code: 920, userInfo: nil))
+//            // completion(loan: results[0] as? KivaLoan, error: nil)
+//        } else {
+//            completion(loan: nil, error: NSError(domain: "fetch error", code: 920, userInfo: nil))
+//        }
+//    }
 
     /* Perform a fetch of the loan object. Updates the fetchedResultsController with the matching data from the core data store. */
     class func fetchLoanByID2(loanID: NSNumber, context: NSManagedObjectContext) -> KivaLoan? {
@@ -356,6 +364,10 @@ class KivaLoan: NSManagedObject  {
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         
         return coordinate
+    }
+    
+    func debugValidateTODORemove() {
+        assert(self.id != self.imageID, "KivaCartItem id == imageID. \(self.id) == \(self.imageID)")
     }
 }
 
@@ -623,6 +635,7 @@ extension KivaLoan {
                 if let loans = loans {
                     for loan in loans {
                         if loan.id == self.id {
+                            self.debugValidateTODORemove()
                             // Found the loan in the results, now determine if the loan status matches the desired status.
                             if loan.status == statusToMatch.rawValue {
                                 completionHandler(result: true, error: nil)

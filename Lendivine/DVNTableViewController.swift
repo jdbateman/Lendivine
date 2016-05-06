@@ -41,8 +41,8 @@ class DVNTableViewController: UITableViewController {
             return
         }
         
-        // Get a collection of loans from Kiva into the sharedContext, but not yet saved to disk.
-        self.findLoans(kivaAPI, context: self.sharedContext) {
+        // Get a collection of loans from Kiva into the loansScratchContext, but not yet saved to disk.
+        self.findLoans(kivaAPI, context: CoreDataContext.sharedInstance().loansScratchContext) {
             
             success, error, loanResults in
             
@@ -50,13 +50,16 @@ class DVNTableViewController: UITableViewController {
                 if let loans = loanResults {
                     for loan in loans where (loan.id != nil) && (loan.id != -1) {
                         // persist the loan
-                        CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().loansScratchContext)
+                        CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().loansScratchContext2)
                     }
+                    CoreDataContext.sharedInstance().loansScratchContext2.reset()
                     CoreDataContext.sharedInstance().loansScratchContext.reset()
                     completionHandler(success: true, error: nil)
+                    return
                 }
             }
             
+            CoreDataContext.sharedInstance().loansScratchContext.reset()
             completionHandler(success: false, error: error)
         }
     }

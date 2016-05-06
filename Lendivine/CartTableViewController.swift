@@ -103,49 +103,49 @@ class CartTableViewController: UITableViewController {
             
             let cartItem = self.cart!.items[row]
             
-                cell.nameLabel.text = cartItem.name
+            cell.nameLabel.text = cartItem.name
+        
+            if let country = cartItem.country {
+                // flag
+                if let uiImage = UIImage(named: country) {
+                    cell.flagImageView.image = uiImage
+                } else {
+                    cell.flagImageView.image = UIImage(named: "United Nations")
+                }
+            }
+        
+            cell.countryLabel.text = cartItem.country
             
-                if let country = cartItem.country {
-                    // flag
-                    if let uiImage = UIImage(named: country) {
-                        cell.flagImageView.image = uiImage
-                    } else {
-                        cell.flagImageView.image = UIImage(named: "United Nations")
-                    }
-                }
+            // donation amount
+            var donationAmount = "$"
+            if let itemDonationAmount = cartItem.donationAmount {
+                donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+            }
+            // Set button image to donation amount
+            let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(14), 4))
+            cell.changeDonationButton.imageView!.image = donationImage
             
-                cell.countryLabel.text = cartItem.country
-                
-                // donation amount
-                var donationAmount = "$"
-                if let itemDonationAmount = cartItem.donationAmount {
-                    donationAmount.appendContentsOf(itemDonationAmount.stringValue)
-                }
-                // Set button image to donation amount
-                let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(14), 4))
-                cell.changeDonationButton.imageView!.image = donationImage
-                
-                // Set main image placeholder image
-                cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
-                
-                // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-                cartItem.getImage() {success, error, image in
-                    if success {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            cell.loanImageView!.image = image
-                            
-                            // draw border around image
-                            cell.loanImageView!.layer.borderColor = UIColor.blueColor().CGColor;
-                            cell.loanImageView!.layer.borderWidth = 2.5
-                            cell.loanImageView!.layer.cornerRadius = 3.0
-                            cell.loanImageView!.clipsToBounds = true
-                        }
-                    } else  {
-                        print("error retrieving image: \(error)")
+            // Set main image placeholder image
+            cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+            
+            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+            cartItem.getImage() {success, error, image in
+                if success {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.loanImageView!.image = image
+                        
+                        // draw border around image
+                        cell.loanImageView!.layer.borderColor = UIColor.blueColor().CGColor;
+                        cell.loanImageView!.layer.borderWidth = 2.5
+                        cell.loanImageView!.layer.cornerRadius = 3.0
+                        cell.loanImageView!.clipsToBounds = true
                     }
+                } else  {
+                    print("error retrieving image: \(error)")
                 }
-                
-                print("cart = \(self.cart!.items.count) [configureCell]")
+            }
+            
+            print("CartTableViewController.ConfigureCell configured the \(cartItem.name) \(cartItem.country) cell of \(self.cart!.items.count) rows")
         }
     }
     
