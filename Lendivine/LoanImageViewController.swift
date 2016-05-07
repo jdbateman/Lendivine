@@ -17,10 +17,7 @@ class LoanImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        imageView.bounds.size.width = image!.size.width
-        imageView.bounds.size.height = image!.size.height
-        
+                
         if let image = image {
             imageView.image = image
         }

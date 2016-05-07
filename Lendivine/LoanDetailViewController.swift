@@ -316,9 +316,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     }
     
     
-    // MARK: Navigation
+    // MARK: Popover
     
-    /* Modally present the LoanImageViewController on the main thread. */
+    /* Present the LoanImageViewController as a Popover on the main thread. */
     func presentImageViewController() {
         
         if let loan = self.loan {
@@ -332,10 +332,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                         guard let image = image else {return}
                         self.largeImage = image
                         
-//                         dispatch_async(dispatch_get_main_queue()) {
-//                            self.performSegueWithIdentifier("LoanDetailToLoanImageViewSegueId", sender: self)
-//                        }
-                        
                         let popoverContent = self.storyboard?.instantiateViewControllerWithIdentifier("LoanImageStoryboardId") as! LoanImageViewController
                         popoverContent.modalPresentationStyle = .Popover
                         popoverContent.image = self.largeImage
@@ -345,25 +341,10 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                             popoverContent.preferredContentSize = CGSizeMake(image.size.width, image.size.height)
                             print("downloaded image size: \(image.size.width) \(image.size.height) ")
                             popover.delegate = self
-                            popover.permittedArrowDirections = .Up
+                            popover.permittedArrowDirections = .Up // .Any
                         }
                         
                         self.presentViewController(popoverContent, animated: true, completion: nil)
-                        
-                    
-//                        let storyboard : UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
-//                        let loanImageViewController: LoanImageViewController = storyboard.instantiateViewControllerWithIdentifier("LoanImageStoryboardId") as! LoanImageViewController
-//                        loanImageViewController.modalPresentationStyle = .Popover
-//                        loanImageViewController.preferredContentSize = CGSizeMake(200, 200) //CGSizeMake(image!.size.width, image!.size.height)
-//                        loanImageViewController.image = self.largeImage
-//                        
-//                        let popoverMenuViewController = self.popoverPresentationController
-//                        popoverMenuViewController?.permittedArrowDirections = .Any
-//                        popoverMenuViewController?.delegate = self
-//                        popoverMenuViewController?.sourceView = self.loanImageView
-//                        popoverMenuViewController?.sourceRect = self.loanImageView.bounds
-//                        
-//                        self.presentViewController(loanImageViewController, animated: true, completion: nil)
                     }
                 } else  {
                     print("error retrieving loan image: \(error)")
@@ -372,46 +353,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         }
     }
     
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        
-//        if segue.identifier == "LoanDetailToLoanImageViewSegueId" {
-//        
-//            let controller = segue.destinationViewController as! LoanImageViewController
-//            controller.image = self.largeImage
-//        }
-//    }
-    
-    // MARK: Popover
-    
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
             return .None
     }
-    
-    //@IBAction
-//    func showPopover(sender: AnyObject) {
-//        
-//        var popoverContent = self.storyboard?.instantiateViewControllerWithIdentifier("StoryboardIdentifier") as! UIViewController
-//        
-//        popoverContent.modalPresentationStyle = .Popover
-//        var popover = popoverContent.popoverPresentationController
-//        
-//        if let popover = popoverContent.popoverPresentationController {
-//            
-//            let viewForSource = sender as! UIView
-//            popover.sourceView = viewForSource
-//            
-//            // the position of the popover where it's showed
-//            popover.sourceRect = viewForSource.bounds
-//            
-//            // the size you want to display
-//            popoverContent.preferredContentSize = CGSizeMake(200,500)
-//            popover.delegate = self
-//        }
-//        
-//        self.presentViewController(popoverContent, animated: true, completion: nil)
-//    }
-//    
-//    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-//        return .None
-//    }
 }

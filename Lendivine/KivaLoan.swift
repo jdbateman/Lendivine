@@ -378,7 +378,6 @@ class KivaLoan: NSManagedObject  {
 // MARK: image management functions
 
 extension KivaLoan {
-
     
     /*
     @brief Acquire the UIImage for this Loan object.
@@ -459,11 +458,8 @@ extension KivaLoan {
         
         if let kivaImageID = kivaImageID {
             
-            // todo: pass image width and height to this method and use it in this call.
+            // todo: pass image width and height into this method and use it in this call the enable support for non200x200 image sizes.
             guard let imageUrlString = self.getImageUrl(kivaImageID, width: kDefaultImageWidth, height: kDefaultImageHeight) else {return}
-            
-            //let imageUrlString = String(format:"http://www.kiva.org/img/w200h200/%@.jpg", kivaImageID.stringValue)
-            //            func dowloadImageFrom(imageUrlString: String?, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
             
             let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
             dispatch_async(backgroundQueue, {
@@ -513,35 +509,10 @@ extension KivaLoan {
         return imageFilename
     }
     
-
-//    func getImageFilename(kivaImageID: NSNumber?, width:Int = 200, height:Int = 200) -> String? {
-//        if let kivaImageID = kivaImageID {
-//            let imageNameString = String(format:"%@w%dh%d.jpg", kivaImageID.stringValue, width, height)
-//            return imageNameString
-//        }
-//        return nil
-//    }
-    
-
-    
-//    /*! 
-//    @brief Return a String representing the url of the image identified by kivaImageID
-//    @param kivaImageID The Kiva image identifier.
-//    @return A String representing the url where the image can be downloaded, or nil in case of an error or invalide identifier.
-//    */
-//    func getImageUrl(kivaImageID: NSNumber?) -> String? {
-//        if let kivaImageID = kivaImageID {
-//            let imageUrlString = String(format:"http://www.kiva.org/img/w200h200/%@.jpg", kivaImageID.stringValue)
-//            return imageUrlString
-//        }
-//        return nil
-//    }
-
-    
-    
-    //TODO: the image name on the filesystem is based off the id. Add the width height in the filename after the id as: idw<width>h<height>
-    
-    /* Save image to a file with the name filename on the filesystem in the Documents directory. */
+    /*!
+        @brief Save image to a file with the name filename on the filesystem in the Documents directory.
+    @discussion It is recommended to construct the filename using the makeImageFilename helper method.
+    */
     func saveImageToFileSystem(filename: String, image: UIImage?) {
         if let image = image {
             let imageData = UIImageJPEGRepresentation(image, 1)
@@ -631,10 +602,8 @@ extension KivaLoan {
                 // save the image data to the file system
                 let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
                 dispatch_async(backgroundQueue, {
-                    //if let imageID = self.imageID {
                     let imageFilename = self.makeImageFilename(imageID, width:width, height:height)
                     self.saveImageToFileSystem(imageFilename, image: theImage)
-                    //}
                 })
             }
         }
