@@ -77,7 +77,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
         
         if let point = tapRecognizer?.locationInView(self.mapView) {
         
-            let tapPoint:CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: self.view)
+            let tapPoint:CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
             let location = CLLocation(latitude: tapPoint.latitude , longitude: tapPoint.longitude)
             
             print("coordinates: lat: \(tapPoint.latitude) lon: \(tapPoint.longitude)")
@@ -121,7 +121,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
                 activityIndicator.startActivityIndicator(self.view)
                 
                 var theCountry: Country?
-                if let countries = DVNCountries.fetchCountriesFilteredByNameOn(self.countryName) as? [Country] {
+                if let countries = DVNCountries.sharedInstance().fetchCountriesFilteredByNameOn(self.countryName) as? [Country] {
                     theCountry = countries.first
                 }
                 
