@@ -41,6 +41,7 @@
 		9E6105DF1CD8FD1100334DDC /* CountryLoansKivaApiHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6105DE1CD8FD1100334DDC /* CountryLoansKivaApiHelper.swift */; };
 		9E6105E51CD9C46B00334DDC /* CoreDataLoanHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6105E41CD9C46B00334DDC /* CoreDataLoanHelper.swift */; };
 		9E6105E91CDA56FF00334DDC /* CoreDataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6105E81CDA56FF00334DDC /* CoreDataContext.swift */; };
+		9E6105F31CDD9BA300334DDC /* LoanImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6105F21CDD9BA300334DDC /* LoanImageViewController.swift */; };
 		9E6815D71CCA8384006DDE1A /* AcknowledgementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */; };
 		9E6AC0031CB1CE2C00F3476F /* DVNTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0001CB1CE2C00F3476F /* DVNTableViewCell.swift */; };
 		9E6AC0041CB1CE2C00F3476F /* DVNTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */; };
@@ -147,6 +148,7 @@
 		9E6105DE1CD8FD1100334DDC /* CountryLoansKivaApiHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryLoansKivaApiHelper.swift; sourceTree = "<group>"; };
 		9E6105E41CD9C46B00334DDC /* CoreDataLoanHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataLoanHelper.swift; sourceTree = "<group>"; };
 		9E6105E81CDA56FF00334DDC /* CoreDataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataContext.swift; sourceTree = "<group>"; };
+		9E6105F21CDD9BA300334DDC /* LoanImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoanImageViewController.swift; sourceTree = "<group>"; };
 		9E6815D61CCA8384006DDE1A /* AcknowledgementsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcknowledgementsViewController.swift; sourceTree = "<group>"; };
 		9E6AC0001CB1CE2C00F3476F /* DVNTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNTableViewCell.swift; sourceTree = "<group>"; };
 		9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNTableViewController.swift; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				9E6AC00B1CB1D6CB00F3476F /* MapWithCheckoutViewController.swift */,
 				9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */,
 				9E6AC00E1CB1F3EA00F3476F /* KivaSignupViewController.swift */,
+				9E6105F21CDD9BA300334DDC /* LoanImageViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -481,6 +484,7 @@
 				9E7869E51C9EF15100F1FE93 /* LoanDetailViewController.swift in Sources */,
 				9EDF2E381BFD660800E6EF9B /* KivaPaging.swift in Sources */,
 				9E79FBBD1CA84AD4008B96B1 /* LoginViewController.swift in Sources */,
+				9E6105F31CDD9BA300334DDC /* LoanImageViewController.swift in Sources */,
 				9E6815D71CCA8384006DDE1A /* AcknowledgementsViewController.swift in Sources */,
 				9E3950691BF66E23007BC75E /* KivaTeam.swift in Sources */,
 				9E7869E21C9E0F6100F1FE93 /* MapViewController.swift in Sources */,

@@ -15,6 +15,9 @@ import UIKit
 import CoreData
 import MapKit
 
+let kDefaultImageWidth:Int = 200
+let kDefaultImageHeight:Int = 200
+
 // make KivaLoan visible to CoreData
 @objc(KivaLoan)
 
@@ -376,23 +379,29 @@ class KivaLoan: NSManagedObject  {
 
 extension KivaLoan {
 
+    
     /*
     @brief Acquire the UIImage for this Loan object.
     @discussion The image is retrieved using the following sequence:
         1. cache
         2. filesystem
         3. download the image from self.imageUrl.
+    Image sizes are maximums
+    @param width (in) - desired width of image
+    @param height (in) - desired height of image
     @param completion (in)
     @param success (out) - true if image successfully acquired, else false.
     @param error (out) - NSError object if an error occurred, else nil.
     @param image (out) - the retrieved UIImage. May be nil if no image was found, or if an error occurred.
     */
-    func getImage(completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
+    func getImage(width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
         
-        let imageUrl = getImageUrl(self.imageID)
+        let imageUrl = getImageUrl(self.imageID, width:width, height:height)
+        print("imageUrl: \(imageUrl)")
         
         // Try loading the image from the image cache.
         if let url = imageUrl {
+            print("find image url: \(url)")
             if let theImage: UIImage = NSCache.sharedInstance.objectForKey(url) as? UIImage {
                 //print("image loaded from cache")
                 completion(success: true, error: nil, image: theImage)
@@ -402,7 +411,8 @@ extension KivaLoan {
         
         // Try loading the data from the file system.
         if let imageID = self.imageID {
-            if let image = getImageFromFileSystem(imageID.stringValue) {
+            let imageFilename = makeImageFilename(imageID, width:width, height:height)
+            if let image = getImageFromFileSystem(imageFilename) {
                 //print("image loaded from file system")
                 
                 // Cache the image in memory.
@@ -415,10 +425,11 @@ extension KivaLoan {
 
         // Load the image from the server asynchronously on a background queue.
         if let url = imageUrl {
-            self.dowloadImageFrom(url) { success, error, theImage in
+            self.dowloadImageFrom(url) {
+                success, error, theImage in
                 if success {
                     if let theImage = theImage {
-                        self.cacheImageAndWriteToFile(theImage)
+                        self.cacheImageAndWriteToFile(theImage, width:width, height:height)
                     }
                     //print("image downloaded from server")
                     completion(success: true, error: nil, image: theImage)
@@ -428,7 +439,7 @@ extension KivaLoan {
                     self.dowloadImageFrom(url) { success, error, theImage in
                         if success {
                             if let theImage = theImage {
-                                self.cacheImageAndWriteToFile(theImage)
+                                self.cacheImageAndWriteToFile(theImage, width:width, height:height)
                             }
                             //print("image downloaded from server")
                             completion(success: true, error: nil, image: theImage)
@@ -445,8 +456,13 @@ extension KivaLoan {
     
     /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
     func getKivaImage(kivaImageID: NSNumber?, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
+        
         if let kivaImageID = kivaImageID {
-            let imageUrlString = String(format:"http://www.kiva.org/img/w200h200/%@.jpg", kivaImageID.stringValue)
+            
+            // todo: pass image width and height to this method and use it in this call.
+            guard let imageUrlString = self.getImageUrl(kivaImageID, width: kDefaultImageWidth, height: kDefaultImageHeight) else {return}
+            
+            //let imageUrlString = String(format:"http://www.kiva.org/img/w200h200/%@.jpg", kivaImageID.stringValue)
             //            func dowloadImageFrom(imageUrlString: String?, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
             
             let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
@@ -473,18 +489,57 @@ extension KivaLoan {
         }
     }
     
-    /*! 
+    /*!
     @brief Return a String representing the url of the image identified by kivaImageID
+    @dicussion Kiva.org returns an image with max size bounded by width and height.
     @param kivaImageID The Kiva image identifier.
+    @param width desired width of the image.
+    @param height desired height of the image.
     @return A String representing the url where the image can be downloaded, or nil in case of an error or invalide identifier.
     */
-    func getImageUrl(kivaImageID: NSNumber?) -> String? {
+    func getImageUrl(kivaImageID: NSNumber?, width:Int = 200, height:Int = 200) -> String? {
         if let kivaImageID = kivaImageID {
-            let imageUrlString = String(format:"http://www.kiva.org/img/w200h200/%@.jpg", kivaImageID.stringValue)
+            let imageUrlString = String(format:"http://www.kiva.org/img/w%dh%d/%@.jpg", width, height, kivaImageID.stringValue)
             return imageUrlString
         }
         return nil
     }
+
+    /*! Return a String representing the filename of the image on disk. The filename consists of the <imageId> + w<width> + h<height> +.jpg.
+    Example output: "123456w340h460.jpg"
+    */
+    func makeImageFilename(imageId:NSNumber, width:Int = 200, height:Int = 200) -> String {
+        let imageFilename = String(format: "%@w%dh%d.jpg", imageId.stringValue, width, height)
+        return imageFilename
+    }
+    
+
+//    func getImageFilename(kivaImageID: NSNumber?, width:Int = 200, height:Int = 200) -> String? {
+//        if let kivaImageID = kivaImageID {
+//            let imageNameString = String(format:"%@w%dh%d.jpg", kivaImageID.stringValue, width, height)
+//            return imageNameString
+//        }
+//        return nil
+//    }
+    
+
+    
+//    /*! 
+//    @brief Return a String representing the url of the image identified by kivaImageID
+//    @param kivaImageID The Kiva image identifier.
+//    @return A String representing the url where the image can be downloaded, or nil in case of an error or invalide identifier.
+//    */
+//    func getImageUrl(kivaImageID: NSNumber?) -> String? {
+//        if let kivaImageID = kivaImageID {
+//            let imageUrlString = String(format:"http://www.kiva.org/img/w200h200/%@.jpg", kivaImageID.stringValue)
+//            return imageUrlString
+//        }
+//        return nil
+//    }
+
+    
+    
+    //TODO: the image name on the filesystem is based off the id. Add the width height in the filename after the id as: idw<width>h<height>
     
     /* Save image to a file with the name filename on the filesystem in the Documents directory. */
     func saveImageToFileSystem(filename: String, image: UIImage?) {
@@ -502,6 +557,7 @@ extension KivaLoan {
     /* Load the data from filename and return as a UIImage object. */
     func getImageFromFileSystem(filename: String) -> UIImage? {
         let path = pathForImageFileWith(filename)
+        print("image path on disk = \(path)")
         if let path = path {
             if NSFileManager.defaultManager().fileExistsAtPath(path) {
                 let imageData = NSFileManager.defaultManager().contentsAtPath(path)
@@ -523,12 +579,15 @@ extension KivaLoan {
         return fileURL.path
     }
     
-    /* Save the image data to the image cache in memory. */
-    func cacheImage(theImage: UIImage) {
+    /* 
+        @brief Save the image data to the image cache in memory.
+        @param The imageID, width, and height are used to construct a url that is used as the key to cache the image.
+    */
+    func cacheImage(theImage: UIImage, width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight) {
         
         // Ensure access of the managed object happpens on the main queue
         dispatch_async(dispatch_get_main_queue()) {
-            let imageUrl = self.getImageUrl(self.imageID)
+            let imageUrl = self.getImageUrl(self.imageID, width:width, height:height)
             if let url = imageUrl {
                 let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
                 dispatch_async(backgroundQueue, {
@@ -564,7 +623,7 @@ extension KivaLoan {
     }
 
     /* Save the image to the local cache and file system. */
-    func cacheImageAndWriteToFile(theImage: UIImage) {
+    func cacheImageAndWriteToFile(theImage: UIImage, width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight) {
         
         // Ensure access of the managed object happpens on the main queue
         dispatch_async(dispatch_get_main_queue()) {
@@ -573,7 +632,8 @@ extension KivaLoan {
                 let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
                 dispatch_async(backgroundQueue, {
                     //if let imageID = self.imageID {
-                        self.saveImageToFileSystem(imageID.stringValue, image: theImage)
+                    let imageFilename = self.makeImageFilename(imageID, width:width, height:height)
+                    self.saveImageToFileSystem(imageFilename, image: theImage)
                     //}
                 })
             }

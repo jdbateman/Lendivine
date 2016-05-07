@@ -1488,6 +1488,39 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
             </objects>
             <point key="canvasLocation" x="3439" y="-304"/>
         </scene>
+        <!--Loan Image View Controller-->
+        <scene sceneID="N6u-dl-jPw">
+            <objects>
+                <viewController storyboardIdentifier="LoanImageStoryboardId" id="Oen-jI-7RD" customClass="LoanImageViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9PX-xd-xFq"/>
+                        <viewControllerLayoutGuide type="bottom" id="zmm-vr-WwE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nJv-TH-1SU">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="07f-CN-xwB">
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="07f-CN-xwB" firstAttribute="top" secondItem="nJv-TH-1SU" secondAttribute="top" id="7yd-ZU-Iz8"/>
+                            <constraint firstItem="07f-CN-xwB" firstAttribute="leading" secondItem="nJv-TH-1SU" secondAttribute="leading" id="Oob-sg-pIN"/>
+                            <constraint firstAttribute="trailing" secondItem="07f-CN-xwB" secondAttribute="trailing" id="Ule-1Q-M7F"/>
+                            <constraint firstItem="zmm-vr-WwE" firstAttribute="top" secondItem="07f-CN-xwB" secondAttribute="bottom" id="jvf-LU-UeZ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="07f-CN-xwB" id="sQc-2I-uko"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="edN-nA-ZA5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4122" y="-304"/>
+        </scene>
         <!--Login-->
         <scene sceneID="p12-YJ-qR4">
             <objects>

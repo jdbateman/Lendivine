@@ -11,7 +11,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
+class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, UIPopoverPresentationControllerDelegate  {
 
     var loan: KivaLoan?
     var kivaAPI: KivaAPI?
@@ -19,6 +19,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     var textAnimationTimer:NSTimer?
     var balanceDescription:String?
     var fundedString:String?
+    var largeImage:UIImage?
     
     @IBOutlet weak var addToCartButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
@@ -33,6 +34,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
     @IBOutlet weak var useLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
+    
+    var tapRecognizer: UITapGestureRecognizer? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +56,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
         showPinOnMap()
         
         getLoanBalancesFromKiva()
+        
+        // Initialize the tapRecognizer
+        initTapRecognizer()
     }
     
     /*! hide the status bar */
@@ -286,4 +292,126 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate  {
             self.fundedAmount.fadeInAnimation(1.0, delay: 0)  {finished in}
         }
      }
+    
+    
+    // MARK: Tap gesture recognizer
+    
+    func initTapRecognizer() {
+        tapRecognizer = UITapGestureRecognizer(target: self, action:Selector("handleSingleTap:"))
+        
+        if let tr = tapRecognizer {
+            tr.numberOfTapsRequired = 1
+            self.loanImageView.addGestureRecognizer(tr)
+            self.loanImageView.userInteractionEnabled = true
+        }
+    }
+    
+    func deinitTapRecognizer() {
+        self.loanImageView.removeGestureRecognizer(self.tapRecognizer!)
+    }
+    
+    // User tapped somewhere on the view. End editing.
+    func handleSingleTap(recognizer: UITapGestureRecognizer) {
+        presentImageViewController()
+    }
+    
+    
+    // MARK: Navigation
+    
+    /* Modally present the LoanImageViewController on the main thread. */
+    func presentImageViewController() {
+        
+        if let loan = self.loan {
+            
+            loan.getImage(450, height:360) {
+                success, error, image in
+                
+                if success {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        
+                        guard let image = image else {return}
+                        self.largeImage = image
+                        
+//                         dispatch_async(dispatch_get_main_queue()) {
+//                            self.performSegueWithIdentifier("LoanDetailToLoanImageViewSegueId", sender: self)
+//                        }
+                        
+                        let popoverContent = self.storyboard?.instantiateViewControllerWithIdentifier("LoanImageStoryboardId") as! LoanImageViewController
+                        popoverContent.modalPresentationStyle = .Popover
+                        popoverContent.image = self.largeImage
+                        if let popover = popoverContent.popoverPresentationController {
+                            popover.sourceView = self.loanImageView
+                            popover.sourceRect =  self.loanImageView.bounds
+                            popoverContent.preferredContentSize = CGSizeMake(image.size.width, image.size.height)
+                            print("downloaded image size: \(image.size.width) \(image.size.height) ")
+                            popover.delegate = self
+                            popover.permittedArrowDirections = .Up
+                        }
+                        
+                        self.presentViewController(popoverContent, animated: true, completion: nil)
+                        
+                    
+//                        let storyboard : UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
+//                        let loanImageViewController: LoanImageViewController = storyboard.instantiateViewControllerWithIdentifier("LoanImageStoryboardId") as! LoanImageViewController
+//                        loanImageViewController.modalPresentationStyle = .Popover
+//                        loanImageViewController.preferredContentSize = CGSizeMake(200, 200) //CGSizeMake(image!.size.width, image!.size.height)
+//                        loanImageViewController.image = self.largeImage
+//                        
+//                        let popoverMenuViewController = self.popoverPresentationController
+//                        popoverMenuViewController?.permittedArrowDirections = .Any
+//                        popoverMenuViewController?.delegate = self
+//                        popoverMenuViewController?.sourceView = self.loanImageView
+//                        popoverMenuViewController?.sourceRect = self.loanImageView.bounds
+//                        
+//                        self.presentViewController(loanImageViewController, animated: true, completion: nil)
+                    }
+                } else  {
+                    print("error retrieving loan image: \(error)")
+                }
+            }
+        }
+    }
+    
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        
+//        if segue.identifier == "LoanDetailToLoanImageViewSegueId" {
+//        
+//            let controller = segue.destinationViewController as! LoanImageViewController
+//            controller.image = self.largeImage
+//        }
+//    }
+    
+    // MARK: Popover
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+            return .None
+    }
+    
+    //@IBAction
+//    func showPopover(sender: AnyObject) {
+//        
+//        var popoverContent = self.storyboard?.instantiateViewControllerWithIdentifier("StoryboardIdentifier") as! UIViewController
+//        
+//        popoverContent.modalPresentationStyle = .Popover
+//        var popover = popoverContent.popoverPresentationController
+//        
+//        if let popover = popoverContent.popoverPresentationController {
+//            
+//            let viewForSource = sender as! UIView
+//            popover.sourceView = viewForSource
+//            
+//            // the position of the popover where it's showed
+//            popover.sourceRect = viewForSource.bounds
+//            
+//            // the size you want to display
+//            popoverContent.preferredContentSize = CGSizeMake(200,500)
+//            popover.delegate = self
+//        }
+//        
+//        self.presentViewController(popoverContent, animated: true, completion: nil)
+//    }
+//    
+//    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+//        return .None
+//    }
 }
