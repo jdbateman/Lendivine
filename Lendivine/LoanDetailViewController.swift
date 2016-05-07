@@ -56,9 +56,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         showPinOnMap()
         
         getLoanBalancesFromKiva()
-        
-        // Initialize the tapRecognizer
-        initTapRecognizer()
     }
     
     /*! hide the status bar */
@@ -67,12 +64,13 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     }
 
     override func viewWillAppear(animated: Bool) {
-        
+        initTapRecognizer()
         textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(5.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {
         textAnimationTimer?.invalidate()
+        deinitTapRecognizer()
     }
     
     override func didReceiveMemoryWarning() {

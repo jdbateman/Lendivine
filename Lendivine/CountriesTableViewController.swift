@@ -29,6 +29,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         addSearchBar()
         
+        navigationItem.title = "Countries"
+        
         //self.edgesForExtendedLayout = .None
         //todo
         //self.navigationController?.navigationBar.translucent = false
@@ -58,6 +60,29 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     func setupView() {
         
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        let mapButton = UIButton(frame: CGRectMake(334, 8, 28, 28))
+        mapButton.backgroundColor = UIColor.clearColor()
+        mapButton.setImage(UIImage(named: "earth-america-7"), forState: .Normal)
+        //mapButton.setTitle("Map", forState: .Normal)
+        mapButton.hidden = false
+        mapButton.addTarget(self, action: "mapAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(mapButton)
+        
+    }
+    
+    func mapAction(sender:UIButton!)
+    {
+//        presentCountriesMapViewController()
+//        return
+        
+        // Modally present the MapViewController on the main thread.
+        dispatch_async(dispatch_get_main_queue()) {
+            
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+
+            self.performSegueWithIdentifier("CountriesToMapSegueId", sender: self)
+        }
     }
     
     /*! hide the status bar */
@@ -381,5 +406,33 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
                 activityIndicator.stopActivityIndicator()
             }
         }
+        else if segue.identifier == "CountriesToMapSegueId" {
+                
+                let controller = segue.destinationViewController as! CountriesMapViewController
+                
+                controller.sourceViewController = self
+                controller.navigationItem.title = "Countries"
+        }
+//        else if segue.identifier == "CartToMapSegueId" {
+//            
+//            self.navigationController?.setNavigationBarHidden(false, animated: false)
+//            
+//            let controller = segue.destinationViewController as! MapWithCheckoutViewController
+//            
+//            controller.sourceViewController = self
+//            controller.navigationItem.title = "Countries"
+//        }
     }
+    
+//    func presentCountriesMapViewController() {
+//        
+//        self.navigationController?.setNavigationBarHidden(false, animated: false)
+//
+//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+////        let controller = storyboard.instantiateViewControllerWithIdentifier("MapWithCheckoutStoryboardID") as! MapWithCheckoutViewController
+//        let controller = storyboard.instantiateViewControllerWithIdentifier("CountriesMapStoryboardID") as! CountriesMapViewController
+//       // controller.sourceViewController = self
+//        controller.navigationItem.title = "Countries"
+//        self.navigationController?.pushViewController(controller, animated: true)
+//    }
 }
