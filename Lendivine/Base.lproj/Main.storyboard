@@ -333,6 +333,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="MxO-nw-b9m"/>
+                    <connections>
+                        <segue destination="PJv-a2-y6x" kind="show" identifier="CountriesToMapSegueId" id="hTF-vG-tzK"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7sL-Pp-bXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1775,6 +1778,83 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
             </objects>
             <point key="canvasLocation" x="-782" y="4"/>
         </scene>
+        <!--Map-->
+        <scene sceneID="Qy8-hO-KOW">
+            <objects>
+                <viewController storyboardIdentifier="CountriesMapStoryboardID" title="Map" id="PJv-a2-y6x" customClass="CountriesMapViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jhZ-Rh-A0v"/>
+                        <viewControllerLayoutGuide type="bottom" id="bQz-gf-9UB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Fkc-ip-8kI">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="IR6-CO-gXR">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                            </mapView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KyW-zc-K3e">
+                                <rect key="frame" x="0.0" y="471" width="600" height="80"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Select a country to search for loans." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ujb-f1-G1r">
+                                        <rect key="frame" x="40" y="29" width="520" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94117647059999998" green="0.66666666669999997" blue="0.16751254560000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="DWQ-f3-HQI"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ujb-f1-G1r" secondAttribute="trailing" constant="40" id="Ku7-SW-DMa"/>
+                                    <constraint firstItem="Ujb-f1-G1r" firstAttribute="centerY" secondItem="KyW-zc-K3e" secondAttribute="centerY" id="cb7-TB-kHN"/>
+                                    <constraint firstItem="Ujb-f1-G1r" firstAttribute="centerX" secondItem="KyW-zc-K3e" secondAttribute="centerX" id="fH0-jM-rR5"/>
+                                    <constraint firstItem="Ujb-f1-G1r" firstAttribute="leading" secondItem="KyW-zc-K3e" secondAttribute="leading" constant="40" id="lRt-7k-XTi"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="top" secondItem="jhZ-Rh-A0v" secondAttribute="bottom" constant="80" id="2lE-Ae-kIR"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="centerX" secondItem="Fkc-ip-8kI" secondAttribute="centerX" id="E1s-NP-qTW"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="leading" secondItem="Fkc-ip-8kI" secondAttribute="leading" id="H7W-8q-gb1"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="top" secondItem="jhZ-Rh-A0v" secondAttribute="bottom" id="HOL-uN-g78"/>
+                            <constraint firstAttribute="trailing" secondItem="IR6-CO-gXR" secondAttribute="trailing" id="T1b-tx-zB4"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="top" secondItem="jhZ-Rh-A0v" secondAttribute="bottom" id="WnH-L2-gVw"/>
+                            <constraint firstItem="bQz-gf-9UB" firstAttribute="top" secondItem="KyW-zc-K3e" secondAttribute="bottom" id="XsJ-aH-59G"/>
+                            <constraint firstItem="KyW-zc-K3e" firstAttribute="leading" secondItem="Fkc-ip-8kI" secondAttribute="leading" id="aef-SH-jWN"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="top" secondItem="jhZ-Rh-A0v" secondAttribute="bottom" id="cCu-nT-lsW"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="centerY" secondItem="Fkc-ip-8kI" secondAttribute="centerY" id="f4o-Az-SoS"/>
+                            <constraint firstItem="IR6-CO-gXR" firstAttribute="top" secondItem="jhZ-Rh-A0v" secondAttribute="bottom" id="gGD-6l-1JX"/>
+                            <constraint firstItem="KyW-zc-K3e" firstAttribute="centerX" secondItem="Fkc-ip-8kI" secondAttribute="centerX" id="hMG-eu-KtN"/>
+                            <constraint firstItem="bQz-gf-9UB" firstAttribute="top" secondItem="IR6-CO-gXR" secondAttribute="bottom" id="j9E-fR-B5x"/>
+                            <constraint firstAttribute="trailing" secondItem="KyW-zc-K3e" secondAttribute="trailing" id="yI4-re-k5f"/>
+                            <constraint firstItem="KyW-zc-K3e" firstAttribute="top" secondItem="IR6-CO-gXR" secondAttribute="bottom" constant="-129" id="yuE-V8-CbS"/>
+                            <constraint firstAttribute="bottom" secondItem="KyW-zc-K3e" secondAttribute="bottom" id="zZ3-A8-1jk"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="WnH-L2-gVw"/>
+                                <exclude reference="gGD-6l-1JX"/>
+                                <exclude reference="f4o-Az-SoS"/>
+                                <exclude reference="2lE-Ae-kIR"/>
+                                <exclude reference="E1s-NP-qTW"/>
+                                <exclude reference="cCu-nT-lsW"/>
+                                <exclude reference="yuE-V8-CbS"/>
+                                <exclude reference="zZ3-A8-1jk"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="Loans" id="Qlm-uz-18j"/>
+                    <connections>
+                        <outlet property="mapView" destination="IR6-CO-gXR" id="bic-nP-GRO"/>
+                        <segue destination="YfW-JB-BBn" kind="show" identifier="CountriesMapToCountryLoans" id="SEU-i4-u6i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Q3-RM-elT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2273" y="-2561"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Add Shopping Cart-50" width="50" height="50"/>
@@ -1791,7 +1871,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="SEU-i4-u6i"/>
+        <segue reference="7o5-ta-g1w"/>
         <segue reference="nqk-aM-Sq9"/>
-        <segue reference="e6n-ZL-xAr"/>
     </inferredMetricsTieBreakers>
 </document>

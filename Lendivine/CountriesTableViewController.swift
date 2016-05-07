@@ -15,7 +15,7 @@ let restCountriesAPI = RESTCountries.sharedInstance()
 class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating/*, UISearchBarDelegate*/ {
 
     let searchController = UISearchController(searchResultsController: nil)
-    
+
     var countries = [Country]()
     var filteredTableData = [Country]()
     
@@ -28,6 +28,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         setupView()
         
         addSearchBar()
+        
+        navigationItem.title = "Countries"
         
         //self.edgesForExtendedLayout = .None
         //todo
@@ -58,6 +60,34 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     func setupView() {
         
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        let mapButton = UIButton(frame: CGRectMake(334, 8, 28, 28))
+        mapButton.backgroundColor = UIColor.clearColor()
+        mapButton.setImage(UIImage(named: "earth-america-7"), forState: .Normal)
+//        if let earthImage = UIImage(named: "earth-america-7") {
+//            let tintedEarth = earthImage.imageWithRenderingMode(.AlwaysTemplate)
+//            mapButton.imageView!.image = tintedEarth
+//            mapButton.imageView!.tintColor = UIColor.blueColor()
+//        }
+        mapButton.hidden = false
+        mapButton.addTarget(self, action: "mapAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(mapButton)
+        
+
+    }
+    
+    func mapAction(sender:UIButton!)
+    {
+//        presentCountriesMapViewController()
+//        return
+        
+        // Modally present the MapViewController on the main thread.
+        dispatch_async(dispatch_get_main_queue()) {
+            
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+
+            self.performSegueWithIdentifier("CountriesToMapSegueId", sender: self)
+        }
     }
     
     /*! hide the status bar */
@@ -68,10 +98,10 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     /*! Initialize countries collection from core data using a scratch context. */
     func initCountriesFromCoreData() {
         
-        fetchCountries()
+        DVNCountries.sharedInstance().fetchCountries()
         
         // set the NSFetchedResultsControllerDelegate
-        fetchedResultsController.delegate = self
+        DVNCountries.sharedInstance().fetchedResultsController.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
@@ -90,7 +120,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = true
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.sizeToFit()
+        searchController.searchBar.sizeThatFits(CGSize(width: 80, height: 20))    // sizeToFit()
         searchController.searchBar.barTintColor = UIColor(rgb:0xFFE8A1)
         
         self.tableView.tableHeaderView = searchController.searchBar
@@ -104,7 +134,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             filteredTableData.removeAll(keepCapacity: false)
         }
         
-        let array = fetchCountriesFilteredByNameOn(searchController.searchBar.text!)
+        let array = DVNCountries.sharedInstance().fetchCountriesFilteredByNameOn(searchController.searchBar.text!)
         
         
         //let array = (countries as NSArray).filteredArrayUsingPredicate(searchPredicate)
@@ -129,7 +159,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         } else {
             
-            let sectionInfo = self.fetchedResultsController.sections![section]
+            let sectionInfo = DVNCountries.sharedInstance().fetchedResultsController.sections![section]
             let count = sectionInfo.numberOfObjects
             return count
         }
@@ -152,12 +182,12 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         var theCountry: Country?
         if self.searchController.active {
-            if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+            if let countries = DVNCountries.sharedInstance().fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
                 theCountry = countries[indexPath.row]
             }
         } else {
             
-            theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Country // TODO use indexPath.row instead of indexPath?
+            theCountry = DVNCountries.sharedInstance().fetchedResultsController.objectAtIndexPath(indexPath) as? Country // TODO use indexPath.row instead of indexPath?
         }
 
         guard let country = theCountry else {
@@ -234,64 +264,64 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 
     // MARK: - Fetched results controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
-        
-        // Create the fetch request
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
-        
-        // Add a sort descriptor to enforce a sort order on the results.
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
-        
-        // Create the Fetched Results Controller
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
-        
-        // Return the fetched results controller. It will be the value of the lazy variable
-        return fetchedResultsController
-    } ()
-    
-    /*! Perform a fetch of Country objects to update the fetchedResultsController with the current data from the core data store. */
-    func fetchCountries() {
-        var error: NSError? = nil
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch let error1 as NSError {
-            error = error1
-        }
-        
-        if let error = error {
-            LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
-        }
-    }
-
-    /*! Perform a fetch of Country objects from the countriesScratchContext filtered for those that contain the specified userInput string. */
-    func fetchCountriesFilteredByNameOn(userInput: String?) -> [AnyObject]? {
-        
-        guard let userInput = userInput else {
-            return nil
-        }
-        
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
-
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
-
-        fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
-        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
-        
-        _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
-            CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
-
-        var results: [AnyObject]?
-        do {
-            results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
-        } catch let error1 as NSError {
-            print("Error in fetchCountriesFilteredByNameOn(): \(error1)")
-            results = nil
-        }
-        
-        return results
-    }
+//    lazy var fetchedResultsController: NSFetchedResultsController = {
+//        
+//        // Create the fetch request
+//        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+//        
+//        // Add a sort descriptor to enforce a sort order on the results.
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+//        
+//        // Create the Fetched Results Controller
+//        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+//            CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
+//        
+//        // Return the fetched results controller. It will be the value of the lazy variable
+//        return fetchedResultsController
+//    } ()
+//    
+//    /*! Perform a fetch of Country objects to update the fetchedResultsController with the current data from the core data store. */
+//    func fetchCountries() {
+//        var error: NSError? = nil
+//        
+//        do {
+//            try fetchedResultsController.performFetch()
+//        } catch let error1 as NSError {
+//            error = error1
+//        }
+//        
+//        if let error = error {
+//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+//        }
+//    }
+//
+//    /*! Perform a fetch of Country objects from the countriesScratchContext filtered for those that contain the specified userInput string. */
+//    func fetchCountriesFilteredByNameOn(userInput: String?) -> [AnyObject]? {
+//        
+//        guard let userInput = userInput else {
+//            return nil
+//        }
+//        
+//        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+//
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+//
+//        fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
+//        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
+//        
+//        _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
+//            CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)
+//
+//        var results: [AnyObject]?
+//        do {
+//            results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
+//        } catch let error1 as NSError {
+//            print("Error in fetchCountriesFilteredByNameOn(): \(error1)")
+//            results = nil
+//        }
+//        
+//        return results
+//    }
     
     
     // MARK: NSFetchedResultsControllerDelegate
@@ -367,13 +397,13 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
                 var theCountry: Country?
                 if self.searchController.active {
                     
-                    if let countries = self.fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
+                    if let countries = DVNCountries.sharedInstance().fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
                         theCountry = countries[indexPath.row]
                     }
                 } else {
                     
                     // save the selected country
-                    theCountry = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Country
+                    theCountry = DVNCountries.sharedInstance().fetchedResultsController.objectAtIndexPath(indexPath) as? Country
                 }
                 
                 controller.country = theCountry
@@ -381,5 +411,33 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
                 activityIndicator.stopActivityIndicator()
             }
         }
+        else if segue.identifier == "CountriesToMapSegueId" {
+                
+                let controller = segue.destinationViewController as! CountriesMapViewController
+                
+                controller.sourceViewController = self
+                controller.navigationItem.title = "Countries"
+        }
+//        else if segue.identifier == "CartToMapSegueId" {
+//            
+//            self.navigationController?.setNavigationBarHidden(false, animated: false)
+//            
+//            let controller = segue.destinationViewController as! MapWithCheckoutViewController
+//            
+//            controller.sourceViewController = self
+//            controller.navigationItem.title = "Countries"
+//        }
     }
+    
+//    func presentCountriesMapViewController() {
+//        
+//        self.navigationController?.setNavigationBarHidden(false, animated: false)
+//
+//        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+////        let controller = storyboard.instantiateViewControllerWithIdentifier("MapWithCheckoutStoryboardID") as! MapWithCheckoutViewController
+//        let controller = storyboard.instantiateViewControllerWithIdentifier("CountriesMapStoryboardID") as! CountriesMapViewController
+//       // controller.sourceViewController = self
+//        controller.navigationItem.title = "Countries"
+//        self.navigationController?.pushViewController(controller, animated: true)
+//    }
 }
