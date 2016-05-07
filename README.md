@@ -133,8 +133,12 @@ All of the main screens in the app that display a list of loans to the user cont
 #### 9. Loan Detail View
 This view displays details about a specific loan.
 
-* When displayed from the My Loans screen the user can select the Add to Cart button in the Loan Details screen to make an additional contribution to the same loan. The loan will be re-added to the cart if it is not presently in the cart.
-* Select the Add to Cart button to add the loan to the cart.
+* Select the thumbnail to display a larger version of the image in a popoverPresentationController.
+* Select the Add to Cart button to add the loan to the cart. (This feature is not available when the Loan Detail screen is presented from the MyLoans screen.)
+* See loan details like a thumbnail image of the requester of the loan, status of the loan, the sector, a description of the purpose of the loan, and the amount loaned to date.
+* An MKMapView displays a pin identifying the location of the loan requester.
+* Select the pin to see the city where the requester is located.
+* The requester's country and flag are displayed at the top of the map.
 
 #### 10. Country Loans View
 
@@ -162,6 +166,7 @@ The Country Loans view displays a list of the most recent loan requests posted i
 * Abstracted both REST APIs and the networking layer in separate classes following the separation of concerns design pattern.
 * MVC design pattern.
 * Swift exception handling.
+* Popover controller
 
 ### References
 * Kiva: The [Kiva.org REST API](https://build.kiva.org/api), and the [Kiva Developer Guide](http://build.kiva.org/)
