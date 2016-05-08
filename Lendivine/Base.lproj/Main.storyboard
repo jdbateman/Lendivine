@@ -1809,7 +1809,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KyW-zc-K3e">
                                 <rect key="frame" x="0.0" y="471" width="600" height="80"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a country to search for loans." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ujb-f1-G1r">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap on a country to search for loans in that country." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ujb-f1-G1r">
                                         <rect key="frame" x="40" y="31" width="520" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1885,7 +1885,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="YhC-ao-4LW"/>
-        <segue reference="0NG-SK-Ni8"/>
-        <segue reference="g7a-yH-ptl"/>
+        <segue reference="DWE-bn-Cim"/>
+        <segue reference="SEU-i4-u6i"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -324,7 +324,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
             let activityIndicator = DVNActivityIndicator()
             activityIndicator.startActivityIndicator(self.view)
             
-            loan.getImage(450, height:360, square:true) {  // todo: review use of square image
+            loan.getImage(450, height:360, square:true) {
                 success, error, image in
                 
                 dispatch_async(dispatch_get_main_queue()) {

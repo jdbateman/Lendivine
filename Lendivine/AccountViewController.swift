@@ -37,6 +37,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     var textAnimationTimer:NSTimer?
     
+    var accountImageId:NSNumber?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,8 +97,17 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.lenderIDLabel.text = lenderId
         }
         
-        if let image = account.getImage() {
-            updateAvatarImageInView(image)
+        if let imageId = accountImageId {
+            
+            let accountImage = KivaImage(imageId: imageId)
+            accountImage.getImage() {
+                success, error, image in
+                if success {
+                    if let image = image {
+                        self.updateAvatarImageInView(image)
+                    }
+                }
+            }
         }
     }
     
@@ -109,7 +119,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         // save the new image to disk
         if let account = _account {
-            account.saveImage(newImage)
+            account.deleteAccountImageFileFromFileSystem()
+            account.saveAccountImage(newImage)
         }
     }
     
@@ -318,16 +329,18 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                     account[KivaAccount.InitKeys.balance] = balance
                                 }
                                 
-                                
+                                // Retrieve the lender to get the imageID for this account.
                                 self.kivaAPI!.kivaOAuthGetLender() { success, error, lender in
                                     if success {
                                         
                                         if let mylender = lender {
                                             
                                             let lenderImageId = mylender.imageID
+                                            self.accountImageId = lenderImageId
                                             let accountImage = KivaImage(imageId: lenderImageId)
                                             
-                                            accountImage.getImage() {success, error, image in
+                                            accountImage.getImage() {
+                                                success, error, image in
                                                 
                                                 if success {
                                                     dispatch_async(dispatch_get_main_queue()) {

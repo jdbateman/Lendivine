@@ -129,19 +129,24 @@ class CartTableViewController: UITableViewController {
             cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
             
             // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-            cartItem.getImage() {success, error, image in
-                if success {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        cell.loanImageView!.image = image
-                        
-                        // draw border around image
-                        cell.loanImageView!.layer.borderColor = UIColor.blueColor().CGColor;
-                        cell.loanImageView!.layer.borderWidth = 2.5
-                        cell.loanImageView!.layer.cornerRadius = 3.0
-                        cell.loanImageView!.clipsToBounds = true
+            
+            if let itemImageId = cartItem.imageID {
+                let itemImage = KivaImage(imageId: itemImageId)
+                itemImage.getImage(200, height:200, square:true) {
+                    success, error, image in
+                    if success {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            cell.loanImageView!.image = image
+                            
+                            // draw border around image
+                            cell.loanImageView!.layer.borderColor = UIColor.blueColor().CGColor;
+                            cell.loanImageView!.layer.borderWidth = 2.5
+                            cell.loanImageView!.layer.cornerRadius = 3.0
+                            cell.loanImageView!.clipsToBounds = true
+                        }
+                    } else  {
+                        print("error retrieving image: \(error)")
                     }
-                } else  {
-                    print("error retrieving image: \(error)")
                 }
             }
             

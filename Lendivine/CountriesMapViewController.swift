@@ -31,6 +31,8 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
     
     func modifyBarButtonItems() {
         
+        navigationItem.title = "Map Search"
+        
         let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
         navigationItem.setRightBarButtonItems([loansByListButton], animated: true)
         

@@ -32,7 +32,6 @@ class CountryLoansTableViewController: UITableViewController {
         self.activityIndicator.startActivityIndicator(tableView)
         
         // initialize user's loans
-        //onRefreshButtonTap()
         refreshLoans(nil)
         
         configureView()
@@ -40,6 +39,7 @@ class CountryLoansTableViewController: UITableViewController {
         // add the map bar button item
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
         navigationItem.setRightBarButtonItem(mapButton, animated: true)
+        self.navigationItem.rightBarButtonItems?.first?.enabled = true
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -367,22 +367,22 @@ class CountryLoansTableViewController: UITableViewController {
             
             if success {
                 
+                // enable/disable earth bar button item
+                if let loans = loans where loans.count > 0 {
+                    self.navigationItem.rightBarButtonItems?.first?.enabled = true
+                } else {
+                    self.navigationItem.rightBarButtonItems?.first?.enabled = false
+                }
+                
                 // Append any new loans returned by the Kiva api to our existing collection.
                 if let loans = loans {
                     self.loans.appendContentsOf(loans)
                 }
                 
                 // paging
-                if nextPage == -1 {
-                    
-                    // disable the refresh button
-                    self.navigationItem.rightBarButtonItems?.first?.enabled = false
-                    
-                } else {
-                    
+                if nextPage != -1 {
                     // save the nextPage
                     self.nextPageOfKivaSearchResults = nextPage
-                    self.navigationItem.rightBarButtonItems?.first?.enabled = true
                 }
                 
                 dispatch_async(dispatch_get_main_queue()) {
