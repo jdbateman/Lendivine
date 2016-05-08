@@ -115,7 +115,8 @@ class MyLoansTableViewController: UITableViewController {
         cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
         
         // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
-        loan.getImage() {success, error, image in
+        loan.getImage(200, height:200, square:true) {
+            success, error, image in
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
                     cell.loanImageView!.image = image

@@ -165,7 +165,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         cell.loanImageView.layer.borderColor = UIColor.clearColor().CGColor
         cell.loanImageView.clipsToBounds = true
     
-        loan.getImage() {success, error, image in
+        loan.getImage(200, height:200, square:true) {
+            success, error, image in
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
                     cell.loanImageView!.image = image

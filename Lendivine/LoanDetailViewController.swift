@@ -321,7 +321,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         
         if let loan = self.loan {
             
-            loan.getImage(450, height:360) {
+            loan.getImage(450, height:360, square:true) {  // todo: review use of square image
                 success, error, image in
                 
                 if success {
