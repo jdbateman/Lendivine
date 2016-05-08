@@ -13,6 +13,8 @@ import OAuthSwift
 import UIKit
 import CoreData
 
+let kKivaPageSize = 20
+
 class KivaAPI {
     
     var oAuthAccessToken: String?
@@ -258,19 +260,19 @@ extension KivaAPI {
         }
     }
     
-    func kivaOAuthGetUserLoans(completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void ) {
+    func kivaOAuthGetUserLoans(page: NSNumber?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?, nextPage: Int) -> Void ) {
         
         // page details
-        var page = 0
-        var page_size = 20
-        var pages = 0
-        var total = 0
-        
-        // TODO: add ability to pass paging parameters into the API request to enable iteration through multiple pages of data.
+        var nextPage = -1
+        var parametersDictionary = [String: AnyObject]()
+        if let page = page {
+            parametersDictionary["page"] = page
+        }
+        parametersDictionary["per_page"] = kKivaPageSize * 5 // Note: in future remove multiple on page size an turn paging on in Calling view controller.
         
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, loans: nil)
+            completionHandler(success: false, error: vtError.error, loans: nil, nextPage: nextPage)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/loans.json", parametersDict: nil) { success, error, jsonData in
@@ -281,21 +283,13 @@ extension KivaAPI {
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
                         
-                        //print("\(jsonData)")
-                        
                         // paging
-                        if let pagingDict = jsonData["paging"] as? [String: AnyObject] {
-                            if let pg = pagingDict["page"] as? Int {
-                                page = pg
-                            }
-                            if let size = pagingDict["page_size"] as? Int {
-                                page_size = size
-                            }
-                            if let pgs = pagingDict["pages"] as? Int {
-                                pages = pgs
-                            }
-                            if let t = pagingDict["total"] as? Int {
-                                total = t
+                        if let pagingDictionary = jsonData["paging"] as? [String: AnyObject] {
+                            let paging = KivaPaging(dictionary: pagingDictionary)
+                            if paging.page < paging.pages {
+                                nextPage = paging.page + 1
+                            } else {
+                                nextPage = -1
                             }
                         }
                         
@@ -314,9 +308,9 @@ extension KivaAPI {
                     }
                 }
                 
-                completionHandler(success: success, error: error, loans: loans)
+                completionHandler(success: success, error: error, loans: loans, nextPage: nextPage)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success: success, error: error, loans: nil, nextPage: nextPage)
             }
         }
     }
@@ -413,13 +407,8 @@ extension KivaAPI {
         }
     }
     
+    // Note: enable paging in future
     func kivaOAuthGetMyTeams(completionHandler: (success: Bool, error: NSError?, teams: [KivaTeam]?) -> Void) {
-
-        // page details
-        var page = 0
-        var page_size = 20
-        var pages = 0
-        var total = 0
         
         if !oAuthEnabled {
             let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
@@ -434,24 +423,6 @@ extension KivaAPI {
                 
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
-                        
-                        //print("teams: \(jsonData)")
-                        
-                        // paging
-                        if let pagingDict = jsonData["paging"] as? [String: AnyObject] {
-                            if let pg = pagingDict["page"] as? Int {
-                                page = pg
-                            }
-                            if let size = pagingDict["page_size"] as? Int {
-                                page_size = size
-                            }
-                            if let pgs = pagingDict["pages"] as? Int {
-                                pages = pgs
-                            }
-                            if let t = pagingDict["total"] as? Int {
-                                total = t
-                            }
-                        }
                         
                         // teams
                         if let arrayOfTeamsDictionaries = jsonData["teams"] as? [[String: AnyObject]] {
@@ -515,14 +486,9 @@ extension KivaAPI {
 // MARK: these public methods do not require the caller to provide an OAuth access token.
 
 extension KivaAPI {
-    
+
+    // Note: enable paging in future
     func kivaGetPartners(completionHandler: (success: Bool, error: NSError?, partners: [KivaPartner]?) -> Void) {
-        
-        // page details
-        var page = 0
-        var page_size = 20
-        var pages = 0
-        var total = 0
         
         makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/partners.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
             
@@ -532,22 +498,6 @@ extension KivaAPI {
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
                         print("partners: \(jsonData)")
-            
-                        // paging
-                        if let pagingDict = jsonData["paging"] as? [String: AnyObject] {
-                                if let pg = pagingDict["page"] as? Int {
-                                page = pg
-                                }
-                                if let size = pagingDict["page_size"] as? Int {
-                                        page_size = size
-                                }
-                                if let pgs = pagingDict["pages"] as? Int {
-                            pages = pgs
-                                }
-                                if let t = pagingDict["total"] as? Int {
-                                    total = t
-                                }
-                        }
             
                         // partners
                         if let arrayOfPartnersDictionaries = jsonData["partners"] as? [[String: AnyObject]] {

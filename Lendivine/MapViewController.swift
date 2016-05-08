@@ -582,6 +582,20 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         mapView.setRegion(region, animated: true)
     }
 
+    /* Set the mapview to show Africa */
+    func setMapRegionToAfrica() {
+        
+        // center of U.S.
+        let location = CLLocationCoordinate2D(
+            latitude: 11.695273,
+            longitude: 22.5
+        )
+        // visible span in degrees lat, lon
+        let span = MKCoordinateSpanMake(70, 60)
+        let region = MKCoordinateRegion(center: location, span: span)
+        mapView.setRegion(region, animated: true)
+    }
+    
     /* Set the mapview to show the specified country. */
     func setMapRegionToCountryForLoan(loan:KivaLoan) {
         

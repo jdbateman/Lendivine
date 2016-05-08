@@ -134,8 +134,11 @@ class MyLoansTableViewController: UITableViewController {
     }
 
     // Call the kiva API to initialize the local collection of loans previously made by the user.
+    // TODO: in future save the nextPage parameter returned by this call and implement paging to support users who have made many loans.
+    var page:Int = 0
     func populateLoans() {
-        kivaAPI.kivaOAuthGetUserLoans() { success, error, loans in
+        kivaAPI.kivaOAuthGetUserLoans(page) {
+            success, error, loans, nextPage in
             if success {
                 if let loans = loans {
                     self.loans = loans

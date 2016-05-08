@@ -32,6 +32,9 @@ class CountryLoansKivaApiHelper {
                     
                     completionHandler(success: true, error: nil, loans: loans, nextPage: nextPage)
                 }
+                else {
+                    completionHandler(success: true, error: nil, loans: nil, nextPage: nextPage)
+                }
             } else {
                 print("failed")
                 completionHandler(success: false, error: error, loans: nil, nextPage: nextPage)

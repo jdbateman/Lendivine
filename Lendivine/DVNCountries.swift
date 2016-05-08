@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class DVNCountries {
 
@@ -40,6 +41,7 @@ class DVNCountries {
 
     /*! Perform a fetch of Country objects to update the fetchedResultsController with the current data from the core data store. */
     func fetchCountries() {
+        
         var error: NSError? = nil
         
         do {
@@ -48,10 +50,11 @@ class DVNCountries {
             error = error1
         }
         
-        // TODO - error message
-//        if let error = error {
-//            LDAlert(viewController:self).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
-//        }
+        if let error = error {
+            if let topController = UIApplication.topViewController() {
+                LDAlert(viewController:topController).displayErrorAlertView("Error retrieving countries", message: "Unresolved error in fetchedResultsController.performFetch \(error), \(error.userInfo)")
+            }
+        }
     }
 
     /*! Perform a fetch of Country objects from the countriesScratchContext filtered for those that contain the specified userInput string. */

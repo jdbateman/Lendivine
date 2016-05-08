@@ -77,13 +77,13 @@ class CartTableViewCell: UITableViewCell {
     
     // Update the donation amount of the cart item associated with this cell.
     func updateCartItem(subView: UIView, donationAmount: NSNumber) {
+        
         let indexPath = getIndexPathForCellContainingSubview(subView)
         if let indexPath = indexPath {
             let index = indexPath.row
             let cartViewController = getTableViewControllerForCellContainingSubview(subView)
         
             let cartItem = cartViewController.cart!.items[index]
-            let donationAmountOriginal = cartItem.donationAmount
             cartItem.donationAmount = donationAmount
             
             // save the context to persist the updated cart property to core data

@@ -362,7 +362,8 @@ class CountryLoansTableViewController: UITableViewController {
     func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
         
         // Search Kiva.org for the next page of Loan results.
-        CountryLoansKivaApiHelper.populateLoansForCountry(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, twoLetterCountryCode: self.country?.countryCodeTwoLetter, nextPage: self.nextPageOfKivaSearchResults) { success, error, loans, nextPage in
+        CountryLoansKivaApiHelper.populateLoansForCountry(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, twoLetterCountryCode: self.country?.countryCodeTwoLetter, nextPage: self.nextPageOfKivaSearchResults) {
+            success, error, loans, nextPage in
             
             if success {
                 

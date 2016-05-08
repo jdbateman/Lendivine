@@ -308,7 +308,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         self.loanImageView.removeGestureRecognizer(self.tapRecognizer!)
     }
     
-    // User tapped somewhere on the view. End editing.
+    // User tapped somewhere on the image view.
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         presentImageViewController()
     }
@@ -321,8 +321,16 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         
         if let loan = self.loan {
             
+            let activityIndicator = DVNActivityIndicator()
+            activityIndicator.startActivityIndicator(self.view)
+            
             loan.getImage(450, height:360, square:true) {  // todo: review use of square image
                 success, error, image in
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    activityIndicator.stopActivityIndicator()
+                }
+                
                 
                 if success {
                     dispatch_async(dispatch_get_main_queue()) {

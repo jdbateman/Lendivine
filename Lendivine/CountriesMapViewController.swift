@@ -17,15 +17,16 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
     
     var annotation: MKAnnotation?
     var countryName: String?
+    var cityName: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //self.kivaAPI = KivaAPI.sharedInstance
 
         modifyBarButtonItems()
 
         initTapRecognizer()
+        
+        setMapRegionToAfrica()
     }
     
     func modifyBarButtonItems() {
@@ -94,9 +95,15 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
                 
                 if placemarks != nil {
                     if let placemark = placemarks?.first {
+                        
                         self.countryName = placemark.country
                         print("country: \(placemark.country)")
                         
+                        if let city = placemark.addressDictionary!["City"] as? String {
+                            self.cityName = city
+                            print("city: \(city)")
+                        }
+
                         // show CountryLoans view controller
                         self.presentCountryLoansController()
                     }
@@ -128,7 +135,6 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
                 controller.country = theCountry
                 
                 activityIndicator.stopActivityIndicator()
-
         }
     }
     

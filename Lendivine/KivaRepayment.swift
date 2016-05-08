@@ -22,9 +22,7 @@ class KivaRepayment {
         
         if let dictionary = dictionary {
             
-            if let k = key as? String {
-                repaymentId = k
-            }
+            repaymentId = key
             
             if let repayments = dictionary["user_repayments"] as? String {
                 userRepayments = repayments
