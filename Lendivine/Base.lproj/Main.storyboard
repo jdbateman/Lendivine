@@ -1275,25 +1275,36 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Resize-50" translatesAutoresizingMaskIntoConstraints="NO" id="Bmm-C9-959">
+                                        <rect key="frame" x="124" y="158" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="Aue-g7-Biv"/>
+                                            <constraint firstAttribute="height" constant="24" id="hd0-Vi-jFD"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.94117647059999998" green="0.66666666669999997" blue="0.16751254560000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="f7B-cT-M2G" firstAttribute="leading" secondItem="yIj-nJ-8Pj" secondAttribute="trailing" constant="8" id="24d-Ec-wxY"/>
                                     <constraint firstItem="PUq-e4-vli" firstAttribute="top" secondItem="4Ii-mP-h4J" secondAttribute="bottom" constant="4" id="5NF-R2-vpE"/>
                                     <constraint firstAttribute="height" constant="190" id="6nh-53-IlI"/>
+                                    <constraint firstItem="Bmm-C9-959" firstAttribute="trailing" secondItem="RN7-fY-W50" secondAttribute="trailing" id="BpM-v2-CTV"/>
                                     <constraint firstAttribute="bottom" secondItem="RN7-fY-W50" secondAttribute="bottom" id="DLg-ee-Uvj"/>
                                     <constraint firstAttribute="bottom" secondItem="4Ii-mP-h4J" secondAttribute="bottom" constant="38" id="FPT-Tu-HQ6"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0vm-8f-F7c" secondAttribute="top" constant="4" id="Kev-Ai-eAN"/>
+                                    <constraint firstAttribute="bottom" secondItem="Bmm-C9-959" secondAttribute="bottom" id="N7p-VE-3h1"/>
                                     <constraint firstItem="4Ii-mP-h4J" firstAttribute="top" secondItem="yIj-nJ-8Pj" secondAttribute="bottom" constant="8" id="OaH-YN-6Wb"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0vm-8f-F7c" secondAttribute="topMargin" id="Pej-HA-agV"/>
                                     <constraint firstItem="yIj-nJ-8Pj" firstAttribute="top" secondItem="0vm-8f-F7c" secondAttribute="top" constant="10" id="Vle-oO-h9v"/>
                                     <constraint firstAttribute="trailing" secondItem="PUq-e4-vli" secondAttribute="trailing" constant="8" id="WNW-Fg-BGV"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="top" secondItem="yIj-nJ-8Pj" secondAttribute="bottom" constant="6" id="aOO-de-eQg"/>
+                                    <constraint firstItem="PUq-e4-vli" firstAttribute="leading" secondItem="Bmm-C9-959" secondAttribute="trailing" constant="9" id="dsT-Pj-Tyn"/>
                                     <constraint firstItem="4Ii-mP-h4J" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="8" id="e5b-5H-1QZ"/>
                                     <constraint firstItem="PUq-e4-vli" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" constant="8" id="eCO-Sv-JZY"/>
                                     <constraint firstAttribute="trailing" secondItem="4Ii-mP-h4J" secondAttribute="trailing" constant="8" id="fkf-Fy-dXL"/>
                                     <constraint firstItem="yIj-nJ-8Pj" firstAttribute="leading" secondItem="0vm-8f-F7c" secondAttribute="leading" constant="8" id="fz1-ey-Vhe"/>
                                     <constraint firstItem="PUq-e4-vli" firstAttribute="top" secondItem="4Ii-mP-h4J" secondAttribute="bottom" constant="-4" id="gsK-Wr-LVb"/>
+                                    <constraint firstItem="Bmm-C9-959" firstAttribute="bottom" secondItem="RN7-fY-W50" secondAttribute="bottom" id="hsD-Rf-jML"/>
                                     <constraint firstItem="yIj-nJ-8Pj" firstAttribute="leading" secondItem="RN7-fY-W50" secondAttribute="trailing" priority="750" constant="6" id="lI7-gs-PcO"/>
                                     <constraint firstAttribute="trailing" secondItem="yIj-nJ-8Pj" secondAttribute="trailing" constant="8" id="nHr-Rr-pgE"/>
                                     <constraint firstItem="RN7-fY-W50" firstAttribute="leading" secondItem="0vm-8f-F7c" secondAttribute="leading" constant="8" id="pas-cD-mTM"/>
@@ -1313,8 +1324,10 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                         <exclude reference="nHr-Rr-pgE"/>
                                         <exclude reference="sSU-eq-rJR"/>
                                         <exclude reference="FPT-Tu-HQ6"/>
+                                        <exclude reference="dsT-Pj-Tyn"/>
                                         <exclude reference="gsK-Wr-LVb"/>
                                         <exclude reference="rZO-tv-0UL"/>
+                                        <exclude reference="N7p-VE-3h1"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1494,6 +1507,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                         <outlet property="loanImageView" destination="RN7-fY-W50" id="Ib6-gs-F6m"/>
                         <outlet property="mapView" destination="nu8-Pr-Pxb" id="PWm-6b-9dj"/>
                         <outlet property="name" destination="yIj-nJ-8Pj" id="EoC-KH-pdT"/>
+                        <outlet property="resizeImageIvew" destination="Bmm-C9-959" id="Z6x-Dh-QEY"/>
                         <outlet property="statusLabel" destination="f7B-cT-M2G" id="wcI-5U-MJG"/>
                         <outlet property="topView" destination="0vm-8f-F7c" id="TtV-9W-o31"/>
                         <outlet property="topViewToTopMarginConstraint" destination="cuG-GL-ZJU" id="pv0-Oj-kb9"/>
@@ -1878,6 +1892,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
         <image name="Donate-32" width="32" height="32"/>
         <image name="Donate-50" width="50" height="50"/>
         <image name="EmptyCart-50" width="50" height="50"/>
+        <image name="Resize-50" width="50" height="50"/>
         <image name="User-100" width="100" height="100"/>
         <image name="User-32" width="32" height="32"/>
         <image name="Volunteering-48" width="48" height="48"/>

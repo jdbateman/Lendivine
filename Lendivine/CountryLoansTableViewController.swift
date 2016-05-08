@@ -129,7 +129,7 @@ class CountryLoansTableViewController: UITableViewController {
         cell.countryLabel.text = loan.country
         
         // Set placeholder image
-        cell.loanImageView.image = UIImage(named: "United Nations")
+        cell.loanImageView.image = UIImage(named: "Download-50")
         
         // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
         loan.getImage() {success, error, image in

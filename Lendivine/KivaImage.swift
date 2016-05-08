@@ -159,7 +159,6 @@ class KivaImage {
     func makeSquareImageUrl(kivaImageID: NSNumber?, side:Int = 300) -> String? {
         if let kivaImageID = kivaImageID {
             let imageUrlString = String(format:"http://www.kiva.org/img/s%d/%@.jpg", side, kivaImageID.stringValue)
-            //let imageUrlString = String(format:"http://www.kiva.org/img/s300/%@.jpg", kivaImageID.stringValue)
             return imageUrlString
         }
         return nil

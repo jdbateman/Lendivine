@@ -271,12 +271,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     let sortedRepayments = repayments.sort { $0.repaymentDate < $1.repaymentDate }
                     self.loanRepaymentSchedule = sortedRepayments
                 }
-                
-                //completionHandler(success:true, error:nil, expectedRepayment: account)
             } else {
-                
                 print("error retrieving repayment information: \(error?.localizedDescription)")
-                //completionHandler(success:false, error:error, accountData: account)
             }
         }
     }
@@ -347,11 +343,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                                         self.avatarImageView.image = image
                                                         if let image = image {
                                                             self.setAccountImage(image)
-                                                            
-                                                            // save the new image to disk
-//                                                            if let account = self._account {
-//                                                                account.saveImage(image)
-//                                                            }
                                                         }
                                                     }
                                                 } else  {
@@ -369,9 +360,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                     }
                                 
                                 }
-                                
-                                
-                                
                             } else {
                                 print("error retrieving user balance: \(error?.localizedDescription)")
                                 completionHandler(success:false, error:error, accountData: account)
@@ -393,7 +381,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     /*! Upload account data to Kiva.org */
     func accountToKiva() {
-        // Unfortunately Kiva.org dos not currently support this functionality.
+        // Unfortunately Kiva.org does not currently support this functionality.
     }
     
     /*! Persist the account properties as an KivaAccount object to core data on disk, and save an instance of the object in this object's properties. */

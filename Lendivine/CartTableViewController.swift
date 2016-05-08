@@ -16,7 +16,7 @@ class CartTableViewController: UITableViewController {
 
     var noDataLabel: UILabel?
     
-    var cart:KivaCart? // = KivaCart.sharedInstance
+    var cart:KivaCart?
     var kivaAPI: KivaAPI?
     
     override func viewDidLoad() {
@@ -25,8 +25,6 @@ class CartTableViewController: UITableViewController {
         self.kivaAPI = KivaAPI.sharedInstance
         
         cart = KivaCart.sharedInstance
-        
-        //updateCart()
         
         configureBarButtonItems()
         
@@ -48,7 +46,6 @@ class CartTableViewController: UITableViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
@@ -126,7 +123,7 @@ class CartTableViewController: UITableViewController {
             cell.changeDonationButton.imageView!.image = donationImage
             
             // Set main image placeholder image
-            cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+            cell.loanImageView.image = UIImage(named: "Download-50")
             
             // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
             

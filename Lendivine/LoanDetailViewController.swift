@@ -21,6 +21,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     var fundedString:String?
     var largeImage:UIImage?
     
+    @IBOutlet weak var resizeImageIvew: UIImageView!
     @IBOutlet weak var addToCartButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var loanImageView: UIImageView!
@@ -164,6 +165,12 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                         self.loanImageView!.layer.borderWidth = 1.5
                         self.loanImageView!.layer.cornerRadius = 5.0
                         self.loanImageView!.clipsToBounds = true
+                        
+                        // white tint on resize image
+                        let resize = UIImage(named: "Resize-50")
+                        let tintedResize = resize?.imageWithRenderingMode(.AlwaysTemplate)
+                        self.resizeImageIvew.image = tintedResize
+                        self.resizeImageIvew.tintColor = UIColor.whiteColor()
                         
                         self.view.setNeedsDisplay()
                     }

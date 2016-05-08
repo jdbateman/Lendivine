@@ -157,7 +157,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
 
         // Set placeholder image
-        cell.loanImageView.image = UIImage(named: "Add Shopping Cart-50") // TODO: update placeholder image in .xcassets
+        cell.loanImageView.image = UIImage(named: "Download-50")
     
         // put rounded corners on loan image
         cell.loanImageView.layer.cornerRadius = 20
