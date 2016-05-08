@@ -91,7 +91,7 @@ Upon completing login the application will display the loans screen. The app wil
 Select the Countries tab to view a list of countries queried from the RESTCountries REST API. A custom cell displays information for each country including an image of the flag, and the population. 
 
 * Select a country to display a list of recent loans requested by entreprenuers in that country. (See the Country Loans screen below for more details.)
-* Select the globe in the search bar to display the CountriesMapView to search by interacting with a map. (See the Countries Map screen below.)
+* Select the globe in the search bar to search for loans by country by interacting with a map. (See the Map Search screen below.)
 
 ##### Search Bar
 
@@ -152,9 +152,9 @@ The Country Loans view displays a list of the most recent loan requests posted i
 * Select the Cart button in a particular table view cell to add the loan to the cart.
 * Select the Back bar button item to navigate back to the Countries screen.
 
-#### 10. Countries Map View
+#### 10. Map Search
 
-The Countries Map view displays and MkMapView. Tap to select a country on the map. The app queries the Kiva API for loans in the country you selected and displays them in the Country Loans View.
+The Map Search screen displays an MKMapView. Tap to select a country on the map. The app queries the Kiva API for loans in the selected country and displays them in the Country Loans View.
 
 
 ### Technical highlights
