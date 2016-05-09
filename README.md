@@ -1,7 +1,15 @@
 # Lendivine
 
 ## Summary
-Lendivine is an iOS application that runs on an iPhone running iOS 8 and above. This application enables users to search for and make small loans to entrepreneurs around the world. Yeah baby!
+Lendivine is an iOS application for the iPhone running iOS 8 and above. This application enables users to search for and make small loans to entrepreneurs around the world. Yeah baby!
+
+## Demo
+
+### Lendivine Demo
+![Watch a quick Lendivine demo](/../media/media/LendivineDemo.gif?raw=true "Lendivine Demo")
+
+### Lendivine Signup
+![Watch Lendivine Signup](/../media/media/LendivineSignup.gif?raw=true "Lendivine Signup")
 
 ## UI Overview
 The UI is comprised of over a dozen view controllers. The main view controllers are listed below:
@@ -32,7 +40,7 @@ These view controllers provide additional detail:
 * Map - Displays a group of loans on a map view. Individual loans are represented by annotations and callouts with images.
 
 
-## Technical overview
+## Technical Overview
 
 The project is written and compiled in Swift 2.0 for an iOS base version of 8.4. using XCode version 7.1.
 
@@ -97,7 +105,7 @@ Select the Countries tab to view a list of countries queried from the RESTCountr
 
 Because the list of countries is large the user can enter a string of characters in the search bar at the top of the screen. The characters are used to filter the list of countries displayed in the table view. For example type "nep" in the search bar to filter the list of countries to a single entry: "Nepal". Clear the selection to redisplay all 200 or so countries. 
 
-##### Gini coefficient
+##### Gini Coefficient
 
 Income inequality is a hot topic in the United States. I wanted to give users an opportunity to use this information to determine where they make loans. Each cell in this view displays a country's gini coefficient, which is a measure of income inequality. 0 represents complete equality while 100 represents maximum inequality.
 
@@ -157,7 +165,7 @@ The Country Loans view displays a list of the most recent loan requests posted i
 The Map Search screen displays an MKMapView. Tap to select a country on the map. The app queries the Kiva API for loans in the selected country and displays them in the Country Loans View.
 
 
-### Technical highlights
+### Technical Highlights
 
 * Uses two REST apis: Kiva.org and RESTCountries.
 * Core data to persist models.
