@@ -31,6 +31,8 @@ class CountryLoansTableViewController: UITableViewController {
 
         self.activityIndicator.startActivityIndicator(tableView)
         
+        nextPageOfKivaSearchResults = 1
+        
         // initialize user's loans
         refreshLoans(nil)
         
@@ -235,6 +237,11 @@ class CountryLoansTableViewController: UITableViewController {
 
     func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
         
+        guard nextPageOfKivaSearchResults != -1 else {
+            showNoMoreResultsAlert()
+            return
+        }
+        
         // Search Kiva.org for the next page of Loan results.
         CountryLoansKivaApiHelper.populateLoansForCountry(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, twoLetterCountryCode: self.country?.countryCodeTwoLetter, nextPage: self.nextPageOfKivaSearchResults) {
             success, error, loans, nextPage in
@@ -253,11 +260,8 @@ class CountryLoansTableViewController: UITableViewController {
                     self.loans.appendContentsOf(loans)
                 }
                 
-                // paging
-                if nextPage != -1 {
-                    // save the nextPage
-                    self.nextPageOfKivaSearchResults = nextPage
-                }
+                // save the nextPage
+                self.nextPageOfKivaSearchResults = nextPage
                 
                 dispatch_async(dispatch_get_main_queue()) {
 
@@ -315,5 +319,25 @@ class CountryLoansTableViewController: UITableViewController {
         
         return results as? [KivaLoan] ?? [KivaLoan]()
     }
+    
+    // MARK: Helper
+    func showNoMoreResultsAlert() {
+        
+        let title = "No More Loans"
+        var message = "No additional loans are available"
+        if let countryName = self.country?.name {
+            message = "No additional loans are available in \(countryName)."
+        }
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+            UIAlertAction in
+            // handle OK pressed in alert controller
+        }
+        
+        alertController.addAction(okAction)
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
 }
 
