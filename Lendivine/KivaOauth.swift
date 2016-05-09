@@ -57,7 +57,7 @@ class KivaOAuth {
         oauthswift.authorizeWithCallbackURL( NSURL(string: Constants.OAuthValues.consumerCallbackUrl)!,
             success: { credential, response in
             
-                print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
+                //print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
 
                 // get the kivaAPI handle
                 self.kivaAPI = KivaAPI.sharedInstance

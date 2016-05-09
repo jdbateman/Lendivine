@@ -418,16 +418,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     managedObject.setValue(balance, forKey: KivaAccount.InitKeys.balance)
                 }
                 
-                print("saveContext:Update AccountViewController.persistAccountDataToCoreData()")
                 CoreDataContext.sharedInstance().saveAccountContext()
-                
-                print("updated existing account object in core data: %@", account)
                 
             } else {
                 // no matches to exiting core data objects on disk. save the new object in core data.
                 CoreDataContext.sharedInstance().saveAccountContext()
-                print("saveContext:Save AccountViewController.persistAccountDataToCoreData()")
-                //print("new account object saved to core data: %@", account)
             }
             
         } catch let error as NSError {
@@ -459,7 +454,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     // MARK: Animation
     
     func animateTextChange() {
-        print("animation fired")
+
         guard let loanRepaymentSchedule = self.loanRepaymentSchedule where loanRepaymentSchedule.count > 0 else {return}
         guard let repaymentIndex = _repaymentIndex else {return}
         let repaymentAmount = loanRepaymentSchedule[repaymentIndex].userRepayments

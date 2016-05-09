@@ -176,16 +176,13 @@ class LoansTableViewCell: DVNTableViewCell {
         let animatedObject = imageViewCopy
         
         animatedObject.frame = CGRect(x: 0, y: 0, width: resizedWidth, height: resizedHeight)
-        print("width, height = \(animatedObject.frame.size.width), \(animatedObject.frame.size.height)")
         
         animateOnView.addSubview(animatedObject)
         
         // Get the coordinates of the cell in the TableView's coordinate space
         let rectCellInTableViewCoords = tableView.rectForRowAtIndexPath(indexPath)
-        print("cellRect: \(rectCellInTableViewCoords)")
         
         let rectCellInScreenCoords = CGRectOffset(rectCellInTableViewCoords, -tableView.contentOffset.x, -tableView.contentOffset.y)
-        print("cellRect with offset: \(rectCellInScreenCoords)")
         
         // screen dimensions
         let screenBounds: CGRect = UIScreen.mainScreen().bounds

@@ -17,7 +17,7 @@ class MySingleton {
     
     private init () {
         //MySingleton.timestampInHeader = true
-        print("timestampInHeader.init() in MySingleton.init() reports timestampInHeader = \(MySingleton._bTimeStampInHeader)")
+        //print("timestampInHeader.init() in MySingleton.init() reports timestampInHeader = \(MySingleton._bTimeStampInHeader)")
     }
     
     var timeStampInHeader: Bool {

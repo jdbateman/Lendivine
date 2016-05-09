@@ -41,20 +41,14 @@ class DVNViewController: UIViewController {
     */
     func findRandomLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
-        print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
-        
         var countries = "TD,TG,TH,TJ,TL,TR,TZ"
         if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
             countries = randomCountries
         }
         
-        print("calling kivaSearchLoans with countries = \(countries)")
-        
         kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: countries, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext) {
             
             success, error, loanResults, nextPage in
-            
-            print("findLoans returned nextPage = \(nextPage)")
             
             if success {
                 if let loanResults = loanResults {
@@ -64,7 +58,6 @@ class DVNViewController: UIViewController {
                             loanNames.appendContentsOf(name + ",")
                         }
                     }
-                    print("loans: \(loanNames)")
                 }
                 
                 completionHandler(success: success, error: error, loans: loanResults)
@@ -89,8 +82,6 @@ class DVNViewController: UIViewController {
             
             success, error, loanResults, nextPage in
             
-            print("findLoans returned nextPage = \(nextPage)")
-            
             // paging
             if nextPage == -1 {
                 self.navigationItem.rightBarButtonItems?[1].enabled = false
@@ -111,7 +102,6 @@ class DVNViewController: UIViewController {
                             loanNames.appendContentsOf(name + ",")
                         }
                     }
-                    print("loans: \(loanNames)")
                 }
                 
                 completionHandler(success: success, error: error, loans: loanResults)
@@ -133,7 +123,7 @@ class DVNViewController: UIViewController {
                             if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataContext.sharedInstance().scratchContext) == nil {
                                 
                                 // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
-                                let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataContext.sharedInstance().scratchContext)
+                                _ = KivaLoan.init(fromLoan: loan, context: CoreDataContext.sharedInstance().scratchContext)
                                 
                                  self.saveScratchContext()
                             }
@@ -142,7 +132,6 @@ class DVNViewController: UIViewController {
                         completionHandler(success: true, error: nil)
                     }
                 } else {
-                    print("failed")
                     completionHandler(success: false, error: error)
                 }
             }
@@ -157,7 +146,6 @@ class DVNViewController: UIViewController {
         
         let error: NSErrorPointer = nil
         do {
-            print("saveContext: DVNViewController.saveScratchContext()")
             _ = try CoreDataContext.sharedInstance().scratchContext.save()
         } catch let error1 as NSError {
             error.memory = error1

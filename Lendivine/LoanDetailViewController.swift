@@ -345,7 +345,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                             popover.sourceView = self.loanImageView
                             popover.sourceRect =  self.loanImageView.bounds
                             popoverContent.preferredContentSize = CGSizeMake(image.size.width, image.size.height)
-                            print("downloaded image size: \(image.size.width) \(image.size.height) ")
                             popover.delegate = self
                             popover.permittedArrowDirections = .Up // .Any
                         }

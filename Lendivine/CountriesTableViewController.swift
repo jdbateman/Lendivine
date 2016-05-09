@@ -194,7 +194,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         
         if let name = country.name {
             cell.name.text = name
-            print("\(name)")
         }
         
         if let region = country.region {
@@ -249,8 +248,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             
         case .Delete:
             
-            print("deleting row \(indexPath!.row)")
-            
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             
         case .Update:
@@ -276,7 +273,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     /* Received a notification that any updated countries are now available in core data. Update the table view. */
     func onCountriesUpdate() {
         
-        print("received notification. reloading data")
         dispatch_async(dispatch_get_main_queue()) {
             self.tableView.reloadData()
         }

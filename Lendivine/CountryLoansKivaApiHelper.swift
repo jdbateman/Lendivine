@@ -21,22 +21,12 @@ class CountryLoansKivaApiHelper {
             
             if success {
                 if let loans = loanResults {
-                    
-//                    // Append any new loans returned by the Kiva api to our existing collection.
-//                    self.loans.appendContentsOf(loans)
-                    
-                    print("new list after appending fetched loans:")
-                    for loan in loans {
-                        print("%@", loan.name)
-                    }
-                    
                     completionHandler(success: true, error: nil, loans: loans, nextPage: nextPage)
                 }
                 else {
                     completionHandler(success: true, error: nil, loans: nil, nextPage: nextPage)
                 }
             } else {
-                print("failed")
                 completionHandler(success: false, error: error, loans: nil, nextPage: nextPage)
             }
         }
@@ -61,21 +51,9 @@ class CountryLoansKivaApiHelper {
             
             success, error, loanResults, nextPage in
             
-//            // TODO: In future enable paging for country loans
-//            if nextPage == -1 {
-//                // disable the refresh button
-//                self.navigationItem.rightBarButtonItems?.first?.enabled = false
-//            } else {
-//                // save the nextPage
-//                self.nextPageOfKivaSearchResults = nextPage
-//                self.navigationItem.rightBarButtonItems?.first?.enabled = true
-//            }
-            
             if success {
-                // print("search loans results: \(loanResults)")
                 completionHandler(success: success, error: error, loans: loanResults, nextPage: nextPage)
             } else {
-                // print("kivaSearchLoans failed")
                 completionHandler(success: success, error: error, loans: nil, nextPage: nextPage)
             }
         }

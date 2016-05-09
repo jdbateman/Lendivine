@@ -86,9 +86,6 @@ class KivaLoan: NSManagedObject  {
     /*! Core Data init method */
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        print("init KivaLoan - 1")
-        
-        debugValidateTODORemove()
     }
 
     /*! Init instance with a dictionary of values, and a core data context. */
@@ -115,9 +112,6 @@ class KivaLoan: NSManagedObject  {
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
         self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
-        
-        print("init KivaLoan - 2")
-        debugValidateTODORemove()
     }
 
     /*! 
@@ -150,9 +144,6 @@ class KivaLoan: NSManagedObject  {
         self.status = fromLoan.status
         self.sector = fromLoan.sector
         self.language = fromLoan.language
-        
-        print("init KivaLoan - 3")
-        debugValidateTODORemove()
     }
     
     init(fromCartItem: KivaCartItem, context: NSManagedObjectContext) {
@@ -178,9 +169,6 @@ class KivaLoan: NSManagedObject  {
         self.status = fromCartItem.status
         self.sector = fromCartItem.sector
         self.language = fromCartItem.language
-        
-        print("init KivaLoan - 4")
-        debugValidateTODORemove()
     }
     
     /*! Update this instance's properties with that from the specified object. */

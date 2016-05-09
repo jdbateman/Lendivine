@@ -39,13 +39,11 @@ class KivaImage {
     func getImage(width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
         
         let imageUrl = makeImageUrl(self.imageID, width:width, height:height, square:square)
-        print("imageUrl: \(imageUrl)")
         
         // Try loading the image from the image cache.
         if let url = imageUrl {
-            print("find image url: \(url)")
+
             if let theImage: UIImage = NSCache.sharedInstance.objectForKey(url) as? UIImage {
-                //print("image loaded from cache")
                 completion(success: true, error: nil, image: theImage)
                 return
             }
@@ -55,7 +53,6 @@ class KivaImage {
         if let imageID = self.imageID {
             let imageFilename = makeImageFilename(imageID, width:width, height:height)
             if let image = getImageFromFileSystem(imageFilename) {
-                //print("image loaded from file system")
                 
                 // Cache the image in memory.
                 self.cacheImage(image, square:square)
@@ -73,7 +70,6 @@ class KivaImage {
                     if let theImage = theImage {
                         self.cacheImageAndWriteToFile(theImage, width:width, height:height, square: square)
                     }
-                    //print("image downloaded from server")
                     completion(success: true, error: nil, image: theImage)
                     return
                 } else {
@@ -83,7 +79,6 @@ class KivaImage {
                             if let theImage = theImage {
                                 self.cacheImageAndWriteToFile(theImage, width:width, height:height, square: square)
                             }
-                            //print("image downloaded from server")
                             completion(success: true, error: nil, image: theImage)
                             return
                         } else {
@@ -191,7 +186,6 @@ class KivaImage {
     /* Load the data from filename and return as a UIImage object. */
     func getImageFromFileSystem(filename: String) -> UIImage? {
         let path = pathForImageFileWith(filename)
-        print("image path on disk = \(path)")
         if let path = path {
             if NSFileManager.defaultManager().fileExistsAtPath(path) {
                 let imageData = NSFileManager.defaultManager().contentsAtPath(path)

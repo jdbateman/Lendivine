@@ -122,7 +122,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         
         if loan.id == -1 {
-            print("loan id == -1 in LoansTableViewcontroller.configureCell")
             CoreDataContext.sharedInstance().scratchContext.deleteObject(loan)
             return
         }
@@ -209,8 +208,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         } else {
             let sectionInfo = self.fetchedResultsController.sections![0]
             let count = sectionInfo.numberOfObjects
-            print("Fetched \(count) loans.")
-            
             navigationItem.title = "\(count) Loans"
             return count
         }
@@ -240,8 +237,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
             
         case .Delete:
-            
-            print("deleting row \(indexPath!.row)")
             
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             
@@ -327,26 +322,12 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     /*! See More Loans..." button was selected. */
     @IBAction func seeMoreLoans(sender: AnyObject) {
         refreshLoans(nil)
-//            {
-//            success, error in
-//            if success {
-//                //
-//            } else {
-//                print("refreshLoans returned an error: \(error)")
-//            }
-//        }
     }
     
     /*! Refresh button was selected. */
     func onAddLoansButtonTap() {
         
         refreshLoans(nil)
-//            {
-//            success, error in
-////            if success {
-//
-////            }
-//        }
     }
     
     func onPullToRefresh(refreshControl: UIRefreshControl) {

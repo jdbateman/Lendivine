@@ -84,7 +84,6 @@ extension KivaAccount {
                         } catch let error1 as NSError {
                             error.memory = error1
                         }
-                        print("deleted file at \(path)")
                         if error != nil {
                             print(error.debugDescription)
                         }

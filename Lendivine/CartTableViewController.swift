@@ -146,9 +146,7 @@ class CartTableViewController: UITableViewController {
                     }
                 }
             }
-            
-            print("CartTableViewController.ConfigureCell configured the \(cartItem.name) \(cartItem.country) cell of \(self.cart!.items.count) rows")
-        }
+         }
     }
     
     // Conditional editing of the table view. (Return true to allow edit of the item, false if item is not editable.)
@@ -223,14 +221,12 @@ class CartTableViewController: UITableViewController {
     
     // The user selected the checkout bar button item.
     func onCheckoutButtonTapped() {
-        print("call KivaAPI.checkout")
         
         let activityIndicator = DVNActivityIndicator()
         activityIndicator.startActivityIndicator(tableView)
         
         let loans = cart!.getLoans2()
-        print("cart count before stripping out non-fundraising loans = \(self.cart!.items.count)")
-        print("loans: %@", loans)
+
         self.getCurrentFundraisingStatus(loans) {
             success, error, fundraising, notFundraising in
             if success {
@@ -256,7 +252,6 @@ class CartTableViewController: UITableViewController {
                                 let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
                                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
                                     UIAlertAction in
-                                    print("OK Tapped")
                                     self.displayKivaWebCartInBrowser()
                                 }
                                 alertController.addAction(okAction)

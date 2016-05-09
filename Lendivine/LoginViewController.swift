@@ -135,10 +135,9 @@ class LoginViewController: UIViewController {
             
             if success {
                 
-                print("doOAuth() succeeded")
+                //print("OAuth succeeded")
                 self.activityIndicator.stopActivityIndicator()
                 loginSessionActive = false
-                print("presentLoansController()")
                 self.presentLoansController()
                 
             } else {
@@ -190,7 +189,7 @@ class LoginViewController: UIViewController {
                     self.kivaAPI = kivaOAuth.kivaAPI
                     self.appDelegate.loggedIn = success
                     
-                    print("kivaOAuth.doOAuthKiva() succeeded. kivaAPI handle acquired.")
+                    print("OAuth succeeded and kivaAPI handle was acquired.")
                     
                 } else {
                     print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")

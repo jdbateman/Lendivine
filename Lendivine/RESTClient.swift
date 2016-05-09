@@ -209,7 +209,7 @@ class RESTClient {
             }
         
         let dataAsUTF8String = String(data: data, encoding: NSUTF8StringEncoding)
-        print("raw json data: \(dataAsUTF8String)")
+        //print("raw json data: \(dataAsUTF8String)")
         
         do {
             let parsedResult: AnyObject? = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)

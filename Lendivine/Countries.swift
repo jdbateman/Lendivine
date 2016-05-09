@@ -124,17 +124,15 @@ class Countries {
             //if Countries.doesCountryExistInCoreData(country) {
                 
                 duplicateCountries.append(country)
-                //print("added duplicate country = \(country)")
             }
         }
         
         // When the Country NSManaged objects were created they were saved to the in-memory version of the core data context.
         // Here will save all countries from core data memory to the core data sqlite store on disk.
-        print("saveContext: Countries.persistNewCountries()")
         CoreDataContext.sharedInstance().saveCountriesContext()
         
         // remove all duplicates
-        print("removing \(duplicateCountries.count) duplicate countries")
+        //print("removing \(duplicateCountries.count) duplicate countries")
         for dupCountry in duplicateCountries {
             
             // delete the object from core data memory
@@ -142,7 +140,6 @@ class Countries {
         }
         
         // commit the deletes to the core data sqlite data store on disk
-        print("saveContext: Countries.persistNewCountries()")
         CoreDataContext.sharedInstance().saveCountriesContext()
     }
     

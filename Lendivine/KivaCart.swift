@@ -25,7 +25,6 @@ class KivaCart {
     
     // designated initializer
     init() {
-        print("KivaCart init called")
         
         // load all cart items from the core data cart context
         fetchCartItems()
@@ -80,7 +79,6 @@ class KivaCart {
             
             // remove the item from the core data store
             CoreDataContext.sharedInstance().cartContext.deleteObject(item)
-            print("saveContext: KivaCart.removeItemByIndex()")
             CoreDataContext.sharedInstance().saveCartContext()
             
             // remove the item from the array

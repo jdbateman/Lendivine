@@ -83,8 +83,6 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
             let tapPoint:CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
             let location = CLLocation(latitude: tapPoint.latitude , longitude: tapPoint.longitude)
             
-            print("coordinates: lat: \(tapPoint.latitude) lon: \(tapPoint.longitude)")
-            
             // add a pin on the map
             let pin = MKPointAnnotation()
             pin.coordinate = tapPoint
@@ -99,11 +97,9 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
                     if let placemark = placemarks?.first {
                         
                         self.countryName = placemark.country
-                        print("country: \(placemark.country)")
                         
                         if let city = placemark.addressDictionary!["City"] as? String {
                             self.cityName = city
-                            print("city: \(city)")
                         }
 
                         // show CountryLoans view controller

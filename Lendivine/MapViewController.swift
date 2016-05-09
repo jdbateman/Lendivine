@@ -149,7 +149,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         
         if let loans = self.loans {
             
-            print("creating Pins for \(loans.count) loans")
             var i = 0
             
             // A collection of point annotations to be displayed on the map view
@@ -192,12 +191,8 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                     
                     // Add annotation to the annotations collection.
                     annotations.append(annotation)
-                    
-                    print("appended another loan: \(++i)") // todo - remove debug
                 }
             }
-            
-            print("Finished appending \(i) annotations. annotations now contains \(annotations.count) annotations")
             
             // Add the annotations to the map.
             self.mapView.addAnnotations(annotations)
@@ -382,8 +377,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         let lat = CLLocationDegrees(latitude)
         let long = CLLocationDegrees(longitude)
 
-        print("\(loan.country) coordinates: (\(lat), \(long))")
-        
         // The lat and long are used to create a CLLocationCoordinates2D instance.
         _ = CLLocationCoordinate2D(latitude: lat, longitude: long)
         
@@ -418,7 +411,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                     lowestLongitude = coordinates.longitude < lowestLongitude ? coordinates.longitude : lowestLongitude
                     largestLongitude = coordinates.longitude > largestLongitude ? coordinates.longitude : largestLongitude
                 }
-                print("latitude range: \(lowestLatitude) -> \(largestLatitude), longitude range: \(lowestLongitude) -> \(largestLongitude)")
             }
             
             // add some margin on edges of the map

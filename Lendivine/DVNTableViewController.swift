@@ -83,8 +83,6 @@ class DVNTableViewController: UITableViewController {
             
             success, error, loanResults, nextPage in
             
-            print("findLoans returned nextPage = \(nextPage)")
-            
             // paging
             if nextPage == -1 {
                 // disable the refresh button
