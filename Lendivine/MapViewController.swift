@@ -167,10 +167,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                     if let name = loan.name, country = loan.country {
                         annotation.title = "\(name) in \(country)"
                     }
-                    //todo - remove
-                    //                if let id = loan.id {
-                    //                    annotation.subtitle = id.stringValue // Later, when the user selects this pin, do a fetch on this id to get the KivaLoan object.
-                    //                }
                     
                     if let _ = loan.id {
                         var subtitleText = ""
@@ -240,7 +236,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
             pinView!.canShowCallout = true
-            //pinView!.image = UIImage(named: "pin-map-7")
 
             // Display the lendee's image on the annotation
             if let loan = pointAnnotation.loan {
@@ -265,7 +260,6 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             }
             
             // Add detail button to right callout
-            //var calloutButton = UIButton(type: .DetailDisclosure) // as UIButton
             pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
         }
         else {

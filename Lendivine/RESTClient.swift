@@ -32,7 +32,7 @@ class RESTClient {
         session = NSURLSession.sharedSession()
     }
     
-    /* Create a task to send an HTTP Get request */    
+    /* TODO: In future use this code to create a task to send an HTTP Get request */    
 //    func taskForGETMethod(#baseUrl: String, method: String, headerParameters: [String : AnyObject], queryParameters: [String : AnyObject]?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
 //        
 //        /* 1. Set the parameters */

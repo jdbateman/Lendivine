@@ -12,7 +12,7 @@ import MapKit
 
 class MapWithCheckoutViewController: MapViewController {
 
-    var cart:KivaCart? // = KivaCart.sharedInstance
+    var cart:KivaCart?
     
     override func viewDidLoad() {
         super.viewDidLoad()

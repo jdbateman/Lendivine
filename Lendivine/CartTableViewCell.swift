@@ -24,16 +24,11 @@ class CartTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
     }
-    
-    // TODO - present donation amounts in a picker instead.
     
     // Display a list of user selectable donation amounts in an action sheet.
     func presentDonationAmounts(sender: AnyObject) {

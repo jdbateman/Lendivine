@@ -160,31 +160,7 @@ class LoginViewController: UIViewController {
         } else {
             
             print("login process failed.")
-//            if loginSessionActive {
-//                
-//                print("retry login()")
-//                
-//                self.login()
-//            }
         }
-        
-//        // Provide feedback on Oauth completion status to end user.
-//        dispatch_async(dispatch_get_main_queue()) {
-//            
-//            print("oAuthCompleted() failed")
-//            
-//            self.oAuthCompleted(success) {
-//                
-//                print("completed first doOAuthRound2")
-//                
-//                if loginSessionActive {
-//                    
-//                    print("logging in again with login()")
-//                    
-//                    self.login()
-//                }
-//            }
-//        }
     }
     
     /*! @brief Display the Kiva.org signup page in an embedded browser to allow the user to create an account on Kiva.org.
@@ -224,20 +200,6 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
-//    func oAuthCompleted(success: Bool, completionHandler:(Void)->Void) {
-//    
-//        let resultText: String = success ? "succeeded" : "failed"
-//        
-//        if !success {
-//            let alert = UIAlertController(title: "Kiva OAuth Complete", message: "The OAuth operation with Kiva.org \(resultText).", preferredStyle: .Alert)
-//            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:nil)
-//            alert.addAction(okAction)
-//            self.presentViewController(alert, animated: true) {
-//                completionHandler()
-//            }
-//        }
-//    }
 
     
     // MARK: Notifications
@@ -246,9 +208,6 @@ class LoginViewController: UIViewController {
         
         // Add a notification observer for the app becoming active.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "onAppDidBecomeActive", name: appDidBecomeActiveNotificationKey, object: nil)
-        
-//        // Add a notification observer for when the app receives a Kiva OAuth deep link.
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onKivaOAuthDeepLinkNotification", name: KivaOAuthDeepLinkNotificationKey, object: nil)
     }
     
     /* Received a notification that the app has become active. */
@@ -259,47 +218,7 @@ class LoginViewController: UIViewController {
         shakeTimer?.invalidate()
         shakeTimer = NSTimer.scheduledTimerWithTimeInterval(3.0 , target: self, selector: "shakeLoginButton", userInfo: nil, repeats: true)
     }
-    
-//    /* Received a notification that the app has become active. */
-//    func onAppDidBecomeActive() {
-//    
-//        print("received AppDidBecomeActive notification.")
-//        
-//        if loginSessionActive {
-//            
-//            // We will only go through this login flow once per session: meaning the AppDidBecomeActive will only be fired once during a login session per app session. This call will disable the notification after it has been received once during a login session.
-//            NSNotificationCenter.defaultCenter().removeObserver(self)
-//            
-//            self.activityIndicator.stopActivityIndicator()
-//            
-//            let alert = UIAlertController(title: "Login", message: "Select Login to continue, else Cancel.", preferredStyle: .Alert)
-//            let okAction = UIAlertAction(title: "Login", style: UIAlertActionStyle.Default) {
-//                UIAlertAction in
-//                self.login()
-//            }
-//            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
-//                UIAlertAction in
-//                // do nothing
-//            }
-//            alert.addAction(okAction)
-//            alert.addAction(cancelAction)
-//
-//            self.presentViewController(alert, animated: true, completion: nil)
-//            
-////            self.login()
-//            
-////            doOAuthRound2()
-//            
-//            
-//        }
-//    }
-//    
-//    /*! Receive a notificat that the app received a Kiva OAuth deep link. */
-//    func onKivaOAuthDeepLinkNotification() {
-//        
-//        loginSessionActive = false
-//    }
-    
+
     
     // MARK: Animation
     
@@ -319,5 +238,4 @@ class LoginViewController: UIViewController {
         shakeAnimation.toValue = NSValue(CGPoint: CGPointMake(button.center.x - 0, button.center.y - 0))
         button.layer.addAnimation(shakeAnimation, forKey: "position")
     }
-    
 }

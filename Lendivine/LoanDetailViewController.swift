@@ -46,11 +46,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         
         setupView()
         
-        // TODO - debug
-        if let loan = loan {
-            print("loan details: \(loan) name:\(loan.name) country:\(loan.country) id:\(loan.id)")
-        }
-        
         // set the mapView delegate to this view controller
         mapView.delegate = self
         
@@ -76,7 +71,6 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     // MARK: - Actions
@@ -91,7 +85,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: CoreDataContext.sharedInstance().cartContext) {
             
             dispatch_async(dispatch_get_main_queue()) {
-                // TODO - potential duplicates if we don't delete existing records before save? Shouldn't core data figure this out itself?
+
                 CoreDataContext.sharedInstance().saveCartContext()
             }
         } else {
@@ -148,8 +142,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                 amountText = "$" + a.stringValue
             }
 
-            //let descriptionText = statusText + " " + amountText + " for " + sectorText
-            var description = amountText + " for " + sectorText //+ "\n" + statusText
+            var description = amountText + " for " + sectorText
             description.replaceRange(description.startIndex...description.startIndex, with: String(description[description.startIndex]).capitalizedString)
             descriptionLabel.text = description
             

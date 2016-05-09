@@ -51,11 +51,6 @@ class KivaAccount: NSManagedObject {
     }
 }
 
-/*! Support Equatable protocol. Allows KivaCartItem instances to be compared. */
-//func ==(lhs: KivaAccount, rhs: KivaAccount) -> Bool {
-//    return (lhs.name == rhs.name)
-//}
-
 
 // MARK: Account Image
 

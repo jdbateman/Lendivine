@@ -61,7 +61,6 @@
 		9EC72E201BF559E90000D9BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1E1BF559E90000D9BF /* LaunchScreen.storyboard */; };
 		9EC72E281BF55A7D0000D9BF /* LoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */; };
 		9EC72E2A1BF55ABC0000D9BF /* LoansTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */; };
-		9ECEC3F91CA77D75005EE6D3 /* KivaApiConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEC3F81CA77D74005EE6D3 /* KivaApiConvenience.swift */; };
 		9ECEFAF41C9532310045E92F /* CountriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFAF31C9532310045E92F /* CountriesTableViewCell.swift */; };
 		9ECEFAF61C9602F10045E92F /* Attributions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFAF51C9602F10045E92F /* Attributions.swift */; };
 		9ECEFAFF1C96064E0045E92F /* CountryLoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */; };
@@ -173,7 +172,6 @@
 		9EC72E211BF559E90000D9BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EC72E271BF55A7D0000D9BF /* LoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansTableViewController.swift; sourceTree = "<group>"; };
 		9EC72E291BF55ABC0000D9BF /* LoansTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansTableViewCell.swift; sourceTree = "<group>"; };
-		9ECEC3F81CA77D74005EE6D3 /* KivaApiConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaApiConvenience.swift; sourceTree = "<group>"; };
 		9ECEFAF31C9532310045E92F /* CountriesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesTableViewCell.swift; sourceTree = "<group>"; };
 		9ECEFAF51C9602F10045E92F /* Attributions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributions.swift; sourceTree = "<group>"; };
 		9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryLoansTableViewController.swift; sourceTree = "<group>"; };
@@ -215,7 +213,6 @@
 			children = (
 				9E6105DE1CD8FD1100334DDC /* CountryLoansKivaApiHelper.swift */,
 				9E3950511BF66E23007BC75E /* KivaAPI.swift */,
-				9ECEC3F81CA77D74005EE6D3 /* KivaApiConvenience.swift */,
 				9E3950521BF66E23007BC75E /* KivaCart.swift */,
 				9E3950541BF66E23007BC75E /* KivaCountry.swift */,
 				9E3950551BF66E23007BC75E /* KivaLender.swift */,
@@ -321,6 +318,7 @@
 				9ED2A1371CDE65E000828AA4 /* CountriesMapViewController.swift */,
 				9E4D85EB1C928A460063DEE5 /* CountriesTableViewController.swift */,
 				9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */,
+				9ED2A13C1CDE938F00828AA4 /* DVNCountries.swift */,
 				9E6AC0011CB1CE2C00F3476F /* DVNTableViewController.swift */,
 				9E6AC0021CB1CE2C00F3476F /* DVNViewController.swift */,
 				9E495BDB1BF9050E00E3DEAD /* KivaCartViewController.swift */,
@@ -332,7 +330,6 @@
 				9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */,
 				9E6AC00E1CB1F3EA00F3476F /* KivaSignupViewController.swift */,
 				9E6105F21CDD9BA300334DDC /* LoanImageViewController.swift */,
-				9ED2A13C1CDE938F00828AA4 /* DVNCountries.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -511,7 +508,6 @@
 				9E495BEA1BFBAAD200E3DEAD /* MyLoansTableViewCell.swift in Sources */,
 				9E59E40E1CD32EB4007C704B /* UIView+Extension.swift in Sources */,
 				9EE356961C74501400363652 /* LDAlert.swift in Sources */,
-				9ECEC3F91CA77D75005EE6D3 /* KivaApiConvenience.swift in Sources */,
 				9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */,
 				9E3950711BF670F4007BC75E /* Constants.swift in Sources */,
 				9E6AC0051CB1CE2C00F3476F /* DVNViewController.swift in Sources */,

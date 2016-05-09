@@ -45,8 +45,8 @@ class KivaOAuth {
     func doOAuthKiva(completionHandler: (success: Bool, error: NSError?, kivaAPI: KivaAPI?) -> Void){
         
         let oauthswift = OAuth1Swift(
-            consumerKey:    Constants.OAuthValues.consumerKey, // Kiva["consumerKey"]!,
-            consumerSecret: Constants.OAuthValues.consumerSecret , // Kiva["consumerSecret"]!,
+            consumerKey:    Constants.OAuthValues.consumerKey,
+            consumerSecret: Constants.OAuthValues.consumerSecret ,
             requestTokenUrl: "https://api.kivaws.org/oauth/request_token",
             authorizeUrl:    "https://www.kiva.org/oauth/authorize",
             accessTokenUrl:  "https://api.kivaws.org/oauth/access_token" 
@@ -58,7 +58,6 @@ class KivaOAuth {
             success: { credential, response in
             
                 print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-                //self.showAlertView("Kiva", message: "oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
 
                 // get the kivaAPI handle
                 self.kivaAPI = KivaAPI.sharedInstance
@@ -76,84 +75,4 @@ class KivaOAuth {
             }
         )
     }
-    
-//    func pokeKivaOAuth(completionHandler: (success: Bool, error: NSError?, kivaAPI: KivaAPI?) -> Void) {
-//        
-//        let oauthswift1 = OAuth1Swift(
-//            consumerKey:    Kiva["consumerKey"]!,
-//            consumerSecret: Kiva["consumerSecret"]!,
-//            requestTokenUrl: "https://api.kivaws.org/oauth/request_token",
-//            authorizeUrl:    "https://www.kiva.org/oauth/authorize",
-//            accessTokenUrl:  "https://api.kivaws.org/oauth/access_token"
-//        )
-//        
-//        oauthswift1.pokeKivaOAuthAPI( NSURL(string: Constants.OAuthValues.consumerCallbackUrl)!,
-//            success: { credential, response in
-//                
-//                print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-//                //self.showAlertView("Kiva", message: "oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-//                
-//                // get the kivaAPI handle
-//                self.kivaAPI = KivaAPI.sharedInstance
-//                
-//                // Enable KivaAPI calls requiring an OAuth access token.
-//                KivaAPI.sharedInstance.setOAuthAccessToken(credential.oauth_token, oAuth1: oauthswift1)
-//                
-//                completionHandler(success: true, error: nil, kivaAPI: self.kivaAPI)
-//            },
-//            failure: {
-//                
-//                (error:NSError!) -> Void in
-//                print(error.localizedDescription)
-//                completionHandler(success: false, error: error, kivaAPI: nil)
-//            }
-//        )
-    
-
-        
-//        oauthswift.doOAuthKiva( NSURL(string: Constants.OAuthValues.consumerCallbackUrl)!,
-//            success: { credential, response in
-//                
-//                completionHandler(success: true, error: nil, kivaAPI: nil)
-//            },
-//            failure: {
-//                
-//                (error:NSError!) -> Void in
-//                print(error.localizedDescription)
-//                completionHandler(success: false, error: error, kivaAPI: nil)
-//            }
-//        )
-//    }
-    
-//    func prepareShortcutLogin(completionHandler: (success: Bool, error: NSError?, kivaAPI: KivaAPI?) -> Void) {
-//        
-//        let oauthswift1 = OAuth1Swift(
-//            consumerKey:    Kiva["consumerKey"]!,
-//            consumerSecret: Kiva["consumerSecret"]!,
-//            requestTokenUrl: "https://api.kivaws.org/oauth/request_token",
-//            authorizeUrl:    "https://www.kiva.org/oauth/authorize",
-//            accessTokenUrl:  "https://api.kivaws.org/oauth/access_token"
-//        )
-//        
-//        oauthswift1.shortcutLogin( { credential, response in
-//                
-//                print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-//                //self.showAlertView("Kiva", message: "oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
-//                
-//                // get the kivaAPI handle
-//                self.kivaAPI = KivaAPI.sharedInstance
-//                
-//                // Enable KivaAPI calls requiring an OAuth access token.
-//                KivaAPI.sharedInstance.setOAuthAccessToken(credential.oauth_token, oAuth1: oauthswift1)
-//                
-//                completionHandler(success: true, error: nil, kivaAPI: self.kivaAPI)
-//            },
-//            failure: {
-//                
-//                (error:NSError) -> Void in
-//                print(error.localizedDescription)
-//                completionHandler(success: false, error: error, kivaAPI: nil)
-//            }
-//        )
-//    }
 }

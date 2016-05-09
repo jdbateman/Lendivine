@@ -1126,6 +1126,7 @@ extension KivaAPI {
 
 extension KivaAPI {
     
+// TODO: in future use this helper to support paging for multiple calls.
 //    func getPaging(jsonData: AnyObject?) -> KivaPaging? {
 //        
 //        if let jsonData = jsonData {

@@ -61,7 +61,7 @@ class CountryLoansKivaApiHelper {
             
             success, error, loanResults, nextPage in
             
-//            // paging
+//            // TODO: In future enable paging for country loans
 //            if nextPage == -1 {
 //                // disable the refresh button
 //                self.navigationItem.rightBarButtonItems?.first?.enabled = false

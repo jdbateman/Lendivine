@@ -370,12 +370,9 @@ class CartTableViewController: UITableViewController {
         
         let cartItem = self.cart!.items[indexPath.row]
         
-//        if let loanID = cartItem.id {
-
             if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
                 self.presentLoanDetailViewController(loan)
             }
-//        }
     }
     
     
@@ -406,13 +403,9 @@ class CartTableViewController: UITableViewController {
                 
                 let cartItem = self.cart!.items[indexPath.row]
                 
-//                if let loanID = cartItem.id {
-                    
-//                    if let loan:KivaLoan = KivaLoan.createKivaLoanFromLoanID(loanID, context: CoreDataStackManager.sharedInstance().cartContext) {
-                    if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
-                        controller.loan = loan
-                    }
-//                }
+                if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
+                    controller.loan = loan
+                }
             }
             
         } else if segue.identifier == "CartToMapSegueId" {

@@ -43,9 +43,6 @@ class DVNViewController: UIViewController {
         
         print("findLoans called with nextPage = \(self.nextPageOfKivaSearchResults)")
         
-        // TODO - in query below pass in nil for sector
-        //_ = "na,ca,sa,af,as,me,ee,we,an,oc" // TODO: remove
-        
         var countries = "TD,TG,TH,TJ,TL,TR,TZ"
         if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
             countries = randomCountries
@@ -60,7 +57,6 @@ class DVNViewController: UIViewController {
             print("findLoans returned nextPage = \(nextPage)")
             
             if success {
-                // todo: debug
                 if let loanResults = loanResults {
                     var loanNames: String = ""
                     for loan in loanResults {
@@ -132,35 +128,14 @@ class DVNViewController: UIViewController {
                 if success {
                     if let loans = loanResults {
                         
-                        // just keep the first numberOfLoansToAdd loans
-                        //tood - reenable? loans.removeRange(numberOfLoansToAdd..<loans.count)  // Not sure this is doing anything: todo investigate
-                        
-                        // todo - do i need to maintain this collection anymore?  self.loans = loans
-                        
-                        print("fetched loans:")
-                        for loan in loans {
-                            print("%@", loan.name)
-                        }
-                        
-                        
                         // Add any newly downloaded loans to the shared context if they are not already persisted in the core data store.
                         for loan in loans where (loan.id != nil) && (loan.id != -1) {
                             if KivaLoan.fetchLoanByID2(loan.id!, context: CoreDataContext.sharedInstance().scratchContext) == nil {
                                 
-                                print("Need to add loan: %@", loan.name)
-                                
-                                // The following lines were causing duplicate objects to appear in core data. removing these lines results in owning the existing loan objects being upserted when saveContext is called.
-                                
-                                // todo duplicate loans
-                                // _ = KivaLoan.init(fromLoan: loan, context: self.sharedContext)
-                                
                                 // Instantiate a KivaLoan in the scratchContext so the fetchResultsController will update the table view.
                                 let newLoan = KivaLoan.init(fromLoan: loan, context: CoreDataContext.sharedInstance().scratchContext)
-                                print("new loan: %@, %d", newLoan.name, newLoan.id)
                                 
-                                // CoreDataStackManager.sharedInstance().saveContext()
-                                
-                                self.saveScratchContext()
+                                 self.saveScratchContext()
                             }
                         }
                         

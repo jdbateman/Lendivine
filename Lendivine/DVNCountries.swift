@@ -69,7 +69,6 @@ class DVNCountries {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
         fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", userInput)
-        //let searchPredicate = NSPredicate(format: "SELF.name CONTAINS[c] %@", searchController.searchBar.text!)
         
         _ = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext:
             CoreDataContext.sharedInstance().countriesScratchContext, sectionNameKeyPath: nil, cacheName: nil)

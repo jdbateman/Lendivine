@@ -13,14 +13,6 @@ import CoreData
 
 class LoansTableViewController: DVNTableViewController, NSFetchedResultsControllerDelegate {
     
-    // a collection of Kiva loans
-    //var loans = [KivaLoan]() // todo - comment out this line. no longer used.
-    
-//    /* The main core data managed object context. This context will be persisted. */
-//    lazy var sharedContext: NSManagedObjectContext = {
-//        return CoreDataStackManager.sharedInstance().managedObjectContext!
-//    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -75,8 +67,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
         // left bar button items
         let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
-//        let oAuthButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "onOAuthButtonTap")
-        navigationItem.setLeftBarButtonItems([trashButton/*, oAuthButton*/], animated: true)
+
+        navigationItem.setLeftBarButtonItems([trashButton], animated: true)
         
         // right bar button items
         let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
@@ -129,7 +121,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
         
         
-        // TODO - REVIEW USE OF SCRACH CONTEXT
         if loan.id == -1 {
             print("loan id == -1 in LoansTableViewcontroller.configureCell")
             CoreDataContext.sharedInstance().scratchContext.deleteObject(loan)
@@ -182,7 +173,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-    // TODO - REVIEW USE OF SCRATCH CONTEXT FOR FETCHEDRESULTSCONTROLLER - I think this is easily changed to the sharedContext.
     
     // MARK: - Fetched results controller
     
@@ -283,14 +273,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         self.tableView.reloadData()
     }
     
-    // OAuth button was selected.
-//    func onOAuthButtonTap() {
-//        doOAuth()
-//    }
-    
     // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
     func doOAuth() {
-        let kivaOAuth = KivaOAuth.sharedInstance // = KivaOAuth()
+        let kivaOAuth = KivaOAuth.sharedInstance
         
         // Do the oauth in a background queue.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
@@ -341,27 +326,27 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
 
     /*! See More Loans..." button was selected. */
     @IBAction func seeMoreLoans(sender: AnyObject) {
-        refreshLoans() {
-            success, error in
-            if success {
-//                self.fetchLoans()
-//                self.tableView.reloadData()
-            } else {
-                print("refreshLoans returned an error: \(error)")
-            }
-        }
+        refreshLoans(nil)
+//            {
+//            success, error in
+//            if success {
+//                //
+//            } else {
+//                print("refreshLoans returned an error: \(error)")
+//            }
+//        }
     }
     
     /*! Refresh button was selected. */
     func onAddLoansButtonTap() {
         
-        refreshLoans() {
-            success, error in
-//            if success {
-//                self.fetchLoans()
-//                self.tableView.reloadData()
-//            }
-        }
+        refreshLoans(nil)
+//            {
+//            success, error in
+////            if success {
+//
+////            }
+//        }
     }
     
     func onPullToRefresh(refreshControl: UIRefreshControl) {
@@ -372,13 +357,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         refreshLoans() {
             success, error in
-            
             refreshControl.endRefreshing()
-            
-//            if success {
-//                self.fetchLoans()
-//                self.tableView.reloadData()
-//            }
         }
     }
     
@@ -401,8 +380,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
-                    //self.fetchLoans()
-                    //self.tableView.reloadData()
                     if let completionHandler = completionHandler {
                         completionHandler(success:true, error: nil)
                     }
@@ -416,12 +393,12 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         }
     }
     
-//    /*! Reload loans from Core Data. */
+    /*! Reload loans from Core Data. Note: placeholder. In future if we want to say fire a notification when items are removed from the cart we could respond here by refetching the loans and removing them from this scree. Chose not to implement this interaction flow with the data for the first version.
+    */
 //    func reloadLoansFromCoreData() {
 //        //TODO
 //    }
     
-    // TODO - why are we using a scratch context? - TODO: MIGHT NEED TO RE-EVALUATE USE OF SCRATCH CONTEXT HERE
     /*! Remove all loans from the scratch context. */
     func removeAllLoans() {
         
@@ -446,8 +423,6 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             }
         }
     }
-    
-    // TODO - USING SCRATCH CONTEXT. REVIEW CODE. THIS MIGHT NOT BE WHAT IS REQUIRED NOW.
     
     /* 
         @brief Perform a fetch of all the loan objects in the scratch context. Return array of KivaLoan instances, or an empty array if no results or query failed.

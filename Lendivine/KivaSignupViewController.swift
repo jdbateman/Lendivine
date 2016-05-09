@@ -16,7 +16,6 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     
     var request = NSURLRequest(URL: NSURL(string: KivaSignUpURL)!)
     
-    //var targetURL : NSURL = NSURL()
     let webView : UIWebView = UIWebView()
     
     override func viewDidLoad() {

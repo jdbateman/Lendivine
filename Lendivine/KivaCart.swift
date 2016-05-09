@@ -132,10 +132,6 @@ class KivaCart {
     
         for item in self.items {
     
-//            var id:NSNumber = 0
-//            if let loanID = item.id {
-//                id = loanID
-//            }
             // NOTE: The context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
             if let loan:KivaLoan = KivaLoan(fromCartItem: item, context: CoreDataContext.sharedInstance().cartContext) {
                 loansInCart.append(loan)
@@ -193,8 +189,6 @@ class KivaCart {
     */
     func KivaAddItemToCart(loan: KivaLoan?, donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
         
-        print("KivaAddItemToCart called for loan \(loan?.name) & \(loan?.id)")
-        
         if let loan = loan {
 
                 if let donationAmount = donationAmount {
@@ -216,20 +210,9 @@ class KivaCart {
                         // Persist the loan to which the cart item refers.
                         CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().cartContext) // TODO beware this might create cart duplicates. may need to use scratch context here to only persist a copy of the single loan.
                         
-                        
-                        print("Added item to cart with loan Id: \(loan.id) in amount: \(donationAmount)")
-                        
-                        // Persist the KivaCartItem object we added to the Core Data shared context
-// TODO - looks like we don't need this call here. Instead, persist from the viewcontroller where add to cart button was selected. TODO - go review them.
-//                        dispatch_async(dispatch_get_main_queue()) {
-//                            print("saveContext: KivaCart.KivaAddItemToCart()")
-//                            CoreDataStackManager.sharedInstance().saveContext()
-//                        }
-                        
-                        return true
+                         return true
                         
                     } else {
-                        print("Item not added to cart. The cart already contains loanId: \(loan.id)")
                         return false
                     }
                 }

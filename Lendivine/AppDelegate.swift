@@ -60,14 +60,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         
-        // remove all the loans from the scratch context
- //       let storyboard = UIStoryboard (name: "Main", bundle: nil)
-//        let controller: LoansTableViewController = storyboard.instantiateViewControllerWithIdentifier("LoansTableViewControllerStoryboardID") as! LoansTableViewController
-//        //controller.removeAllLoans()  // TODO - call cleanup instead
         CoreDataLoanHelper.cleanup()
         
-        // Save changes in the application's managed object context before the application terminates.
-//TODO        CoreDataStackManager.sharedInstance().saveContext()
+        // Note: enable this line in future if you want to save changes in the application's managed object context before the application terminates.
+        // CoreDataStackManager.sharedInstance().saveContext()
     }
     
     // Handle launch by URL scheme.
@@ -92,38 +88,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
             
-//            writeOAuth(url)
-            
-            print("")
-            print("****************************************************************************")
-            print("Step 3: Request Access Token")
-            print("")
-            print("Parsing redirect url and params from Kiva:")
-            print("url: \(url)")
-            
             let mySing = MySingleton.sharedInstance
             mySing.timeStampInHeader = false
+            
+            /* Helpful OAuth debug info.
+            print("Step 3: Request Access Token. Parse redirect url and params from Kiva:")
+            print("url: \(url)")
             print("timestampInHeader = \(mySing.timeStampInHeader) in AppDelegate")
+            */
             
             OAuth1Swift.handleOpenURL(url)
         }
     }
 
-//    // MARK: Persist OAuth access token
-//    
-//    func writeOAuth(url:NSURL) {
-//        
-//        print("appDelegate saved OAuth url  = \(url)")
-//        let appSettings = NSUserDefaults.standardUserDefaults()
-//        appSettings.setURL(url, forKey: "KivaOAuthUrl")
-//    }
-//    
-//    func readOAuth() -> NSURL? {
-//        
-//        let appSettings = NSUserDefaults.standardUserDefaults()
-//        let nsurl = appSettings.URLForKey("KivaOAuthUrl")
-//        return nsurl
-//    }
     
     // MARK - notifications
     
@@ -132,11 +109,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         NSNotificationCenter.defaultCenter().postNotificationName(appDidBecomeActiveNotificationKey, object: self)
     }
-    
-//    /*! Post a notification indicating that the Kiva OAuth deep link was received. */
-//    func postKivaDeepLinkNotification() {
-//        
-//        NSNotificationCenter.defaultCenter().postNotificationName(KivaOAuthDeepLinkNotificationKey, object: self)
-//    }
 }
 
