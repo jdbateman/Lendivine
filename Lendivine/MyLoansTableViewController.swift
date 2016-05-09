@@ -166,6 +166,7 @@ class MyLoansTableViewController: UITableViewController {
                 let loan = self.loans[indexPath.row]
                 controller.loan = loan
                 controller.showAddToCart = false
+                controller.showBalanceInfo = true
             }
             
         } else if segue.identifier == "MyLoansToMapSegueId" {

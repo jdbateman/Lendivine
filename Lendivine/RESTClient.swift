@@ -208,7 +208,7 @@ class RESTClient {
                 return
             }
         
-        let dataAsUTF8String = String(data: data, encoding: NSUTF8StringEncoding)
+        //let dataAsUTF8String = String(data: data, encoding: NSUTF8StringEncoding)
         //print("raw json data: \(dataAsUTF8String)")
         
         do {

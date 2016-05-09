@@ -149,7 +149,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         
         if let loans = self.loans {
             
-            var i = 0
+            //var i = 0
             
             // A collection of point annotations to be displayed on the map view
             var annotations = [DVNPointAnnotation]()

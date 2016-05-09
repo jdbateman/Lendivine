@@ -16,6 +16,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     var loan: KivaLoan?
     var kivaAPI: KivaAPI?
     var showAddToCart: Bool = true
+    var showBalanceInfo: Bool = false
     var textAnimationTimer:NSTimer?
     var balanceDescription:String?
     var fundedString:String?
@@ -51,7 +52,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         
         showPinOnMap()
         
-        getLoanBalancesFromKiva()
+        if showBalanceInfo == true {
+            getLoanBalancesFromKiva()
+        }
     }
     
     /*! hide the status bar */

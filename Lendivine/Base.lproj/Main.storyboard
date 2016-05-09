@@ -421,6 +421,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="150" id="52F-HF-Erh"/>
                                                 <constraint firstAttribute="width" constant="70" id="cdi-49-Axx"/>
+                                                <constraint firstAttribute="height" constant="50" id="fCp-wC-bsU"/>
                                                 <constraint firstAttribute="height" constant="70" id="znf-KV-w0v"/>
                                             </constraints>
                                             <state key="normal" image="EmptyCart-50"/>
@@ -1899,8 +1900,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YhC-ao-4LW"/>
-        <segue reference="DWE-bn-Cim"/>
         <segue reference="SEU-i4-u6i"/>
+        <segue reference="e6n-ZL-xAr"/>
+        <segue reference="YhC-ao-4LW"/>
     </inferredMetricsTieBreakers>
 </document>
