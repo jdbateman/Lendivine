@@ -51,7 +51,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
 
     override func viewWillAppear(animated: Bool) {
-        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(4.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
+        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(4.0 , target: self, selector: #selector(AccountViewController.animateTextChange), userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {

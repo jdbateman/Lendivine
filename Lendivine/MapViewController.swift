@@ -81,11 +81,11 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         
         var barButtonItems = [UIBarButtonItem]()
         
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: #selector(MapViewController.onLoansByListButtonTap))
         barButtonItems.append(loansByListButton)
         
         if showRefreshButton {
-            let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "onRefreshButtonTap")
+            let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(MapViewController.onRefreshButtonTap))
             barButtonItems.append(refreshButton)
         }
         
@@ -441,7 +441,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     }
     
     func createCustomBackButton() {
-        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "onCancelButton")
+        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(MapViewController.onCancelButton))
         navigationItem.setLeftBarButtonItem(customBackButton, animated: true)
     }
     

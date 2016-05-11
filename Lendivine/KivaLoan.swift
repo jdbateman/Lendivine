@@ -111,7 +111,7 @@ class KivaLoan: NSManagedObject  {
         self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
-        self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?[0] as? String
+        self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?.firstObject as? String
     }
 
     /*! 

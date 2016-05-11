@@ -26,7 +26,7 @@ class MapWithCheckoutViewController: MapViewController {
     
     func modifyBarButtonItems() {
 
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: #selector(MapWithCheckoutViewController.onLoansByListButtonTap))
         navigationItem.setRightBarButtonItems([loansByListButton], animated: true)
         
         // remove back button

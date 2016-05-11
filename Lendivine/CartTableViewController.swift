@@ -174,13 +174,13 @@ class CartTableViewController: UITableViewController {
     func configureBarButtonItems() {
         
         // left bar button items
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(CartTableViewController.onTrashButtonTap))
         navigationItem.setLeftBarButtonItem(trashButton, animated: true)
         
         // right bar button items
-        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: "onCheckoutButtonTapped")
+        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: #selector(CartTableViewController.onCheckoutButtonTapped))
         //self.navigationItem.rightBarButtonItem = checkoutButton
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(CartTableViewController.onMapButton))
         navigationItem.setRightBarButtonItems([mapButton, checkoutButton], animated: true)
     }
 

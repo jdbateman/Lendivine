@@ -39,7 +39,7 @@ class CountryLoansTableViewController: UITableViewController {
         configureView()
         
         // add the map bar button item
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(CountryLoansTableViewController.onMapButton))
         navigationItem.setRightBarButtonItem(mapButton, animated: true)
         self.navigationItem.rightBarButtonItems?.first?.enabled = true
     }

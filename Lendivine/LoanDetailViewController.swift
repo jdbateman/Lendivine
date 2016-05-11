@@ -64,7 +64,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
 
     override func viewWillAppear(animated: Bool) {
         initTapRecognizer()
-        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(5.0 , target: self, selector: "animateTextChange", userInfo: nil, repeats: true)
+        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(5.0 , target: self, selector: #selector(LoanDetailViewController.animateTextChange), userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -298,7 +298,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     // MARK: Tap gesture recognizer
     
     func initTapRecognizer() {
-        tapRecognizer = UITapGestureRecognizer(target: self, action:Selector("handleSingleTap:"))
+        tapRecognizer = UITapGestureRecognizer(target: self, action:#selector(LoanDetailViewController.handleSingleTap(_:)))
         
         if let tr = tapRecognizer {
             tr.numberOfTapsRequired = 1

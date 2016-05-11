@@ -174,7 +174,7 @@ class Countries {
         }
 
         // add the requested number of randomly selected countries
-        for var i = 0; i < numberOfCountries; i++ {
+        for _ in 0..<numberOfCountries {
             let index = Int(arc4random_uniform(UInt32(countries.count)))
             randomCountries.append(countries[index])
         }
@@ -226,7 +226,7 @@ class Countries {
         }
         
         // add the requested number of randomly selected countries
-        for var i = 0; i < numberOfCountries; i++ {
+            for _ in 0..<numberOfCountries {
             let index = Int(arc4random_uniform(UInt32(countries.count)))
             randomCountries.append(countries[index])
         }

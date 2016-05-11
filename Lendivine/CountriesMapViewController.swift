@@ -33,7 +33,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
         
         navigationItem.title = "Map Search"
         
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: "onLoansByListButtonTap")
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: #selector(CountriesMapViewController.onLoansByListButtonTap))
         navigationItem.setRightBarButtonItems([loansByListButton], animated: true)
         
         // remove back button
@@ -57,7 +57,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
     // MARK: Tap gesture recognizer
     
     func initTapRecognizer() {
-        tapRecognizer = UITapGestureRecognizer(target: self, action:Selector("handleSingleTap:"))
+        tapRecognizer = UITapGestureRecognizer(target: self, action:#selector(CountriesMapViewController.handleSingleTap(_:)))
         
         if let tr = tapRecognizer {
             tr.numberOfTapsRequired = 1

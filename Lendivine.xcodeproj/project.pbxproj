@@ -74,6 +74,8 @@
 		9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */; };
 		9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356921C71577900363652 /* Model.xcdatamodeld */; };
 		9EE356961C74501400363652 /* LDAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356951C74501400363652 /* LDAlert.swift */; };
+		9EF19DB11CE3017E00F2618E /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E39508D1BF68406007BC75E /* OAuthSwift.framework */; };
+		9EF19DB21CE3017E00F2618E /* OAuthSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E39508D1BF68406007BC75E /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,7 +114,28 @@
 			remoteGlobalIDString = F43502791A6791B200038A29;
 			remoteInfo = OAuthSwift;
 		};
+		9EF19DB31CE3017E00F2618E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9E3950831BF68405007BC75E /* OAuthSwift.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F43502791A6791B200038A29;
+			remoteInfo = OAuthSwift;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9EF19DB51CE3017F00F2618E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9EF19DB21CE3017E00F2618E /* OAuthSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9E1911721C94D6CD004E5FBB /* Countries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countries.swift; sourceTree = "<group>"; };
@@ -192,6 +215,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EF19DB11CE3017E00F2618E /* OAuthSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,11 +399,13 @@
 				9EC72E0C1BF559E90000D9BF /* Sources */,
 				9EC72E0D1BF559E90000D9BF /* Frameworks */,
 				9EC72E0E1BF559E90000D9BF /* Resources */,
+				9EF19DB51CE3017F00F2618E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				9E495BCD1BF6845300E3DEAD /* PBXTargetDependency */,
+				9EF19DB41CE3017E00F2618E /* PBXTargetDependency */,
 			);
 			name = Lendivine;
 			productName = Lendivine;
@@ -549,6 +575,11 @@
 			name = OAuthSwift;
 			targetProxy = 9E495BCC1BF6845300E3DEAD /* PBXContainerItemProxy */;
 		};
+		9EF19DB41CE3017E00F2618E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OAuthSwift;
+			targetProxy = 9EF19DB31CE3017E00F2618E /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -656,6 +687,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Lendivine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = self.JohnBateman.Lendivine;
@@ -667,6 +699,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Lendivine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = self.JohnBateman.Lendivine;

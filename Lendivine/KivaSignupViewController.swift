@@ -57,7 +57,7 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     // MARK: Navigation
     
     func createCustomBackButton() {
-        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "onCancelButton")
+        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(KivaSignupViewController.onCancelButton))
         navigationItem.setLeftBarButtonItem(customBackButton, animated: true)
     }
     

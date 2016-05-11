@@ -38,7 +38,7 @@ class CustomView: MKAnnotationView {
         btn.frame=CGRectMake(66, -18, 20, 20)
         btn.backgroundColor=UIColor.redColor()
         btn.setTitle("button", forState: UIControlState.Normal)
-        btn.addTarget(self, action: "onChangeLabel", forControlEvents: UIControlEvents.TouchUpInside)
+        btn.addTarget(self, action: #selector(CustomView.onChangeLabel), forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(btn)
         
         let txtField : UITextField = UITextField()

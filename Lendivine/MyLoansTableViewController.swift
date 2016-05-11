@@ -43,7 +43,7 @@ class MyLoansTableViewController: UITableViewController {
     /*! Setup the nav bar button items. */
     func configureBarButtonItems() {
         
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(MyLoansTableViewController.onMapButton))
         navigationItem.setRightBarButtonItem(mapButton, animated: true)
     }
     

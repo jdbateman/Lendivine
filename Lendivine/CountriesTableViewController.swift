@@ -35,7 +35,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         super.viewWillAppear(animated)
         
         // Add a notification observer for updates to countries from RESTCountries web service.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onCountriesUpdate", name: countriesUpdateNotificationKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CountriesTableViewController.onCountriesUpdate), name: countriesUpdateNotificationKey, object: nil)
         
         setupView()
     }
@@ -136,7 +136,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 //        mapButton.imageView!.tintColor = UIColor.blueColor()
         
         mapButton.hidden = false
-        mapButton.addTarget(self, action: "mapAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        mapButton.addTarget(self, action: #selector(CountriesTableViewController.mapAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(mapButton)
         
         mapButton.setNeedsDisplay()

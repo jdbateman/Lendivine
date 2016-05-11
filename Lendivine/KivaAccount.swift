@@ -78,7 +78,7 @@ extension KivaAccount {
                 let path = accountImage.pathForImageFileWith(id)
                 if let path = path {
                     if NSFileManager.defaultManager().fileExistsAtPath(path) {
-                        let error:NSErrorPointer = NSErrorPointer()
+                        let error:NSErrorPointer = nil
                         do {
                             try NSFileManager.defaultManager().removeItemAtPath(path)
                         } catch let error1 as NSError {

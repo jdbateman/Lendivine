@@ -49,7 +49,7 @@ class LoginViewController: UIViewController {
         
         setupNotificationObservers()
         
-        shakeTimer = NSTimer.scheduledTimerWithTimeInterval(10.0 , target: self, selector: "shakeLoginButton", userInfo: nil, repeats: true)
+        shakeTimer = NSTimer.scheduledTimerWithTimeInterval(10.0 , target: self, selector: #selector(LoginViewController.shakeLoginButton), userInfo: nil, repeats: true)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -206,7 +206,7 @@ class LoginViewController: UIViewController {
     func setupNotificationObservers() {
         
         // Add a notification observer for the app becoming active.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onAppDidBecomeActive", name: appDidBecomeActiveNotificationKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginViewController.onAppDidBecomeActive), name: appDidBecomeActiveNotificationKey, object: nil)
     }
     
     /* Received a notification that the app has become active. */
@@ -215,7 +215,7 @@ class LoginViewController: UIViewController {
         self.activityIndicator.stopActivityIndicator()
         
         shakeTimer?.invalidate()
-        shakeTimer = NSTimer.scheduledTimerWithTimeInterval(3.0 , target: self, selector: "shakeLoginButton", userInfo: nil, repeats: true)
+        shakeTimer = NSTimer.scheduledTimerWithTimeInterval(3.0 , target: self, selector: #selector(LoginViewController.shakeLoginButton), userInfo: nil, repeats: true)
     }
 
     
