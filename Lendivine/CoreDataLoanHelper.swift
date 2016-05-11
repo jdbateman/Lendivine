@@ -179,8 +179,7 @@ class CoreDataLoanHelper {
                     let dupFetchResults = try context.executeFetchRequest(dupFetchRequest)
                     let dupResults = dupFetchResults
                     let count = dupResults.count
-                    var i:Int = 1
-                    for (i; i < count; i++) {
+                    for i in 1..<count {
                         if let loan = dupResults[i] as? KivaLoan {
                             //assert(false,"Should not have duplicate loans! Found duplicate: \(loan)")
                             print("cleaning up duplicate loan \(loan)")

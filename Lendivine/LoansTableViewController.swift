@@ -66,14 +66,14 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func configureBarButtonItems() {
     
         // left bar button items
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "onTrashButtonTap")
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(LoansTableViewController.onTrashButtonTap))
 
         navigationItem.setLeftBarButtonItems([trashButton], animated: true)
         
         // right bar button items
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: "onMapButton")
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(LoansTableViewController.onMapButton))
         
-        let addLoansButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "onAddLoansButtonTap")
+        let addLoansButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(LoansTableViewController.onAddLoansButtonTap))
         navigationItem.setRightBarButtonItems([mapButton, addLoansButton], animated: true)
     }
     
@@ -82,7 +82,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = UIColor.whiteColor()
         refreshControl.transform = CGAffineTransformMakeScale(2.0, 2.0)
-        refreshControl.addTarget(self, action: "onPullToRefresh:", forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self, action: #selector(LoansTableViewController.onPullToRefresh(_:)), forControlEvents: .ValueChanged)
         self.tableView.addSubview(refreshControl)
         self.tableView.alwaysBounceVertical = true
     }
