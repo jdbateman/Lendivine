@@ -1632,7 +1632,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Donate-50" translatesAutoresizingMaskIntoConstraints="NO" id="pUV-w4-0Wf">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Donate-120" translatesAutoresizingMaskIntoConstraints="NO" id="pUV-w4-0Wf">
                                 <rect key="frame" x="168" y="135" width="256" height="256"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="256" id="1yI-Rz-w3N"/>
@@ -1949,8 +1949,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
         <image name="Calendar-50" width="50" height="50"/>
         <image name="Checkout-50" width="50" height="50"/>
         <image name="Clear Shopping Cart-32" width="32" height="32"/>
+        <image name="Donate-120" width="120" height="120"/>
         <image name="Donate-32" width="32" height="32"/>
-        <image name="Donate-50" width="50" height="50"/>
         <image name="EmptyCart-50" width="50" height="50"/>
         <image name="Resize-50" width="50" height="50"/>
         <image name="User-100" width="100" height="100"/>
