@@ -19,12 +19,20 @@ let KivaOAuthDeepLinkNotificationKey = "com.lendivine.appdelegate.kivaoauthdeepl
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var OAuthSession: NSURLSession?
+    
     var window: UIWindow?
     var loggedIn: Bool = false
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        Countries.persistCountriesFromWebService(nil)
+        Countries.persistCountriesFromWebService() {
+            success, error in
+            if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                let topViewController = ((self.window!.rootViewController) as! UINavigationController).visibleViewController
+                LDAlert(viewController: topViewController!).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+            }
+        }
         
         UITabBar.appearance().translucent = false
         UITabBar.appearance().barTintColor = UIColor(rgb:0x122950)

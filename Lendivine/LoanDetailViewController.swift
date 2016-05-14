@@ -171,6 +171,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                         self.view.setNeedsDisplay()
                     }
                 } else  {
+                    if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                        LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                    }
                     print("error retrieving loan image: \(error)")
                 }
             }
@@ -265,7 +268,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                     }
 
                 } else {
-                    
+                    if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                        LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                    }
                     print("error retrieving balances information: \(error?.localizedDescription)")
                 }
             }
@@ -355,6 +360,9 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                         self.presentViewController(popoverContent, animated: true, completion: nil)
                     }
                 } else  {
+                    if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                        LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                    }
                     print("error retrieving loan image: \(error)")
                 }
             }

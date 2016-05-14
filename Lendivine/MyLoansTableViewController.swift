@@ -128,6 +128,9 @@ class MyLoansTableViewController: UITableViewController {
                     cell.loanImageView!.clipsToBounds = true
                 }
             } else  {
+                if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("error retrieving image: \(error)")
             }
         }
@@ -149,6 +152,9 @@ class MyLoansTableViewController: UITableViewController {
                     self.loans.removeAll()
                 }
             } else {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("error retrieving user's loans from Kiva.org: \(error)")
             }
         }

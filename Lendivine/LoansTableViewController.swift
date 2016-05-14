@@ -162,6 +162,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                     cell.loanImageView!.image = image
                 }
             } else  {
+                if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("error retrieving image: \(error)")
             }
         }
@@ -366,6 +369,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                     }
                 }
             } else {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("failed to populate loans. error: \(error?.localizedDescription)")
                 if let completionHandler = completionHandler {
                     completionHandler(success:false, error: error)

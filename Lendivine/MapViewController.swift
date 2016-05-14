@@ -136,6 +136,9 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                     self.refreshMapPins()
                 }
             } else {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("failed to populate loans. error: \(error?.localizedDescription)")
             }
         }
@@ -243,6 +246,10 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                             pinView!.leftCalloutAccessoryView = self.getCustomAccessoryViewForImage(image)
                         
                             self.mapView.setNeedsDisplay()
+                        }
+                    } else {
+                        if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                            LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                         }
                     }
                 }

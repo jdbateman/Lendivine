@@ -317,6 +317,9 @@ class CartTableViewController: UITableViewController {
                     completionHandler(success: true, error: nil, fundraising: fundraising, notFundraising: notFundraising)
                 }
             } else {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
                 completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
             }
@@ -339,6 +342,9 @@ class CartTableViewController: UITableViewController {
                     // successfully determined status of loan
                     completionHandler(result: result, error: nil)
                 } else {
+                    if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                        LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                    }
                     // error determining the status of the loan
                     completionHandler(result: false, error: error)
                 }

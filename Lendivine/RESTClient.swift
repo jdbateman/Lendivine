@@ -178,6 +178,10 @@ class RESTClient {
     /* Helper: Given a response with error, see if a status_message is returned, otherwise return the previous error */
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
         
+        if data == nil && error.localizedDescription != "" {
+            return error
+        }
+        
         guard let data = data else {
             return NSError(domain: "REST service Error", code: 1, userInfo: [NSLocalizedDescriptionKey : "no json data in response"])
         }

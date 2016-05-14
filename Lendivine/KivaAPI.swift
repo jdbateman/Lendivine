@@ -75,6 +75,19 @@ class KivaAPI {
             }
         )
     }
+    
+    // MARK: Notifications
+    
+    func setupNotificationObservers() {
+        
+        // Add a notification observer for logout.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(KivaAPI.onLogout), name: logoutNotificationKey, object: nil)
+    }
+    
+    /* Received a notification that logout was initiated. */
+    @objc private func onLogout() {
+        oAuthAccessToken = nil
+    }
 }
 
 // MARK: These Convenience methods must provide an OAuth access token to the underlying KivaAPI.
