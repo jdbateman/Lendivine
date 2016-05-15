@@ -95,6 +95,7 @@ public class OAuthSwiftHTTPRequest: NSObject, NSURLSessionDelegate {
             self.session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
                 delegate: self,
                 delegateQueue: NSOperationQueue.mainQueue())
+            
             let task: NSURLSessionDataTask = self.session.dataTaskWithRequest(self.request!) { data, response, error -> Void in
                 #if os(iOS)
                     UIApplication.sharedApplication().networkActivityIndicatorVisible = false
@@ -105,12 +106,14 @@ public class OAuthSwiftHTTPRequest: NSObject, NSURLSessionDelegate {
                 if let data = data {
                     self.responseData.appendData(data)
                 }
-   // TODO: this code throws an exception if there is no internet connection. Need to properly handle, especially beware forced unwrapping of optionals.
                 
                 if let response = self.response {
                     if response.statusCode >= 400 {
                         let responseString = NSString(data: self.responseData, encoding: self.dataEncoding)
-                        let localizedDescription = OAuthSwiftHTTPRequest.descriptionForHTTPStatus(self.response.statusCode, responseString: responseString! as String)
+                        var localizedDescription = ""
+                        if let responseString = responseString {
+                            localizedDescription = OAuthSwiftHTTPRequest.descriptionForHTTPStatus(self.response.statusCode, responseString: responseString as String)
+                        }
                         let userInfo : [NSObject : AnyObject] = [NSLocalizedDescriptionKey: localizedDescription, "Response-Headers": self.response.allHeaderFields]
                         let error = NSError(domain: NSURLErrorDomain, code: self.response.statusCode, userInfo: userInfo)
                         self.failureHandler?(error: error)
@@ -121,6 +124,9 @@ public class OAuthSwiftHTTPRequest: NSObject, NSURLSessionDelegate {
                 } else {
                     // response is invalid - the else block added by John B on 11/7/2015
                     print("invalid response")
+                    if let error = error {
+                        self.failureHandler?(error: error)
+                    }
 //                    if let data = data {
 //                        self.successHandler?(data: data, response: )
 //                    }

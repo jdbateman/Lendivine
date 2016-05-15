@@ -114,7 +114,7 @@ class MyLoansTableViewController: UITableViewController {
         // Set placeholder image
         cell.loanImageView.image = UIImage(named: "Download-50")
         
-        // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+        // getImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
         loan.getImage(200, height:200, square:true) {
             success, error, image in
             if success {
@@ -149,6 +149,9 @@ class MyLoansTableViewController: UITableViewController {
                     self.loans.removeAll()
                 }
             } else {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("error retrieving user's loans from Kiva.org: \(error)")
             }
         }

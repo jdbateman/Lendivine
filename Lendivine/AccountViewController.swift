@@ -12,6 +12,10 @@
 
 import UIKit
 import CoreData
+import OAuthSwift
+
+/* A custom NSNotification that indicates any updated country data from the web service is now available in core data. */
+let logoutNotificationKey = "com.lendivine.accountViewController.logout"
 
 class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -99,6 +103,9 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         if let imageId = accountImageId {
             
+            let activityIndicator = DVNActivityIndicator()
+            activityIndicator.startActivityIndicator(avatarImageView)
+            
             let accountImage = KivaImage(imageId: imageId)
             accountImage.getImage() {
                 success, error, image in
@@ -107,6 +114,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                         self.updateAvatarImageInView(image)
                     }
                 }
+                activityIndicator.stopActivityIndicator()
             }
         }
     }
@@ -177,11 +185,34 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.loggedIn = false
         
-        // present login controller as the root view controller
-        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let rootController:LoginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginStoryboardID") as! LoginViewController
-        let navigationController = UINavigationController(rootViewController: rootController)
-        appDelegate.window?.rootViewController = navigationController
+        showKivaLogoutInExternalBrowser()
+    }
+    
+    /*! Launch external Safari web browser to Kiva logout page to log the user out of the Kiva service. */
+    func showKivaLogoutInExternalBrowser() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentLoginScreenAfterDelay(0.1)
+        }
+        dispatch_async(dispatch_get_main_queue()) {
+            UIApplication.sharedApplication().openURL(NSURL(string: "https://www.kiva.org/logout")!)
+        }
+    }
+
+    /*! Present the Login screen after the specified number of seconds elapse. */
+    func presentLoginScreenAfterDelay(seconds:Double) {
+        
+        let delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+            
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            
+            // present login controller as the root view controller
+            let storyboard = UIStoryboard (name: "Main", bundle: nil)
+            let rootController:LoginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginStoryboardID") as! LoginViewController
+            let navigationController = UINavigationController(rootViewController: rootController)
+            appDelegate.window?.rootViewController = navigationController
+        }
     }
     
     func presentImagePicker(sourceType: UIImagePickerControllerSourceType) {
@@ -272,6 +303,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     self.loanRepaymentSchedule = sortedRepayments
                 }
             } else {
+                self.checkForInternetConnectivityError(error)
                 print("error retrieving repayment information: \(error?.localizedDescription)")
             }
         }
@@ -293,7 +325,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     /*! Retrieve account data from Kiva.org. */
     func getAccountFromKiva(completionHandler: (success: Bool, error: NSError?, accountData: [String:AnyObject]?) -> Void) {
-        
+        let activityIndicator = DVNActivityIndicator()
+        activityIndicator.startActivityIndicator(self.view)
         // account name and lender ID
         kivaAPI!.kivaOAuthGetUserAccount() {
             success, error, kivaAccount in
@@ -351,29 +384,36 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                             }
                                             
                                         }
-                                        
+                                        activityIndicator.stopActivityIndicator()
                                         completionHandler(success:true, error:nil, accountData: account)
                                     } else {
-                                        
+                                        self.checkForInternetConnectivityError(error)
                                         print("error retrieving lender: \(error?.localizedDescription)")
+                                        activityIndicator.stopActivityIndicator()
                                         completionHandler(success:false, error:error, accountData: account)
                                     }
                                 
                                 }
                             } else {
+                                self.checkForInternetConnectivityError(error)
                                 print("error retrieving user balance: \(error?.localizedDescription)")
+                                activityIndicator.stopActivityIndicator()
                                 completionHandler(success:false, error:error, accountData: account)
                             }
                         }
                         
                     } else {
+                        self.checkForInternetConnectivityError(error)
                         print("error retrieving user email: \(error?.localizedDescription)")
+                        activityIndicator.stopActivityIndicator()
                         completionHandler(success:false, error:error, accountData: account)
                     }
                 }
                 
             } else {
+                self.checkForInternetConnectivityError(error)
                 print("error retrieving user account: \(error?.localizedDescription)")
+                activityIndicator.stopActivityIndicator()
                 completionHandler(success:false, error:error, accountData: account)
             }
         }
@@ -477,6 +517,21 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.repaymentLabel.text = "Repayment of $\(repaymentAmount) on \(convertedDate)"
             
             self.repaymentLabel.fadeInAnimation(0.8, delay: 0)  {finished in}
+        }
+    }
+    
+    // MARK: Notification
+    
+    /*! Post a notification indicating logout was initiated. */
+    func postLogoutNotification() {
+        NSNotificationCenter.defaultCenter().postNotificationName(logoutNotificationKey, object: self)
+    }
+    
+    // MARK: Helper
+    
+    func checkForInternetConnectivityError(error: NSError?) {
+        if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+            LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
         }
     }
 }

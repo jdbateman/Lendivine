@@ -12,12 +12,12 @@ import UIKit
 
 class DVNActivityIndicator {
     
-    var activityIndicatorBackView: UIView?
-    var indicator = UIActivityIndicatorView()
+    private var activityIndicatorBackView: UIView?
+    private var indicator = UIActivityIndicatorView()
     
 
     //*! Create and render an activity indicator on the visible portion of the specified view. The activity indicator has a backing view. */
-    func startActivityIndicator(view: UIView?) {
+    internal func startActivityIndicator(view: UIView?) {
         
         guard let view = view else {
             return
@@ -51,12 +51,14 @@ class DVNActivityIndicator {
     }
     
     /*! Destroy the activity indicator and it's backing view. */
-    func stopActivityIndicator() {
+    internal func stopActivityIndicator() {
         
-        self.indicator.stopAnimating()
-        if let backView = activityIndicatorBackView {
-            backView.removeFromSuperview()
-            activityIndicatorBackView = nil
+        dispatch_async(dispatch_get_main_queue()) {
+            self.indicator.stopAnimating()
+            if let backView = self.activityIndicatorBackView {
+                backView.removeFromSuperview()
+                self.activityIndicatorBackView = nil
+            }
         }
     }
 }

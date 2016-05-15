@@ -155,8 +155,18 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         cell.loanImageView.layer.borderColor = UIColor.clearColor().CGColor
         cell.loanImageView.clipsToBounds = true
     
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        activityIndicator.center = CGPointMake(cell.loanImageView.center.x - 8, cell.loanImageView.center.y - 20)
+        cell.loanImageView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
         loan.getImage(200, height:200, square:true) {
             success, error, image in
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                activityIndicator.stopAnimating()
+            }
+            
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
                     cell.loanImageView!.image = image
@@ -366,6 +376,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                     }
                 }
             } else {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
+                }
                 print("failed to populate loans. error: \(error?.localizedDescription)")
                 if let completionHandler = completionHandler {
                     completionHandler(success:false, error: error)

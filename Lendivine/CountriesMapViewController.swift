@@ -106,7 +106,11 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
                         self.presentCountryLoansController()
                     }
                 } else {
-                    self.showAlert()
+                    if (error?.domain == kCLErrorDomain) && (error?.code == 2) {
+                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: "Unable to Search for loans in the selected country.")
+                    } else {
+                        self.showAlert()
+                    }
                 }
             }
         }

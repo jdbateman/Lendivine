@@ -22,19 +22,19 @@ class KivaImage {
     }
         
     /*
-    @brief Acquire the UIImage for this Loan object.
-    @discussion The image is retrieved using the following sequence:
-    1. cache
-    2. filesystem
-    3. download the image from self.imageUrl.
-    Image sizes are maximums
-    @param width (in) - desired width of image
-    @param height (in) - desired height of image
-    @param square (in) - If true then a square image will be requested from Kiva using the width parameter for the dimension of a side.
-    @param completion (in)
-    @param success (out) - true if image successfully acquired, else false.
-    @param error (out) - NSError object if an error occurred, else nil.
-    @param image (out) - the retrieved UIImage. May be nil if no image was found, or if an error occurred.
+        @brief Acquire the UIImage for this Loan object.
+        @discussion The image is retrieved using the following sequence:
+        1. cache
+        2. filesystem
+        3. download the image from self.imageUrl.
+        Image sizes are maximums
+        @param width (in) - desired width of image
+        @param height (in) - desired height of image
+        @param square (in) - If true then a square image will be requested from Kiva using the width parameter for the dimension of a side.
+        @param completion (in)
+        @param success (out) - true if image successfully acquired, else false.
+        @param error (out) - NSError object if an error occurred, else nil.
+        @param image (out) - the retrieved UIImage. May be nil if no image was found, or if an error occurred.
     */
     func getImage(width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
         
@@ -64,7 +64,7 @@ class KivaImage {
         
         // Load the image from the server asynchronously on a background queue.
         if let url = imageUrl {
-            self.dowloadImageFrom(url) {
+            self.downloadImageFrom(url, withTimeout:30) {
                 success, error, theImage in
                 if success {
                     if let theImage = theImage {
@@ -74,7 +74,7 @@ class KivaImage {
                     return
                 } else {
                     // The download failed. Retry the download once.
-                    self.dowloadImageFrom(url) { success, error, theImage in
+                    self.downloadImageFrom(url, withTimeout:30) { success, error, theImage in
                         if success {
                             if let theImage = theImage {
                                 self.cacheImageAndWriteToFile(theImage, width:width, height:height, square: square)
@@ -90,38 +90,45 @@ class KivaImage {
             }
         }
     }
-    
-    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
-    func getKivaImage(kivaImageID: NSNumber?, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
-        
-        if let kivaImageID = kivaImageID {
-            
-            // todo: pass image width and height into this method and use it in this call the enable support for non200x200 image sizes.
-            guard let imageUrlString = self.makeImageUrl(kivaImageID, width: kDefaultImageWidth, height: kDefaultImageHeight, square:square) else {return}
-            
-            let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
-            dispatch_async(backgroundQueue, {
-                // get the binary image data
-                let imageURL = NSURL(string: imageUrlString)
-                if let imageData = NSData(contentsOfURL: imageURL!) {
-                    
-                    // Convert the image data to a UIImage object and append to the array to be returned.
-                    if let picture = UIImage(data: imageData) {
-                        completion(success: true, error: nil, image: picture)
-                    }
-                    else {
-                        let vtError = VTError(errorString: "Cannot convert image data.", errorCode: VTError.ErrorCodes.IMAGE_CONVERSION_ERROR)
-                        completion(success: false, error: vtError.error, image: nil)
-                    }
-                    
-                } else {
-                    let vtError = VTError(errorString: "Image does not exist at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
-                    completion(success: false, error: vtError.error, image: nil)
-                }
-            })
-            //            }
-        }
-    }
+// TODO: unused
+//    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
+//    func downloadKivaImage(kivaImageID: NSNumber?, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
+//        
+//        if let kivaImageID = kivaImageID {
+//            
+//            // todo: pass image width and height into this method and use it in this call the enable support for non200x200 image sizes.
+//            guard let imageUrlString = self.makeImageUrl(kivaImageID, width: kDefaultImageWidth, height: kDefaultImageHeight, square:square) else {return}
+//            
+//            // get the binary image data
+//            self.downloadImage(imageUrlString, withTimeout:30) {
+//                success, error, image in
+//                completion(success: success, error: error, image: image)
+//            }
+//            
+//// todo - this was replaced.
+////            let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+////            dispatch_async(backgroundQueue, {
+////                
+////                let imageURL = NSURL(string: imageUrlString)
+////                if let imageData = NSData(contentsOfURL: imageURL!) {
+////                    
+////                    // Convert the image data to a UIImage object and append to the array to be returned.
+////                    if let picture = UIImage(data: imageData) {
+////                        completion(success: true, error: nil, image: picture)
+////                    }
+////                    else {
+////                        let vtError = VTError(errorString: "Cannot convert image data.", errorCode: VTError.ErrorCodes.IMAGE_CONVERSION_ERROR)
+////                        completion(success: false, error: vtError.error, image: nil)
+////                    }
+////                    
+////                } else {
+////                    let vtError = VTError(errorString: "Unable to download image at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
+////                    completion(success: false, error: vtError.error, image: nil)
+////                }
+////            })
+//        }
+//    }
+
     
     /*!
     @brief Return a String representing the url of the image identified by kivaImageID
@@ -226,7 +233,7 @@ class KivaImage {
     }
     
     /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
-    func dowloadImageFrom(imageUrlString: String?, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
+    func downloadImageFrom(imageUrlString: String?, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
         
         let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
         dispatch_async(backgroundQueue, {
@@ -244,10 +251,79 @@ class KivaImage {
                 }
                 
             } else {
-                let vtError = VTError(errorString: "Image does not exist at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
+                let vtError = VTError(errorString: "Unable to download image at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
                 completion(success: false, error: vtError.error, image: nil)
             }
         })
+    }
+    
+    /*! Download image asynchronously in background queue with a short defaut timeout. */
+    //    func downloadImage(imageUrlString: String?, completion:(success:Bool, error:NSError?, image:UIImage?)->Void) {
+    //
+    //        guard let imageUrlString = imageUrlString else {
+    //            let error = NSError(domain: "KivaImage.imageDownloadError", code: 1018, userInfo: [NSLocalizedDescriptionKey: "missing country code"])
+    //            completion(success: false, error: error, image: nil)
+    //            return
+    //        }
+    //
+    //        let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+    //        dispatch_async(backgroundQueue, {
+    //
+    //            // get the binary image data
+    //            let imageURL = NSURL(string: imageUrlString)
+    //            if let imageData = NSData(contentsOfURL: imageURL!) {
+    //
+    //                // Convert the image data to a UIImage object and append to the array to be returned.
+    //                if let picture = UIImage(data: imageData) {
+    //                    completion(success: true, error: nil, image: picture)
+    //                }
+    //                else {
+    //                    let vtError = VTError(errorString: "Cannot convert image data.", errorCode: VTError.ErrorCodes.IMAGE_CONVERSION_ERROR)
+    //                    completion(success: false, error: vtError.error, image: nil)
+    //                }
+    //
+    //            } else {
+    //                let vtError = VTError(errorString: "Unable to download image at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
+    //                completion(success: false, error: vtError.error, image: nil)
+    //            }
+    //        })
+    //    }
+    
+    /*! Download image asynchronously in background queue with the specified timeout in seconds. */
+    func downloadImageFrom(imageUrlString: String?, withTimeout timeout:Double, completion:(success:Bool, error:NSError?, image:UIImage?)->Void) {
+        
+        guard let imageUrlString = imageUrlString else {
+            let error = NSError(domain: "KivaImage.imageDownloadError", code: 1018, userInfo: [NSLocalizedDescriptionKey: "missing country code"])
+            completion(success: false, error: error, image: nil)
+            return
+        }
+        
+        let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+        dispatch_async(backgroundQueue) {
+            
+            let url: NSURL = NSURL(string: imageUrlString)!
+            let imageDownloadRequest: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+            
+            imageDownloadRequest.HTTPMethod = "GET"
+            imageDownloadRequest.timeoutInterval = timeout
+            let queue:NSOperationQueue = NSOperationQueue()
+            
+            NSURLConnection.sendAsynchronousRequest(imageDownloadRequest, queue: queue) {
+                response, imageData, error in
+                
+                if error == nil {
+                    // Convert the image data to a UIImage object
+                    if let imageData = imageData, picture = UIImage(data: imageData) {
+                        completion(success: true, error: nil, image: picture)
+                    }
+                    else {
+                        completion(success: false, error: error, image: nil)
+                    }
+                } else {
+                    completion(success: false, error: error, image: nil)
+                }
+            }
+        }
     }
     
     /* Save the image to the local cache and file system. */
