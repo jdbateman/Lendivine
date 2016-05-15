@@ -125,7 +125,7 @@ class CartTableViewController: UITableViewController {
             // Set main image placeholder image
             cell.loanImageView.image = UIImage(named: "Download-50")
             
-            // getKivaImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
+            // getImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
             
             if let itemImageId = cartItem.imageID {
                 let itemImage = KivaImage(imageId: itemImageId)

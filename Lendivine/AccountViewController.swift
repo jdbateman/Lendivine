@@ -103,6 +103,9 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         if let imageId = accountImageId {
             
+            let activityIndicator = DVNActivityIndicator()
+            activityIndicator.startActivityIndicator(avatarImageView)
+            
             let accountImage = KivaImage(imageId: imageId)
             accountImage.getImage() {
                 success, error, image in
@@ -111,6 +114,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                         self.updateAvatarImageInView(image)
                     }
                 }
+                activityIndicator.stopActivityIndicator()
             }
         }
     }
@@ -321,7 +325,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     /*! Retrieve account data from Kiva.org. */
     func getAccountFromKiva(completionHandler: (success: Bool, error: NSError?, accountData: [String:AnyObject]?) -> Void) {
-        
+        let activityIndicator = DVNActivityIndicator()
+        activityIndicator.startActivityIndicator(self.view)
         // account name and lender ID
         kivaAPI!.kivaOAuthGetUserAccount() {
             success, error, kivaAccount in
@@ -379,11 +384,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                             }
                                             
                                         }
-                                        
+                                        activityIndicator.stopActivityIndicator()
                                         completionHandler(success:true, error:nil, accountData: account)
                                     } else {
                                         self.checkForInternetConnectivityError(error)
                                         print("error retrieving lender: \(error?.localizedDescription)")
+                                        activityIndicator.stopActivityIndicator()
                                         completionHandler(success:false, error:error, accountData: account)
                                     }
                                 
@@ -391,6 +397,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                             } else {
                                 self.checkForInternetConnectivityError(error)
                                 print("error retrieving user balance: \(error?.localizedDescription)")
+                                activityIndicator.stopActivityIndicator()
                                 completionHandler(success:false, error:error, accountData: account)
                             }
                         }
@@ -398,6 +405,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     } else {
                         self.checkForInternetConnectivityError(error)
                         print("error retrieving user email: \(error?.localizedDescription)")
+                        activityIndicator.stopActivityIndicator()
                         completionHandler(success:false, error:error, accountData: account)
                     }
                 }
@@ -405,6 +413,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             } else {
                 self.checkForInternetConnectivityError(error)
                 print("error retrieving user account: \(error?.localizedDescription)")
+                activityIndicator.stopActivityIndicator()
                 completionHandler(success:false, error:error, accountData: account)
             }
         }

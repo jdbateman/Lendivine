@@ -149,9 +149,18 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
             description.replaceRange(description.startIndex...description.startIndex, with: String(description[description.startIndex]).capitalizedString)
             descriptionLabel.text = description
             
+            let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            activityIndicator.center = CGPointMake(self.loanImageView.center.x - 8, self.loanImageView.center.y - 20)
+            self.loanImageView.addSubview(activityIndicator)
+            activityIndicator.startAnimating()
             
             loan.getImage() {success, error, image in
                 if success {
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        activityIndicator.stopAnimating()
+                    }
+                    
                     dispatch_async(dispatch_get_main_queue()) {
                         
                         self.loanImageView!.image = image
@@ -171,7 +180,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                         self.view.setNeedsDisplay()
                     }
                 } else  {
-                    if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                    if (error != nil) && ((error?.code)! == VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.containsString("Image download"))! {
                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                     }
                     print("error retrieving loan image: \(error)")
@@ -360,7 +369,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                         self.presentViewController(popoverContent, animated: true, completion: nil)
                     }
                 } else  {
-                    if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                    if (error != nil) && ((error?.code)! == VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.containsString("Image download"))! {
                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                     }
                     print("error retrieving loan image: \(error)")

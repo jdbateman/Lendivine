@@ -94,11 +94,16 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     func refreshMapPins() {
         
+        let activityIndicator = DVNActivityIndicator()
+        activityIndicator.startActivityIndicator(self.mapView)
+        
         // Clear any existing pins before redrawing them (e.g. if navigating back to the map view from the InfoPosting view.)
         removeAllPins()
         
         // Draw the pins now (as it is conceivable that the notification arrived prior to the observer being registered.)
         createPins()
+        
+        activityIndicator.stopActivityIndicator()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -248,7 +253,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                             self.mapView.setNeedsDisplay()
                         }
                     } else {
-                        if (error != nil) && ((error?.code)! == 9003) && (error?.localizedDescription.containsString("Image download"))! {
+                        if (error != nil) && ((error?.code)! == VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.containsString("Image download"))! {
                             LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                         }
                     }

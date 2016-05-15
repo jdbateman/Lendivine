@@ -106,7 +106,6 @@ public class OAuthSwiftHTTPRequest: NSObject, NSURLSessionDelegate {
                 if let data = data {
                     self.responseData.appendData(data)
                 }
-   // TODO: this code throws an exception if there is no internet connection. Need to properly handle, especially beware forced unwrapping of optionals.
                 
                 if let response = self.response {
                     if response.statusCode >= 400 {

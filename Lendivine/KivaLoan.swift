@@ -330,16 +330,16 @@ extension KivaLoan {
             completion(success: success, error: error, image: image)
         }
     }
-    
-    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
-    func getKivaImage(kivaImageID: NSNumber?, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
-        
-        let image = KivaImage(imageId: kivaImageID)
-        image.getKivaImage(kivaImageID, square: square) {
-            success, error, image in
-            completion(success: success, error: error, image: image)
-        }
-    }
+// TODO: unused   
+//    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
+//    func downloadKivaImage(kivaImageID: NSNumber?, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
+//        
+//        let image = KivaImage(imageId: kivaImageID)
+//        image.downloadKivaImage(kivaImageID, square: square) {
+//            success, error, image in
+//            completion(success: success, error: error, image: image)
+//        }
+//    }
     
     /*! Return an image of the flag where this loan resides. */
     func getFlagImage() -> UIImage? {
