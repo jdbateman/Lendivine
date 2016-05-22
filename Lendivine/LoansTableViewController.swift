@@ -469,7 +469,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
      
             navigationItem.title = "Loans"
             
-            let controller = segue.destinationViewController as! MapViewController
+            let controller = segue.destinationViewController as! LoansMapViewController
         
             controller.sourceViewController = self
         

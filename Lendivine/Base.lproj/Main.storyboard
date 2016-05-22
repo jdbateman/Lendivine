@@ -134,7 +134,7 @@
         <!--Map-->
         <scene sceneID="yof-6Y-SUB">
             <objects>
-                <viewController storyboardIdentifier="MapStoryboardID" title="Map" id="HRh-kV-WGA" customClass="MapViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapStoryboardID" title="Map" id="HRh-kV-WGA" customClass="LoansMapViewController" customModule="Lendivine" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cSO-6Q-MMg"/>
                         <viewControllerLayoutGuide type="bottom" id="87y-t7-4Ee"/>
@@ -143,21 +143,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="r2u-T5-Pqa">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="r2u-T5-Pqa">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                             </mapView>
+                            <view alpha="0.84999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Raj-TF-c9z">
+                                <rect key="frame" x="0.0" y="520" width="600" height="80"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press on a country to search for loans in that country." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BVQ-4b-kLN">
+                                        <rect key="frame" x="40" y="31" width="520" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94117647059999998" green="0.66666666669999997" blue="0.16751254560000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="BVQ-4b-kLN" secondAttribute="trailing" constant="40" id="7kH-EA-ft7"/>
+                                    <constraint firstItem="BVQ-4b-kLN" firstAttribute="leading" secondItem="Raj-TF-c9z" secondAttribute="leading" constant="40" id="C5N-9q-FOB"/>
+                                    <constraint firstItem="BVQ-4b-kLN" firstAttribute="centerX" secondItem="Raj-TF-c9z" secondAttribute="centerX" id="Q10-Vj-atm"/>
+                                    <constraint firstAttribute="height" constant="80" id="WUo-AQ-1eX"/>
+                                    <constraint firstItem="BVQ-4b-kLN" firstAttribute="centerY" secondItem="Raj-TF-c9z" secondAttribute="centerY" id="hAh-cK-0Mi"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="top" secondItem="cSO-6Q-MMg" secondAttribute="bottom" constant="80" id="08i-FG-yMe"/>
                             <constraint firstItem="87y-t7-4Ee" firstAttribute="top" secondItem="r2u-T5-Pqa" secondAttribute="bottom" id="8A4-Or-zDC"/>
+                            <constraint firstItem="Raj-TF-c9z" firstAttribute="leading" secondItem="Pap-6f-4Ke" secondAttribute="leading" id="CnY-hd-ioh"/>
+                            <constraint firstItem="Raj-TF-c9z" firstAttribute="centerX" secondItem="Pap-6f-4Ke" secondAttribute="centerX" id="E96-YV-859"/>
                             <constraint firstAttribute="trailing" secondItem="r2u-T5-Pqa" secondAttribute="trailing" id="Jni-dZ-gZZ"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="top" secondItem="cSO-6Q-MMg" secondAttribute="bottom" id="NZm-oI-Z18"/>
+                            <constraint firstAttribute="trailing" secondItem="Raj-TF-c9z" secondAttribute="trailing" id="SDo-tk-zt3"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="leading" secondItem="Pap-6f-4Ke" secondAttribute="leading" id="SEc-SG-0Ph"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="centerX" secondItem="Pap-6f-4Ke" secondAttribute="centerX" id="W7O-aR-boo"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="centerY" secondItem="Pap-6f-4Ke" secondAttribute="centerY" id="WON-0C-Q02"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="top" secondItem="cSO-6Q-MMg" secondAttribute="bottom" id="Zzp-4u-Yb5"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="top" secondItem="cSO-6Q-MMg" secondAttribute="bottom" id="bKP-VS-3FG"/>
+                            <constraint firstItem="87y-t7-4Ee" firstAttribute="top" secondItem="Raj-TF-c9z" secondAttribute="bottom" id="cGh-k7-roX"/>
                             <constraint firstItem="r2u-T5-Pqa" firstAttribute="top" secondItem="cSO-6Q-MMg" secondAttribute="bottom" id="faL-1Z-2eZ"/>
                         </constraints>
                         <variation key="default">
@@ -175,11 +198,12 @@
                     <connections>
                         <outlet property="mapView" destination="r2u-T5-Pqa" id="8m5-GR-UbP"/>
                         <segue destination="oNk-3E-cEf" kind="show" identifier="MapToLoanDetailSegue" id="DWE-bn-Cim"/>
+                        <segue destination="YfW-JB-BBn" kind="show" identifier="LoansMapToCountryLoans" id="Btc-x5-veJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Vy-Wi-6ka" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3439" y="-1084"/>
+            <point key="canvasLocation" x="3439" y="-1313"/>
         </scene>
         <!--Countries-->
         <scene sceneID="mdF-bS-1VC">
@@ -1150,7 +1174,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.94117647058823528" green="0.66666666666666663" blue="0.16862745098039217" alpha="1" colorSpace="calibratedRGB"/>
                         <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="P0k-5Z-uF1">
-                            <rect key="frame" x="0.0" y="252" width="600" height="44"/>
+                            <rect key="frame" x="0.0" y="188" width="600" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="1" green="0.90980392160000001" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                             <state key="normal" title="See More Loans..."/>
@@ -1160,7 +1184,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
                         </button>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CountryLoansTableViewCellID" rowHeight="160" id="Rnc-r1-Zi4" customClass="CountryLoanTableViewCell" customModule="Lendivine" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="92" width="600" height="160"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="160"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Rnc-r1-Zi4" id="Pz7-1l-hQA">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="159"/>
@@ -1959,8 +1983,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
         <image name="earth-america-7" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SEU-i4-u6i"/>
-        <segue reference="K3P-VK-vgJ"/>
-        <segue reference="m3e-5i-rNo"/>
+        <segue reference="nqk-aM-Sq9"/>
+        <segue reference="Btc-x5-veJ"/>
+        <segue reference="DWE-bn-Cim"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -76,6 +76,7 @@
 		9EE3568E1C713A9300363652 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */; };
 		9EE356941C71577900363652 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356921C71577900363652 /* Model.xcdatamodeld */; };
 		9EE356961C74501400363652 /* LDAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE356951C74501400363652 /* LDAlert.swift */; };
+		9EEA021A1CF2711A0003CDE7 /* LoansMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA02191CF2711A0003CDE7 /* LoansMapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +188,7 @@
 		9EE3568D1C713A9300363652 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		9EE356931C71577900363652 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		9EE356951C74501400363652 /* LDAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LDAlert.swift; sourceTree = "<group>"; };
+		9EEA02191CF2711A0003CDE7 /* LoansMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansMapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,6 +324,7 @@
 				9E495BE71BFBA13700E3DEAD /* MyLoansTableViewController.swift */,
 				9E6AC00E1CB1F3EA00F3476F /* KivaSignupViewController.swift */,
 				9E6105F21CDD9BA300334DDC /* LoanImageViewController.swift */,
+				9EEA02191CF2711A0003CDE7 /* LoansMapViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 				9E79FBBD1CA84AD4008B96B1 /* LoginViewController.swift in Sources */,
 				9E6105F31CDD9BA300334DDC /* LoanImageViewController.swift in Sources */,
 				9ED2A13D1CDE938F00828AA4 /* DVNCountries.swift in Sources */,
+				9EEA021A1CF2711A0003CDE7 /* LoansMapViewController.swift in Sources */,
 				9E6815D71CCA8384006DDE1A /* AcknowledgementsViewController.swift in Sources */,
 				9E3950691BF66E23007BC75E /* KivaTeam.swift in Sources */,
 				9E7869E21C9E0F6100F1FE93 /* MapViewController.swift in Sources */,
