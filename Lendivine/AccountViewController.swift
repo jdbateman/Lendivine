@@ -13,11 +13,12 @@
 import UIKit
 import CoreData
 import OAuthSwift
+import SafariServices
 
 /* A custom NSNotification that indicates any updated country data from the web service is now available in core data. */
 let logoutNotificationKey = "com.lendivine.accountViewController.logout"
 
-class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFSafariViewControllerDelegate {
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
@@ -185,7 +186,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.loggedIn = false
         
-        showKivaLogoutInExternalBrowser()
+        logoutWithSFSafariViewController()
+        //showKivaLogoutInExternalBrowser()
     }
     
     /*! Launch external Safari web browser to Kiva logout page to log the user out of the Kiva service. */
@@ -195,6 +197,25 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         dispatch_async(dispatch_get_main_queue()) {
             UIApplication.sharedApplication().openURL(NSURL(string: "https://www.kiva.org/logout")!)
+        }
+    }
+    
+    func logoutWithSFSafariViewController() {
+        
+// re-enable this line to automatically hide the Kiva post-logout page.
+//        dispatch_async(dispatch_get_main_queue()) {
+//            self.presentLoginScreenAfterDelay(0.1)
+//        }
+        dispatch_async(dispatch_get_main_queue()) {
+            if let logoutURL = NSURL(string: "https://www.kiva.org/logout") {
+                if #available(iOS 9.0, *) {
+                    let safariVC = SFSafariViewController(URL: logoutURL)
+                    safariVC.delegate = self
+                    self.presentViewController(safariVC, animated: true, completion: nil)
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
         }
     }
 
@@ -517,6 +538,19 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.repaymentLabel.text = "Repayment of $\(repaymentAmount) on \(convertedDate)"
             
             self.repaymentLabel.fadeInAnimation(0.8, delay: 0)  {finished in}
+        }
+    }
+    
+    // MARK: - SFSafariViewControllerDelegate
+    
+    // Called on "Done" button on SFSafariViewController. Presents the Login screen.
+    @available(iOS 9.0, *)
+    func safariViewControllerDidFinish(controller: SFSafariViewController) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+        
+        // Note: If automatic hiding of the Kiva page is enable above in logoutWithSFSafariViewController() then this code can be removed.
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentLoginScreenAfterDelay(0.1)
         }
     }
     

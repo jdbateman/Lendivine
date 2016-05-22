@@ -104,8 +104,6 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         searchController.searchBar.barTintColor = UIColor(rgb:0xFFE8A1)
         
         self.tableView.tableHeaderView = searchController.searchBar
-        
-        //todo searchController.searchBar.delegate = self
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -185,7 +183,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
             }
         } else {
             
-            theCountry = DVNCountries.sharedInstance().fetchedResultsController.objectAtIndexPath(indexPath) as? Country // TODO use indexPath.row instead of indexPath?
+            theCountry = DVNCountries.sharedInstance().fetchedResultsController.objectAtIndexPath(indexPath) as? Country
         }
 
         guard let country = theCountry else {

@@ -111,7 +111,6 @@ extension KivaAPI {
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/account.json", parametersDict: nil) { success, error, jsonData in
             if success {
                 
-                // TODO: optimization - instead of rebuilding a separate dictionary, pass the userAccountDict directly to the KivaUserAccount initializer.
                 let userAccountDict = jsonData!["user_account"] as? [String: AnyObject]
                 
                 let firstName = userAccountDict?["first_name"] as? String
@@ -362,10 +361,10 @@ extension KivaAPI {
         
         let requestUrl = String(format: "https://api.kivaws.org/v1/my/loans/%@/balances.json", loanID)
         
-        makeKivaOAuthAPIRequest(urlOfAPI: requestUrl, parametersDict: nil /*parametersDict*/) { success, error, jsonData in
+        makeKivaOAuthAPIRequest(urlOfAPI: requestUrl, parametersDict: nil) { success, error, jsonData in
             
             if success {
-                var balances = [KivaLoanBalance]() //TODO: change type of array
+                var balances = [KivaLoanBalance]()
                 
                 if let jsonData = jsonData {
                     if jsonData.count > 0 {
@@ -996,10 +995,10 @@ extension KivaAPI {
             // none
             
             // specify base URL
-            let baseURL = "http://www.kiva.org" // TODO: make a constant in RESTClient.Constants.kivaBaseURL
+            let baseURL = "http://www.kiva.org"
             
             // specify method
-            let mutableMethod : String = "/basket/set" // TODO: make a constant in RESTClient.Constants.parseGetStudentLocations
+            let mutableMethod : String = "/basket/set"
             
             // set up http header parameters
             let headerParms = [String:AnyObject]()

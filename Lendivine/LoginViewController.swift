@@ -8,10 +8,11 @@
 // This file implements the LoginViewController which allows the user to Login with an account previously created on the Kiva website. The website will offer an option to create an account if the user does not yet have an account.
 
 import UIKit
+import SafariServices
 
 var loginSessionActive = false
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     
     var shakeTimer:NSTimer?
     
@@ -42,7 +43,7 @@ class LoginViewController: UIViewController {
         // If already logged in to Kiva.org present the Loans view controller.
         if appDelegate.loggedIn == true {
             loginSessionActive = false
-            presentLoansController()
+            //presentLoansController() <-- already handled in doOAuth block
         }
         
         setupView()
@@ -115,6 +116,9 @@ class LoginViewController: UIViewController {
     func presentLoansController() {
         dispatch_async(dispatch_get_main_queue()) {
             self.performSegueWithIdentifier("LoginSegueId", sender: self)
+            
+            // kill the sfsafariviewcontroller
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 
@@ -182,24 +186,34 @@ class LoginViewController: UIViewController {
         // Do the oauth in a background queue.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             
-            kivaOAuth.doOAuthKiva() {
-                success, error, kivaAPI in
-                
-                if success {
-                    self.kivaAPI = kivaOAuth.kivaAPI
-                    self.appDelegate.loggedIn = success
+            if #available(iOS 9.0, *) {
+                kivaOAuth.doOAuthKiva(self) {
+                    success, error, kivaAPI in
                     
-                    print("OAuth succeeded and kivaAPI handle was acquired.")
+                    if success {
+                        self.kivaAPI = kivaOAuth.kivaAPI
+                        self.appDelegate.loggedIn = success
+                        
+                        print("OAuth succeeded and kivaAPI handle was acquired.")
+                        
+                    } else {
+                        print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")
+                    }
                     
-                } else {
-                    print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")
+                    completionHandler(success: success, error: error)
                 }
-                
-                completionHandler(success: success, error: error)
+            } else {
+                // Fallback on earlier versions
             }
         }
     }
 
+    // MARK: - SFSafariViewControllerDelegate
+    // Called on "Done" button
+    @available(iOS 9.0, *)
+    func safariViewControllerDidFinish(controller: SFSafariViewController) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
     
     // MARK: Notifications
     

@@ -231,8 +231,6 @@ class KivaLoan: NSManagedObject  {
         if let languages = fromLoan.language {
             self.language = languages
         }
-        
-        debugValidateTODORemove()
     }
     
     // MARK: - Fetched results controller
@@ -299,10 +297,6 @@ class KivaLoan: NSManagedObject  {
         
         return coordinate
     }
-    
-    func debugValidateTODORemove() {
-        assert(self.id != self.imageID, "KivaCartItem id == imageID. \(self.id) == \(self.imageID)")
-    }
 }
 
 extension KivaLoan {
@@ -330,16 +324,6 @@ extension KivaLoan {
             completion(success: success, error: error, image: image)
         }
     }
-// TODO: unused   
-//    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
-//    func downloadKivaImage(kivaImageID: NSNumber?, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
-//        
-//        let image = KivaImage(imageId: kivaImageID)
-//        image.downloadKivaImage(kivaImageID, square: square) {
-//            success, error, image in
-//            completion(success: success, error: error, image: image)
-//        }
-//    }
     
     /*! Return an image of the flag where this loan resides. */
     func getFlagImage() -> UIImage? {
@@ -394,7 +378,6 @@ extension KivaLoan {
                 if let loans = loans {
                     for loan in loans {
                         if loan.id == self.id {
-                            self.debugValidateTODORemove()
                             // Found the loan in the results, now determine if the loan status matches the desired status.
                             if loan.status == statusToMatch.rawValue {
                                 completionHandler(result: true, error: nil)
