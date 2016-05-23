@@ -118,6 +118,8 @@ class CountryLoansTableViewController: UITableViewController {
     // Initialize the contents of the cell.
     func configureCell(cell: CountryLoanTableViewCell /*MyLoansTableViewCell*/, row: Int) {
         
+        cell.controller = self
+        
         let loan = self.loans[row]
         cell.nameLabel.text = loan.name
         cell.sectorLabel.text = loan.sector

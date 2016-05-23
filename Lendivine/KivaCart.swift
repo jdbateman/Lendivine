@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class KivaCart {
     
@@ -231,5 +232,23 @@ class KivaCart {
             }
         }
         return false
+    }
+    
+    /*! Update the badge on the Cart item in the tab bar to indicate the current number of items in the cart. */
+    class func updateCartBadge(controller:UIViewController?) {
+        
+        guard let controller = controller else {return}
+        
+        let tabBarIndexOfCart = 2
+        let tabArray = controller.tabBarController?.tabBar.items as NSArray!
+        let tabItem = tabArray.objectAtIndex(tabBarIndexOfCart) as! UITabBarItem
+        
+        let cart = KivaCart.sharedInstance
+        let count = cart.count
+        if count > 0 {
+            tabItem.badgeValue = String(count)
+        } else {
+            tabItem.badgeValue = nil
+        }
     }
 }

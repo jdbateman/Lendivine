@@ -37,6 +37,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         navigationController?.navigationBar.translucent = false
         
         initRefreshControl()
+        
+        KivaCart.updateCartBadge(self)
     }
     
     /*! hide the status bar */

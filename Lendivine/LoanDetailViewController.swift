@@ -87,6 +87,8 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         let cart = KivaCart.sharedInstance
         if cart.KivaAddItemToCart(loan, donationAmount: 25.00, context: CoreDataContext.sharedInstance().cartContext) {
             
+            KivaCart.updateCartBadge(self)
+            
             dispatch_async(dispatch_get_main_queue()) {
 
                 CoreDataContext.sharedInstance().saveCartContext()

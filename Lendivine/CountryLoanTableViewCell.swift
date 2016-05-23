@@ -12,6 +12,8 @@ import CoreData
 
 class CountryLoanTableViewCell:DVNTableViewCell {
 
+    var controller: UITableViewController?
+    
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var sectorLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
@@ -54,7 +56,7 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         let cart = KivaCart.sharedInstance
         
         if cart.KivaAddItemToCart(loan, donationAmount: amount, context: CoreDataContext.sharedInstance().cartContext) {
-                // noop
+                KivaCart.updateCartBadge(controller)
         } else {
             
             if let controller = self.parentController {

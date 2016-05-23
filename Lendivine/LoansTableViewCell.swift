@@ -59,8 +59,8 @@ class LoansTableViewCell: DVNTableViewCell {
 
         let cart = KivaCart.sharedInstance
 
-        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: CoreDataContext.sharedInstance().cartContext) { // self.sharedContext
-        
+        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: CoreDataContext.sharedInstance().cartContext) {
+            
             // animation:
             
             if let indexPath = indexPath {
@@ -68,6 +68,10 @@ class LoansTableViewCell: DVNTableViewCell {
                 heartbeatAnimation (self.loanImageView) { success in
                 
                     self.animateLoanToCart(tableView, tableView: tableView, indexPath: indexPath, loan: loan)
+                    
+                    if let controller = self.parentController {
+                        KivaCart.updateCartBadge(controller)
+                    }
                 }
             }
             
