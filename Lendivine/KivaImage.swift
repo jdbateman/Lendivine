@@ -90,45 +90,6 @@ class KivaImage {
             }
         }
     }
-// TODO: unused
-//    /* Download the image identified by imageUrlString in a background thread, convert it to a UIImage object, and return the object. */
-//    func downloadKivaImage(kivaImageID: NSNumber?, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void) {
-//        
-//        if let kivaImageID = kivaImageID {
-//            
-//            // todo: pass image width and height into this method and use it in this call the enable support for non200x200 image sizes.
-//            guard let imageUrlString = self.makeImageUrl(kivaImageID, width: kDefaultImageWidth, height: kDefaultImageHeight, square:square) else {return}
-//            
-//            // get the binary image data
-//            self.downloadImage(imageUrlString, withTimeout:30) {
-//                success, error, image in
-//                completion(success: success, error: error, image: image)
-//            }
-//            
-//// todo - this was replaced.
-////            let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
-////            dispatch_async(backgroundQueue, {
-////                
-////                let imageURL = NSURL(string: imageUrlString)
-////                if let imageData = NSData(contentsOfURL: imageURL!) {
-////                    
-////                    // Convert the image data to a UIImage object and append to the array to be returned.
-////                    if let picture = UIImage(data: imageData) {
-////                        completion(success: true, error: nil, image: picture)
-////                    }
-////                    else {
-////                        let vtError = VTError(errorString: "Cannot convert image data.", errorCode: VTError.ErrorCodes.IMAGE_CONVERSION_ERROR)
-////                        completion(success: false, error: vtError.error, image: nil)
-////                    }
-////                    
-////                } else {
-////                    let vtError = VTError(errorString: "Unable to download image at \(imageURL)", errorCode: VTError.ErrorCodes.FILE_NOT_FOUND_ERROR)
-////                    completion(success: false, error: vtError.error, image: nil)
-////                }
-////            })
-//        }
-//    }
-
     
     /*!
     @brief Return a String representing the url of the image identified by kivaImageID

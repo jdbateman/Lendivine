@@ -198,7 +198,6 @@ class KivaCart {
                         return false
                     }
                     
-                    // TODO: cart context - all calls to KivaAddItemToCart need to change from sharedContext to cartContext
                     let item = KivaCartItem(loan: loan, donationAmount: donationAmount, context: context)
                     
                     if !itemInCart(item) {

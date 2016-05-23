@@ -94,7 +94,6 @@ class DVNViewController: UIViewController {
             }
             
             if success {
-                // todo: debug
                 if let loanResults = loanResults {
                     var loanNames: String = ""
                     for loan in loanResults {

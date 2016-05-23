@@ -73,25 +73,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // Handle launch by URL scheme.
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+//    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+//        
+//        /*"oauth-callback"*/
+//        
+//        if (url.host == Constants.OAuthValues.consumerCallbackUrlHost ) {
+//            
+//            handleOAuthDeepLink(openURL:url)
+//            /* The Kiva OAuth deep link url is:
+//            oauth-swift://oauth-callback/kiva/Lendivine?oauth_verifier=KV-Q8wmUyTv&oauth_token=xZ7vISo4Sw8.4EC6NYC7teRlMisLDb0I%3Bself.JohnBateman.Lendivine&scope=access%2Cuser_balance%2Cuser_email%2Cuser_expected_repayments%2Cuser_anon_lender_data%2Cuser_anon_lender_loans%2Cuser_stats%2Cuser_loan_balances%2Cuser_anon_lender_teams&state=6ED1279AB3340E9
+//            */
+//            
+//        } else {
+//            print("Error: unexpected. Not Oauth1")
+//        }
+//        return true
+//    }
+    
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         
-        /*"oauth-callback"*/
+        //        print("app: \(app)")
+        //        print("url: \(url)")
+        //        print("options: \(options)")
         
-        if (url.host == Constants.OAuthValues.consumerCallbackUrlHost ) {
+        if let sourceApplication = options["UIApplicationOpenURLOptionsSourceApplicationKey"] {
             
-            handleOAuthDeepLink(openURL:url)
-            /* The Kiva OAuth deep link url is:
-            oauth-swift://oauth-callback/kiva/Lendivine?oauth_verifier=KV-Q8wmUyTv&oauth_token=xZ7vISo4Sw8.4EC6NYC7teRlMisLDb0I%3Bself.JohnBateman.Lendivine&scope=access%2Cuser_balance%2Cuser_email%2Cuser_expected_repayments%2Cuser_anon_lender_data%2Cuser_anon_lender_loans%2Cuser_stats%2Cuser_loan_balances%2Cuser_anon_lender_teams&state=6ED1279AB3340E9
-            */
-            
-        } else {
-            print("Error: unexpected. Not Oauth1")
+            if (String(sourceApplication) == "com.apple.SafariViewService") {
+                
+                
+                /*"oauth-callback"*/
+                
+                if (url.host == Constants.OAuthValues.consumerCallbackUrlHost ) {
+                    
+                    handleOAuthDeepLink(openURL:url)
+                    /* The Kiva OAuth deep link url is:
+                     oauth-swift://oauth-callback/kiva/Lendivine?oauth_verifier=KV-Q8wmUyTv&oauth_token=xZ7vISo4Sw8.4EC6NYC7teRlMisLDb0I%3Bself.JohnBateman.Lendivine&scope=access%2Cuser_balance%2Cuser_email%2Cuser_expected_repayments%2Cuser_anon_lender_data%2Cuser_anon_lender_loans%2Cuser_stats%2Cuser_loan_balances%2Cuser_anon_lender_teams&state=6ED1279AB3340E9
+                     */
+                    
+                } else {
+                    print("Error: unexpected. Not Oauth1")
+                }
+                
+                return true
+            }
         }
+        
         return true
     }
-    
+ 
     func handleOAuthDeepLink(openURL url: NSURL) {
-        
+ 
         if (url.path!.hasPrefix(Constants.OAuthValues.consumerCallbackUrlPath )) {
             
             let mySing = MySingleton.sharedInstance

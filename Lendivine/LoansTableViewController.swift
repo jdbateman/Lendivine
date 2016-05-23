@@ -9,9 +9,10 @@
 
 import UIKit
 import CoreData
+import SafariServices
 
 
-class LoansTableViewController: DVNTableViewController, NSFetchedResultsControllerDelegate {
+class LoansTableViewController: DVNTableViewController, NSFetchedResultsControllerDelegate, SFSafariViewControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -285,17 +286,21 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // Do the oauth in a background queue.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             
-            kivaOAuth.doOAuthKiva() {success, error, kivaAPI in
-                if success {
-                    self.kivaAPI = kivaOAuth.kivaAPI
-                } else {
-                    print("kivaOAuth failed. Unable to acquire kivaAPI handle.")
+            if #available(iOS 9.0, *) {
+                kivaOAuth.doOAuthKiva(self) {success, error, kivaAPI in
+                    if success {
+                        self.kivaAPI = kivaOAuth.kivaAPI
+                    } else {
+                        print("kivaOAuth failed. Unable to acquire kivaAPI handle.")
+                    }
+                    
+                    // Call oAuthCompleted on main queue.
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.oAuthCompleted(success)
+                    }
                 }
-                
-                // Call oAuthCompleted on main queue.
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.oAuthCompleted(success)
-                }
+            } else {
+                // Fallback on earlier versions
             }
         }
     }

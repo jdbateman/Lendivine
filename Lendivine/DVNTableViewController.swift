@@ -71,8 +71,6 @@ class DVNTableViewController: UITableViewController {
     */
     func findLoans(kivaAPI: KivaAPI, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
         
-        // TODO: expand loan types beyond agriculture
-        
         var nextPage = self.readNextKivaPage()
         if nextPage < 1 {
             nextPage = 1 /*self.nextPageOfKivaSearchResults*/

@@ -9,6 +9,8 @@
 //  Acknowledgement: Thanks to Congri Jin for this OAuth 1.0a stack.
 
 import Foundation
+import SafariServices
+import UIKit
 
 // OAuthSwift errors
 public let OAuthSwiftErrorDomain = "oauthswift.error"
@@ -52,7 +54,8 @@ public class OAuth1Swift: NSObject {
     public typealias FailureHandler = (error: NSError) -> Void
 
     // 0. Start
-    public func authorizeWithCallbackURL(callbackURL: NSURL, success: TokenSuccessHandler, failure: ((error: NSError) -> Void)) {
+    @available(iOS 9.0, *)
+    public func authorizeWithCallbackURL(controller:SFSafariViewControllerDelegate, callbackURL: NSURL, success: TokenSuccessHandler, failure: ((error: NSError) -> Void)) {
 
         // Post unauthorized OAuth Request token
         
@@ -120,10 +123,27 @@ public class OAuth1Swift: NSObject {
                 + "oauth_token=\(credential.oauth_token)")
             {
                 //print("oauth_token: \(credential.oauth_token) request: \(queryURL)")
-                self.authorize_url_handler.handle(queryURL)
+                
+                //todo: re-enable this is the original call --> self.authorize_url_handler.handle(queryURL)
+                
+                self.authorizeInSFSafariViewController(controller, authURL: queryURL)
             }
         },
         failure: failure)
+    }
+    
+    /*! Invoke Kiva authorization page in the SFSafariViewController. */
+    @available(iOS 9.0, *)
+    func authorizeInSFSafariViewController(controller:SFSafariViewControllerDelegate, authURL:NSURL) {
+        
+//        if #available(iOS 9.0, *) {
+            let safariVC = SFSafariViewController(URL: authURL)
+            safariVC.delegate = controller
+            (controller as! UIViewController).presentViewController(safariVC, animated: true, completion: nil)
+            
+//        } else {
+//            self.authorize_url_handler.handle(authURL)
+//        }
     }
 
     // 1. Request token

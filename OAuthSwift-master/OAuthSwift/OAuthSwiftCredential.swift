@@ -74,7 +74,7 @@ public class OAuthSwiftCredential: NSObject, NSCoding {
         return [:]
     }
 
-    // TODO - here or earlier to unencode the urlencoded input parameter oauth_token
+    // unencode the urlencoded input parameter oauth_token
     public func authorizationHeaderForMethod(method: String, url: NSURL, parameters: Dictionary<String, AnyObject>) -> String {
         var authorizationParameters = Dictionary<String, AnyObject>()
         authorizationParameters["oauth_version"] = OAuth.version
@@ -109,7 +109,6 @@ public class OAuthSwiftCredential: NSObject, NSCoding {
         let finalParameters = combinedParameters
         
         authorizationParameters["oauth_signature"] = self.signatureForMethod(method, url: url, parameters: finalParameters)
-    //TODO - i think this might be the spot!!
         var parameterComponents = authorizationParameters.urlEncodedQueryStringWithEncoding(dataEncoding).componentsSeparatedByString("&") as [String]
         parameterComponents.sortInPlace { $0 < $1 }
         
