@@ -286,21 +286,17 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // Do the oauth in a background queue.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             
-            if #available(iOS 9.0, *) {
-                kivaOAuth.doOAuthKiva(self) {success, error, kivaAPI in
-                    if success {
-                        self.kivaAPI = kivaOAuth.kivaAPI
-                    } else {
-                        print("kivaOAuth failed. Unable to acquire kivaAPI handle.")
-                    }
-                    
-                    // Call oAuthCompleted on main queue.
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.oAuthCompleted(success)
-                    }
+            kivaOAuth.doOAuthKiva(self) {success, error, kivaAPI in
+                if success {
+                    self.kivaAPI = kivaOAuth.kivaAPI
+                } else {
+                    print("kivaOAuth failed. Unable to acquire kivaAPI handle.")
                 }
-            } else {
-                // Fallback on earlier versions
+                
+                // Call oAuthCompleted on main queue.
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.oAuthCompleted(success)
+                }
             }
         }
     }

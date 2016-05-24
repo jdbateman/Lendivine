@@ -186,24 +186,20 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         // Do the oauth in a background queue.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             
-            if #available(iOS 9.0, *) {
-                kivaOAuth.doOAuthKiva(self) {
-                    success, error, kivaAPI in
+            kivaOAuth.doOAuthKiva(self) {
+                success, error, kivaAPI in
+                
+                if success {
+                    self.kivaAPI = kivaOAuth.kivaAPI
+                    self.appDelegate.loggedIn = success
                     
-                    if success {
-                        self.kivaAPI = kivaOAuth.kivaAPI
-                        self.appDelegate.loggedIn = success
-                        
-                        print("OAuth succeeded and kivaAPI handle was acquired.")
-                        
-                    } else {
-                        print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")
-                    }
+                    print("OAuth succeeded and kivaAPI handle was acquired.")
                     
-                    completionHandler(success: success, error: error)
+                } else {
+                    print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")
                 }
-            } else {
-                // Fallback on earlier versions
+                
+                completionHandler(success: success, error: error)
             }
         }
     }

@@ -208,13 +208,9 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 //        }
         dispatch_async(dispatch_get_main_queue()) {
             if let logoutURL = NSURL(string: "https://www.kiva.org/logout") {
-                if #available(iOS 9.0, *) {
-                    let safariVC = SFSafariViewController(URL: logoutURL)
-                    safariVC.delegate = self
-                    self.presentViewController(safariVC, animated: true, completion: nil)
-                } else {
-                    // Fallback on earlier versions
-                }
+                let safariVC = SFSafariViewController(URL: logoutURL)
+                safariVC.delegate = self
+                self.presentViewController(safariVC, animated: true, completion: nil)
             }
         }
     }
