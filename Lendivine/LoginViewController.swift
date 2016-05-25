@@ -100,7 +100,13 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     /* SignUp button selected. Do Kiva.org OAuth. */
     @IBAction func onSignUpButtonTap(sender: AnyObject) {
         
-        authenticate()
+        //authenticate()
+        
+        if let kivaSignUpURL = NSURL(string:"https://www.kiva.org/register?doneUrl=https%3A%2F%2Fwww.kiva.org%2Fportfolio") {
+            let safariVC = SFSafariViewController(URL: kivaSignUpURL)
+            safariVC.delegate = self
+            self.presentViewController(safariVC, animated: true, completion: nil)
+        }
     }
 
     /* Login button selected. Do Kiva.org OAuth. */
