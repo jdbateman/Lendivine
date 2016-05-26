@@ -162,6 +162,8 @@ class CartTableViewController: UITableViewController {
             // remove the item from the KivaCart object
             cart!.removeItemByIndex(indexPath.row)
             
+            KivaCart.updateCartBadge(self)
+            
             // remove the item from the table view
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             
@@ -200,6 +202,7 @@ class CartTableViewController: UITableViewController {
             UIAlertAction in
             if let cart = self.cart {
                 cart.empty()
+                KivaCart.updateCartBadge(self)
             }
             self.updateCart()
         }

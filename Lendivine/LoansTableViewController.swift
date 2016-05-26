@@ -37,6 +37,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         navigationController?.navigationBar.translucent = false
         
         initRefreshControl()
+        
+        KivaCart.updateCartBadge(self)
     }
     
     /*! hide the status bar */
@@ -465,7 +467,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
      
             navigationItem.title = "Loans"
             
-            let controller = segue.destinationViewController as! MapViewController
+            let controller = segue.destinationViewController as! LoansMapViewController
         
             controller.sourceViewController = self
         
