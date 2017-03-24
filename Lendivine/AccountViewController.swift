@@ -40,7 +40,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     var _repaymentIndex:Int?
     
-    var textAnimationTimer:NSTimer?
+    var textAnimationTimer:Timer?
     
     var accountImageId:NSNumber?
     
@@ -55,11 +55,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         populateAccountData()
     }
 
-    override func viewWillAppear(animated: Bool) {
-        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(4.0 , target: self, selector: #selector(AccountViewController.animateTextChange), userInfo: nil, repeats: true)
+    override func viewWillAppear(_ animated: Bool) {
+        textAnimationTimer = Timer.scheduledTimer(timeInterval: 4.0 , target: self, selector: #selector(AccountViewController.animateTextChange), userInfo: nil, repeats: true)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         textAnimationTimer?.invalidate()
     }
     
@@ -75,10 +75,10 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         setupDefaultAvatarImage()
         
         // camera button
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
-            cameraButton.enabled = true
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
+            cameraButton.isEnabled = true
         } else {
-            cameraButton.enabled = false
+            cameraButton.isEnabled = false
         }
     }
     
@@ -122,7 +122,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     // MARK: Avatar image
     
-    func setAccountImage(newImage:UIImage) {
+    func setAccountImage(_ newImage:UIImage) {
         
         updateAvatarImageInView(newImage)
         
@@ -134,17 +134,17 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     /*! Set and style the avatar image */
-    func updateAvatarImageInView(image: UIImage) {
+    func updateAvatarImageInView(_ image: UIImage) {
         
         avatarImageView.image = image
         
         // bordered with grey outlined circle, scale to fill
-        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 90
         avatarImageView.layer.borderWidth = 2
-        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
+        avatarImageView.layer.borderColor = UIColor.darkGray.cgColor
         avatarImageView.clipsToBounds = true
-        avatarImageView.backgroundColor = UIColor.blackColor()
+        avatarImageView.backgroundColor = UIColor.black
     }
     
     /*! Display default avatar image. */
@@ -152,38 +152,38 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
         // white tint
         let avatar = UIImage(named: "User-100")
-        let tintedAvatar = avatar?.imageWithRenderingMode(.AlwaysTemplate)
+        let tintedAvatar = avatar?.withRenderingMode(.alwaysTemplate)
         avatarImageView.image = tintedAvatar
-        avatarImageView.tintColor = UIColor.whiteColor()
+        avatarImageView.tintColor = UIColor.white
         
         // bordered with grey outlined circle
         avatarImageView.layer.cornerRadius = 90
         avatarImageView.layer.borderWidth = 2
-        avatarImageView.layer.borderColor = UIColor.darkGrayColor().CGColor
+        avatarImageView.layer.borderColor = UIColor.darkGray.cgColor
         avatarImageView.clipsToBounds = true
-        avatarImageView.backgroundColor = UIColor.blackColor()
+        avatarImageView.backgroundColor = UIColor.black
     }
     
     
     // MARK: Actions
     
     // pick an image from the camera
-    @IBAction func onCameraButton(sender: AnyObject) {
-        self.presentImagePicker(UIImagePickerControllerSourceType.Camera)
+    @IBAction func onCameraButton(_ sender: AnyObject) {
+        self.presentImagePicker(UIImagePickerControllerSourceType.camera)
     }
     
     // pick an image from the photo album
-    @IBAction func onAlbumButton(sender: AnyObject) {
-        self.presentImagePicker(UIImagePickerControllerSourceType.PhotoLibrary)
+    @IBAction func onAlbumButton(_ sender: AnyObject) {
+        self.presentImagePicker(UIImagePickerControllerSourceType.photoLibrary)
     }
     
-    @IBAction func onLogoutButton(sender: AnyObject) {
+    @IBAction func onLogoutButton(_ sender: AnyObject) {
         
         // reset any user defaults
         writeDefaultDonation(25)
         
         // reset login state
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.loggedIn = false
         
         logoutWithSFSafariViewController()
@@ -192,11 +192,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     /*! Launch external Safari web browser to Kiva logout page to log the user out of the Kiva service. */
     func showKivaLogoutInExternalBrowser() {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.presentLoginScreenAfterDelay(0.1)
         }
-        dispatch_async(dispatch_get_main_queue()) {
-            UIApplication.sharedApplication().openURL(NSURL(string: "https://www.kiva.org/logout")!)
+        DispatchQueue.main.async {
+            UIApplication.shared.openURL(URL(string: "https://www.kiva.org/logout")!)
         }
     }
     
@@ -206,42 +206,42 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 //        dispatch_async(dispatch_get_main_queue()) {
 //            self.presentLoginScreenAfterDelay(0.1)
 //        }
-        dispatch_async(dispatch_get_main_queue()) {
-            if let logoutURL = NSURL(string: "https://www.kiva.org/logout") {
-                let safariVC = SFSafariViewController(URL: logoutURL)
+        DispatchQueue.main.async {
+            if let logoutURL = URL(string: "https://www.kiva.org/logout") {
+                let safariVC = SFSafariViewController(url: logoutURL)
                 safariVC.delegate = self
-                self.presentViewController(safariVC, animated: true, completion: nil)
+                self.present(safariVC, animated: true, completion: nil)
             }
         }
     }
 
     /*! Present the Login screen after the specified number of seconds elapse. */
-    func presentLoginScreenAfterDelay(seconds:Double) {
+    func presentLoginScreenAfterDelay(_ seconds:Double) {
         
-        let delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC)))
+        let delayTimeInNanoSeconds = DispatchTime.now() + Double(Int64(seconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         
-        dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+        DispatchQueue.main.asyncAfter(deadline: delayTimeInNanoSeconds) {
             
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
             
             // present login controller as the root view controller
             let storyboard = UIStoryboard (name: "Main", bundle: nil)
-            let rootController:LoginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginStoryboardID") as! LoginViewController
+            let rootController:LoginViewController = storyboard.instantiateViewController(withIdentifier: "LoginStoryboardID") as! LoginViewController
             let navigationController = UINavigationController(rootViewController: rootController)
             appDelegate.window?.rootViewController = navigationController
         }
     }
     
-    func presentImagePicker(sourceType: UIImagePickerControllerSourceType) {
+    func presentImagePicker(_ sourceType: UIImagePickerControllerSourceType) {
         let imagePicker: UIImagePickerController = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = sourceType
         imagePicker.allowsEditing = true
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        self.present(imagePicker, animated: true, completion: nil)
     }
     
     /*! The value changed on the Default Donation segmented control. */
-    @IBAction func defaultDonationChangedAction(sender: AnyObject) {
+    @IBAction func defaultDonationChangedAction(_ sender: AnyObject) {
         
         switch sender.selectedSegmentIndex
         {
@@ -256,7 +256,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
-    func setDefaultDonation(amount:Int) {
+    func setDefaultDonation(_ amount:Int) {
         
         switch amount
         {
@@ -275,7 +275,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     // MARK: UIImagePickerControllerDelegate
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         if let selectedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             setAccountImage(selectedImage)
@@ -286,12 +286,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         // dismiss the image picker view controller
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         // dismiss the image picker view controller
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     
@@ -316,7 +316,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
              
                 if let repayments = expectedRepayments {
                     
-                    let sortedRepayments = repayments.sort { $0.repaymentDate < $1.repaymentDate }
+                    let sortedRepayments = repayments.sorted { $0.repaymentDate < $1.repaymentDate }
                     self.loanRepaymentSchedule = sortedRepayments
                 }
             } else {
@@ -341,7 +341,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     /*! Retrieve account data from Kiva.org. */
-    func getAccountFromKiva(completionHandler: (success: Bool, error: NSError?, accountData: [String:AnyObject]?) -> Void) {
+    func getAccountFromKiva(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ accountData: [String:AnyObject]?) -> Void) {
         let activityIndicator = DVNActivityIndicator()
         activityIndicator.startActivityIndicator(self.view)
         // account name and lender ID
@@ -353,26 +353,26 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             if success {
                 if let firstName = kivaAccount?.firstName {
                     if let lastName = kivaAccount?.lastName {
-                        account[KivaAccount.InitKeys.name] = firstName + " " + lastName
+                        account[KivaAccount.InitKeys.name] = firstName + " " + lastName as AnyObject?
                     }
                 }
                 
                 if let lenderID = kivaAccount?.lenderID {
-                    account[KivaAccount.InitKeys.lenderId] = lenderID
+                    account[KivaAccount.InitKeys.lenderId] = lenderID as AnyObject?
                 }
                 
                 // email
                 self.kivaAPI!.kivaOAuthGetUserEmail(){ success, error, email in
                     if success {
                         if let email = email {
-                            account[KivaAccount.InitKeys.email] = email
+                            account[KivaAccount.InitKeys.email] = email as AnyObject?
                         }
                         
                         // balance
                         self.kivaAPI!.kivaOAuthGetUserBalance(){ success, error, balance in
                             if success {
                                 if let balance = balance {
-                                    account[KivaAccount.InitKeys.balance] = balance
+                                    account[KivaAccount.InitKeys.balance] = balance as AnyObject?
                                 }
                                 
                                 // Retrieve the lender to get the imageID for this account.
@@ -389,7 +389,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                                 success, error, image in
                                                 
                                                 if success {
-                                                    dispatch_async(dispatch_get_main_queue()) {
+                                                    DispatchQueue.main.async {
                                                         self.avatarImageView.image = image
                                                         if let image = image {
                                                             self.setAccountImage(image)
@@ -402,12 +402,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                             
                                         }
                                         activityIndicator.stopActivityIndicator()
-                                        completionHandler(success:true, error:nil, accountData: account)
+                                        completionHandler(true, nil, account)
                                     } else {
                                         self.checkForInternetConnectivityError(error)
                                         print("error retrieving lender: \(error?.localizedDescription)")
                                         activityIndicator.stopActivityIndicator()
-                                        completionHandler(success:false, error:error, accountData: account)
+                                        completionHandler(false, error, account)
                                     }
                                 
                                 }
@@ -415,7 +415,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                 self.checkForInternetConnectivityError(error)
                                 print("error retrieving user balance: \(error?.localizedDescription)")
                                 activityIndicator.stopActivityIndicator()
-                                completionHandler(success:false, error:error, accountData: account)
+                                completionHandler(false, error, account)
                             }
                         }
                         
@@ -423,7 +423,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                         self.checkForInternetConnectivityError(error)
                         print("error retrieving user email: \(error?.localizedDescription)")
                         activityIndicator.stopActivityIndicator()
-                        completionHandler(success:false, error:error, accountData: account)
+                        completionHandler(false, error, account)
                     }
                 }
                 
@@ -431,7 +431,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 self.checkForInternetConnectivityError(error)
                 print("error retrieving user account: \(error?.localizedDescription)")
                 activityIndicator.stopActivityIndicator()
-                completionHandler(success:false, error:error, accountData: account)
+                completionHandler(false, error, account)
             }
         }
     }
@@ -442,7 +442,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     /*! Persist the account properties as an KivaAccount object to core data on disk, and save an instance of the object in this object's properties. */
-    func persistAccountDataToCoreData(account:[String:AnyObject]?) -> KivaAccount? {
+    func persistAccountDataToCoreData(_ account:[String:AnyObject]?) -> KivaAccount? {
         
         guard let account = account else {return nil}
         guard let lenderId = account[KivaAccount.InitKeys.lenderId] as? String else {return nil}
@@ -451,12 +451,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 
         // Determine if this account already exist in core data.
 
-        let fetchRequest = NSFetchRequest(entityName: "KivaAccount")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "KivaAccount")
         fetchRequest.predicate = NSPredicate(format: "lenderId = %@", lenderId)
 
         
         do {
-            let fetchResults = try CoreDataContext.sharedInstance().accountContext.executeFetchRequest(fetchRequest)
+            let fetchResults = try CoreDataContext.sharedInstance().accountContext.fetch(fetchRequest)
             
             // success ...
             if fetchResults.count != 0 {
@@ -466,13 +466,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 let managedObject = fetchResults[0]
                 
                 if let name = account[KivaAccount.InitKeys.name] {
-                    managedObject.setValue(name, forKey: KivaAccount.InitKeys.name)
+                    (managedObject as AnyObject).setValue(name, forKey: KivaAccount.InitKeys.name)
                 }
                 if let email = account[KivaAccount.InitKeys.email] {
-                    managedObject.setValue(email, forKey: KivaAccount.InitKeys.email)
+                    (managedObject as AnyObject).setValue(email, forKey: KivaAccount.InitKeys.email)
                 }
                 if let balance = account[KivaAccount.InitKeys.balance] {
-                    managedObject.setValue(balance, forKey: KivaAccount.InitKeys.balance)
+                    (managedObject as AnyObject).setValue(balance, forKey: KivaAccount.InitKeys.balance)
                 }
                 
                 CoreDataContext.sharedInstance().saveAccountContext()
@@ -494,16 +494,16 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     // MARK: Persist defaults
     
-    func writeDefaultDonation(amount:Int) {
+    func writeDefaultDonation(_ amount:Int) {
         
-        let appSettings = NSUserDefaults.standardUserDefaults()
+        let appSettings = UserDefaults.standard
         appSettings.setValue(amount, forKey: "AccountDefaultDonation")
     }
     
     func readDefaultDonation() -> Int {
         
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        let amount = appSettings.integerForKey("AccountDefaultDonation")
+        let appSettings = UserDefaults.standard
+        let amount = appSettings.integer(forKey: "AccountDefaultDonation")
         return amount
     }
     
@@ -512,19 +512,19 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func animateTextChange() {
 
-        guard let loanRepaymentSchedule = self.loanRepaymentSchedule where loanRepaymentSchedule.count > 0 else {return}
+        guard let loanRepaymentSchedule = self.loanRepaymentSchedule, loanRepaymentSchedule.count > 0 else {return}
         guard let repaymentIndex = _repaymentIndex else {return}
         let repaymentAmount = loanRepaymentSchedule[repaymentIndex].userRepayments
         let repaymentDate = loanRepaymentSchedule[repaymentIndex].repaymentDate
         _repaymentIndex = (repaymentIndex < loanRepaymentSchedule.count - 1) ? repaymentIndex + 1 : 0
 
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-        guard let date = dateFormatter.dateFromString(repaymentDate) else {return}
+        guard let date = dateFormatter.date(from: repaymentDate) else {return}
         
-        dateFormatter.locale = NSLocale.currentLocale()
-        dateFormatter.dateStyle = NSDateFormatterStyle.LongStyle
-        let convertedDate = dateFormatter.stringFromDate(date)
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateStyle = DateFormatter.Style.long
+        let convertedDate = dateFormatter.string(from: date)
         
         self.repaymentLabel.fadeOutAnimation(1.0, delay: 0) {
             finished in
@@ -541,11 +541,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     // Called on "Done" button on SFSafariViewController. Presents the Login screen.
     @available(iOS 9.0, *)
-    func safariViewControllerDidFinish(controller: SFSafariViewController) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true, completion: nil)
         
         // Note: If automatic hiding of the Kiva page is enable above in logoutWithSFSafariViewController() then this code can be removed.
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.presentLoginScreenAfterDelay(0.1)
         }
     }
@@ -554,13 +554,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     /*! Post a notification indicating logout was initiated. */
     func postLogoutNotification() {
-        NSNotificationCenter.defaultCenter().postNotificationName(logoutNotificationKey, object: self)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: logoutNotificationKey), object: self)
     }
     
     // MARK: Helper
     
-    func checkForInternetConnectivityError(error: NSError?) {
-        if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+    func checkForInternetConnectivityError(_ error: NSError?) {
+        if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
             LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
         }
     }

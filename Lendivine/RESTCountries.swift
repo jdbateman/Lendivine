@@ -14,7 +14,7 @@ import CoreData
 class RESTCountries {
     
     /* Shared session */
-    var session: NSURLSession
+    var session: URLSession
     
     // MARK: - Shared Instance
     
@@ -30,11 +30,11 @@ class RESTCountries {
     
     /* default initializer */
     init() {
-        session = NSURLSession.sharedSession()
+        session = URLSession.shared
     }
     
     /* Create a task to send an HTTP Get request */
-    func taskForGETMethod(baseUrl baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, completionHandler: (result: AnyObject?, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func taskForGETMethod(baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, completionHandler: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         /* 1. Set the parameters */
         var mutableParameters = [String : AnyObject]()
@@ -47,8 +47,8 @@ class RESTCountries {
         if mutableParameters.count > 0 {
             urlString += RESTClient.escapedParameters(mutableParameters)
         }
-        let url = NSURL(string: urlString)!
-        let request = NSMutableURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        var request = URLRequest(url: url) // NSMutableURLRequest(url: url)     //todo:swift3
         
         // configure http header
         if let headerParameters = headerParameters {
@@ -58,16 +58,16 @@ class RESTCountries {
         }
         
         /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
             /* 5/6. Parse the data and use the data (happens in completion handler) */
             if let error = downloadError {
-                let newError = RESTClient.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: newError)
+                let newError = RESTClient.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
                 // success
                 RESTCountries.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
             }
-        }
+        }) 
         
         /* 7. Start the request */
         task.resume()
@@ -76,7 +76,7 @@ class RESTCountries {
     }
     
     /* Create a task to send an HTTP Post request */
-    func taskForPOSTMethod(apiKey apiKey: String, baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, jsonBody: [String:AnyObject], completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func taskForPOSTMethod(apiKey: String, baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, jsonBody: [String:AnyObject], completionHandler: @escaping (_ result: Any?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         /* 1. Set the parameters */
         var mutableParameters = [String : AnyObject]()
@@ -84,7 +84,7 @@ class RESTCountries {
             mutableParameters = params
         }
         if apiKey != "" {
-            mutableParameters["api_key"] = apiKey
+            mutableParameters["api_key"] = apiKey as AnyObject?
         }
         
         /* 2/3. Build the URL and configure the request */
@@ -92,11 +92,11 @@ class RESTCountries {
         if mutableParameters.count > 0 {
             urlString += RESTClient.escapedParameters(mutableParameters)
         }
-        let url = NSURL(string: urlString)!
-        let request = NSMutableURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        var request = URLRequest(url: url) // NSMutableURLRequest(url: url)     // todo:swift3
         
         // configure http header
-        request.HTTPMethod = "POST"
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         if let headerParameters = headerParameters {
@@ -105,29 +105,29 @@ class RESTCountries {
             }
         }
         
-        request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(jsonBody, options: [])
+        request.httpBody = try! JSONSerialization.data(withJSONObject: jsonBody, options: [])
         
         
         /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
             
             guard let data = data
                 else {
                     print("no data found: \(downloadError)")
-                    completionHandler(result: nil, error: downloadError)
+                    completionHandler(nil, downloadError as NSError?)
                     return
                 }
             
             /* 5/6. Parse the data and use the data (happens in completion handler) */
             if let error = downloadError {
                 // error
-                _ = RESTClient.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: downloadError)
+                _ = RESTClient.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, downloadError as NSError?)
             } else {
                 // success
                 RESTClient.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
             }
-        }
+        }) 
         
         /* 7. Start the request */
         task.resume()
@@ -136,10 +136,10 @@ class RESTCountries {
     }
     
     /* Helper: Given a response with error, see if a status_message is returned, otherwise return the previous error */
-    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
+    class func errorForData(_ data: Data?, response: URLResponse?, error: NSError) -> NSError {
         
         do {
-            if let parsedResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary {
+            if let parsedResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary {
                 print(parsedResult)
                 
                 if let errorMessage = parsedResult["status_message"] as? String {
@@ -160,7 +160,7 @@ class RESTCountries {
     }
     
     /* Helper: Given raw JSON, return a usable Foundation object */
-    class func parseJSONWithCompletionHandler(data: NSData?, completionHandler: (result: AnyObject?, error: NSError?) -> Void) {
+    class func parseJSONWithCompletionHandler(_ data: Data?, completionHandler: (_ result: AnyObject?, _ error: NSError?) -> Void) {
         
         guard let data = data
             else {
@@ -224,17 +224,17 @@ class RESTCountries {
 //        ]"
 
         do {
-            let parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [[String:AnyObject]]
+            let parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String:AnyObject]]
                     //print(parsedResult)
-                    completionHandler(result: parsedResult, error: nil)
+                    completionHandler(parsedResult as AnyObject?, nil)
         } catch let error as NSError {
             print(error.localizedDescription)
-            completionHandler(result: nil, error: error)
+            completionHandler(nil, error)
         }
     }
     
     /* Helper function: Given a dictionary of parameters, convert to a string for a url */
-    class func escapedParameters(parameters: [String : AnyObject]) -> String {
+    class func escapedParameters(_ parameters: [String : AnyObject]) -> String {
         
         var urlVars = [String]()
         
@@ -244,13 +244,13 @@ class RESTCountries {
             let stringValue = "\(value)"
             
             /* Escape it */
-            let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+            let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
             
             /* Append it */
             urlVars += [key + "=" + "\(escapedValue!)"]
             
         }
         
-        return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
+        return (!urlVars.isEmpty ? "?" : "") + urlVars.joined(separator: "&")
     }
 }

@@ -18,16 +18,16 @@ class VTError {
     }
     
     enum ErrorCodes: Int {
-        case CORE_DATA_INIT_ERROR = 9000
-        case JSON_PARSE_ERROR = 9001
-        case KIVA_REQUEST_ERROR = 9002
-        case S3_FILE_DOWNLOAD_ERROR = 9003
-        case IMAGE_CONVERSION_ERROR = 9004
-        case FILE_NOT_FOUND_ERROR = 9005
-        case KIVA_OAUTH_ERROR = 9006
-        case KIVA_API_NO_LOANS = 9007
-        case KIVA_API_LOAN_NOT_FOUND = 9008
-        case KIVA_API_HANDLE_NIL = 9009
+        case core_DATA_INIT_ERROR = 9000
+        case json_PARSE_ERROR = 9001
+        case kiva_REQUEST_ERROR = 9002
+        case s3_FILE_DOWNLOAD_ERROR = 9003
+        case image_CONVERSION_ERROR = 9004
+        case file_NOT_FOUND_ERROR = 9005
+        case kiva_OAUTH_ERROR = 9006
+        case kiva_API_NO_LOANS = 9007
+        case kiva_API_LOAN_NOT_FOUND = 9008
+        case kiva_API_HANDLE_NIL = 9009
     }
     
     init(errorString: String, errorCode: ErrorCodes) {
@@ -36,7 +36,7 @@ class VTError {
         
         // construct NSError
         var dict = [String: AnyObject]()
-        dict[NSLocalizedDescriptionKey] = errorString
+        dict[NSLocalizedDescriptionKey] = errorString as AnyObject?
         error = NSError(domain: VTError.Constants.ERROR_DOMAIN, code: errorCode.rawValue, userInfo: dict)
     }
 }

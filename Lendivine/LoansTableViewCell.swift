@@ -28,7 +28,7 @@ class LoansTableViewCell: DVNTableViewCell {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }()
     
-    @IBAction func onAddToCartButtonTap(sender: UIButton) {
+    @IBAction func onAddToCartButtonTap(_ sender: UIButton) {
         
          // Find the cell starting from the button.
         let button = sender 
@@ -37,29 +37,29 @@ class LoansTableViewCell: DVNTableViewCell {
         
         // Find the tableView by walking the view hierarchy until a UITableView class is encountered.
         var view = cell.superview
-        while ( (view != nil) && (view?.isKindOfClass(UITableView) == false) ) {
+        while ( (view != nil) && (view?.isKind(of: UITableView.self) == false) ) {
             view = view!.superview
         }
         let tableView: UITableView = view as! UITableView
         
         // Get the indexPath associated with this table cell
-        let indexPath = tableView.indexPathForCell(cell)
+        let indexPath = tableView.indexPath(for: cell)
         
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! LoansTableViewController
-        let loan = tableViewController.fetchedResultsController.objectAtIndexPath(indexPath!) as! KivaLoan
+        let loan = tableViewController.fetchedResultsController.object(at: indexPath!) 
         
         // set default donation amount to user preference.
         var amount = 25
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        amount = appSettings.integerForKey("AccountDefaultDonation")
+        let appSettings = UserDefaults.standard
+        amount = appSettings.integer(forKey: "AccountDefaultDonation")
         if amount == 0 {
             amount = 25
         }
 
         let cart = KivaCart.sharedInstance
 
-        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: CoreDataContext.sharedInstance().cartContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: amount as NSNumber?, context: CoreDataContext.sharedInstance().cartContext) {
             
             // animation:
             
@@ -75,7 +75,7 @@ class LoansTableViewCell: DVNTableViewCell {
                 }
             }
             
-            donatedImageView.hidden = false
+            donatedImageView.isHidden = false
             
         } else {
             if let controller = self.parentController {
@@ -88,7 +88,7 @@ class LoansTableViewCell: DVNTableViewCell {
         super.awakeFromNib()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -97,21 +97,21 @@ class LoansTableViewCell: DVNTableViewCell {
     
     // MARK: Animation
 
-    func heartbeatAnimation(imageView: UIImageView, completion:(success: Bool) -> Void) {
+    func heartbeatAnimation(_ imageView: UIImageView, completion:@escaping (_ success: Bool) -> Void) {
     
         pulseAnimation(self.loanImageView) { success in
             
-            var delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+            var delayTimeInNanoSeconds = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTimeInNanoSeconds) {
                 
                 self.pulseAnimation(self.loanImageView) { success in
                     
-                    delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.15 * Double(NSEC_PER_SEC)))
-                    dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+                    delayTimeInNanoSeconds = DispatchTime.now() + Double(Int64(0.15 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+                    DispatchQueue.main.asyncAfter(deadline: delayTimeInNanoSeconds) {
                         
                         self.pulseAnimation(self.loanImageView) { success in
                             
-                            completion(success: success)
+                            completion(success)
                         }
                     }
                 }
@@ -119,12 +119,12 @@ class LoansTableViewCell: DVNTableViewCell {
         }
     }
     
-    func pulseAnimation(imageView: UIImageView, completion:(success: Bool) -> Void) {
+    func pulseAnimation(_ imageView: UIImageView, completion:@escaping (_ success: Bool) -> Void) {
         
-        var delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.25 * Double(NSEC_PER_SEC)))
+        var delayTimeInNanoSeconds = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         
         // shrink
-        UIView.animateWithDuration(0.4, animations: {
+        UIView.animate(withDuration: 0.4, animations: {
             let center = imageView.center
             imageView.frame.size.height -= 20
             imageView.frame.size.width -= 20
@@ -132,19 +132,19 @@ class LoansTableViewCell: DVNTableViewCell {
         })
    
         //delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.25 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
+        DispatchQueue.main.asyncAfter(deadline: delayTimeInNanoSeconds) {
                 
             // grow
-            UIView.animateWithDuration(0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: {
                 let center = imageView.center
                 imageView.frame.size.height += 20
                 imageView.frame.size.width += 20
                 imageView.center = center
             })
             
-            delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
-                completion(success:true)
+            delayTimeInNanoSeconds = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTimeInNanoSeconds) {
+                completion(true)
             }
         }
     }
@@ -157,39 +157,39 @@ class LoansTableViewCell: DVNTableViewCell {
         @param (in) indexPaht - the index path of the selected cell.
         @param (in) loan - the loan associated with the selected cell.
     */
-    func animateLoanToCart(/*cell: LoansTableViewCell,*/ animateOnView: UIView, tableView: UITableView, indexPath: NSIndexPath, loan: KivaLoan) {
+    func animateLoanToCart(/*cell: LoansTableViewCell,*/ _ animateOnView: UIView, tableView: UITableView, indexPath: IndexPath, loan: KivaLoan) {
         
         let cellImageView =  self.loanImageView
         
         // resize
-        let resizedWidth = cellImageView.frame.size.width
-        let resizedHeight = cellImageView.frame.size.height
+        let resizedWidth = cellImageView?.frame.size.width
+        let resizedHeight = cellImageView?.frame.size.height
         
-        guard let cgImage = cellImageView.image?.CGImage else {
+        guard let cgImage = cellImageView?.image?.cgImage else {
             return
         }
         
         // copy the image
-        guard let newCgIm = CGImageCreateCopy(cgImage) else {
+        guard let newCgIm = cgImage.copy() else {
             return
         }
-        let imageCopy = UIImage(CGImage: newCgIm, scale: cellImageView.image!.scale, orientation: cellImageView.image!.imageOrientation)
+        let imageCopy = UIImage(cgImage: newCgIm, scale: (cellImageView?.image!.scale)!, orientation: (cellImageView?.image!.imageOrientation)!)
         
         let imageViewCopy: UIImageView = UIImageView(image: imageCopy)
         
         let animatedObject = imageViewCopy
         
-        animatedObject.frame = CGRect(x: 0, y: 0, width: resizedWidth, height: resizedHeight)
+        animatedObject.frame = CGRect(x: 0, y: 0, width: resizedWidth!, height: resizedHeight!)
         
         animateOnView.addSubview(animatedObject)
         
         // Get the coordinates of the cell in the TableView's coordinate space
-        let rectCellInTableViewCoords = tableView.rectForRowAtIndexPath(indexPath)
+        let rectCellInTableViewCoords = tableView.rectForRow(at: indexPath)
         
-        let rectCellInScreenCoords = CGRectOffset(rectCellInTableViewCoords, -tableView.contentOffset.x, -tableView.contentOffset.y)
+        let rectCellInScreenCoords = rectCellInTableViewCoords.offsetBy(dx: -tableView.contentOffset.x, dy: -tableView.contentOffset.y)
         
         // screen dimensions
-        let screenBounds: CGRect = UIScreen.mainScreen().bounds
+        let screenBounds: CGRect = UIScreen.main.bounds
         _ = screenBounds.width
         let heightOfScreen = screenBounds.height
         
@@ -201,16 +201,16 @@ class LoansTableViewCell: DVNTableViewCell {
         
         // create a path that follows a bezier curve
         let path = UIBezierPath()
-        let startPoint = CGPoint(x: cellOriginX + 8 + resizedWidth / 2, y: cellOriginY + 8 + resizedHeight / 2)
+        let startPoint = CGPoint(x: cellOriginX + 8 + resizedWidth! / 2, y: cellOriginY + 8 + resizedHeight! / 2)
         let endPoint = CGPoint(x: cellWidth / 2, y: cellOriginY + cellToScreenBottom)
         
         // move to start point of path
-        path.moveToPoint(CGPoint(x: startPoint.x, y: startPoint.y))
+        path.move(to: CGPoint(x: startPoint.x, y: startPoint.y))
         
         // move along straight line to end point of path
         // path.addLineToPoint(endPoint)
 
-        path.addCurveToPoint(endPoint,
+        path.addCurve(to: endPoint,
             controlPoint1: CGPoint(x: screenBounds.width * 3 / 4, y: cellOriginY + (cellToScreenBottom / 4) ),
             controlPoint2: CGPoint(x: screenBounds.width / 2, y: cellOriginY + (cellToScreenBottom) / 2 ))
         
@@ -218,7 +218,7 @@ class LoansTableViewCell: DVNTableViewCell {
         let anim = CAKeyframeAnimation(keyPath: "position")
         
         // configure the animation to use the bezier curve
-        anim.path = path.CGPath
+        anim.path = path.cgPath
         
         // rotate the view as it travels along the path
         anim.rotationMode = kCAAnimationRotateAuto
@@ -226,17 +226,17 @@ class LoansTableViewCell: DVNTableViewCell {
         anim.duration = 1.0
         
         // Add the animation to the view
-        animatedObject.layer.addAnimation(anim, forKey: "animate position along path")
+        animatedObject.layer.add(anim, forKey: "animate position along path")
         
         tableView.reloadData()
         
-        let delayTimeInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTimeInNanoSeconds, dispatch_get_main_queue()) {
-            imageViewCopy.hidden = true
+        let delayTimeInNanoSeconds = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTimeInNanoSeconds) {
+            imageViewCopy.isHidden = true
         }
     }
     
-    func animateButtonTapped(sender: UIView) {
+    func animateButtonTapped(_ sender: UIView) {
         
         // create a 'tuple' (a pair or more of objects assigned to a single variable)
         var views : (frontView: UIView, backView: UIView)
@@ -247,24 +247,24 @@ class LoansTableViewCell: DVNTableViewCell {
         test.frame = CGRect(x: 50, y: 50, width: 50, height: 50)
         sender.addSubview(test)
         
-        views = (frontView: cellImageView, backView: test)
+        views = (frontView: cellImageView!, backView: test)
         
         // set a transition style
-        let transitionOptions = UIViewAnimationOptions.TransitionFlipFromLeft
+        let transitionOptions = UIViewAnimationOptions.transitionFlipFromLeft
         
         // with no animation block, and a completion block set to 'nil' this makes a single line of code
-        UIView.transitionFromView(views.frontView, toView: views.backView, duration: 1.0, options: transitionOptions, completion: nil)
+        UIView.transition(from: views.frontView, to: views.backView, duration: 1.0, options: transitionOptions, completion: nil)
         
     }
     
-    func getImageForLoan(loan: KivaLoan, completion:(success:Bool, image:UIImage?, error:NSError?) -> Void) {
+    func getImageForLoan(_ loan: KivaLoan, completion:@escaping (_ success:Bool, _ image:UIImage?, _ error:NSError?) -> Void) {
         
         loan.getImage() {success, error, image in
             if success {
-                completion(success:true, image:image, error:nil)
+                completion(true, image, nil)
             } else  {
                 print("error retrieving image: \(error)")
-                completion(success:false, image:nil, error:error)
+                completion(false, nil, error)
             }
         }
     }    

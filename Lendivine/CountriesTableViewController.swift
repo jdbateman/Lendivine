@@ -31,25 +31,25 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         navigationItem.title = "Countries"
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Add a notification observer for updates to countries from RESTCountries web service.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CountriesTableViewController.onCountriesUpdate), name: countriesUpdateNotificationKey, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(CountriesTableViewController.onCountriesUpdate), name: NSNotification.Name(rawValue: countriesUpdateNotificationKey), object: nil)
         
         setupView()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Remove observer for the countries update notification.
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func setupView() {
@@ -59,19 +59,19 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         updateMapSearchItem()
     }
     
-    func mapAction(sender:UIButton!)
+    func mapAction(_ sender:UIButton!)
     {
         // Modally present the MapViewController on the main thread.
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             
             self.navigationController?.setNavigationBarHidden(false, animated: false)
 
-            self.performSegueWithIdentifier("CountriesToMapSegueId", sender: self)
+            self.performSegue(withIdentifier: "CountriesToMapSegueId", sender: self)
         }
     }
     
     /*! hide the status bar */
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
@@ -106,10 +106,10 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         self.tableView.tableHeaderView = searchController.searchBar
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         
         if filteredTableData.count > 0 {
-            filteredTableData.removeAll(keepCapacity: false)
+            filteredTableData.removeAll(keepingCapacity: false)
         } else {
             updateMapSearchItem()
         }
@@ -123,9 +123,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     
     func updateMapSearchItem() {
         
-        let mapButton = UIButton(frame: CGRectMake(334, 8, 28, 28))
-        mapButton.backgroundColor = UIColor.clearColor()
-        mapButton.setImage(UIImage(named: "earth-america-7"), forState: .Normal)
+        let mapButton = UIButton(frame: CGRect(x: 334, y: 8, width: 28, height: 28))
+        mapButton.backgroundColor = UIColor.clear
+        mapButton.setImage(UIImage(named: "earth-america-7"), for: UIControlState())
         
         // blue tint on earth image
 //        let earth = UIImage(named: "earth-america-7")
@@ -133,8 +133,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 //        mapButton.imageView!.image = tintedEarth
 //        mapButton.imageView!.tintColor = UIColor.blueColor()
         
-        mapButton.hidden = false
-        mapButton.addTarget(self, action: #selector(CountriesTableViewController.mapAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        mapButton.isHidden = false
+        mapButton.addTarget(self, action: #selector(CountriesTableViewController.mapAction(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(mapButton)
         
         mapButton.setNeedsDisplay()
@@ -142,14 +142,14 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return countries.count
         
-        if self.searchController.active {
+        if self.searchController.isActive {
         
             return self.filteredTableData.count
         
@@ -162,9 +162,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("CountryTableViewCellID", forIndexPath: indexPath) as! CountriesTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CountryTableViewCellID", for: indexPath) as! CountriesTableViewCell
 
         configureCell(cell, indexPath: indexPath)
         
@@ -172,18 +172,18 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     }
     
     // Initialize the contents of the cell.
-    func configureCell(cell: CountriesTableViewCell, indexPath: NSIndexPath) {
+    func configureCell(_ cell: CountriesTableViewCell, indexPath: IndexPath) {
         
         //TODO - eliminates grey cell background on selection: cell.selectionStyle = UITableViewCellSelectionStyle.None;
         
         var theCountry: Country?
-        if self.searchController.active {
+        if self.searchController.isActive {
             if let countries = DVNCountries.sharedInstance().fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
                 theCountry = countries[indexPath.row]
             }
         } else {
             
-            theCountry = DVNCountries.sharedInstance().fetchedResultsController.objectAtIndexPath(indexPath) as? Country
+            theCountry = DVNCountries.sharedInstance().fetchedResultsController.object(at: indexPath)
         }
 
         guard let country = theCountry else {
@@ -199,9 +199,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
         
         if let population = country.population {
-            let popFormatter = NSNumberFormatter()
-            popFormatter.numberStyle = .DecimalStyle
-            cell.population.text = popFormatter.stringFromNumber(population)
+            let popFormatter = NumberFormatter()
+            popFormatter.numberStyle = .decimal
+            cell.population.text = popFormatter.string(from: population)
         }
         
         if let languages = country.languages {
@@ -227,41 +227,41 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     
     // Any change to Core Data causes these delegate methods to be called.
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         // store up changes to the table until endUpdates() is called
         self.tableView.beginUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         // Our project does not use sections. So we can ignore these invocations.
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
             
-        case .Insert:
+        case .insert:
             
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
             
-        case .Delete:
+        case .delete:
             
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath!], with: .fade)
             
-        case .Update:
+        case .update:
             
-            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!) as! CountriesTableViewCell, indexPath: indexPath!)
+            self.configureCell(tableView.cellForRow(at: indexPath!) as! CountriesTableViewCell, indexPath: indexPath!)
             
-        case .Move:
+        case .move:
             
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath!], with: .fade)
             
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
             
         }
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         // Make the stored changes visible.
         self.tableView.endUpdates()
     }
@@ -271,27 +271,27 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     /* Received a notification that any updated countries are now available in core data. Update the table view. */
     func onCountriesUpdate() {
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
     
     // MARK: Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "ShowCountryLoans" {
             
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
-                let controller = segue.destinationViewController as! CountryLoansTableViewController
+                let controller = segue.destination as! CountryLoansTableViewController
                 
                 let activityIndicator = DVNActivityIndicator()
                 
                 activityIndicator.startActivityIndicator(tableView)
                 
                 var theCountry: Country?
-                if self.searchController.active {
+                if self.searchController.isActive {
                     
                     if let countries = DVNCountries.sharedInstance().fetchCountriesFilteredByNameOn(searchController.searchBar.text!) as? [Country] {
                         theCountry = countries[indexPath.row]
@@ -299,7 +299,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
                 } else {
                     
                     // save the selected country
-                    theCountry = DVNCountries.sharedInstance().fetchedResultsController.objectAtIndexPath(indexPath) as? Country
+                    theCountry = DVNCountries.sharedInstance().fetchedResultsController.object(at: indexPath)
                 }
                 
                 controller.country = theCountry
@@ -309,7 +309,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         }
         else if segue.identifier == "CountriesToMapSegueId" {
                 
-                let controller = segue.destinationViewController as! CountriesMapViewController
+                let controller = segue.destination as! CountriesMapViewController
                 
                 controller.sourceViewController = self
                 controller.navigationItem.title = "Countries"

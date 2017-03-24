@@ -13,7 +13,7 @@ import CoreData
 class CoreDataLoanHelper {
     
     /*! Add the loan to the context and save it if it doesn't exist, else NOOP. */
-    class func add(loan: KivaLoan?, toContext context: NSManagedObjectContext) -> KivaLoan? {
+    class func add(_ loan: KivaLoan?, toContext context: NSManagedObjectContext) -> KivaLoan? {
 
         var persistedLoan: KivaLoan?
         
@@ -21,12 +21,12 @@ class CoreDataLoanHelper {
         guard let id = loan.id else {return nil}
         
         // fetch request with predicate on loan id
-        let fetchRequest = NSFetchRequest(entityName: "KivaLoan")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "KivaLoan")
         fetchRequest.predicate = NSPredicate(format: "id = %@", id)
         
         // if not found instantiate object in context and save context
         do {
-            let fetchResults = try context.executeFetchRequest(fetchRequest)
+            let fetchResults = try context.fetch(fetchRequest)
             
             // a match was found
             if fetchResults.count == 0 {
@@ -50,7 +50,7 @@ class CoreDataLoanHelper {
     }
     
     /*! Create the loan in the context and save it to the persistent store on disk if it doesn't exist, else update it if it does, then save the context. */
-    class func upsert(loan: KivaLoan?, toContext context: NSManagedObjectContext) -> KivaLoan? {
+    class func upsert(_ loan: KivaLoan?, toContext context: NSManagedObjectContext) -> KivaLoan? {
         
         var persistedLoan: KivaLoan?
         
@@ -58,12 +58,12 @@ class CoreDataLoanHelper {
         guard let id = loan.id else {return nil}
         
         // fetch request with predicate on loan id
-        let fetchRequest = NSFetchRequest(entityName: "KivaLoan")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "KivaLoan")
         fetchRequest.predicate = NSPredicate(format: "id = %@", id)
         
         // if not found instantiate object in context and save context
         do {
-            let fetchResults = try context.executeFetchRequest(fetchRequest)
+            let fetchResults = try context.fetch(fetchRequest)
             
             // a match was found
             if fetchResults.count > 0 {
@@ -102,7 +102,7 @@ class CoreDataLoanHelper {
     }
  
     /*! Save the managed object context to the persistent store. */
-    class func saveContext (context: NSManagedObjectContext) {
+    class func saveContext (_ context: NSManagedObjectContext) {
         
         var error: NSError? = nil
         
@@ -129,10 +129,10 @@ class CoreDataLoanHelper {
         let context = CoreDataContext.sharedInstance().coreDataLoanHelperScratchContext
         
         // fetch request for all KivaLoan objects
-        let fetchRequest = NSFetchRequest(entityName: "KivaLoan")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "KivaLoan")
         
         do {
-            let fetchResults = try context.executeFetchRequest(fetchRequest)
+            let fetchResults = try context.fetch(fetchRequest)
             
             let results = fetchResults
             for result in results {
@@ -151,47 +151,46 @@ class CoreDataLoanHelper {
         @brief Delete duplicates of the loan object in the context and persistant store.
         @discussion Duplicates are determined by a match of the Kiva loan entities' id property. This call uses it's own context.
     */
-    class func removeDuplicatesForLoan(loan: KivaLoan?) {
+    class func removeDuplicatesForLoan(_ loan: KivaLoan?) {
     
         let context = CoreDataContext.sharedInstance().coreDataLoanHelperCleanupContext
         context.reset()
         
         guard let loan = loan else {return}
         
-        let fetchRequest = NSFetchRequest(entityName: "KivaLoan")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "KivaLoan")
         
         if let id = loan.id {
             
             fetchRequest.predicate = NSPredicate(format: "id = %@", id)
             
             do {
-                var error:NSError?
-                let count = context.countForFetchRequest(fetchRequest, error:&error)
-                
-                if (count != NSNotFound && count > 1) {
-
-                    // Found duplicates. Remove them.
-                    
-                    // Fetch loan with duplicates by id and elete all after first item.
-                    
-                    let dupFetchRequest = NSFetchRequest(entityName: "KivaLoan")
-                    dupFetchRequest.predicate = NSPredicate(format: "id = %@", id)
-                    let dupFetchResults = try context.executeFetchRequest(dupFetchRequest)
-                    let dupResults = dupFetchResults
-                    let count = dupResults.count
-                    for i in 1..<count {
-                        if let loan = dupResults[i] as? KivaLoan {
-                            //assert(false,"Should not have duplicate loans! Found duplicate: \(loan)")
-                            print("cleaning up duplicate loan \(loan)")
-                            context.deleteObject(loan)
+                if let count = try? context.count(for: fetchRequest) {
+                    if (count != NSNotFound && count > 1) {
+                        
+                        // Found duplicates. Remove them.
+                        
+                        // Fetch loan with duplicates by id and elete all after first item.
+                        
+                        let dupFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "KivaLoan")
+                        dupFetchRequest.predicate = NSPredicate(format: "id = %@", id)
+                        let dupFetchResults = try context.fetch(dupFetchRequest)
+                        let dupResults = dupFetchResults
+                        let count = dupResults.count
+                        for i in 1..<count {
+                            if let loan = dupResults[i] as? KivaLoan {
+                                //assert(false,"Should not have duplicate loans! Found duplicate: \(loan)")
+                                print("cleaning up duplicate loan \(loan)")
+                                context.delete(loan)
+                            }
                         }
+                        
+                        // Save the context in order to update the persistent store.
+                        CoreDataContext.sharedInstance().saveCoreDataLoanHelperCleanupContext()
+                        
+                    } else {
+                        // no duplicates.
                     }
-                    
-                    // Save the context in order to update the persistent store.
-                    CoreDataContext.sharedInstance().saveCoreDataLoanHelperCleanupContext()
-                    
-                } else {
-                    // no duplicates.
                 }
                 
             } catch let error as NSError {

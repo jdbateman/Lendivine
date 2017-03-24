@@ -21,7 +21,7 @@ class CountryLoanTableViewCell:DVNTableViewCell {
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var addToCartButton: UIButton!
     
-    @IBAction func onAddCountryLoanToCartButtonTap(sender: AnyObject) {
+    @IBAction func onAddCountryLoanToCartButtonTap(_ sender: AnyObject) {
         
         // Find the cell starting from the button.
         let button = sender
@@ -30,13 +30,13 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         
         // Find the tableView by walking the view hierarchy until a UITableView class is encountered.
         var view = cell.superview
-        while ( (view != nil) && (view?.isKindOfClass(UITableView) == false) ) {
+        while ( (view != nil) && (view?.isKind(of: UITableView.self) == false) ) {
             view = view!.superview
         }
         let tableView: UITableView = view as! UITableView
         
         // Get the indexPath associated with this table cell
-        let indexPath = tableView.indexPathForCell(cell)
+        let indexPath = tableView.indexPath(for: cell)
         
         // Place the loan in the cart.
         let tableViewController = tableView.dataSource as! CountryLoansTableViewController
@@ -47,15 +47,15 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         
         // set default donation amount to user preference.
         var amount = 25
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        amount = appSettings.integerForKey("AccountDefaultDonation")
+        let appSettings = UserDefaults.standard
+        amount = appSettings.integer(forKey: "AccountDefaultDonation")
         if amount == 0 {
             amount = 25
         }
         
         let cart = KivaCart.sharedInstance
         
-        if cart.KivaAddItemToCart(loan, donationAmount: amount, context: CoreDataContext.sharedInstance().cartContext) {
+        if cart.KivaAddItemToCart(loan, donationAmount: amount as NSNumber?, context: CoreDataContext.sharedInstance().cartContext) {
                 KivaCart.updateCartBadge(controller)
         } else {
             
@@ -70,7 +70,7 @@ class CountryLoanTableViewCell:DVNTableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

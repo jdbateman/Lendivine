@@ -39,14 +39,14 @@ class DVNViewController: UIViewController {
             error nil if query was successful and returned a valid result, else contains error information.
             loans A list of loans returned by the query, else nil if an error occurred.
     */
-    func findRandomLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func findRandomLoans(_ kivaAPI: KivaAPI, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?) -> Void) {
         
         var countries = "TD,TG,TH,TJ,TL,TR,TZ"
-        if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.TwoLetterCode) {
+        if let randomCountries = Countries.getRandomCountryCodes(30, resultType:.twoLetterCode) {
             countries = randomCountries
         }
         
-        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: countries, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext) {
+        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: countries, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults as NSNumber?, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE as NSNumber?, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext) {
             
             success, error, loanResults, nextPage in
             
@@ -55,14 +55,14 @@ class DVNViewController: UIViewController {
                     var loanNames: String = ""
                     for loan in loanResults {
                         if let name = loan.name {
-                            loanNames.appendContentsOf(name + ",")
+                            loanNames.append(name + ",")
                         }
                     }
                 }
                 
-                completionHandler(success: success, error: error, loans: loanResults)
+                completionHandler(success, error, loanResults)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
@@ -76,21 +76,21 @@ class DVNViewController: UIViewController {
             error nil if query was successful and returned a valid result, else contains error information.
             loans A list of loans returned by the query, else nil if an error occurred.
     */
-    func findLoans(kivaAPI: KivaAPI, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func findLoans(_ kivaAPI: KivaAPI, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?) -> Void) {
         
-        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext) {
+        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: KivaAPI.LoanSector.Agriculture, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: self.nextPageOfKivaSearchResults as NSNumber?, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE as NSNumber?, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext) {
             
             success, error, loanResults, nextPage in
             
             // paging
             if nextPage == -1 {
-                self.navigationItem.rightBarButtonItems?[1].enabled = false
+                self.navigationItem.rightBarButtonItems?[1].isEnabled = false
             } else {
                 // save the nextPage
                 self.nextPageOfKivaSearchResults = nextPage
                 
                 // enable the refresh button
-                self.navigationItem.rightBarButtonItems?[1].enabled = true
+                self.navigationItem.rightBarButtonItems?[1].isEnabled = true
             }
             
             if success {
@@ -98,20 +98,20 @@ class DVNViewController: UIViewController {
                     var loanNames: String = ""
                     for loan in loanResults {
                         if let name = loan.name {
-                            loanNames.appendContentsOf(name + ",")
+                            loanNames.append(name + ",")
                         }
                     }
                 }
                 
-                completionHandler(success: success, error: error, loans: loanResults)
+                completionHandler(success, error, loanResults)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
     // Find loans from Kiva.org and update this instance's loan collection property.
-    func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
+    func populateLoans(_ numberOfLoansToAdd: Int, completionHandler: @escaping (_ success: Bool, _ error: NSError?) -> Void) {
         if let kivaAPI = self.kivaAPI {
             self.findRandomLoans(kivaAPI) { success, error, loanResults in
                 if success {
@@ -128,26 +128,26 @@ class DVNViewController: UIViewController {
                             }
                         }
                         
-                        completionHandler(success: true, error: nil)
+                        completionHandler(true, nil)
                     }
                 } else {
-                    completionHandler(success: false, error: error)
+                    completionHandler(false, error)
                 }
             }
         } else {
             print("no kivaAPI")
-            completionHandler(success: false, error: nil)
+            completionHandler(false, nil)
         }
     }
     
     /* Save the data in the scrach context to the core data store on disk. */
     func saveScratchContext() {
         
-        let error: NSErrorPointer = nil
+        let error: NSErrorPointer? = nil
         do {
             _ = try CoreDataContext.sharedInstance().scratchContext.save()
         } catch let error1 as NSError {
-            error.memory = error1
+            error??.pointee = error1
             print("Error saving scratchContext: \(error)")
         }
     }

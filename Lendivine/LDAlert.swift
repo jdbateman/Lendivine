@@ -24,20 +24,20 @@ class LDAlert {
         usage:
         LDAlert(viewController:self).displayErrorAlertView("error_title", message: "error_message \(some_var)")
     */
-    func displayErrorAlertView(title: String, message: String) {
+    func displayErrorAlertView(_ title: String, message: String) {
         // Make the alert controller
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Create and add the actions
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { UIAlertAction in
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { UIAlertAction in
             // do nothing on OK
         }
         alertController.addAction(okAction)
         
         // Present the Alert controller
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             if let controller = self.controller {
-                controller.presentViewController(alertController, animated: true, completion: nil)
+                controller.present(alertController, animated: true, completion: nil)
             }
         }
     }

@@ -67,6 +67,7 @@
 		9ECEFAF61C9602F10045E92F /* Attributions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFAF51C9602F10045E92F /* Attributions.swift */; };
 		9ECEFAFF1C96064E0045E92F /* CountryLoansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */; };
 		9ECEFB021C97C7710045E92F /* CountryLoanTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECEFB011C97C7710045E92F /* CountryLoanTableViewCell.swift */; };
+		9ECF14041E81ECAB00B4A6EB /* DVNCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF14031E81ECAB00B4A6EB /* DVNCache.swift */; };
 		9ED2A1381CDE65E000828AA4 /* CountriesMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2A1371CDE65E000828AA4 /* CountriesMapViewController.swift */; };
 		9ED2A13D1CDE938F00828AA4 /* DVNCountries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2A13C1CDE938F00828AA4 /* DVNCountries.swift */; };
 		9ED2A1411CDED6B900828AA4 /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2A1401CDED6B900828AA4 /* UIApplication+Extension.swift */; };
@@ -179,6 +180,7 @@
 		9ECEFAF51C9602F10045E92F /* Attributions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributions.swift; sourceTree = "<group>"; };
 		9ECEFAFE1C96064E0045E92F /* CountryLoansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryLoansTableViewController.swift; sourceTree = "<group>"; };
 		9ECEFB011C97C7710045E92F /* CountryLoanTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryLoanTableViewCell.swift; sourceTree = "<group>"; };
+		9ECF14031E81ECAB00B4A6EB /* DVNCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNCache.swift; sourceTree = "<group>"; };
 		9ED2A1371CDE65E000828AA4 /* CountriesMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesMapViewController.swift; sourceTree = "<group>"; };
 		9ED2A13C1CDE938F00828AA4 /* DVNCountries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVNCountries.swift; sourceTree = "<group>"; };
 		9ED2A1401CDED6B900828AA4 /* UIApplication+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				9EE356921C71577900363652 /* Model.xcdatamodeld */,
 				9E495BDF1BF9611400E3DEAD /* VTError.swift */,
 				9E36CC161CCD773C006402C4 /* KivaAccount.swift */,
+				9ECF14031E81ECAB00B4A6EB /* DVNCache.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -398,12 +401,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "John Bateman";
 				TargetAttributes = {
 					9EC72E0F1BF559E90000D9BF = {
 						CreatedOnToolsVersion = 7.1;
 						DevelopmentTeam = 4FP2V369XG;
+						LastSwiftMigration = 0820;
 					};
 				};
 			};
@@ -460,6 +464,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E7869F01C9F5CCF00F1FE93 /* DVNPointAnnotation.swift in Sources */,
+				9ECF14041E81ECAB00B4A6EB /* DVNCache.swift in Sources */,
 				9E39506B1BF66E23007BC75E /* MySingleton.swift in Sources */,
 				9E3950631BF66E23007BC75E /* KivaCountry.swift in Sources */,
 				9E3950671BF66E23007BC75E /* KivaOauth.swift in Sources */,
@@ -575,8 +580,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -619,8 +626,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -639,6 +648,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -646,14 +656,15 @@
 		9EC72E251BF559E90000D9BF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Lendivine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jb.lendivine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -661,14 +672,15 @@
 		9EC72E261BF559E90000D9BF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Lendivine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jb.lendivine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

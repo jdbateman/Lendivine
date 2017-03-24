@@ -31,7 +31,7 @@ class CartTableViewController: UITableViewController {
         navigationItem.title = "Cart"
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateCart()
     }
@@ -50,39 +50,39 @@ class CartTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         
         if cart!.items.count > 0 {
         
             noDataLabel?.text = ""
-            noDataLabel?.hidden = true
+            noDataLabel?.isHidden = true
             
             return 1
             
         } else {
             
-            noDataLabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
+            noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
             
             if let noDataLabel = noDataLabel {
-                noDataLabel.hidden = false
+                noDataLabel.isHidden = false
                 noDataLabel.text = "The cart is empty."
-                noDataLabel.textColor = UIColor.darkGrayColor()
-                noDataLabel.textAlignment = .Center
+                noDataLabel.textColor = UIColor.darkGray
+                noDataLabel.textAlignment = .center
                 tableView.backgroundView = noDataLabel
-                tableView.separatorStyle = .None
+                tableView.separatorStyle = .none
             }
             
             return 1
         }
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cart!.items.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("CartTableCellID", forIndexPath: indexPath) as! CartTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CartTableCellID", for: indexPath) as! CartTableViewCell
 
         // Configure the cell...
         configureCell(cell, row: indexPath.row)
@@ -90,9 +90,9 @@ class CartTableViewController: UITableViewController {
         return cell
     }
     
-    func configureCell(cell: CartTableViewCell, row: Int) {
+    func configureCell(_ cell: CartTableViewCell, row: Int) {
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             
             // make donation button corners rounded
             cell.changeDonationButton.layer.cornerRadius = 7
@@ -116,10 +116,10 @@ class CartTableViewController: UITableViewController {
             // donation amount
             var donationAmount = "$"
             if let itemDonationAmount = cartItem.donationAmount {
-                donationAmount.appendContentsOf(itemDonationAmount.stringValue)
+                donationAmount.append(itemDonationAmount.stringValue)
             }
             // Set button image to donation amount
-            let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(14), 4))
+            let donationImage: UIImage = ViewUtility.createImageFromText(donationAmount as NSString, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPoint(x: CGFloat(14), y: 4))
             cell.changeDonationButton.imageView!.image = donationImage
             
             // Set main image placeholder image
@@ -132,11 +132,11 @@ class CartTableViewController: UITableViewController {
                 itemImage.getImage(200, height:200, square:true) {
                     success, error, image in
                     if success {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             cell.loanImageView!.image = image
                             
                             // draw border around image
-                            cell.loanImageView!.layer.borderColor = UIColor.blueColor().CGColor;
+                            cell.loanImageView!.layer.borderColor = UIColor.blue.cgColor;
                             cell.loanImageView!.layer.borderWidth = 2.5
                             cell.loanImageView!.layer.cornerRadius = 3.0
                             cell.loanImageView!.clipsToBounds = true
@@ -150,13 +150,13 @@ class CartTableViewController: UITableViewController {
     }
     
     // Conditional editing of the table view. (Return true to allow edit of the item, false if item is not editable.)
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
     // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
             // Delete the row from the data source
             
             // remove the item from the KivaCart object
@@ -165,9 +165,9 @@ class CartTableViewController: UITableViewController {
             KivaCart.updateCartBadge(self)
             
             // remove the item from the table view
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath], with: .fade)
             
-        } else if editingStyle == .Insert {
+        } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
@@ -176,13 +176,13 @@ class CartTableViewController: UITableViewController {
     func configureBarButtonItems() {
         
         // left bar button items
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(CartTableViewController.onTrashButtonTap))
-        navigationItem.setLeftBarButtonItem(trashButton, animated: true)
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(CartTableViewController.onTrashButtonTap))
+        navigationItem.setLeftBarButton(trashButton, animated: true)
         
         // right bar button items
-        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .Plain, target: self, action: #selector(CartTableViewController.onCheckoutButtonTapped))
+        let checkoutButton = UIBarButtonItem(image: UIImage(named: "Checkout-50"), style: .plain, target: self, action: #selector(CartTableViewController.onCheckoutButtonTapped))
         //self.navigationItem.rightBarButtonItem = checkoutButton
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(CartTableViewController.onMapButton))
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .plain, target: self, action: #selector(CartTableViewController.onMapButton))
         navigationItem.setRightBarButtonItems([mapButton, checkoutButton], animated: true)
     }
 
@@ -197,8 +197,8 @@ class CartTableViewController: UITableViewController {
     func onTrashButtonTap() {
 
         // Confirm the delete-all operation with the user via an alert controller.
-        let alertController = UIAlertController(title: "Clear Cart", message: "Select OK to remove all loans from the cart." , preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+        let alertController = UIAlertController(title: "Clear Cart", message: "Select OK to remove all loans from the cart." , preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
             UIAlertAction in
             if let cart = self.cart {
                 cart.empty()
@@ -206,7 +206,7 @@ class CartTableViewController: UITableViewController {
             }
             self.updateCart()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) {
             UIAlertAction in
             // do nothing
         }
@@ -214,11 +214,11 @@ class CartTableViewController: UITableViewController {
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // The user selected the checkout button.
-    @IBAction func onCheckoutButtonInViewTapped(sender: AnyObject) {
+    @IBAction func onCheckoutButtonInViewTapped(_ sender: AnyObject) {
         onCheckoutButtonTapped()
     }
     
@@ -238,27 +238,27 @@ class CartTableViewController: UITableViewController {
                     if notFundraising.count > 0 {
                         if var loans = loans {
                             for notFRLoan in notFundraising {
-                                if let index = loans.indexOf(notFRLoan) {
-                                    loans.removeAtIndex(index)
+                                if let index = loans.index(of: notFRLoan) {
+                                    loans.remove(at: index)
                                 }
                                 
                                 //  UIAlertController
                                 var userMessage = "The following loans are no longer raising funds and have been removed from the cart:\n\n"
                                 var allRemovedLoansString = ""
                                 for nfLoan in notFundraising {
-                                    if let country = nfLoan.country, name = nfLoan.name, sector = nfLoan.sector {
+                                    if let country = nfLoan.country, let name = nfLoan.name, let sector = nfLoan.sector {
                                         let removedLoanString = String(format: "%@, %@, %@\n", name, sector, country)
-                                        allRemovedLoansString.appendContentsOf(removedLoanString)
+                                        allRemovedLoansString.append(removedLoanString)
                                     }
                                 }
-                                userMessage.appendContentsOf(allRemovedLoansString)
-                                let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
-                                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                                userMessage.append(allRemovedLoansString)
+                                let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .alert)
+                                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
                                     UIAlertAction in
                                     self.displayKivaWebCartInBrowser()
                                 }
                                 alertController.addAction(okAction)
-                                self.presentViewController(alertController, animated: true, completion: nil)
+                                self.present(alertController, animated: true, completion: nil)
                             }
                         }
                     } else {
@@ -286,12 +286,12 @@ class CartTableViewController: UITableViewController {
         @brief Get loans from Kiva.org and confirm the status of each is "fundraising".
         @return List of loans with fundraising status, and list of loans no longer with fundraining status.
     */
-    func getCurrentFundraisingStatus(loans: [KivaLoan]?, completionHandler: (success: Bool, error: NSError?, fundraising: [KivaLoan]?, notFundraising: [KivaLoan]?) -> Void) {
+    func getCurrentFundraisingStatus(_ loans: [KivaLoan]?, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ fundraising: [KivaLoan]?, _ notFundraising: [KivaLoan]?) -> Void) {
         
         // validate loans not nil or empty
         if loans == nil || loans!.count == 0 {
-            let error = VTError(errorString: "Kiva loan not specified.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-            completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+            let error = VTError(errorString: "Kiva loan not specified.", errorCode: VTError.ErrorCodes.kiva_API_NO_LOANS)
+            completionHandler(true, error.error, nil, nil)
         }
         
         var fundraising = [KivaLoan]()
@@ -317,14 +317,14 @@ class CartTableViewController: UITableViewController {
                             notFundraising.append(loan)
                         }
                     }
-                    completionHandler(success: true, error: nil, fundraising: fundraising, notFundraising: notFundraising)
+                    completionHandler(true, nil, fundraising, notFundraising)
                 }
             } else {
-                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
                     LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                 }
-                let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
-                completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+                let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.kiva_API_LOAN_NOT_FOUND)
+                completionHandler(true, error.error, nil, nil)
             }
         }
     }
@@ -336,20 +336,20 @@ class CartTableViewController: UITableViewController {
             (out) result - true if loan status was able to be confirmed, else false if an error occurred.
             (out) error - NSError describing the error, else nil if no error occurred. If an error occured the result is not valid.
     */
-    func confirmLoanIsAvailable(loan: KivaLoan?, completionHandler: (result: Bool, error: NSError?) -> Void) {
+    func confirmLoanIsAvailable(_ loan: KivaLoan?, completionHandler: @escaping (_ result: Bool, _ error: NSError?) -> Void) {
         
         if let loan = loan {
             loan.confirmLoanStatus(KivaLoan.Status.fundraising, context: CoreDataContext.sharedInstance().cartContext) {
                 result, error in
                 if error == nil {
                     // successfully determined status of loan
-                    completionHandler(result: result, error: nil)
+                    completionHandler(result, nil)
                 } else {
-                    if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                     }
                     // error determining the status of the loan
-                    completionHandler(result: false, error: error)
+                    completionHandler(false, error)
                 }
             }
         }
@@ -370,53 +370,51 @@ class CartTableViewController: UITableViewController {
     // MARK: UITableViewDelegate Accessory Views
     
     /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
-    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
         let cartItem = self.cart!.items[indexPath.row]
         
-            if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
-                self.presentLoanDetailViewController(loan)
-            }
+            let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext)
+            self.presentLoanDetailViewController(loan)
     }
     
     
     // MARK: Navigation
     
     /* Modally present the LoanDetail view controller. */
-    func presentLoanDetailViewController(loan: KivaLoan?) {
+    func presentLoanDetailViewController(_ loan: KivaLoan?) {
         guard let loan = loan else {
             return
         }
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+        let controller = storyboard.instantiateViewController(withIdentifier: "LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     // MARK: Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "ShowCartDetail" {
             
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
-                let controller = segue.destinationViewController as! LoanDetailViewController
+                let controller = segue.destination as! LoanDetailViewController
                 
                 controller.showAddToCart = false
                 
                 let cartItem = self.cart!.items[indexPath.row]
                 
-                if let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext) {
-                    controller.loan = loan
-                }
+                let loan:KivaLoan = KivaLoan(fromCartItem: cartItem, context: CoreDataContext.sharedInstance().cartContext)
+                controller.loan = loan
             }
             
         } else if segue.identifier == "CartToMapSegueId" {
             
             //navigationItem.title = "Cart"
             
-            let controller = segue.destinationViewController as! MapViewController
+            let controller = segue.destination as! MapViewController
             
             controller.sourceViewController = self
             controller.navigationItem.title = "Cart"
@@ -430,8 +428,8 @@ class CartTableViewController: UITableViewController {
     
     /* Modally present the MapViewController on the main thread. */
     func presentMapController() {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.performSegueWithIdentifier("CartToMapSegueId", sender: self)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "CartToMapSegueId", sender: self)
         }
     }
 }

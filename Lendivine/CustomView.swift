@@ -17,33 +17,35 @@ class CustomView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.addCustomView()
-    }
+//    init() { //todo:swift3 - MKAnnotationView does not have an initializer with a frame:CGRect parameter
+//    //init(frame: CGRect) { //todo:swift3 - MKAnnotationView does not have an initializer with a frame:CGRect parameter
+//        //super.init(frame: frame)
+//        super.init()
+//        self.addCustomView()
+//    }
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func addCustomView() {
-        label.frame = CGRectMake(0, -20, 100, 22)
-        label.backgroundColor=UIColor.whiteColor()
-        label.textAlignment = NSTextAlignment.Center
+        label.frame = CGRect(x: 0, y: -20, width: 100, height: 22)
+        label.backgroundColor=UIColor.white
+        label.textAlignment = NSTextAlignment.center
         label.text = "label"
-        label.hidden=false
+        label.isHidden=false
         self.addSubview(label)
         
         let btn: UIButton = UIButton()
-        btn.frame=CGRectMake(66, -18, 20, 20)
-        btn.backgroundColor=UIColor.redColor()
-        btn.setTitle("button", forState: UIControlState.Normal)
-        btn.addTarget(self, action: #selector(CustomView.onChangeLabel), forControlEvents: UIControlEvents.TouchUpInside)
+        btn.frame=CGRect(x: 66, y: -18, width: 20, height: 20)
+        btn.backgroundColor=UIColor.red
+        btn.setTitle("button", for: UIControlState())
+        btn.addTarget(self, action: #selector(CustomView.onChangeLabel), for: UIControlEvents.touchUpInside)
         self.addSubview(btn)
         
         let txtField : UITextField = UITextField()
-        txtField.frame = CGRectMake(22, -18, 40, 20)
-        txtField.backgroundColor = UIColor.grayColor()
+        txtField.frame = CGRect(x: 22, y: -18, width: 40, height: 20)
+        txtField.backgroundColor = UIColor.gray
         self.addSubview(txtField)
         txtField.text = "testing"
         
@@ -51,11 +53,10 @@ class CustomView: MKAnnotationView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.frame = CGRect(x: 0, y: -20, width: 20, height: 20)
-        self.addSubview(imageView)
+        self.addSubview(imageView
     }
     
     func onChangeLabel() {
         self.label.text = "changelable selected"
     }
-    
 }

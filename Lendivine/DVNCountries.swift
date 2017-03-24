@@ -23,10 +23,10 @@ class DVNCountries {
     
     // MARK: - Fetched results controller
 
-    lazy var fetchedResultsController: NSFetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController<Country> = {
         
         // Create the fetch request
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<Country>(entityName: Country.entityName)
         
         // Add a sort descriptor to enforce a sort order on the results.
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -58,13 +58,13 @@ class DVNCountries {
     }
 
     /*! Perform a fetch of Country objects from the countriesScratchContext filtered for those that contain the specified userInput string. */
-    func fetchCountriesFilteredByNameOn(userInput: String?) -> [AnyObject]? {
+    func fetchCountriesFilteredByNameOn(_ userInput: String?) -> [AnyObject]? {
         
         guard let userInput = userInput else {
             return nil
         }
         
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
@@ -75,7 +75,7 @@ class DVNCountries {
         
         var results: [AnyObject]?
         do {
-            results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataContext.sharedInstance().countriesContext.fetch(fetchRequest)
         } catch let error1 as NSError {
             print("Error in fetchCountriesFilteredByNameOn(): \(error1)")
             results = nil

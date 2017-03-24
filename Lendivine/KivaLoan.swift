@@ -84,34 +84,34 @@ class KivaLoan: NSManagedObject  {
     @NSManaged var sector: String?
     
     /*! Core Data init method */
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 
     /*! Init instance with a dictionary of values, and a core data context. */
     init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "KivaLoan", in: context)!
+        super.init(entity: entity, insertInto: context)
         
         self.name = dictionary[InitKeys.name] as? String
-        self.country = dictionary["location"]?.objectForKey(InitKeys.country) as? String
-        self.geo = dictionary["location"]?.objectForKey(InitKeys.geo)?.objectForKey("pairs") as? String
-        self.town = dictionary["location"]?.objectForKey(InitKeys.town) as? String
+        self.country = dictionary["location"]?.object(forKey: InitKeys.country) as? String
+        self.geo = (dictionary["location"]?.object(forKey: InitKeys.geo) as AnyObject).object(forKey: "pairs") as? String
+        self.town = dictionary["location"]?.object(forKey: InitKeys.town) as? String
         self.postedDate = dictionary[InitKeys.postedDate] as? String
         self.activity = dictionary[InitKeys.activity] as? String
         self.id = dictionary[InitKeys.id] as? NSNumber
         self.use = dictionary[InitKeys.use] as? String
         self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
         self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
-        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
-        self.imageTemplateID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageTemplateID) as? NSNumber
+        self.imageID = (dictionary[InitKeys.image])?.object(forKey: InitKeys.imageId) as? NSNumber
+        self.imageTemplateID = (dictionary[InitKeys.image])?.object(forKey: InitKeys.imageTemplateID) as? NSNumber
         self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
         self.lenderCount = dictionary[InitKeys.lenderCount] as? NSNumber
         self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
-        self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?.firstObject as? String
+        self.language = (dictionary["description"]?.object(forKey: InitKeys.languages) as AnyObject).firstObject as? String
     }
 
     /*! 
@@ -123,8 +123,8 @@ class KivaLoan: NSManagedObject  {
     */
     init(fromLoan: KivaLoan, context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "KivaLoan", in: context)!
+        super.init(entity: entity, insertInto: context)
 
         self.name = fromLoan.name
         self.country = fromLoan.country
@@ -148,8 +148,8 @@ class KivaLoan: NSManagedObject  {
     
     init(fromCartItem: KivaCartItem, context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("KivaLoan", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "KivaLoan", in: context)!
+        super.init(entity: entity, insertInto: context)
         
         self.name = fromCartItem.name
         self.country = fromCartItem.country
@@ -172,7 +172,7 @@ class KivaLoan: NSManagedObject  {
     }
     
     /*! Update this instance's properties with that from the specified object. */
-    func update(fromLoan fromLoan: KivaLoan?) {
+    func update(fromLoan: KivaLoan?) {
         
         guard let fromLoan = fromLoan else {return}
         
@@ -241,17 +241,17 @@ class KivaLoan: NSManagedObject  {
     }()
 
     /* Perform a fetch of the loan object. Updates the fetchedResultsController with the matching data from the core data store. */
-    class func fetchLoanByID2(loanID: NSNumber, context: NSManagedObjectContext) -> KivaLoan? {
+    class func fetchLoanByID2(_ loanID: NSNumber, context: NSManagedObjectContext) -> KivaLoan? {
         
-        let error: NSErrorPointer = nil
-        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+        let error: NSErrorPointer? = nil
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: KivaLoan.entityName)
         fetchRequest.predicate = NSPredicate(format: "id == %@", loanID)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
         var results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchRequest) as! [KivaLoan]
+            results = try context.fetch(fetchRequest) as! [KivaLoan]
         } catch let error1 as NSError {
-            error.memory = error1
+            error??.pointee = error1
             print("Error in fetchLoanByID2(): \(error)")
             return nil
         }
@@ -262,7 +262,7 @@ class KivaLoan: NSManagedObject  {
         }
         
         // Return the first result, or nil
-        if let results = results where results.count > 0 {
+        if let results = results, results.count > 0 {
             for loan in results {
                 if let loan = loan as? KivaLoan {
                     if loan.id == loanID {
@@ -277,7 +277,7 @@ class KivaLoan: NSManagedObject  {
     }
     
     /* Return mappable coordinates for a KivaLoan object */
-    class func getCoordinatesForLoan(loan: KivaLoan) -> CLLocationCoordinate2D? {
+    class func getCoordinatesForLoan(_ loan: KivaLoan) -> CLLocationCoordinate2D? {
         
         // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
         guard let geo = loan.geo else {
@@ -316,12 +316,12 @@ extension KivaLoan {
     @param error (out) - NSError object if an error occurred, else nil.
     @param image (out) - the retrieved UIImage. May be nil if no image was found, or if an error occurred.
     */
-    func getImage(width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight, square:Bool = false, completion: (success: Bool, error: NSError?, image: UIImage?) -> Void ) {
+    func getImage(_ width:Int = kDefaultImageWidth, height:Int = kDefaultImageHeight, square:Bool = false, completion: @escaping (_ success: Bool, _ error: NSError?, _ image: UIImage?) -> Void ) {
         
         let image = KivaImage(imageId: self.imageID)
         image.getImage(width, height:height, square:square) {
             success, error, image in
-            completion(success: success, error: error, image: image)
+            completion(success, error, image)
         }
     }
     
@@ -369,7 +369,7 @@ extension KivaLoan {
         (out) result - true if loan status matches the specified input, else false.
         (out) error - nil if loan status successfully determined, else contains an NSError.
     */
-    func confirmLoanStatus(statusToMatch: KivaLoan.Status, context: NSManagedObjectContext, completionHandler: (result: Bool, error: NSError?) -> Void ) {
+    func confirmLoanStatus(_ statusToMatch: KivaLoan.Status, context: NSManagedObjectContext, completionHandler: @escaping (_ result: Bool, _ error: NSError?) -> Void ) {
         // get loan from server and check it's status
         let loanIDs = [self.id]
         KivaAPI.sharedInstance.kivaGetLoans(loanIDs, context: context) {
@@ -380,9 +380,9 @@ extension KivaLoan {
                         if loan.id == self.id {
                             // Found the loan in the results, now determine if the loan status matches the desired status.
                             if loan.status == statusToMatch.rawValue {
-                                completionHandler(result: true, error: nil)
+                                completionHandler(true, nil)
                             } else {
-                                completionHandler(result: false, error: nil)
+                                completionHandler(false, nil)
                             }
                             return
                         }
@@ -392,8 +392,8 @@ extension KivaLoan {
                 
             }
             
-            let error = VTError(errorString: "Unable to find loan id.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
-            completionHandler(result: false, error: error.error)
+            let error = VTError(errorString: "Unable to find loan id.", errorCode: VTError.ErrorCodes.kiva_API_LOAN_NOT_FOUND)
+            completionHandler(false, error.error)
         }
     }
 
@@ -401,12 +401,12 @@ extension KivaLoan {
     @brief Get loans from Kiva.org and confirm the status of each is "fundraising".
     @return List of loans with fundraising status, and list of loans no longer with fundraining status.
     */
-    class func getCurrentFundraisingStatus(loans: [KivaLoan]?, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, fundraising: [KivaLoan]?, notFundraising: [KivaLoan]?) -> Void) {
+    class func getCurrentFundraisingStatus(_ loans: [KivaLoan]?, context: NSManagedObjectContext, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ fundraising: [KivaLoan]?, _ notFundraising: [KivaLoan]?) -> Void) {
         
         // validate loans not nil or empty
         if loans == nil || loans!.count == 0 {
-            let error = VTError(errorString: "Kiva loan not specified.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-            completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+            let error = VTError(errorString: "Kiva loan not specified.", errorCode: VTError.ErrorCodes.kiva_API_NO_LOANS)
+            completionHandler(true, error.error, nil, nil)
         }
         
         var fundraising = [KivaLoan]()
@@ -432,11 +432,11 @@ extension KivaLoan {
                             notFundraising.append(loan)
                         }
                     }
-                    completionHandler(success: true, error: nil, fundraising: fundraising, notFundraising: notFundraising)
+                    completionHandler(true, nil, fundraising, notFundraising)
                 }
             } else {
-                let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.KIVA_API_LOAN_NOT_FOUND)
-                completionHandler(success: true, error: error.error, fundraising: nil, notFundraising: nil)
+                let error = VTError(errorString: "Kiva loan not found.", errorCode: VTError.ErrorCodes.kiva_API_LOAN_NOT_FOUND)
+                completionHandler(true, error.error, nil, nil)
             }
         }
     }

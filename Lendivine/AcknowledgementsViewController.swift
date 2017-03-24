@@ -28,8 +28,8 @@ class AcknowledgementsViewController: UIViewController, UIScrollViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        let point = CGPointMake(0, self.scrollView.contentOffset.y)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let point = CGPoint(x: 0, y: self.scrollView.contentOffset.y)
         scrollView.setContentOffset(point, animated: true)
     }
     
@@ -41,7 +41,7 @@ class AcknowledgementsViewController: UIViewController, UIScrollViewDelegate {
     func setupView() {
         
         let artists = ["Georgia Osinga", "Jolan Soens", "Erin Standley", "Gregor Črešnar", "Veronika Geertsema König", "Joel Olson"]
-        let artistsText = artists.joinWithSeparator("\n")
+        let artistsText = artists.joined(separator: "\n")
         let oAuthAck = "OAuthSwift framework:\nCopyright © 2016\nhttps://github.com/OAuthSwift/OAuthSwift\n"
     
         let otherArtwork = " Flag Images from http://365icon.com/icon-styles/ethnic/classic2/, Earth icon from http://www.iconbeast.com/free/ "
@@ -59,8 +59,8 @@ class AcknowledgementsViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.contentSize.height = acknowledgementsLabel.bounds.size.height + acknowledgements.bounds.size.height
         scrollView.delegate = self
-        scrollView.scrollEnabled = true
-        scrollView.directionalLockEnabled = false
+        scrollView.isScrollEnabled = true
+        scrollView.isDirectionalLockEnabled = false
         scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     }
 }

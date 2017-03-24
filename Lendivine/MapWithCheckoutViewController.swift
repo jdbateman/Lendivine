@@ -26,14 +26,14 @@ class MapWithCheckoutViewController: MapViewController {
     
     func modifyBarButtonItems() {
 
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: #selector(MapWithCheckoutViewController.onLoansByListButtonTap))
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .plain, target: self, action: #selector(MapWithCheckoutViewController.onLoansByListButtonTap))
         navigationItem.setRightBarButtonItems([loansByListButton], animated: true)
         
         // remove back button
         navigationItem.hidesBackButton = true
     }
     
-    @IBAction func onCheckoutButtonTapped(sender: AnyObject) {
+    @IBAction func onCheckoutButtonTapped(_ sender: AnyObject) {
 
         let loans = cart!.getLoans2()
 
@@ -45,27 +45,27 @@ class MapWithCheckoutViewController: MapViewController {
                     if notFundraising.count > 0 {
                         if var loans = loans {
                             for notFRLoan in notFundraising {
-                                if let index = loans.indexOf(notFRLoan) {
-                                    loans.removeAtIndex(index)
+                                if let index = loans.index(of: notFRLoan) {
+                                    loans.remove(at: index)
                                 }
                                 
                                 //  UIAlertController
                                 var userMessage = "The following loans are no longer raising funds and have been removed from the cart:\n\n"
                                 var allRemovedLoansString = ""
                                 for nfLoan in notFundraising {
-                                    if let country = nfLoan.country, name = nfLoan.name, sector = nfLoan.sector {
+                                    if let country = nfLoan.country, let name = nfLoan.name, let sector = nfLoan.sector {
                                         let removedLoanString = String(format: "%@, %@, %@\n", name, sector, country)
-                                        allRemovedLoansString.appendContentsOf(removedLoanString)
+                                        allRemovedLoansString.append(removedLoanString)
                                     }
                                 }
-                                userMessage.appendContentsOf(allRemovedLoansString)
-                                let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .Alert)
-                                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                                userMessage.append(allRemovedLoansString)
+                                let alertController = UIAlertController(title: "Cart Modified", message: userMessage, preferredStyle: .alert)
+                                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
                                     UIAlertAction in
                                     self.displayKivaWebCartInBrowser()
                                 }
                                 alertController.addAction(okAction)
-                                self.presentViewController(alertController, animated: true, completion: nil)
+                                self.present(alertController, animated: true, completion: nil)
                             }
                         }
                     } else {

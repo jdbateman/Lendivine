@@ -49,22 +49,22 @@ class Country: NSManagedObject {
     @NSManaged var countryCodeTwoLetter: String?
 
     /*! Core Data init method */
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 
     /*! Init instance with a dictionary of values, and a core data context. */
     init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName(Country.entityName, inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: Country.entityName, in: context)!
+        super.init(entity: entity, insertInto: context)
         
         self.name = dictionary[InitKeys.name] as? String
         self.region = dictionary[InitKeys.region] as? String
         self.countryCodeTwoLetter = dictionary[InitKeys.alpha2Code] as? String
 
         if let languagesArray = dictionary[InitKeys.languages] as? [String] {
-            self.languages = languagesArray.joinWithSeparator(",")
+            self.languages = languagesArray.joined(separator: ",")
         } else {
             self.languages = "unknown"
         }

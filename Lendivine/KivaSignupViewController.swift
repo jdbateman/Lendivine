@@ -14,7 +14,7 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     static let KivaSignInURL:String = "https://www.kiva.org/login?doneUrl=https%3A%2F%2Fwww.kiva.org%2Fportfolio"
     static let KivaSignUpURL:String = "https://www.kiva.org/register?doneUrl=https%3A%2F%2Fwww.kiva.org%2Fportfolio"
     
-    var request = NSURLRequest(URL: NSURL(string: KivaSignUpURL)!)
+    var request = URLRequest(url: URL(string: KivaSignUpURL)!)
     
     let webView : UIWebView = UIWebView()
     
@@ -33,7 +33,7 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
         //navigationItem.hidesBackButton = false
         createCustomBackButton()
         
-        self.webView.frame = UIScreen.mainScreen().bounds
+        self.webView.frame = UIScreen.main.bounds
         self.webView.scalesPageToFit = true
         self.webView.delegate = self
         
@@ -41,7 +41,7 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     }
     
     /*! hide the status bar */
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
@@ -57,8 +57,8 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     // MARK: Navigation
     
     func createCustomBackButton() {
-        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(KivaSignupViewController.onCancelButton))
-        navigationItem.setLeftBarButtonItem(customBackButton, animated: true)
+        let customBackButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(KivaSignupViewController.onCancelButton))
+        navigationItem.setLeftBarButton(customBackButton, animated: true)
     }
     
     func onCancelButton() {
@@ -66,6 +66,6 @@ class KivaSignupViewController: UIViewController, UIWebViewDelegate {
     }
     
     func popViewController() {
-        navigationController?.popToRootViewControllerAnimated(true)
+        _ = navigationController?.popToRootViewController(animated: true)
     }
 }

@@ -10,11 +10,13 @@
 import Foundation
 import UIKit
 
-extension NSCache {
-    static var sharedInstance: NSCache {
-        struct Singleton {
-            static let sharedCache: NSCache = NSCache()
-        }
-        return Singleton.sharedCache
-    }
-}
+//extension NSCache {
+//    static var sharedInstance: NSCache {
+//        struct Singleton {
+//            static let sharedCache: NSCache = NSCache()
+//        }
+//        return Singleton.sharedCache
+//    }
+//    
+//    static let sharedInstance: NSCache = NSCache()
+//}

@@ -31,15 +31,15 @@ class KivaAccount: NSManagedObject {
     @NSManaged var lenderId: String?
     
     /*! Core Data init method */
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
     
     /*! Init instance with a dictionary of values, and a core data context. */
     init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName(KivaAccount.entityName, inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: KivaAccount.entityName, in: context)!
+        super.init(entity: entity, insertInto: context)
         
         self.name = dictionary[InitKeys.name] as? String
         
@@ -56,12 +56,12 @@ class KivaAccount: NSManagedObject {
 
 extension KivaAccount {
     
-    func saveAccountImage(newImage:UIImage) {
+    func saveAccountImage(_ newImage:UIImage) {
         
         if let id = self.lenderId {  // here we save the image using the lenderId to construct the filename on disk
             
             if let idNum = Int(id) {
-                let accountImage = KivaImage(imageId: idNum)
+                let accountImage = KivaImage(imageId: idNum as NSNumber?)
                 accountImage.saveImageToFileSystem(id, image: newImage)
             }
         }
@@ -74,15 +74,15 @@ extension KivaAccount {
     func deleteAccountImageFileFromFileSystem() {
         if let id = self.lenderId {
             if let idNum = Int(id) {
-                let accountImage = KivaImage(imageId: idNum)
+                let accountImage = KivaImage(imageId: idNum as NSNumber?)
                 let path = accountImage.pathForImageFileWith(id)
                 if let path = path {
-                    if NSFileManager.defaultManager().fileExistsAtPath(path) {
-                        let error:NSErrorPointer = nil
+                    if FileManager.default.fileExists(atPath: path) {
+                        let error:NSErrorPointer? = nil
                         do {
-                            try NSFileManager.defaultManager().removeItemAtPath(path)
+                            try FileManager.default.removeItem(atPath: path)
                         } catch let error1 as NSError {
-                            error.memory = error1
+                            error??.pointee = error1
                         }
                         if error != nil {
                             print(error.debugDescription)

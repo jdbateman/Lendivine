@@ -34,7 +34,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         navigationItem.title = "Loans"
         
         navigationController?.navigationBar.barTintColor = UIColor(rgb:0xFFE8A1)
-        navigationController?.navigationBar.translucent = false
+        navigationController?.navigationBar.isTranslucent = false
         
         initRefreshControl()
         
@@ -42,17 +42,17 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
     
     /*! hide the status bar */
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         //self.removeAllLoans()
         fetchedResultsController.delegate = nil
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     }
@@ -69,35 +69,35 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func configureBarButtonItems() {
     
         // left bar button items
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(LoansTableViewController.onTrashButtonTap))
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(LoansTableViewController.onTrashButtonTap))
 
         navigationItem.setLeftBarButtonItems([trashButton], animated: true)
         
         // right bar button items
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(LoansTableViewController.onMapButton))
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .plain, target: self, action: #selector(LoansTableViewController.onMapButton))
         
-        let addLoansButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(LoansTableViewController.onAddLoansButtonTap))
+        let addLoansButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(LoansTableViewController.onAddLoansButtonTap))
         navigationItem.setRightBarButtonItems([mapButton, addLoansButton], animated: true)
     }
     
     func initRefreshControl() {
         
         let refreshControl = UIRefreshControl()
-        refreshControl.tintColor = UIColor.whiteColor()
-        refreshControl.transform = CGAffineTransformMakeScale(2.0, 2.0)
-        refreshControl.addTarget(self, action: #selector(LoansTableViewController.onPullToRefresh(_:)), forControlEvents: .ValueChanged)
+        refreshControl.tintColor = UIColor.white
+        refreshControl.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        refreshControl.addTarget(self, action: #selector(LoansTableViewController.onPullToRefresh(_:)), for: .valueChanged)
         self.tableView.addSubview(refreshControl)
         self.tableView.alwaysBounceVertical = true
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
         // return self.fetchedResultsController.sections?.count ?? 0
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let sectionInfo = self.fetchedResultsController.sections![section]
         let count = sectionInfo.numberOfObjects
@@ -105,9 +105,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         return count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("LoansTableViewCellID", forIndexPath: indexPath) as! LoansTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LoansTableViewCellID", for: indexPath) as! LoansTableViewCell
 
         // Configure the cell...
         configureCell(cell, indexPath: indexPath)
@@ -119,13 +119,13 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     }
     
     // Initialize the contents of the cell.
-    func configureCell(cell: LoansTableViewCell, indexPath: NSIndexPath) {
+    func configureCell(_ cell: LoansTableViewCell, indexPath: IndexPath) {
         
-        let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as! KivaLoan
+        let loan = self.fetchedResultsController.object(at: indexPath)
         
         
         if loan.id == -1 {
-            CoreDataContext.sharedInstance().scratchContext.deleteObject(loan)
+            CoreDataContext.sharedInstance().scratchContext.delete(loan)
             return
         }
         
@@ -139,9 +139,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         var amountString = "$"
         if let loanAmount = loan.loanAmount {
-            amountString.appendContentsOf(loanAmount.stringValue)
+            amountString.append(loanAmount.stringValue)
         } else {
-            amountString.appendContentsOf("0")
+            amountString.append("0")
         }
         cell.amountLabel.text = amountString
         
@@ -155,23 +155,23 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         // put rounded corners on loan image
         cell.loanImageView.layer.cornerRadius = 20
         cell.loanImageView.layer.borderWidth = 0
-        cell.loanImageView.layer.borderColor = UIColor.clearColor().CGColor
+        cell.loanImageView.layer.borderColor = UIColor.clear.cgColor
         cell.loanImageView.clipsToBounds = true
     
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-        activityIndicator.center = CGPointMake(cell.loanImageView.center.x - 8, cell.loanImageView.center.y - 20)
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityIndicator.center = CGPoint(x: cell.loanImageView.center.x - 8, y: cell.loanImageView.center.y - 20)
         cell.loanImageView.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         
         loan.getImage(200, height:200, square:true) {
             success, error, image in
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 activityIndicator.stopAnimating()
             }
             
             if success {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     cell.loanImageView!.image = image
                 }
             } else  {
@@ -181,17 +181,17 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         
         let cart = KivaCart.sharedInstance
         if let id = loan.id {
-            cell.donatedImageView.hidden = cart.containsLoanId(id) ? false : true
+            cell.donatedImageView.isHidden = cart.containsLoanId(id) ? false : true
         }
     }
     
     
     // MARK: - Fetched results controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController<KivaLoan> = {
         
         // Create the fetch request
-        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+        let fetchRequest = NSFetchRequest<KivaLoan>(entityName: KivaLoan.entityName)
         
         // Add a sort descriptor to enforce a sort order on the results.
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
@@ -232,40 +232,40 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
     // Any change to Core Data causes these delegate methods to be called.
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         // store up changes to the table until endUpdates() is called
         self.tableView.beginUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         // Our project does not use sections. So we can ignore these invocations.
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
             
-        case .Insert:
+        case .insert:
             
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
             
-        case .Delete:
+        case .delete:
             
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath!], with: .fade)
             
-        case .Update:
+        case .update:
             
-            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!) as! LoansTableViewCell, indexPath: indexPath!)
+            self.configureCell(tableView.cellForRow(at: indexPath!) as! LoansTableViewCell, indexPath: indexPath!)
             
-        case .Move:
+        case .move:
             
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath!], with: .fade)
             
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
         }
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         // Make the stored changes visible.
         self.tableView.endUpdates()
     }
@@ -277,7 +277,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func onTrashButtonTap() {
         removeAllLoans()
         self.resetNextKivaPage()
-        self.fetchLoans()
+        _ = self.fetchLoans()
         self.tableView.reloadData()
     }
     
@@ -286,7 +286,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         let kivaOAuth = KivaOAuth.sharedInstance
         
         // Do the oauth in a background queue.
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             
             kivaOAuth.doOAuthKiva(self) {success, error, kivaAPI in
                 if success {
@@ -296,14 +296,14 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
                 }
                 
                 // Call oAuthCompleted on main queue.
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.oAuthCompleted(success)
                 }
             }
         }
     }
     
-    func oAuthCompleted(success: Bool) {
+    func oAuthCompleted(_ success: Bool) {
         print("OAuth completed with success = \(success)")
     }
     
@@ -314,9 +314,9 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     func onCartButton() {
         // Display local Cart VC containing only the loans in the cart.
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller: CartTableViewController = storyboard.instantiateViewControllerWithIdentifier("CartStoryboardID") as! CartTableViewController
+        let controller: CartTableViewController = storyboard.instantiateViewController(withIdentifier: "CartStoryboardID") as! CartTableViewController
         controller.kivaAPI = self.kivaAPI
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
         // 2. TODO - modify security keys in info.plist to get kiva.org cart to render correctly. currently <key>NSAllowsArbitraryLoads</key> <true/> is set to get around the security restriction. To fix look at http://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9 and enable appropriate options then remove the workaround above.
     }
@@ -329,11 +329,11 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             controller.request = self.kivaAPI!.getKivaCartRequest()
         }
 
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
 
     /*! See More Loans..." button was selected. */
-    @IBAction func seeMoreLoans(sender: AnyObject) {
+    @IBAction func seeMoreLoans(_ sender: AnyObject) {
         refreshLoans(nil)
     }
     
@@ -343,7 +343,7 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         refreshLoans(nil)
     }
     
-    func onPullToRefresh(refreshControl: UIRefreshControl) {
+    func onPullToRefresh(_ refreshControl: UIRefreshControl) {
         
         let myAttribute = [ NSFontAttributeName: UIFont(name: "Georgia", size: 10.0)! ]
         
@@ -362,29 +362,29 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
         @brief Get loans from Kiva.org.
         @discussion Loans are persisted to disk and refetched into the sharedContext.
     */
-    func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
+    func refreshLoans(_ completionHandler: ((_ success: Bool, _ error: NSError?) -> Void)? ) {
         
         // Search Kiva.org for the next page of Loan results.
         self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) {
             success, error in
             
             // refetch irrespective or result.
-            self.fetchLoans()
+            _ = self.fetchLoans()
             self.tableView.reloadData()
             
             if success {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     if let completionHandler = completionHandler {
-                        completionHandler(success:true, error: nil)
+                        completionHandler(true, nil)
                     }
                 }
             } else {
-                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
                     LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                 }
                 print("failed to populate loans. error: \(error?.localizedDescription)")
                 if let completionHandler = completionHandler {
-                    completionHandler(success:false, error: error)
+                    completionHandler(false, error)
                 }
             }
         }
@@ -406,8 +406,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
             
             for loan: KivaLoan in loans {
                 
-                if let id = loan.id where (cart.containsLoanId(id) == false) {
-                    CoreDataContext.sharedInstance().scratchContext.deleteObject(loan)
+                if let id = loan.id, (cart.containsLoanId(id) == false) {
+                    CoreDataContext.sharedInstance().scratchContext.delete(loan)
                 } else {
                     inCartCount += 1
                 }
@@ -427,14 +427,14 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     */
     func fetchAllLoans() -> [KivaLoan]? {
 
-        let error: NSErrorPointer = nil
-        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+        let error: NSErrorPointer? = nil
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: KivaLoan.entityName)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
         var results: [AnyObject]?
         do {
-            results = try CoreDataContext.sharedInstance().scratchContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
+            results = try CoreDataContext.sharedInstance().scratchContext.fetch(fetchRequest) as? [KivaLoan]
         } catch let error1 as NSError {
-            error.memory = error1
+            error??.pointee = error1
             print("Error in fetchAllLoans(): \(error)")
             return nil
         }
@@ -450,24 +450,23 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
     // MARK: Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "ShowDetail" {
             
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
-                let controller = segue.destinationViewController as! LoanDetailViewController
+                let controller = segue.destination as! LoanDetailViewController
                 
-                if let loan = self.fetchedResultsController.objectAtIndexPath(indexPath) as? KivaLoan {
-                    controller.loan = loan
-                }
+                let loan:KivaLoan = self.fetchedResultsController.object(at: indexPath)
+                controller.loan = loan
             }
         
         } else if segue.identifier == "LoansToMapSegueId" {
      
             navigationItem.title = "Loans"
             
-            let controller = segue.destinationViewController as! LoansMapViewController
+            let controller = segue.destination as! LoansMapViewController
         
             controller.sourceViewController = self
         
@@ -480,8 +479,8 @@ class LoansTableViewController: DVNTableViewController, NSFetchedResultsControll
     
     /* Modally present the MapViewController on the main thread. */
     func presentMapController() {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.performSegueWithIdentifier("LoansToMapSegueId", sender: self)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "LoansToMapSegueId", sender: self)
         }
     }
 }

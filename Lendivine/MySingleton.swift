@@ -15,7 +15,7 @@ class MySingleton {
     
     static let sharedInstance = MySingleton()
     
-    private init () {
+    fileprivate init () {
         //MySingleton.timestampInHeader = true
         //print("timestampInHeader.init() in MySingleton.init() reports timestampInHeader = \(MySingleton._bTimeStampInHeader)")
     }

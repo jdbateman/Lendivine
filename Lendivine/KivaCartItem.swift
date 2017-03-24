@@ -74,8 +74,8 @@ class KivaCartItem: NSManagedObject {
     
     init(loan: KivaLoan, donationAmount: NSNumber, context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("KivaCartItem", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "KivaCartItem", in: context)!
+        super.init(entity: entity, insertInto: context)
 
         self.donationAmount = donationAmount
         
@@ -100,8 +100,8 @@ class KivaCartItem: NSManagedObject {
     }
     
     /*! Core Data init method */
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
     
     /*! Return a dictionary representation of a portion of the data in this KivaCartItem instance. 
@@ -117,28 +117,28 @@ class KivaCartItem: NSManagedObject {
     /*! Init instance with a dictionary of values, and a core data context. */
     init(dictionary: [String: AnyObject], context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("KivaCartItem", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "KivaCartItem", in: context)!
+        super.init(entity: entity, insertInto: context)
         
         self.donationAmount = dictionary[InitKeys.donationAmount] as? NSNumber
         self.name = dictionary[InitKeys.name] as? String
-        self.country = dictionary["location"]?.objectForKey(InitKeys.country) as? String
-        self.geo = dictionary["location"]?.objectForKey(InitKeys.geo)?.objectForKey("pairs") as? String
-        self.town = dictionary["location"]?.objectForKey(InitKeys.town) as? String
+        self.country = dictionary["location"]?.object(forKey: InitKeys.country) as? String
+        self.geo = (dictionary["location"]?.object(forKey: InitKeys.geo) as AnyObject).object(forKey: "pairs") as? String
+        self.town = dictionary["location"]?.object(forKey: InitKeys.town) as? String
         self.postedDate = dictionary[InitKeys.postedDate] as? String
         self.activity = dictionary[InitKeys.activity] as? String
         self.id = dictionary[InitKeys.id] as? NSNumber
         self.use = dictionary[InitKeys.use] as? String
         self.fundedAmount = dictionary[InitKeys.fundedAmount] as? NSNumber
         self.partnerID = dictionary[InitKeys.partnerID] as? NSNumber
-        self.imageID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageId) as? NSNumber
-        self.imageTemplateID = (dictionary[InitKeys.image])?.objectForKey(InitKeys.imageTemplateID) as? NSNumber
+        self.imageID = (dictionary[InitKeys.image])?.object(forKey: InitKeys.imageId) as? NSNumber
+        self.imageTemplateID = (dictionary[InitKeys.image])?.object(forKey: InitKeys.imageTemplateID) as? NSNumber
         self.borrowerCount = dictionary[InitKeys.borrowerCount] as? NSNumber
         self.lenderCount = dictionary[InitKeys.lenderCount] as? NSNumber
         self.loanAmount = dictionary[InitKeys.loanAmount] as? NSNumber
         self.status = dictionary[InitKeys.status] as? String
         self.sector = dictionary[InitKeys.sector] as? String
-        self.language = dictionary["description"]?.objectForKey(InitKeys.languages)?.firstObject as? String
+        self.language = (dictionary["description"]?.object(forKey: InitKeys.languages) as AnyObject).firstObject as? String
     }
 }
 

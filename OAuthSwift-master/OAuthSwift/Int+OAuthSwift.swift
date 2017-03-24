@@ -9,25 +9,43 @@
 import Foundation
 
 extension Int {
-    public func bytes(totalBytes: Int = sizeof(Int)) -> [UInt8] {
+    public func bytes(_ totalBytes: Int = MemoryLayout<Int>.size) -> [UInt8] {
         return arrayOfBytes(self, length: totalBytes)
     }
 }
+//todo:swift3
+//func arrayOfBytes<T>(_ value:T, length:Int? = nil) -> [UInt8] {
+//    let totalBytes = length ?? (MemoryLayout.size(ofValue: value) * 8)
+//    
+//    let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
+//    valuePointer.pointee = value
+//    
+//    let bytesPointer = UnsafeRawPointer(valuePointer) // let bytesPointer = UnsafeMutablePointer<UInt8>(valuePointer) //todo:swift3
+//    var bytes = [UInt8](repeating: 0, count: totalBytes)
+//    for j in 0..<min(MemoryLayout<T>.size,totalBytes) {
+//        bytes[totalBytes - 1 - j] = (bytesPointer + j).pointee
+//    }
+//    
+//    valuePointer.deinitialize()
+//    valuePointer.deallocate(capacity: 1)
+//    
+//    return bytes
+//}
 
-func arrayOfBytes<T>(value:T, length:Int? = nil) -> [UInt8] {
-    let totalBytes = length ?? (sizeofValue(value) * 8)
+fileprivate func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
+    let totalBytes = length ?? MemoryLayout<T>.size
     
-    let valuePointer = UnsafeMutablePointer<T>.alloc(1)
-    valuePointer.memory = value
+    let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
+    valuePointer.pointee = value
     
-    let bytesPointer = UnsafeMutablePointer<UInt8>(valuePointer)
-    var bytes = [UInt8](count: totalBytes, repeatedValue: 0)
-    for j in 0..<min(sizeof(T),totalBytes) {
-        bytes[totalBytes - 1 - j] = (bytesPointer + j).memory
+    let bytesPointer = UnsafeMutablePointer<UInt8>(OpaquePointer(valuePointer))
+    var bytes = [UInt8](repeating: 0, count: totalBytes)
+    for j in 0..<min(MemoryLayout<T>.size, totalBytes) {
+        bytes[totalBytes - 1 - j] = (bytesPointer + j).pointee
     }
     
-    valuePointer.destroy()
-    valuePointer.dealloc(1)
+    valuePointer.deinitialize()
+    valuePointer.deallocate(capacity: 1)
     
     return bytes
 }

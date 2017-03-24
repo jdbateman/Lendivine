@@ -18,7 +18,7 @@ class CartTableViewCell: UITableViewCell {
     @IBOutlet weak var flagImageView: UIImageView!
 
     // User selected the change donation button in the cell. Present donation amount options in an action sheet.
-    @IBAction func onChangeDonationButton(sender: AnyObject) {
+    @IBAction func onChangeDonationButton(_ sender: AnyObject) {
         presentDonationAmounts(sender)
     }
     
@@ -26,15 +26,15 @@ class CartTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     
     // Display a list of user selectable donation amounts in an action sheet.
-    func presentDonationAmounts(sender: AnyObject) {
-        let alertController = UIAlertController(title: nil, message: "Select an amount to lend.", preferredStyle: .ActionSheet)
+    func presentDonationAmounts(_ sender: AnyObject) {
+        let alertController = UIAlertController(title: nil, message: "Select an amount to lend.", preferredStyle: .actionSheet)
         
-        let Action25 = UIAlertAction(title: "$25", style: .Default) { (action) in
+        let Action25 = UIAlertAction(title: "$25", style: .default) { (action) in
             // update donation amount on button text
             self.changeDonationButton.imageView!.image = self.imageForButton(25)
             
@@ -43,7 +43,7 @@ class CartTableViewCell: UITableViewCell {
         }
         alertController.addAction(Action25)
         
-        let Action50 = UIAlertAction(title: "$50", style: .Default) { (action) in
+        let Action50 = UIAlertAction(title: "$50", style: .default) { (action) in
             // update donation amount on button text
             self.changeDonationButton.imageView!.image = self.imageForButton(50)
             
@@ -52,7 +52,7 @@ class CartTableViewCell: UITableViewCell {
         }
         alertController.addAction(Action50)
         
-        let Action100 = UIAlertAction(title: "$100", style: .Default) { (action) in
+        let Action100 = UIAlertAction(title: "$100", style: .default) { (action) in
             // update donation amount on button text
             self.changeDonationButton.imageView!.image = self.imageForButton(100)
             
@@ -64,14 +64,14 @@ class CartTableViewCell: UITableViewCell {
         // present the controller
         let controller = parentViewController
         if let controller = controller {
-            controller.presentViewController(alertController, animated: true) {
+            controller.present(alertController, animated: true) {
                 // ...
             }
         }
     }
     
     // Update the donation amount of the cart item associated with this cell.
-    func updateCartItem(subView: UIView, donationAmount: NSNumber) {
+    func updateCartItem(_ subView: UIView, donationAmount: NSNumber) {
         
         let indexPath = getIndexPathForCellContainingSubview(subView)
         if let indexPath = indexPath {
@@ -87,10 +87,10 @@ class CartTableViewCell: UITableViewCell {
     }
     
     // Set button image to donation amount
-    func imageForButton(donationAmount: NSNumber) -> UIImage {
+    func imageForButton(_ donationAmount: NSNumber) -> UIImage {
         
         var xCoord = 15
-        switch donationAmount.intValue {
+        switch donationAmount.int32Value {
         case 0...9:
             xCoord = 14
         case 10...99:
@@ -103,12 +103,12 @@ class CartTableViewCell: UITableViewCell {
         
         let buttonText: String = "$" + donationAmount.stringValue
         
-        let donationImage: UIImage = ViewUtility.createImageFromText(buttonText, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPointMake(CGFloat(xCoord), 4))
+        let donationImage: UIImage = ViewUtility.createImageFromText(buttonText as NSString, backingImage: UIImage(named:cartDonationImageName)!, atPoint: CGPoint(x: CGFloat(xCoord), y: 4))
         return donationImage
     }
     
     // Return an index path for the cell containing the specified subview of the cell.
-    func getIndexPathForCellContainingSubview(subview: UIView) -> NSIndexPath? {
+    func getIndexPathForCellContainingSubview(_ subview: UIView) -> IndexPath? {
         
         // Find the cell starting from the subview.
         let contentView = subview.superview!
@@ -116,19 +116,19 @@ class CartTableViewCell: UITableViewCell {
 
         // Find the tableView by walking the view hierarchy until a UITableView class is encountered.
         var view = cell.superview
-        while ( (view != nil) && (view?.isKindOfClass(UITableView) == false) ) {
+        while ( (view != nil) && (view?.isKind(of: UITableView.self) == false) ) {
             view = view!.superview
         }
         let tableView: UITableView = view as! UITableView
         
         // Get the indexPath associated with this table cell
-        let indexPath = tableView.indexPathForCell(cell)
+        let indexPath = tableView.indexPath(for: cell)
         
         return indexPath
     }
     
     // Return the CartTableViewController for the cell containing the specified subview of the cell.
-    func getTableViewControllerForCellContainingSubview(subview: UIView) -> CartTableViewController {
+    func getTableViewControllerForCellContainingSubview(_ subview: UIView) -> CartTableViewController {
         
         // Find the cell starting from the subview.
         let contentView = subview.superview!
@@ -136,7 +136,7 @@ class CartTableViewCell: UITableViewCell {
         
         // Find the tableView by walking the view hierarchy until a UITableView class is encountered.
         var view = cell.superview
-        while ( (view != nil) && (view?.isKindOfClass(UITableView) == false) ) {
+        while ( (view != nil) && (view?.isKind(of: UITableView.self) == false) ) {
             view = view!.superview
         }
         let tableView: UITableView = view as! UITableView
@@ -147,7 +147,7 @@ class CartTableViewCell: UITableViewCell {
     }
     
     // Remove cell containing the selected button from the cart table view controller, and remove the associated loan from the cart.
-    func removeFromCart(sender: UIButton) {
+    func removeFromCart(_ sender: UIButton) {
         // Find the cell starting from the button.
         let button = sender
         let contentView = button.superview!
@@ -155,13 +155,13 @@ class CartTableViewCell: UITableViewCell {
         
         // Find the tableView by walking the view hierarchy until a UITableView class is encountered.
         var view = cell.superview
-        while ( (view != nil) && (view?.isKindOfClass(UITableView) == false) ) {
+        while ( (view != nil) && (view?.isKind(of: UITableView.self) == false) ) {
             view = view!.superview
         }
         let tableView: UITableView = view as! UITableView
         
         // Get the indexPath associated with this table cell
-        let indexPath = tableView.indexPathForCell(cell)
+        let indexPath = tableView.indexPath(for: cell)
         
         // Remove the loan from the cart.
         let cartViewController = tableView.dataSource as! CartTableViewController
@@ -169,7 +169,7 @@ class CartTableViewCell: UITableViewCell {
         cartViewController.cart?.removeItemByIndex(index)
         
         // refresh the table view
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             tableView.reloadData()
         }
     }
@@ -179,7 +179,7 @@ extension UIView {
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {
-            parentResponder = parentResponder!.nextResponder()
+            parentResponder = parentResponder!.next
             if parentResponder is UIViewController {
                 return parentResponder as! UIViewController!
             }

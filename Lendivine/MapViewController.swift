@@ -24,7 +24,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
-    var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50)) as UIActivityIndicatorView
+    var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50)) as UIActivityIndicatorView
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +37,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         setupBarButtonItems()
         
         // get a reference to the app delegate
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         // set the mapView delegate to this view controller
         mapView.delegate = self
@@ -50,7 +50,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                 
                 var firstLoanWithGoodCoordinates = theLoans[0]
                 for loan in theLoans {
-                    if let coordinate = KivaLoan.getCoordinatesForLoan(loan) where coordinate.latitude != 0 && coordinate.longitude != 0 {
+                    if let coordinate = KivaLoan.getCoordinatesForLoan(loan), coordinate.latitude != 0 && coordinate.longitude != 0 {
                         firstLoanWithGoodCoordinates = loan
                     }
                 }
@@ -64,14 +64,14 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         mapView.showsUserLocation = false
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         refreshMapPins()
     }
     
     /*! hide the status bar */
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
@@ -81,11 +81,11 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         
         var barButtonItems = [UIBarButtonItem]()
         
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: #selector(MapViewController.onLoansByListButtonTap))
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .plain, target: self, action: #selector(MapViewController.onLoansByListButtonTap))
         barButtonItems.append(loansByListButton)
         
         if showRefreshButton {
-            let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(MapViewController.onRefreshButtonTap))
+            let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(MapViewController.onRefreshButtonTap))
             barButtonItems.append(refreshButton)
         }
         
@@ -106,15 +106,15 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         activityIndicator.stopActivityIndicator()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.mapView.setNeedsDisplay()
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     
@@ -136,12 +136,12 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         // Search Kiva.org for the next page of Loan results.
         self.populateLoans(LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE) { success, error in
             if success {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     //self.fetchLoans()
                     self.refreshMapPins()
                 }
             } else {
-                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
                     LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                 }
                 print("failed to populate loans. error: \(error?.localizedDescription)")
@@ -171,7 +171,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                     let annotation = DVNPointAnnotation() // MKPointAnnotation()
                     annotation.coordinate = coordinate
                     
-                    if let name = loan.name, country = loan.country {
+                    if let name = loan.name, let country = loan.country {
                         annotation.title = "\(name) in \(country)"
                     }
                     
@@ -181,11 +181,11 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                             subtitleText = sector
                         }
                         if let amount = loan.loanAmount {
-                            let formatter = NSNumberFormatter()
-                            formatter.numberStyle = .CurrencyStyle
-                            if let amountString = formatter.stringFromNumber(amount) {
-                                subtitleText.appendContentsOf(": ")
-                                subtitleText.appendContentsOf(amountString)
+                            let formatter = NumberFormatter()
+                            formatter.numberStyle = .currency
+                            if let amountString = formatter.string(from: amount) {
+                                subtitleText.append(": ")
+                                subtitleText.append(amountString)
                             }
                         }
                         annotation.subtitle = subtitleText
@@ -222,19 +222,19 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     // MARK: MKMapViewDelegate
     
     /*! Create an accessory view for the pin annotation callout when it is added to the map view */
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         if annotation is MKUserLocation {
             //return nil so map view draws "blue dot" for standard user location
             return nil
         }
         
-        guard annotation .isKindOfClass(DVNPointAnnotation) else {
+        guard annotation .isKind(of: DVNPointAnnotation.self) else {
             return nil
         }
         let pointAnnotation: DVNPointAnnotation = annotation as! DVNPointAnnotation
         
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("pin")
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: "pin")
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
@@ -246,14 +246,14 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
                     success, error, image in
                     
                     if success {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             // pointAnnotation.annotationImage = image
                             pinView!.leftCalloutAccessoryView = self.getCustomAccessoryViewForImage(image)
                         
                             self.mapView.setNeedsDisplay()
                         }
                     } else {
-                        if (error != nil) && ((error?.code)! == VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.containsString("Image download"))! {
+                        if (error != nil) && ((error?.code)! == VTError.ErrorCodes.s3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.contains("Image download"))! {
                             LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                         }
                     }
@@ -267,7 +267,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
             }
             
             // Add detail button to right callout
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
             pinView!.annotation = annotation
@@ -276,7 +276,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         return pinView
     }
 
-    func getCustomAccessoryViewForImage(image:UIImage?) -> UIImageView? {
+    func getCustomAccessoryViewForImage(_ image:UIImage?) -> UIImageView? {
         if let image = image {
             if let thumb = getThumbnailForImage(image) {
                 return UIImageView(image: thumb)
@@ -285,7 +285,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         return nil
     }
     
-    func getCustomAccessoryViewForImageNamed(imageName:String) -> UIImageView? {
+    func getCustomAccessoryViewForImageNamed(_ imageName:String) -> UIImageView? {
         
         if let annotationImage = UIImage(named:imageName) {
             if let image = getThumbnailForImage(annotationImage) {
@@ -295,22 +295,22 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
         return nil
     }
     
-    func getThumbnailForImage(fullImage:UIImage) -> UIImage?
+    func getThumbnailForImage(_ fullImage:UIImage) -> UIImage?
     {
-        let resizedImageView = UIImageView(frame: CGRectMake(0, 0, 45, 45))
-        resizedImageView.layer.borderColor = UIColor.whiteColor().CGColor
+        let resizedImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 45, height: 45))
+        resizedImageView.layer.borderColor = UIColor.white.cgColor
         resizedImageView.layer.borderWidth = 2.2
-        resizedImageView.contentMode = UIViewContentMode.ScaleAspectFit // or ScaleAspectFill
+        resizedImageView.contentMode = UIViewContentMode.scaleAspectFit // or ScaleAspectFill
         resizedImageView.image = fullImage
         
         UIGraphicsBeginImageContextWithOptions(resizedImageView.frame.size, false, 0.0)
-        resizedImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        resizedImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
         let thumbnailImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return thumbnailImage
     }
     
-   func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+   func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
 
         let ano = view.annotation as! DVNPointAnnotation
     
@@ -322,12 +322,12 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     // MARK: Helper functions
 
     /* Modally present the LoanDetail view controller. */
-    func presentLoanDetailViewController(loan: KivaLoan?) {
+    func presentLoanDetailViewController(_ loan: KivaLoan?) {
         guard let loan = loan else {
             return
         }
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+        let controller = storyboard.instantiateViewController(withIdentifier: "LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
 
         // add the view controller to the navigation controller stack
@@ -338,7 +338,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     func startActivityIndicator() {
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
     }
@@ -378,7 +378,7 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     }
     
     /* Set the mapview to show the specified country. */
-    func setMapRegionToCountryForLoan(loan:KivaLoan) {
+    func setMapRegionToCountryForLoan(_ loan:KivaLoan) {
         
         // get latitude and longitude from loan and save as CCLocationDegree type (a Double type)
         guard let geo = loan.geo else {return}
@@ -448,13 +448,13 @@ class MapViewController: DVNViewController, MKMapViewDelegate {
     func popViewController() {
         
         if let src = self.sourceViewController {
-            src.navigationController?.popViewControllerAnimated(true)
+            _ = src.navigationController?.popViewController(animated: true)
         }
     }
     
     func createCustomBackButton() {
-        let customBackButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(MapViewController.onCancelButton))
-        navigationItem.setLeftBarButtonItem(customBackButton, animated: true)
+        let customBackButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(MapViewController.onCancelButton))
+        navigationItem.setLeftBarButton(customBackButton, animated: true)
     }
     
     func onCancelButton() {

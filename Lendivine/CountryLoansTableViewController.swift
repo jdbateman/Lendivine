@@ -39,12 +39,12 @@ class CountryLoansTableViewController: UITableViewController {
         configureView()
         
         // add the map bar button item
-        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .Plain, target: self, action: #selector(CountryLoansTableViewController.onMapButton))
-        navigationItem.setRightBarButtonItem(mapButton, animated: true)
-        self.navigationItem.rightBarButtonItems?.first?.enabled = true
+        let mapButton = UIBarButtonItem(image: UIImage(named: "earth-america-7"), style: .plain, target: self, action: #selector(CountryLoansTableViewController.onMapButton))
+        navigationItem.setRightBarButton(mapButton, animated: true)
+        self.navigationItem.rightBarButtonItems?.first?.isEnabled = true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         configureView()
@@ -67,7 +67,7 @@ class CountryLoansTableViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         
         if self.loans.count > 0 {
             
@@ -82,29 +82,29 @@ class CountryLoansTableViewController: UITableViewController {
             
             if self.showNoResults {
                 
-                let noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height))
+                let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
                 noDataLabel.text = "No loans available"
                 if let country = self.country, let name = country.name {
                     noDataLabel.text = "No loans available" + " for " + "\(name)"
                 }
-                noDataLabel.textColor = UIColor.darkGrayColor()
-                noDataLabel.textAlignment = .Center
+                noDataLabel.textColor = UIColor.darkGray
+                noDataLabel.textAlignment = .center
                 tableView.backgroundView = noDataLabel
-                tableView.separatorStyle = .None
+                tableView.separatorStyle = .none
             }
             
             return 0
         }
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.loans.count
     }
     
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> CountryLoanTableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CountryLoanTableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("CountryLoansTableViewCellID" /*"MyLoansTableViewCellID"*/, forIndexPath: indexPath) as! CountryLoanTableViewCell //MyLoansTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CountryLoansTableViewCellID" /*"MyLoansTableViewCellID"*/, for: indexPath) as! CountryLoanTableViewCell //MyLoansTableViewCell
         
         // Configure the cell...
         configureCell(cell, row: indexPath.row)
@@ -116,7 +116,7 @@ class CountryLoansTableViewController: UITableViewController {
     }
     
     // Initialize the contents of the cell.
-    func configureCell(cell: CountryLoanTableViewCell /*MyLoansTableViewCell*/, row: Int) {
+    func configureCell(_ cell: CountryLoanTableViewCell /*MyLoansTableViewCell*/, row: Int) {
         
         cell.controller = self
         
@@ -125,9 +125,9 @@ class CountryLoansTableViewController: UITableViewController {
         cell.sectorLabel.text = loan.sector
         var amountString = "$"
         if let loanAmount = loan.loanAmount {
-            amountString.appendContentsOf(loanAmount.stringValue)
+            amountString.append(loanAmount.stringValue)
         } else {
-            amountString.appendContentsOf("0")
+            amountString.append("0")
         }
         cell.amountLabel.text = amountString
         cell.countryLabel.text = loan.country
@@ -135,20 +135,20 @@ class CountryLoansTableViewController: UITableViewController {
         // Set placeholder image
         cell.loanImageView.image = UIImage(named: "Download-50")
         
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-        activityIndicator.center = CGPointMake(cell.loanImageView.center.x - 8, cell.loanImageView.center.y - 20)
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityIndicator.center = CGPoint(x: cell.loanImageView.center.x - 8, y: cell.loanImageView.center.y - 20)
         cell.loanImageView.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         
         // getImage can retrieve the image from the server in a background thread. Make sure to update UI from main thread.
         loan.getImage() {success, error, image in
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 activityIndicator.stopAnimating()
             }
             
             if success {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     cell.loanImageView!.image = image
                 }
             } else  {
@@ -158,9 +158,9 @@ class CountryLoansTableViewController: UITableViewController {
         
         cell.addToCartButton.layer.cornerRadius = 19.2 // 24
         if let cart = UIImage(named: "Add Shopping Cart-50") {
-            let tintedCart = cart.imageWithRenderingMode(.AlwaysTemplate)
+            let tintedCart = cart.withRenderingMode(.alwaysTemplate)
             cell.addToCartButton.imageView!.image = tintedCart
-            cell.addToCartButton.imageView!.tintColor = UIColor.blueColor()
+            cell.addToCartButton.imageView!.tintColor = UIColor.blue
         }
     }
     
@@ -171,7 +171,7 @@ class CountryLoansTableViewController: UITableViewController {
         presentMapController()
     }
     
-    @IBAction func onSeeMoreLoansButton(sender: AnyObject) {
+    @IBAction func onSeeMoreLoansButton(_ sender: AnyObject) {
 
         refreshLoans() {
             success, error in
@@ -186,7 +186,7 @@ class CountryLoansTableViewController: UITableViewController {
     // MARK: UITableViewDelegate Accessory Views
     
     /*! Disclosure indicator tapped. Present the loan detail view controller for the selected loan. */
-    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
         guard indexPath.row < loans.count else {return}
         
@@ -198,25 +198,25 @@ class CountryLoansTableViewController: UITableViewController {
     // MARK: Navigation
     
     /* Modally present the LoanDetail view controller. */
-    func presentLoanDetailViewController(loan: KivaLoan?) {
+    func presentLoanDetailViewController(_ loan: KivaLoan?) {
         guard let loan = loan else {
             return
         }
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("LoanDetailStoryboardID") as! LoanDetailViewController
+        let controller = storyboard.instantiateViewController(withIdentifier: "LoanDetailStoryboardID") as! LoanDetailViewController
         controller.loan = loan
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     // MARK: Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "ShowCountryLoanDetail" {
             
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
-                let controller = segue.destinationViewController as! LoanDetailViewController
+                let controller = segue.destination as! LoanDetailViewController
                 
                 let loan = self.loans[indexPath.row]
                 controller.loan = loan
@@ -226,7 +226,7 @@ class CountryLoansTableViewController: UITableViewController {
             
             // navigationItem.title = loans.first?.country
             
-            let controller = segue.destinationViewController as! MapViewController
+            let controller = segue.destination as! MapViewController
             
             controller.sourceViewController = self
             
@@ -239,15 +239,15 @@ class CountryLoansTableViewController: UITableViewController {
     
     /* Modally present the MapViewController on the main thread. */
     func presentMapController() {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.performSegueWithIdentifier("CountryLoanToMapSegueId", sender: self)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "CountryLoanToMapSegueId", sender: self)
         }
     }
 
     
     // MARK: Kiva API
 
-    func refreshLoans(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
+    func refreshLoans(_ completionHandler: ((_ success: Bool, _ error: NSError?) -> Void)? ) {
         
         guard nextPageOfKivaSearchResults != -1 else {
             showNoMoreResultsAlert()
@@ -261,21 +261,21 @@ class CountryLoansTableViewController: UITableViewController {
             if success {
                 
                 // enable/disable earth bar button item
-                if let loans = loans where loans.count > 0 {
-                    self.navigationItem.rightBarButtonItems?.first?.enabled = true
+                if let loans = loans, loans.count > 0 {
+                    self.navigationItem.rightBarButtonItems?.first?.isEnabled = true
                 } else {
-                    self.navigationItem.rightBarButtonItems?.first?.enabled = false
+                    self.navigationItem.rightBarButtonItems?.first?.isEnabled = false
                 }
                 
                 // Append any new loans returned by the Kiva api to our existing collection.
                 if let loans = loans {
-                    self.loans.appendContentsOf(loans)
+                    self.loans.append(contentsOf: loans)
                 }
                 
                 // save the nextPage
                 self.nextPageOfKivaSearchResults = nextPage
                 
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
 
                     self.tableView.reloadData()
                     
@@ -284,7 +284,7 @@ class CountryLoansTableViewController: UITableViewController {
                     }
                     
                     if let completionHandler = completionHandler {
-                        completionHandler(success:true, error: nil)
+                        completionHandler(true, nil)
                     }
                 }
                 
@@ -295,12 +295,12 @@ class CountryLoansTableViewController: UITableViewController {
                 print("failed to populate loans. error: \(error?.localizedDescription)")
                 
                 
-                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
                     LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                 }
                 
                 if let completionHandler = completionHandler {
-                    completionHandler(success:false, error: error)
+                    completionHandler(false, error)
                 }
             }
             
@@ -317,14 +317,14 @@ class CountryLoansTableViewController: UITableViewController {
     */
     func fetchAllLoans() -> [KivaLoan]? {
         
-        let error: NSErrorPointer = nil
-        let fetchRequest = NSFetchRequest(entityName: KivaLoan.entityName)
+        let error: NSErrorPointer? = nil
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: KivaLoan.entityName)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
         var results: [AnyObject]?
         do {
-            results = try CoreDataContext.sharedInstance().countryLoanContext.executeFetchRequest(fetchRequest) as? [KivaLoan]
+            results = try CoreDataContext.sharedInstance().countryLoanContext.fetch(fetchRequest) as? [KivaLoan]
         } catch let error1 as NSError {
-            error.memory = error1
+            error??.pointee = error1
             print("Error in fetchAllLoans(): \(error)")
             return nil
         }
@@ -346,14 +346,14 @@ class CountryLoansTableViewController: UITableViewController {
             message = "No additional loans are available in \(countryName)."
         }
 
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
             UIAlertAction in
             // handle OK pressed in alert controller
         }
         
         alertController.addAction(okAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
 }

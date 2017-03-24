@@ -20,7 +20,7 @@ class Countries {
         @brief Initialize Core data with all countries from the RESTCountries.eu api. Country objects are persisted in core data. 
         @discussion This is an asynchronous method that interacts with a REST service. Objects are persisted to the shared core data context. No duplicate country objects are persisted.
     */
-    class func persistCountriesFromWebService(completionHandler: ((success: Bool, error: NSError?) -> Void)? ) {
+    class func persistCountriesFromWebService(_ completionHandler: ((_ success: Bool, _ error: NSError?) -> Void)? ) {
         
         // Acquire countries from rest api.
         restCountriesAPI.getCountries() { countries, error in
@@ -32,13 +32,13 @@ class Countries {
                 Countries.sendUpdatedCountriesNotification()
                 
                 if completionHandler != nil {
-                    completionHandler!(success: true, error: nil)
+                    completionHandler!(true, nil)
                 }
                 
             } else {
                 
                 if completionHandler != nil {
-                    completionHandler!(success: false, error: error)
+                    completionHandler!(false, error)
                 }
             }
         }
@@ -47,70 +47,64 @@ class Countries {
     /*! Provides a count of countries that reside in core data in memory. Note that these objects have not necessarily been persisted to the sqlite store yet. */
     class func countCountries() -> Int {
         
-        var error: NSError?
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
-        
-        let count = CoreDataContext.sharedInstance().countriesContext.countForFetchRequest(fetchRequest, error:&error)
-        
-        if (count == NSNotFound) {
-            print("Error: \(error)")
+        if let count = try? CoreDataContext.sharedInstance().countriesContext.count(for: fetchRequest) {
+            if (count == NSNotFound) {
+                return 0
+            }
+            return count
+        }
+        else {
             return 0
         }
         
-        return count
+        
     }
     
     /*! Provides a count of the number of Country objects that match the specified Country that reside in core data in memory. Note that these objects have not necessarily been persisted to the sqlite store yet. */
-    class func countCountry(country: Country?) -> Int {
+    class func countCountry(_ country: Country?) -> Int {
         
         guard let country = country else {
             return 0
         }
         
-        var error: NSError?
-        
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
         fetchRequest.predicate = NSPredicate(format: "name == %@", country.name!)
         
-        let count = CoreDataContext.sharedInstance().countriesContext.countForFetchRequest(fetchRequest, error:&error)
-        
-        if (count == NSNotFound) {
-            print("Error: \(error)")
+        if let count = try? CoreDataContext.sharedInstance().countriesContext.count(for: fetchRequest) {
+            if (count == NSNotFound) {
+                return 0
+            }
+            return count
+        } else {
             return 0
         }
-        
-        return count
     }
     
     /*! Returns true if a Country object with the same name already exists in core data memory. */
-    class func doesCountryExistInCoreData(country: Country?) -> Bool {
+    class func doesCountryExistInCoreData(_ country: Country?) -> Bool {
         
         guard let country = country else {
             return false
         }
         
-        var error: NSError?
-        
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
         fetchRequest.predicate = NSPredicate(format: "name == %@", country.name!)
         
-        let count = CoreDataContext.sharedInstance().countriesContext.countForFetchRequest(fetchRequest, error:&error)
-        
-        if (count == NSNotFound) {
-            print("Error: \(error)")
-            return false
-        } else if count == 0 {
-            return false
+        if let count = try? CoreDataContext.sharedInstance().countriesContext.count(for: fetchRequest) {
+            if ( (count != NSNotFound) && (count != 0) ) {
+                return true
+            }
         }
         
-        return true
+        return false
     }
     
     /*! Saves new countries to core data context. Does not persist duplicate Country objects. */
-    class func persistNewCountries(countries: [Country]?) {
+    class func persistNewCountries(_ countries: [Country]?) {
         
         var duplicateCountries = [Country]()
         
@@ -136,7 +130,7 @@ class Countries {
         for dupCountry in duplicateCountries {
             
             // delete the object from core data memory
-            CoreDataContext.sharedInstance().countriesContext.deleteObject(dupCountry)
+            CoreDataContext.sharedInstance().countriesContext.delete(dupCountry)
         }
         
         // commit the deletes to the core data sqlite data store on disk
@@ -144,12 +138,12 @@ class Countries {
     }
     
     /*! Return a randomized comma separated string of country names. */
-    class func getRandomCountries(numberOfCountries:Int = 20) -> String? {
+    class func getRandomCountries(_ numberOfCountries:Int = 20) -> String? {
         
         var countries = [String]()
         var randomCountries = [String]()
         
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
@@ -158,7 +152,7 @@ class Countries {
 
         var results: [AnyObject]?
         do {
-            results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataContext.sharedInstance().countriesContext.fetch(fetchRequest)
             if let results = results {
                 for result in results {
                     if let result = result as? Country {
@@ -179,22 +173,22 @@ class Countries {
             randomCountries.append(countries[index])
         }
         
-        let randomCountriesString = randomCountries.joinWithSeparator(",")
+        let randomCountriesString = randomCountries.joined(separator: ",")
         
         return randomCountriesString
     }
     
     enum RandomCountryResultType {
-        case Name, TwoLetterCode
+        case name, twoLetterCode
     }
     
     /*! Return a randomized comma separated string of two letter country codes. */
-    class func getRandomCountryCodes(numberOfCountries:Int = 20, resultType:RandomCountryResultType = .Name) -> String? {
+    class func getRandomCountryCodes(_ numberOfCountries:Int = 20, resultType:RandomCountryResultType = .name) -> String? {
         
         var countries = [String]()
         var randomCountries = [String]()
         
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
@@ -203,15 +197,15 @@ class Countries {
         
         var results: [AnyObject]?
         do {
-            results = try CoreDataContext.sharedInstance().countriesContext.executeFetchRequest(fetchRequest)
+            results = try CoreDataContext.sharedInstance().countriesContext.fetch(fetchRequest)
             if let results = results {
                 for result in results {
                     if let result = result as? Country {
-                        if resultType == .Name {
+                        if resultType == .name {
                             if let name = result.name {
                                 countries.append(name)
                             }
-                        } else if resultType == .TwoLetterCode {
+                        } else if resultType == .twoLetterCode {
                             if let countryCode = result.countryCodeTwoLetter {
                                 countries.append(countryCode)
                             }
@@ -231,7 +225,7 @@ class Countries {
             randomCountries.append(countries[index])
         }
         
-        let randomCountriesString = randomCountries.joinWithSeparator(",")
+        let randomCountriesString = randomCountries.joined(separator: ",")
         
         return randomCountriesString
     }
@@ -240,10 +234,10 @@ class Countries {
     
     // MARK: - Fetched results controller
     
-    static var fetchedResultsController: NSFetchedResultsController = {
+    static var fetchedResultsController: NSFetchedResultsController = { () -> NSFetchedResultsController<NSFetchRequestResult> in
         
         // Create the fetch request
-        let fetchRequest = NSFetchRequest(entityName: Country.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Country.entityName)
         
         // Add a sort descriptor to enforce a sort order on the results.
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -271,7 +265,7 @@ class Countries {
     
     /*! Send a notification indicating that any new country obtained from the rest service is now avaiable in core data. */
     class func sendUpdatedCountriesNotification() {
-        NSNotificationCenter.defaultCenter().postNotificationName(countriesUpdateNotificationKey, object: self)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: countriesUpdateNotificationKey), object: self)
     }
     
 }

@@ -42,15 +42,15 @@ class KivaCart {
     }
     
     // update the cart
-    func update(completion: () -> Void)  {
-        dispatch_async(dispatch_get_main_queue()) {
+    func update(_ completion: @escaping () -> Void)  {
+        DispatchQueue.main.async {
             self.fetchCartItems()
             completion()
         }
     }
     
     // add an item to the cart
-    func add(item: KivaCartItem) {
+    func add(_ item: KivaCartItem) {
         items.append(item)
         CoreDataContext.sharedInstance().saveCartContext()
     }
@@ -63,31 +63,31 @@ class KivaCart {
     }
     
     // remove an item from the cart
-    func removeItem(item: KivaCartItem?) {
+    func removeItem(_ item: KivaCartItem?) {
         if let item = item {
-            if let index = items.indexOf(item) {
+            if let index = items.index(of: item) {
                 removeItemByIndex(index)
             }
         }
     }
     
     // remove an item from the cart given it's index
-    func removeItemByIndex(index: Int?) {
+    func removeItemByIndex(_ index: Int?) {
         
-        if let index = index where index < items.count {
+        if let index = index, index < items.count {
             
             let item = items[index]
             
             // remove the item from the core data store
-            CoreDataContext.sharedInstance().cartContext.deleteObject(item)
+            CoreDataContext.sharedInstance().cartContext.delete(item)
             CoreDataContext.sharedInstance().saveCartContext()
             
             // remove the item from the array
-            items.removeAtIndex(index)
+            items.remove(at: index)
         }
     }
     
-    func containsLoanId(id:NSNumber) -> Bool {
+    func containsLoanId(_ id:NSNumber) -> Bool {
         for item in items {
             if item.id == id {
                 return true
@@ -97,10 +97,10 @@ class KivaCart {
     }
     
     // get JSON representation of the cart.
-    func getJSONData() -> NSData? {
+    func getJSONData() -> Data? {
         do {
             let serializableItems: [[String : AnyObject]] = convertCartItemsToSerializableItems()
-            let json = try NSJSONSerialization.dataWithJSONObject(serializableItems, options: NSJSONWritingOptions.PrettyPrinted)
+            let json = try JSONSerialization.data(withJSONObject: serializableItems, options: JSONSerialization.WritingOptions.prettyPrinted)
             return json
         } catch let error as NSError {
             print(error)
@@ -131,10 +131,9 @@ class KivaCart {
     
         for item in self.items {
     
-            // NOTE: The context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behvior of the app.
-            if let loan:KivaLoan = KivaLoan(fromCartItem: item, context: CoreDataContext.sharedInstance().cartContext) {
-                loansInCart.append(loan)
-            }
+            // NOTE: The context passed to createKivaLoanFromLoanID used to be ignored by fetchLoanByID2, which just used the shared context, but it now uses the passed context. this may modify the behavior of the app.
+            let loan:KivaLoan = KivaLoan(fromCartItem: item, context: CoreDataContext.sharedInstance().cartContext)
+            loansInCart.append(loan)
         }
         NSLog("loans in Cart: %@", loansInCart)
         return loansInCart
@@ -143,10 +142,10 @@ class KivaCart {
     
     // MARK: - Fetched results controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController<KivaCartItem> = {
         
         // Create the fetch request
-        let fetchRequest = NSFetchRequest(entityName: KivaCartItem.entityName)
+        let fetchRequest = NSFetchRequest<KivaCartItem>(entityName: KivaCartItem.entityName)
         
         // Add a sort descriptor to enforce a sort order on the results.
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
@@ -173,7 +172,9 @@ class KivaCart {
                 error = error1
                 print("fetchCartItems error: \(error)")
             }
-            self.items = self.fetchedResultsController.fetchedObjects as! [KivaCartItem]
+            if let fetchedCartItems = self.fetchedResultsController.fetchedObjects {
+                self.items = fetchedCartItems // as! [KivaCartItem]
+            }
 //        }
     }
     
@@ -186,7 +187,7 @@ class KivaCart {
         @param (in) context - Core Data context in which the KivaCartItem is created.
         @return true if loan was successfully added to the cart, else false.
     */
-    func KivaAddItemToCart(loan: KivaLoan?, donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
+    func KivaAddItemToCart(_ loan: KivaLoan?, donationAmount: NSNumber?, context: NSManagedObjectContext) -> Bool {
         
         if let loan = loan {
 
@@ -195,7 +196,7 @@ class KivaCart {
                     let cart = KivaCart.sharedInstance
                     
                     // check if loan id is already in the cart
-                    if let id = loan.id where cart.containsLoanId(id) {
+                    if let id = loan.id, cart.containsLoanId(id) {
                         return false
                     }
                     
@@ -206,7 +207,7 @@ class KivaCart {
                         cart.add(item)
                         
                         // Persist the loan to which the cart item refers.
-                        CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().cartContext) // TODO beware this might create cart duplicates. may need to use scratch context here to only persist a copy of the single loan.
+                        _ = CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().cartContext) // TODO beware this might create cart duplicates. may need to use scratch context here to only persist a copy of the single loan.
                         
                          return true
                         
@@ -224,7 +225,7 @@ class KivaCart {
         @param (in) item - The item to find in the cart.
         @return true if item is in the cart, else false if it is not in the cart.
     */
-    func itemInCart(item:KivaCartItem) -> Bool {
+    func itemInCart(_ item:KivaCartItem) -> Bool {
         
         for nextItem in self.items {
             if item == nextItem {
@@ -235,13 +236,13 @@ class KivaCart {
     }
     
     /*! Update the badge on the Cart item in the tab bar to indicate the current number of items in the cart. */
-    class func updateCartBadge(controller:UIViewController?) {
+    class func updateCartBadge(_ controller:UIViewController?) {
         
         guard let controller = controller else {return}
         
         let tabBarIndexOfCart = 2
         let tabArray = controller.tabBarController?.tabBar.items as NSArray!
-        let tabItem = tabArray.objectAtIndex(tabBarIndexOfCart) as! UITabBarItem
+        let tabItem = tabArray?.object(at: tabBarIndexOfCart) as! UITabBarItem
         
         let cart = KivaCart.sharedInstance
         let count = cart.count

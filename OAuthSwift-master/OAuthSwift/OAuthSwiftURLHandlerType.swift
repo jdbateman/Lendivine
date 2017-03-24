@@ -15,26 +15,31 @@ import Foundation
 #endif
 
 @objc public protocol OAuthSwiftURLHandlerType {
-    func handle(url: NSURL)
+    func handle(_ url: URL)
 }
 
-public class OAuthSwiftOpenURLExternally: OAuthSwiftURLHandlerType {
-    class var sharedInstance : OAuthSwiftOpenURLExternally {
-        struct Static {
-            static var onceToken : dispatch_once_t = 0
-            static var instance : OAuthSwiftOpenURLExternally? = nil
-        }
-        dispatch_once(&Static.onceToken) {
-            Static.instance = OAuthSwiftOpenURLExternally()
-        }
-        return Static.instance!
-    }
+open class OAuthSwiftOpenURLExternally: OAuthSwiftURLHandlerType {
     
-    @objc public func handle(url: NSURL) {
+    static let sharedInstance = OAuthSwiftOpenURLExternally() //todo:swift3
+    
+//    private static var __once: () = {
+//            Static.instance = OAuthSwiftOpenURLExternally()
+//        }()
+//    class var sharedInstance : OAuthSwiftOpenURLExternally {
+//        struct Static {
+//            static var onceToken : Int = 0
+//            static var instance : OAuthSwiftOpenURLExternally? = nil
+//        }
+//        _ = OAuthSwiftOpenURLExternally.__once
+//        return Static.instance!
+//    }
+
+    
+    @objc open func handle(_ url: URL) {
         #if os(iOS)
             // TODO: Re-enable to see log of OAuth request.
             // print("openURL(\(url))")
-            UIApplication.sharedApplication().openURL(url)
+            UIApplication.shared.openURL(url)
         #elseif os(OSX)
             NSWorkspace.sharedWorkspace().openURL(url)
         #endif

@@ -13,7 +13,7 @@ import Foundation
 class RESTClient {
     
     /* Shared session */
-    var session: NSURLSession
+    var session: URLSession
     
     // MARK: - Shared Instance
     
@@ -29,7 +29,7 @@ class RESTClient {
     
     /* default initializer */
     init() {
-        session = NSURLSession.sharedSession()
+        session = URLSession.shared
     }
     
     /* TODO: In future use this code to create a task to send an HTTP Get request */    
@@ -81,7 +81,7 @@ class RESTClient {
 //    }
     
     /* Create a task to send an HTTP Post request */
-    func taskForPOSTMethod(apiKey apiKey: String, baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, jsonBody: [String:AnyObject], completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func taskForPOSTMethod(apiKey: String, baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, jsonBody: [String:AnyObject], completionHandler: @escaping (_ result: Any?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         /* 1. Set the parameters */
         var mutableParameters = [String : AnyObject]()
@@ -89,7 +89,7 @@ class RESTClient {
             mutableParameters = params
         }
         if apiKey != "" {
-            mutableParameters["api_key"/*ParameterKeys.ApiKey*/] = apiKey
+            mutableParameters["api_key"/*ParameterKeys.ApiKey*/] = apiKey as AnyObject?
         }
         
         /* 2/3. Build the URL and configure the request */
@@ -97,11 +97,11 @@ class RESTClient {
         if mutableParameters.count > 0 {
             urlString += RESTClient.escapedParameters(mutableParameters)
         }
-        let url = NSURL(string: urlString)!
-        let request = NSMutableURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        var request = URLRequest(url: url) // NSMutableURLRequest(url: url) //todo:swift3
         
         // configure http header
-        request.HTTPMethod = "POST"
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         if let headerParameters = headerParameters {
@@ -112,26 +112,26 @@ class RESTClient {
 //        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(jsonBody, options: nil, error: &jsonifyError)
         
         do {
-            request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(jsonBody, options: NSJSONWritingOptions.PrettyPrinted)
+            request.httpBody = try JSONSerialization.data(withJSONObject: jsonBody, options: JSONSerialization.WritingOptions.prettyPrinted)
         } catch let error as NSError {
             print(error)
         }
         
         /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
             
             /* 5/6. Parse the data and use the data (happens in completion handler) */
             if let error = downloadError {
-                let newError = RESTClient.errorForData(data, response: response, error: error)
+                let newError = RESTClient.errorForData(data, response: response, error: error as NSError)
                 print("error in post request: \(newError)")
-                completionHandler(result: nil, error: downloadError)
+                completionHandler(nil, downloadError as NSError?)
             } else {
                 // success
                 if let returnData = data {
                     RESTClient.parseJSONWithCompletionHandler(returnData, completionHandler: completionHandler)
                 }
             }
-        }
+        }) 
         
         /* 7. Start the request */
         task.resume()
@@ -140,7 +140,7 @@ class RESTClient {
     }
     
     /* Return an NSMutalbeURLRequest for an HTTP Post */
-    func getPostRequest(baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, /*jsonBody: [String:AnyObject],*/ httpBody: NSData?) -> NSMutableURLRequest? {
+    func getPostRequest(_ baseUrl: String, method: String, headerParameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, /*jsonBody: [String:AnyObject],*/ httpBody: Data?) -> NSMutableURLRequest? {
         
         /* 1. Set the parameters */
         var mutableParameters = [String : AnyObject]()
@@ -156,11 +156,11 @@ class RESTClient {
         if mutableParameters.count > 0 {
             urlString += RESTClient.escapedParameters(mutableParameters)
         }
-        let url = NSURL(string: urlString)!
-        let request = NSMutableURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        let request = NSMutableURLRequest(url: url)
         
         // configure http header
-        request.HTTPMethod = "POST"
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 //TODO        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         if let headerParameters = headerParameters {
@@ -170,13 +170,13 @@ class RESTClient {
         }
         
         // configure the HTTPBody
-        request.HTTPBody = httpBody
+        request.httpBody = httpBody
         
         return request
     }
     
     /* Helper: Given a response with error, see if a status_message is returned, otherwise return the previous error */
-    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
+    class func errorForData(_ data: Data?, response: URLResponse?, error: NSError) -> NSError {
         
         if data == nil && error.localizedDescription != "" {
             return error
@@ -187,7 +187,7 @@ class RESTClient {
         }
             
         do {
-            if let parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String : AnyObject] {
+            if let parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : AnyObject] {
 
                 if let errorMessage = parsedResult["status_message"] as? String {
                     
@@ -204,7 +204,7 @@ class RESTClient {
     }
     
     /* Helper: Given raw JSON, return a usable Foundation object */
-    class func parseJSONWithCompletionHandler(data: NSData?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
+    class func parseJSONWithCompletionHandler(_ data: Data?, completionHandler: (_ result: Any?, _ error: NSError?) -> Void) {
         
         guard let data = data
             else {
@@ -216,17 +216,17 @@ class RESTClient {
         //print("raw json data: \(dataAsUTF8String)")
         
         do {
-            let parsedResult: AnyObject? = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+            let parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
             // here "parsedResult" is the dictionary decoded from JSON data
-            completionHandler(result: parsedResult!, error: nil)
+            completionHandler(parsedResult, nil)
         } catch let error as NSError {
             print(error)
-            completionHandler(result: nil, error: error)
+            completionHandler(nil, error)
         }
     }
     
     /* Helper function: Given a dictionary of parameters, convert to a string for a url */
-    class func escapedParameters(parameters: [String : AnyObject]) -> String {
+    class func escapedParameters(_ parameters: [String : AnyObject]) -> String {
         
         var urlVars = [String]()
         
@@ -236,13 +236,13 @@ class RESTClient {
             let stringValue = "\(value)"
             
             /* Escape it */
-            let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+            let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
             
             /* Append it */
             urlVars += [key + "=" + "\(escapedValue!)"]
             
         }
         
-        return (!urlVars.isEmpty ? "?" : "") +  urlVars.joinWithSeparator("&")
+        return (!urlVars.isEmpty ? "?" : "") +  urlVars.joined(separator: "&")
     }
 }

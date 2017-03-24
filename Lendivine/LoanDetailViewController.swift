@@ -17,7 +17,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     var kivaAPI: KivaAPI?
     var showAddToCart: Bool = true
     var showBalanceInfo: Bool = false
-    var textAnimationTimer:NSTimer?
+    var textAnimationTimer:Timer?
     var balanceDescription:String?
     var fundedString:String?
     var largeImage:UIImage?
@@ -58,16 +58,16 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     }
     
     /*! hide the status bar */
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         initTapRecognizer()
-        textAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(5.0 , target: self, selector: #selector(LoanDetailViewController.animateTextChange), userInfo: nil, repeats: true)
+        textAnimationTimer = Timer.scheduledTimer(timeInterval: 5.0 , target: self, selector: #selector(LoanDetailViewController.animateTextChange), userInfo: nil, repeats: true)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         textAnimationTimer?.invalidate()
         deinitTapRecognizer()
     }
@@ -78,7 +78,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     
     // MARK: - Actions
     
-    @IBAction func onAddToCartTap(sender: AnyObject) {
+    @IBAction func onAddToCartTap(_ sender: AnyObject) {
     
         guard let loan = self.loan else {
             return
@@ -89,7 +89,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
             
             KivaCart.updateCartBadge(self)
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
 
                 CoreDataContext.sharedInstance().saveCartContext()
             }
@@ -132,7 +132,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                 var cleanString = String(s.characters.map {
                     $0 == "_" ? " " : $0
                     })
-                cleanString.replaceRange(cleanString.startIndex...cleanString.startIndex, with: String(cleanString[cleanString.startIndex]).capitalizedString)
+                cleanString.replaceSubrange(cleanString.startIndex...cleanString.startIndex, with: String(cleanString[cleanString.startIndex]).capitalized)
                 statusText = "\(cleanString)"
             }
             self.statusLabel.text = statusText
@@ -148,41 +148,41 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
             }
 
             var description = amountText + " for " + sectorText
-            description.replaceRange(description.startIndex...description.startIndex, with: String(description[description.startIndex]).capitalizedString)
+            description.replaceSubrange(description.startIndex...description.startIndex, with: String(description[description.startIndex]).capitalized)
             descriptionLabel.text = description
             
-            let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-            activityIndicator.center = CGPointMake(self.loanImageView.center.x - 8, self.loanImageView.center.y - 20)
+            let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+            activityIndicator.center = CGPoint(x: self.loanImageView.center.x - 8, y: self.loanImageView.center.y - 20)
             self.loanImageView.addSubview(activityIndicator)
             activityIndicator.startAnimating()
             
             loan.getImage() {success, error, image in
                 if success {
                     
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         activityIndicator.stopAnimating()
                     }
                     
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         
                         self.loanImageView!.image = image
                         
                         // draw border around image
-                        self.loanImageView!.layer.borderColor = UIColor.whiteColor().CGColor;
+                        self.loanImageView!.layer.borderColor = UIColor.white.cgColor;
                         self.loanImageView!.layer.borderWidth = 1.5
                         self.loanImageView!.layer.cornerRadius = 5.0
                         self.loanImageView!.clipsToBounds = true
                         
                         // white tint on resize image
                         let resize = UIImage(named: "Resize-50")
-                        let tintedResize = resize?.imageWithRenderingMode(.AlwaysTemplate)
+                        let tintedResize = resize?.withRenderingMode(.alwaysTemplate)
                         self.resizeImageIvew.image = tintedResize
-                        self.resizeImageIvew.tintColor = UIColor.whiteColor()
+                        self.resizeImageIvew.tintColor = UIColor.white
                         
                         self.view.setNeedsDisplay()
                     }
                 } else  {
-                    if (error != nil) && ((error?.code)! == VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.containsString("Image download"))! {
+                    if (error != nil) && ((error?.code)! == VTError.ErrorCodes.s3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.contains("Image download"))! {
                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                     }
                     print("error retrieving loan image: \(error)")
@@ -192,13 +192,13 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
             var useText = ""
             if let u = loan.use {
                 useText = u
-                useText.replaceRange(useText.startIndex...useText.startIndex, with: String(useText[useText.startIndex]).capitalizedString)
+                useText.replaceSubrange(useText.startIndex...useText.startIndex, with: String(useText[useText.startIndex]).capitalized)
             }
             useLabel.text = useText
         }
         
-        addToCartButton.hidden = !showAddToCart
-        bottomView.hidden = !showAddToCart
+        addToCartButton.isHidden = !showAddToCart
+        bottomView.isHidden = !showAddToCart
     }
 
     
@@ -236,7 +236,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         self.mapView.addAnnotations(annotations)
         
         // Set the center of the map.
-        self.mapView.setCenterCoordinate(coordinate, animated: true)
+        self.mapView.setCenter(coordinate, animated: true)
         
         // Tell the OS that the mapView needs to be refreshed.
         self.mapView.setNeedsDisplay()
@@ -248,19 +248,19 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         @param (in) loan - An attempt was made to add this loan to the cart.
         @param (in) controller - The parent view controller to host the alert.
     */
-    func showLoanAlreadyInCartAlert(loan: KivaLoan, controller: UIViewController) {
+    func showLoanAlreadyInCartAlert(_ loan: KivaLoan, controller: UIViewController) {
         
         var message = "The selected loan has already been added to your cart."
         if let name = loan.name {
             message = "The loan requested by \(name) has already been added to your cart."
         }
-        let alertController = UIAlertController(title: "Already in Cart", message: message, preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+        let alertController = UIAlertController(title: "Already in Cart", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
             UIAlertAction in
             // handle OK pressed in alert controller here
         }
         alertController.addAction(okAction)
-        controller.presentViewController(alertController, animated: true, completion: nil)
+        controller.present(alertController, animated: true, completion: nil)
     }
     
     func getLoanBalancesFromKiva() {
@@ -279,7 +279,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
                     }
 
                 } else {
-                    if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.containsString("offline"))! {
+                    if (error != nil) && ((error?.code)! == -1009) && (error?.localizedDescription.contains("offline"))! {
                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                     }
                     print("error retrieving balances information: \(error?.localizedDescription)")
@@ -319,7 +319,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         if let tr = tapRecognizer {
             tr.numberOfTapsRequired = 1
             self.loanImageView.addGestureRecognizer(tr)
-            self.loanImageView.userInteractionEnabled = true
+            self.loanImageView.isUserInteractionEnabled = true
         }
     }
     
@@ -328,7 +328,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
     }
     
     // User tapped somewhere on the image view.
-    func handleSingleTap(recognizer: UITapGestureRecognizer) {
+    func handleSingleTap(_ recognizer: UITapGestureRecognizer) {
         presentImageViewController()
     }
     
@@ -346,32 +346,32 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
             loan.getImage(450, height:360, square:true) {
                 success, error, image in
                 
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     activityIndicator.stopActivityIndicator()
                 }
                 
                 
                 if success {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         
                         guard let image = image else {return}
                         self.largeImage = image
                         
-                        let popoverContent = self.storyboard?.instantiateViewControllerWithIdentifier("LoanImageStoryboardId") as! LoanImageViewController
-                        popoverContent.modalPresentationStyle = .Popover
+                        let popoverContent = self.storyboard?.instantiateViewController(withIdentifier: "LoanImageStoryboardId") as! LoanImageViewController
+                        popoverContent.modalPresentationStyle = .popover
                         popoverContent.image = self.largeImage
                         if let popover = popoverContent.popoverPresentationController {
                             popover.sourceView = self.loanImageView
                             popover.sourceRect =  self.loanImageView.bounds
-                            popoverContent.preferredContentSize = CGSizeMake(image.size.width, image.size.height)
+                            popoverContent.preferredContentSize = CGSize(width: image.size.width, height: image.size.height)
                             popover.delegate = self
-                            popover.permittedArrowDirections = .Up // .Any
+                            popover.permittedArrowDirections = .up // .Any
                         }
                         
-                        self.presentViewController(popoverContent, animated: true, completion: nil)
+                        self.present(popoverContent, animated: true, completion: nil)
                     }
                 } else  {
-                    if (error != nil) && ((error?.code)! == VTError.ErrorCodes.S3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.containsString("Image download"))! {
+                    if (error != nil) && ((error?.code)! == VTError.ErrorCodes.s3_FILE_DOWNLOAD_ERROR.rawValue) && (error?.localizedDescription.contains("Image download"))! {
                         LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: (error?.localizedDescription)!)
                     }
                     print("error retrieving loan image: \(error)")
@@ -380,7 +380,7 @@ class LoanDetailViewController: UIViewController, MKMapViewDelegate, UIGestureRe
         }
     }
     
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-            return .None
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+            return .none
     }
 }

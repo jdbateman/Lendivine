@@ -14,7 +14,7 @@ var loginSessionActive = false
 
 class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     
-    var shakeTimer:NSTimer?
+    var shakeTimer:Timer?
     
     var appDelegate: AppDelegate!
     
@@ -33,10 +33,10 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         setupView()
         
         // get a reference to the app delegate
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         
@@ -50,22 +50,22 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         
         setupNotificationObservers()
         
-        shakeTimer = NSTimer.scheduledTimerWithTimeInterval(10.0 , target: self, selector: #selector(LoginViewController.shakeLoginButton), userInfo: nil, repeats: true)
+        shakeTimer = Timer.scheduledTimer(timeInterval: 10.0 , target: self, selector: #selector(LoginViewController.shakeLoginButton), userInfo: nil, repeats: true)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
         
         self.activityIndicator.stopActivityIndicator()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         
         super.viewWillDisappear(animated)
         
         // Remove observer for all notifications.
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         
         shakeTimer?.invalidate()
     }
@@ -87,9 +87,9 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         let signupButtonText = "Don't have an account? Sign Up"
         let signupString = NSMutableAttributedString(string: signupButtonText, attributes: [NSFontAttributeName: UIFont(name: "Georgia", size: 17.0)!])
         let blueColor = UIColor(rgb: 0x0D5FFA)
-        signupString.addAttribute(NSForegroundColorAttributeName, value: UIColor.whiteColor(), range: NSRange(location: 0,length: 22))
+        signupString.addAttribute(NSForegroundColorAttributeName, value: UIColor.white, range: NSRange(location: 0,length: 22))
         signupString.addAttribute(NSForegroundColorAttributeName, value: blueColor, range: NSRange(location: 23,length: 7))
-        signupButton.setAttributedTitle(signupString, forState: .Normal)
+        signupButton.setAttributedTitle(signupString, for: UIControlState())
         
         self.view.setNeedsDisplay()
     }
@@ -98,19 +98,19 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     // MARK: Actions
 
     /* SignUp button selected. Do Kiva.org OAuth. */
-    @IBAction func onSignUpButtonTap(sender: AnyObject) {
+    @IBAction func onSignUpButtonTap(_ sender: AnyObject) {
         
         //authenticate()
         
-        if let kivaSignUpURL = NSURL(string:"https://www.kiva.org/register?doneUrl=https%3A%2F%2Fwww.kiva.org%2Fportfolio") {
-            let safariVC = SFSafariViewController(URL: kivaSignUpURL)
+        if let kivaSignUpURL = URL(string:"https://www.kiva.org/register?doneUrl=https%3A%2F%2Fwww.kiva.org%2Fportfolio") {
+            let safariVC = SFSafariViewController(url: kivaSignUpURL)
             safariVC.delegate = self
-            self.presentViewController(safariVC, animated: true, completion: nil)
+            self.present(safariVC, animated: true, completion: nil)
         }
     }
 
     /* Login button selected. Do Kiva.org OAuth. */
-    @IBAction func onLoginButtonTap(sender: AnyObject) {
+    @IBAction func onLoginButtonTap(_ sender: AnyObject) {
         
         authenticate()
     }
@@ -120,11 +120,11 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
 
     /* Present the Loans view controller on the main thread. */
     func presentLoansController() {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.performSegueWithIdentifier("LoginSegueId", sender: self)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "LoginSegueId", sender: self)
             
             // kill the sfsafariviewcontroller
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
 
@@ -160,7 +160,7 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         }
     }
     
-    func afterLogin(success:Bool) {
+    func afterLogin(_ success:Bool) {
         
         if success {
             
@@ -175,22 +175,23 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     /*! @brief Display the Kiva.org signup page in an embedded browser to allow the user to create an account on Kiva.org.
         @discussion Displaying the signup page directly does allow the user to create an account on Kiva.org. However, the service will not deep link back to the application after signup.
     */
+    //TODO: May need to present Kiva.org signup in SFSafariViewController as well!
     func signup() {
         
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("KviaSignupStoryboardID") as! KivaSignupViewController
+        let controller = storyboard.instantiateViewController(withIdentifier: "KviaSignupStoryboardID") as! KivaSignupViewController
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
     // MARK: OAuth with Kiva.org
     
     // OAuth with Kiva.org. Login happens on Kiva website and is redirected to Lendivine app once an OAuth access token is granted.
-    func doOAuth(completionHandler:(success:Bool, error: NSError?)->Void) {
+    func doOAuth(_ completionHandler:@escaping (_ success:Bool, _ error: NSError?)->Void) {
         
         let kivaOAuth = KivaOAuth.sharedInstance // = KivaOAuth()
         
         // Do the oauth in a background queue.
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             
             kivaOAuth.doOAuthKiva(self) {
                 success, error, kivaAPI in
@@ -205,7 +206,7 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
                     print("kivaOAuth.doOAuthKiva() failed. Unable to acquire kivaAPI handle.")
                 }
                 
-                completionHandler(success: success, error: error)
+                completionHandler(success, error)
             }
         }
     }
@@ -213,8 +214,8 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     // Called on "Done" button
     @available(iOS 9.0, *)
-    func safariViewControllerDidFinish(controller: SFSafariViewController) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true, completion: nil)
     }
     
     // MARK: Notifications
@@ -222,7 +223,7 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
     func setupNotificationObservers() {
         
         // Add a notification observer for the app becoming active.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginViewController.onAppDidBecomeActive), name: appDidBecomeActiveNotificationKey, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.onAppDidBecomeActive), name: NSNotification.Name(rawValue: appDidBecomeActiveNotificationKey), object: nil)
     }
     
     /* Received a notification that the app has become active. */
@@ -231,7 +232,7 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         self.activityIndicator.stopActivityIndicator()
         
         shakeTimer?.invalidate()
-        shakeTimer = NSTimer.scheduledTimerWithTimeInterval(3.0 , target: self, selector: #selector(LoginViewController.shakeLoginButton), userInfo: nil, repeats: true)
+        shakeTimer = Timer.scheduledTimer(timeInterval: 3.0 , target: self, selector: #selector(LoginViewController.shakeLoginButton), userInfo: nil, repeats: true)
     }
 
     
@@ -249,8 +250,8 @@ class LoginViewController: UIViewController, SFSafariViewControllerDelegate {
         shakeAnimation.repeatCount = 2
         shakeAnimation.autoreverses = true
         
-        shakeAnimation.fromValue = NSValue(CGPoint: CGPointMake(button.center.x + 3, button.center.y + 1))
-        shakeAnimation.toValue = NSValue(CGPoint: CGPointMake(button.center.x - 0, button.center.y - 0))
-        button.layer.addAnimation(shakeAnimation, forKey: "position")
+        shakeAnimation.fromValue = NSValue(cgPoint: CGPoint(x: (button?.center.x)! + 3, y: (button?.center.y)! + 1))
+        shakeAnimation.toValue = NSValue(cgPoint: CGPoint(x: (button?.center.x)! - 0, y: (button?.center.y)! - 0))
+        button?.layer.add(shakeAnimation, forKey: "position")
     }
 }

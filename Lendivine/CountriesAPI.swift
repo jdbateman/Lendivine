@@ -18,7 +18,7 @@ extension RESTCountries {
         @discussion Parses the data returned from the RESTCountries api into a collection of Country objects. Invokes the https://restcountries.eu/rest/v1/all endpoint.
         @return A collection of Country objects, else nil if an error occurred.
     */
-    func getCountries(completionHandler: (countries: [Country]?, error: NSError?) -> Void) {
+    func getCountries(_ completionHandler: @escaping (_ countries: [Country]?, _ error: NSError?) -> Void) {
         
         /* 1. Specify parameters */
         // none
@@ -29,12 +29,12 @@ extension RESTCountries {
         /* 2. Make the request */
         //let apiEndpoint = "name/canada"
         let apiEndpoint = "all"
-        taskForGETMethod(baseUrl: "https://restcountries.eu/rest/v1/", method: apiEndpoint, headerParameters: nil, queryParameters: nil) { JSONResult, error in
+        _ = taskForGETMethod(baseUrl: "https://restcountries.eu/rest/v1/", method: apiEndpoint, headerParameters: nil, queryParameters: nil) { JSONResult, error in
             
             /* 3. Send the desired value(s) to completion handler */
             if let error = error {
                 // didn't work. bubble up error.
-                completionHandler(countries: nil, error: error)
+                completionHandler(nil, error)
             } else {
                 // parse the json response
                 var countries = [Country]()
@@ -42,18 +42,18 @@ extension RESTCountries {
                 if let returnData = JSONResult as! [[String:AnyObject]]? {
                     
                     // Ensure cored data operations happen on the main thread.
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         
                         // Convert each dictionary in the response data into a Country object.
                         for dictionary in returnData {
                             let country:Country = Country(dictionary: dictionary, context: CoreDataContext.sharedInstance().countriesContext)
                             countries.append(country)
                         }
-                        completionHandler(countries: countries, error: nil)
+                        completionHandler(countries, nil)
                     }
                 }
             else {
-                    completionHandler(countries: nil, error: error)
+                    completionHandler(nil, error)
                 }
             }
         }

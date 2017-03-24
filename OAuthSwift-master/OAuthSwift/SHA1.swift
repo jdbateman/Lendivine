@@ -10,15 +10,15 @@ import Foundation
 
 class SHA1 {
     
-    var message: NSData
+    var message: Data
     
-    init(_ message: NSData) {
+    init(_ message: Data) {
         self.message = message
     }
     
     /** Common part for hash calculation. Prepare header data. */
-    func prepare(len:Int = 64) -> NSMutableData {
-        let tmpMessage: NSMutableData = NSMutableData(data: self.message)
+    func prepare(_ len:Int = 64) -> NSMutableData {
+        let tmpMessage: NSMutableData = NSMutableData(data: self.message) //todo:swift3 - converted NSData to NSMutableData
         
         // Step 1. Append Padding Bits
         tmpMessage.appendBytes([0x80]) // append one bit (Byte with one bit) to message
@@ -31,13 +31,13 @@ class SHA1 {
         return tmpMessage
     }
 
-    func calculate() -> NSData {
+    func calculate() -> Data {
 
         //var tmpMessage = self.prepare()
         let len = 64
         let h:[UInt32] = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 
-        let tmpMessage: NSMutableData = NSMutableData(data: self.message)
+        let tmpMessage: NSMutableData = NSMutableData(data: self.message)  //todo:swift3 - converted NSData to NSMutableData
         
         // Step 1. Append Padding Bits
         tmpMessage.appendBytes([0x80]) // append one bit (Byte with one bit) to message
@@ -51,21 +51,25 @@ class SHA1 {
         var hh = h
         
         // append message length, in a 64-bit big-endian integer. So now the message length is a multiple of 512 bits.
-        tmpMessage.appendBytes((self.message.length * 8).bytes(64 / 8))
+        tmpMessage.appendBytes((self.message.count * 8).bytes(64 / 8))
         
         // Process the message in successive 512-bit chunks:
         let chunkSizeBytes = 512 / 8 // 64
         var leftMessageBytes = tmpMessage.length 
-        for var i = 0; i < tmpMessage.length; i = i + chunkSizeBytes, leftMessageBytes -= chunkSizeBytes {
-            let chunk = tmpMessage.subdataWithRange(NSRange(location: i, length: min(chunkSizeBytes,leftMessageBytes)))
+
+        //        for var i = 0; i < tmpMessage.length; i = i + chunkSizeBytes, leftMessageBytes -= chunkSizeBytes {
+        //for var i in (0..<tmpMessage.length) { //todo:swift3
+        for i in stride(from:0, to:tmpMessage.length, by:chunkSizeBytes) {
+
+            let chunk = tmpMessage.subdata(with: NSRange(location: i, length: min(chunkSizeBytes,leftMessageBytes)))
             // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15, big-endian
             // Extend the sixteen 32-bit words into eighty 32-bit words:
-            var M:[UInt32] = [UInt32](count: 80, repeatedValue: 0)
+            var M:[UInt32] = [UInt32](repeating: 0, count: 80)
             for x in 0..<M.count {
                 switch (x) {
                 case 0...15:
                     var le:UInt32 = 0
-                    chunk.getBytes(&le, range:NSRange(location:x * sizeofValue(M[x]), length: sizeofValue(M[x])))
+                    (chunk as NSData).getBytes(&le, range:NSRange(location:x * MemoryLayout.size(ofValue: M[x]), length: MemoryLayout.size(ofValue: M[x])))
                     M[x] = le.bigEndian
                     break
                 default:
@@ -120,15 +124,19 @@ class SHA1 {
             hh[2] = (hh[2] &+ C) & 0xffffffff
             hh[3] = (hh[3] &+ D) & 0xffffffff
             hh[4] = (hh[4] &+ E) & 0xffffffff
+            
+            leftMessageBytes -= chunkSizeBytes
         }
         
         // Produce the final hash value (big-endian) as a 160 bit number:
         let buf: NSMutableData = NSMutableData()
         hh.forEach({ (item) -> () in
             var i:UInt32 = item.bigEndian
-            buf.appendBytes(&i, length: sizeofValue(i))
+            buf.append(&i, length: MemoryLayout.size(ofValue: i))
         })
         
-        return buf.copy() as! NSData
+        return buf.copy() as! Data
     }
 }
+
+

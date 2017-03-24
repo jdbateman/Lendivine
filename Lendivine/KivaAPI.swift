@@ -33,24 +33,24 @@ class KivaAPI {
     }
     
     // Enable KivaAPI calls requiring an OAuth access token.
-    func setOAuthAccessToken(oAuthAccessToken: String, oAuth1: OAuth1Swift) {
+    func setOAuthAccessToken(_ oAuthAccessToken: String, oAuth1: OAuth1Swift) {
         self.oAuthAccessToken = oAuthAccessToken
         self.oAuth1 = oAuth1
     }
     
-    func makeKivaOAuthAPIRequest(urlOfAPI url: String, parametersDict: [String: AnyObject]?, completionHandler: (success: Bool, error: NSError?, jsonData: AnyObject?) -> Void ) {
+    func makeKivaOAuthAPIRequest(urlOfAPI url: String, parametersDict: [String: AnyObject]?, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ jsonData: AnyObject?) -> Void ) {
         
         if oAuthAccessToken == nil || oAuth1 == nil {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, jsonData: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         
         // set the oauth_token parameter. remove any existing URL encoding (% escaped characters)
         var parameters =  Dictionary<String, AnyObject>()
         parameters = [
-            "oauth_token" : self.oAuthAccessToken!.stringByRemovingPercentEncoding!,
-            "app_id" : Constants.OAuthValues.consumerKey
+            "oauth_token" : self.oAuthAccessToken!.removingPercentEncoding! as AnyObject,
+            "app_id" : Constants.OAuthValues.consumerKey as AnyObject
         ]
         if let newParameters = parametersDict {
             for (key,value) in newParameters {
@@ -64,14 +64,14 @@ class KivaAPI {
         self.oAuth1!.client.get(url, parameters: parameters,
             
             success: { data, response in
-                let jsonDict: AnyObject! = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-                completionHandler(success: true, error: nil, jsonData: jsonDict)
+                let jsonDict: AnyObject! = try? JSONSerialization.jsonObject(with: data, options: []) as AnyObject!
+                completionHandler(true, nil, jsonDict)
             },
             
             failure: { (error:NSError!) -> Void in
                 print("Kiva API request failed.")
                 //print(error)
-                completionHandler(success: false, error: error, jsonData: nil)
+                completionHandler(false, error, nil)
             }
         )
     }
@@ -81,11 +81,11 @@ class KivaAPI {
     func setupNotificationObservers() {
         
         // Add a notification observer for logout.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(KivaAPI.onLogout), name: logoutNotificationKey, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(KivaAPI.onLogout), name: NSNotification.Name(rawValue: logoutNotificationKey), object: nil)
     }
     
     /* Received a notification that logout was initiated. */
-    @objc private func onLogout() {
+    @objc fileprivate func onLogout() {
         oAuthAccessToken = nil
     }
 }
@@ -102,10 +102,10 @@ extension KivaAPI {
         }
     }
     
-    func kivaOAuthGetUserAccount(completionHandler: (success: Bool, error: NSError?, userAccount: KivaUserAccount?) -> Void ) {
+    func kivaOAuthGetUserAccount(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ userAccount: KivaUserAccount?) -> Void ) {
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, userAccount: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/account.json", parametersDict: nil) { success, error, jsonData in
@@ -121,27 +121,27 @@ extension KivaAPI {
                 let isDeveloper = userAccountDict?["is_developer"] as? Bool
                 
                 var dictionary = [String: AnyObject]()
-                dictionary["first_name"] = firstName
-                dictionary["last_name"] = lastName
-                dictionary["lender_id"] = lenderID
+                dictionary["first_name"] = firstName as AnyObject?
+                dictionary["last_name"] = lastName as AnyObject?
+                dictionary["lender_id"] = lenderID as AnyObject?
                 dictionary["id"] = id
-                dictionary["is_public"] = isPublic
-                dictionary["is_developer"] = isDeveloper
+                dictionary["is_public"] = isPublic as AnyObject?
+                dictionary["is_developer"] = isDeveloper as AnyObject?
                 
                 
                 let account = KivaUserAccount(dictionary: dictionary)
                 
-                completionHandler(success: success, error: error, userAccount: account)
+                completionHandler(success, error, account)
             } else {
-                completionHandler(success: success, error: error, userAccount: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
-    func kivaOAuthGetUserBalance(completionHandler: (success: Bool, error: NSError?, balance: String?) -> Void ) {
+    func kivaOAuthGetUserBalance(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ balance: String?) -> Void ) {
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, balance: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/balance.json", parametersDict: nil) { success, error, jsonData in
@@ -150,14 +150,14 @@ extension KivaAPI {
             let userBalanceDict = jsonData!["user_balance"] as? [String: AnyObject]
             let balance = userBalanceDict?["balance"] as? String
             
-            completionHandler(success: success, error: error, balance: balance)
+            completionHandler(success, error, balance)
         }
     }
     
-    func kivaOAuthGetUserEmail(completionHandler: (success: Bool, error: NSError?, email: String?) -> Void ) {
+    func kivaOAuthGetUserEmail(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ email: String?) -> Void ) {
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, email: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/email.json", parametersDict: nil) { success, error, jsonData in
@@ -167,18 +167,18 @@ extension KivaAPI {
                 let userEmailDict = jsonData!["user_email"] as? [String: AnyObject]
                 let email = userEmailDict?["email"] as? String
 
-                completionHandler(success: success, error: error, email: email)
+                completionHandler(success, error, email)
             } else {
-                completionHandler(success: false, error: error, email: nil)
+                completionHandler(false, error, nil)
             }
         }
     }
     
     
-    func kivaOAuthGetUserExpectedRepayment(completionHandler: (success: Bool, error: NSError?, expectedRepayments: [KivaRepayment]?) -> Void ) {
+    func kivaOAuthGetUserExpectedRepayment(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ expectedRepayments: [KivaRepayment]?) -> Void ) {
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, expectedRepayments: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/expected_repayments.json", parametersDict: nil) { success, error, jsonData in
@@ -222,27 +222,25 @@ extension KivaAPI {
                     if jsonData.count > 0 {
                         
                         for (key, value) in jsonData as! [String: AnyObject] {
-                            
-                            if let repayment:KivaRepayment = KivaRepayment(key: key, dictionary: value as? [String: AnyObject]) {
-                                repayments.append(repayment)
-                            }
+                            let repayment:KivaRepayment = KivaRepayment(key: key, dictionary: value as? [String: AnyObject])
+                            repayments.append(repayment)
                         }
                     }
                 }
                 
-                completionHandler(success: success, error: error, expectedRepayments: repayments)
+                completionHandler(success, error, repayments)
             }
             else {
-                completionHandler(success: success, error: error, expectedRepayments: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
-    func kivaOAuthGetLender(completionHandler: (success: Bool, error: NSError?, lender: KivaLender?) -> Void ) {
+    func kivaOAuthGetLender(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ lender: KivaLender?) -> Void ) {
         
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, lender: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         
@@ -261,14 +259,14 @@ extension KivaAPI {
                     }
                 }
                 
-                completionHandler(success: success, error: error, lender: lender)
+                completionHandler(success, error, lender)
             } else {
-                completionHandler(success: success, error: error, lender: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
-    func kivaOAuthGetUserLoans(page: NSNumber?, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?, nextPage: Int) -> Void ) {
+    func kivaOAuthGetUserLoans(_ page: NSNumber?, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?, _ nextPage: Int) -> Void ) {
         
         // page details
         var nextPage = -1
@@ -276,11 +274,11 @@ extension KivaAPI {
         if let page = page {
             parametersDictionary["page"] = page
         }
-        parametersDictionary["per_page"] = kKivaPageSize * 5 // Note: in future remove multiple on page size an turn paging on in Calling view controller.
+        parametersDictionary["per_page"] = (kKivaPageSize * 5) as AnyObject // Note: in future remove multiple on page size an turn paging on in Calling view controller.
         
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, loans: nil, nextPage: nextPage)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil, nextPage)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/loans.json", parametersDict: nil) { success, error, jsonData in
@@ -316,18 +314,18 @@ extension KivaAPI {
                     }
                 }
                 
-                completionHandler(success: success, error: error, loans: loans, nextPage: nextPage)
+                completionHandler(success, error, loans, nextPage)
             } else {
-                completionHandler(success: success, error: error, loans: nil, nextPage: nextPage)
+                completionHandler(success, error, nil, nextPage)
             }
         }
     }
     
-    func kivaOAuthGetMyLenderStatistics(completionHandler: (success: Bool, error: NSError?, statistics: KivaLoanStatistics?) -> Void ) {
+    func kivaOAuthGetMyLenderStatistics(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ statistics: KivaLoanStatistics?) -> Void ) {
         
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, statistics: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         makeKivaOAuthAPIRequest(urlOfAPI: "https://api.kivaws.org/v1/my/stats.json", parametersDict: nil) { success, error, jsonData in
@@ -343,19 +341,19 @@ extension KivaAPI {
                     }
                 }
                 
-                completionHandler(success: success, error: error, statistics: statistics)
+                completionHandler(success, error, statistics)
             } else {
-                completionHandler(success: success, error: error, statistics: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
     /*! Get the balance data for the loan identied by loanID. */
-    func kivaOAuthGetLoanBalance(loanID: NSNumber, completionHandler: (success: Bool, error: NSError?, balance: KivaLoanBalance?) -> Void ) {
+    func kivaOAuthGetLoanBalance(_ loanID: NSNumber, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ balance: KivaLoanBalance?) -> Void ) {
     
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, balance: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
         
@@ -404,19 +402,19 @@ extension KivaAPI {
                 if balances.count > 0 {
                     returnBalance = balances[0]
                 }
-                completionHandler(success: success, error: error, balance: returnBalance)
+                completionHandler(success, error, returnBalance)
             } else {
-                completionHandler(success: success, error: error, balance: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
     // Note: enable paging in future
-    func kivaOAuthGetMyTeams(completionHandler: (success: Bool, error: NSError?, teams: [KivaTeam]?) -> Void) {
+    func kivaOAuthGetMyTeams(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ teams: [KivaTeam]?) -> Void) {
         
         if !oAuthEnabled {
-            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.KIVA_OAUTH_ERROR)
-            completionHandler(success: false, error: vtError.error, teams: nil)
+            let vtError = VTError(errorString: "No OAuth access token.", errorCode: VTError.ErrorCodes.kiva_OAUTH_ERROR)
+            completionHandler(false, vtError.error, nil)
             return
         }
  
@@ -438,9 +436,9 @@ extension KivaAPI {
                         }
                     }
                 }
-                completionHandler(success: success, error: error, teams: teams)
+                completionHandler(success, error, teams)
             } else {
-                completionHandler(success: success, error: error, teams: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
@@ -491,7 +489,7 @@ extension KivaAPI {
 extension KivaAPI {
 
     // Note: enable paging in future
-    func kivaGetPartners(completionHandler: (success: Bool, error: NSError?, partners: [KivaPartner]?) -> Void) {
+    func kivaGetPartners(_ completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ partners: [KivaPartner]?) -> Void) {
         
         makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/partners.json", parametersDict: nil /*parametersDict*/) { success, error, jsonData in
             
@@ -511,9 +509,9 @@ extension KivaAPI {
                         }
                     }
                 }
-                completionHandler(success: success, error: error, partners: partners)
+                completionHandler(success, error, partners)
             } else {
-                completionHandler(success: success, error: error, partners: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
@@ -747,7 +745,7 @@ extension KivaAPI {
     }
     
     enum PartnerRiskRatingMaximum: Int {
-        case low = 0, medLow, medium, medHigh, High, Highest = 5
+        case low = 0, medLow, medium, medHigh, high, highest = 5
     }
     
     enum PartnerDelinquencyMaximum: Int {
@@ -755,8 +753,8 @@ extension KivaAPI {
         case medLow = 8
         case medium = 16
         case medHigh = 24
-        case High = 32
-        case Highest = 41
+        case high = 32
+        case highest = 41
     }
     
     enum PartnerDefaultRateMaximum: Int {
@@ -764,8 +762,8 @@ extension KivaAPI {
         case medLow = 5
         case medium = 10
         case medHigh = 15
-        case High = 20
-        case Highest = 26
+        case high = 20
+        case highest = 26
     }
     
     /*!
@@ -791,65 +789,65 @@ extension KivaAPI {
         loans (out) An Array of KivaLoan objects. Nil if an error occurred or no loans were found.
         nextPage (out) -1 if there is no next page, else the number of the next page of results to request.
     */
-    func kivaSearchLoans(queryMatch queryMatch: String?, status: String?, gender: LoanGender?, regions: String?, countries: String?, sector: LoanSector?, borrowerType: String?, maxPartnerRiskRating: PartnerRiskRatingMaximum?, maxPartnerDelinquency: PartnerDelinquencyMaximum?, maxPartnerDefaultRate: PartnerDefaultRateMaximum?, includeNonRatedPartners: Bool?, includedPartnersWithCurrencyRisk: Bool?, page: NSNumber?, perPage: NSNumber?, sortBy: String?, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?, nextPage: Int) -> Void) {
+    func kivaSearchLoans(queryMatch: String?, status: String?, gender: LoanGender?, regions: String?, countries: String?, sector: LoanSector?, borrowerType: String?, maxPartnerRiskRating: PartnerRiskRatingMaximum?, maxPartnerDelinquency: PartnerDelinquencyMaximum?, maxPartnerDefaultRate: PartnerDefaultRateMaximum?, includeNonRatedPartners: Bool?, includedPartnersWithCurrencyRisk: Bool?, page: NSNumber?, perPage: NSNumber?, sortBy: String?, context: NSManagedObjectContext, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?, _ nextPage: Int) -> Void) {
         
         var nextPage = -1
         var parametersDictionary = [String: AnyObject]()
                     
         // Validate input parameters
         if let q = queryMatch {
-            parametersDictionary["query"] = q
+            parametersDictionary["query"] = q as AnyObject?
         }
     
         if let s = status {
-            parametersDictionary["status"] = s
+            parametersDictionary["status"] = s as AnyObject?
         }
         
         if let g = gender {
-            parametersDictionary["gender"] = g.rawValue
+            parametersDictionary["gender"] = g.rawValue as AnyObject?
         }
         
         if let r = regions {
-            parametersDictionary["region"] = r
+            parametersDictionary["region"] = r as AnyObject?
         }
         
         if let c = countries {
-            parametersDictionary["country_code"] = c
+            parametersDictionary["country_code"] = c as AnyObject?
         }
                     
         if let s = sector {
-            parametersDictionary["sector"] = s.rawValue
+            parametersDictionary["sector"] = s.rawValue as AnyObject?
         }
         
         if let b = borrowerType {
-            parametersDictionary["borrower_type"] = b
+            parametersDictionary["borrower_type"] = b as AnyObject?
         }
                     
         if let risk = maxPartnerRiskRating {
-            parametersDictionary["partner_risk_rating_max"] = risk.rawValue
+            parametersDictionary["partner_risk_rating_max"] = risk.rawValue as AnyObject?
         }
                     
         if let delinquency = maxPartnerDelinquency {
-            parametersDictionary["partner_arrears_max"] = delinquency.rawValue
+            parametersDictionary["partner_arrears_max"] = delinquency.rawValue as AnyObject?
         }
                     
         if let defaultRate = maxPartnerDefaultRate {
-            parametersDictionary["partner_default_max"] = defaultRate.rawValue
+            parametersDictionary["partner_default_max"] = defaultRate.rawValue as AnyObject?
         }
                 
         if let nonRatedPartners = includeNonRatedPartners {
             if nonRatedPartners == true {
-                parametersDictionary["partner_risk_include_nonrated"] = "false"
+                parametersDictionary["partner_risk_include_nonrated"] = "false" as AnyObject?
             } else {
-                parametersDictionary["partner_risk_include_nonrated"] = "true"
+                parametersDictionary["partner_risk_include_nonrated"] = "true" as AnyObject?
             }
         }
                     
         if let currencyRisk = includedPartnersWithCurrencyRisk {
             if currencyRisk == true {
-                parametersDictionary["include_curr_risk"] = "false"
+                parametersDictionary["include_curr_risk"] = "false" as AnyObject?
             } else {
-                parametersDictionary["include_curr_risk"] = "true"
+                parametersDictionary["include_curr_risk"] = "true" as AnyObject?
             }
         }
                     
@@ -862,7 +860,7 @@ extension KivaAPI {
         }
                     
         if let sortBy = sortBy {
-            parametersDictionary["sort_by"] = sortBy
+            parametersDictionary["sort_by"] = sortBy as AnyObject?
         }
                     
         makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/search.json", parametersDict: parametersDictionary) { success, error, jsonData in
@@ -897,14 +895,14 @@ extension KivaAPI {
                         }
                     }
                 }
-                completionHandler(success: success, error: error, loans: loans, nextPage: nextPage)
+                completionHandler(success, error, loans, nextPage)
             } else {
-                completionHandler(success: success, error: error, loans: nil, nextPage: nextPage)
+                completionHandler(success, error, nil, nextPage)
             }
         }
     }
     
-    func kivaGetNewestLoans(scratchContext: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func kivaGetNewestLoans(_ scratchContext: NSManagedObjectContext, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?) -> Void) {
         
         makeKivaOAuthAPIRequest(urlOfAPI: "http://api.kivaws.org/v1/loans/newest.json", parametersDict: nil) { success, error, jsonData in
             
@@ -925,19 +923,19 @@ extension KivaAPI {
                     }
                 }
                 
-                completionHandler(success: success, error: error, loans: loans)
+                completionHandler(success, error, loans)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
     
-    func kivaGetLoans(loanIDs: [NSNumber?]?, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func kivaGetLoans(_ loanIDs: [NSNumber?]?, context: NSManagedObjectContext, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?) -> Void) {
         
         // ensure at least one loan ID was passed in
         if loanIDs == nil || loanIDs!.count == 0 {
-            let error = VTError(errorString: "No loan IDs.", errorCode: VTError.ErrorCodes.KIVA_API_NO_LOANS)
-            completionHandler(success: false, error: error.error, loans: nil)
+            let error = VTError(errorString: "No loan IDs.", errorCode: VTError.ErrorCodes.kiva_API_NO_LOANS)
+            completionHandler(false, error.error, nil)
             return
         }
         
@@ -947,11 +945,11 @@ extension KivaAPI {
             for id in loanIDs{
                 if let id = id {
                     let nextLoanString = id.stringValue
-                    loanIDsString.appendContentsOf(String(format:"%@,",nextLoanString))
+                    loanIDsString.append(String(format:"%@,",nextLoanString))
                 }
             }
         }
-        loanIDsString.removeAtIndex(loanIDsString.endIndex.predecessor())
+        loanIDsString.remove(at: loanIDsString.characters.index(before: loanIDsString.endIndex))
 
         let requestUrl = String(format: "http://api.kivaws.org/v1/loans/%@.json", loanIDsString /*loanIDs![0]*/) // TODO - append all loan IDs not just the first.
         
@@ -973,9 +971,9 @@ extension KivaAPI {
                     }
                 }
                 
-                completionHandler(success: success, error: error, loans: loans)
+                completionHandler(success, error, loans)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
@@ -1007,7 +1005,7 @@ extension KivaAPI {
             
             // using directly UTF8 encoded string
             
-            var httpBody: NSData?
+            var httpBody: Data?
             var loanIDs = [NSNumber]()
             for item in cart.items {
                 if let loanID = item.id {
@@ -1032,36 +1030,36 @@ extension KivaAPI {
     }
     
     // Helper function to create http body for cart POST request given a collection of loan IDs and additional information.
-    func createHTTPBody(loanIDs:[NSNumber], appID: String, donation: NSNumber?, callbackURL: String?) -> NSData? {
+    func createHTTPBody(_ loanIDs:[NSNumber], appID: String, donation: NSNumber?, callbackURL: String?) -> Data? {
         
         let cart = KivaCart.sharedInstance
         var loanString = "loans=["
         
         // loans
         for item in cart.items {
-            if let loanID = item.id, donationAmount = item.donationAmount where loanID.intValue > 0 {
-                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", loanID.intValue, donationAmount.floatValue)
-                loanString.appendContentsOf(loanToAdd)
+            if let loanID = item.id, let donationAmount = item.donationAmount, loanID.int32Value > 0 {
+                let loanToAdd = String(format:"{\"id\":%ld,\"amount\":%0.2f},", loanID.int32Value, donationAmount.floatValue)
+                loanString.append(loanToAdd)
             }
         }
 
-        loanString.removeAtIndex(loanString.endIndex.predecessor())
-        loanString.appendContentsOf("]")
+        loanString.remove(at: loanString.characters.index(before: loanString.endIndex))
+        loanString.append("]")
         
         // app_id
-        loanString.appendContentsOf("&app_id=" + Constants.OAuthValues.consumerKey) // ("&app_id=com.johnbateman.awesomeapp")
+        loanString.append("&app_id=" + Constants.OAuthValues.consumerKey) // ("&app_id=com.johnbateman.awesomeapp")
         
         // donation
         if let donation = donation {
-            loanString.appendContentsOf(String(format:"&donation=%0.2f",donation.floatValue))
+            loanString.append(String(format:"&donation=%0.2f",donation.floatValue))
         }
         
         // callback_url
         if let callbackUrl = callbackURL {
-            loanString.appendContentsOf(String(format:"&callback_url=%@",callbackUrl))
+            loanString.append(String(format:"&callback_url=%@",callbackUrl))
         }
         
-        return loanString.dataUsingEncoding(NSUTF8StringEncoding)
+        return loanString.data(using: String.Encoding.utf8)
     }
     
     // Check out cart via Kiva.org -> returns an NSURLMutableRequest for the kiva.org basket
@@ -1086,7 +1084,7 @@ extension KivaAPI {
         result Contains true if post was successful, else it contains false if an error occurred.
         error  An NSError object if something went wrong, else nil.
     */
-    func postCartToKiva(cart: KivaCart /*, completionHandler: (result: Bool, error: NSError?) -> NSMutableURLRequest?*/) -> NSMutableURLRequest? {
+    func postCartToKiva(_ cart: KivaCart /*, completionHandler: (result: Bool, error: NSError?) -> NSMutableURLRequest?*/) -> NSMutableURLRequest? {
         
         /* 1. Specify parameters, method (if has {key}) */
         
@@ -1094,7 +1092,7 @@ extension KivaAPI {
         var jsonBody = [String: AnyObject]()
         if cart.count > 0 {
             let serializableItems: [[String : AnyObject]] = cart.convertCartItemsToSerializableItems()
-            jsonBody["loans"] = serializableItems
+            jsonBody["loans"] = serializableItems as AnyObject?
         }
         return nil
     }

@@ -17,7 +17,7 @@ class KivaCartViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.webView.frame = UIScreen.mainScreen().bounds
+        self.webView.frame = UIScreen.main.bounds
         self.webView.scalesPageToFit = true
         self.webView.delegate = self
         
@@ -33,11 +33,11 @@ class KivaCartViewController: UIViewController, UIWebViewDelegate {
     func loadAddressURL() {
 
         if let request = request {
-            self.webView.loadRequest(request)
+            self.webView.loadRequest(request as URLRequest)
         } else {
             // load a default page for testing purposes
-            let url = NSURL(string: "http://www.google.com")
-            let request = NSURLRequest(URL: url!)
+            let url = URL(string: "http://www.google.com")
+            let request = URLRequest(url: url!)
             self.webView.loadRequest(request)
         }
     }

@@ -44,7 +44,7 @@ class KivaOAuth {
     static let sharedInstance = KivaOAuth()
     
     @available(iOS 9.0, *)
-    func doOAuthKiva(controller:SFSafariViewControllerDelegate, completionHandler: (success: Bool, error: NSError?, kivaAPI: KivaAPI?) -> Void){
+    func doOAuthKiva(_ controller:SFSafariViewControllerDelegate, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ kivaAPI: KivaAPI?) -> Void){
         
         let oauthswift = OAuth1Swift(
             consumerKey:    Constants.OAuthValues.consumerKey,
@@ -56,7 +56,7 @@ class KivaOAuth {
         
         // Request an unauthorized oauth Request Token. Upon receipt of the request token from Kiva use it to redirect to Kiva.org for user authentication and user authorization of app. If the user authorizes this app then Kiva.org redirects to the callback url below by appending an oauth_verifier code. The app will exchange the unauthorized oauth request token and oauth_verifier code for a long lived Access Token that can be used to make Kiva API calls to access protected resources.
         
-        oauthswift.authorizeWithCallbackURL(controller, callbackURL: NSURL(string: Constants.OAuthValues.consumerCallbackUrl)!,
+        oauthswift.authorizeWithCallbackURL(controller, callbackURL: URL(string: Constants.OAuthValues.consumerCallbackUrl)!,
             success: { credential, response in
             
                 //print("oauth_token:\(credential.oauth_token)\n\noauth_token_secret:\(credential.oauth_token_secret)")
@@ -67,13 +67,13 @@ class KivaOAuth {
                 // Enable KivaAPI calls requiring an OAuth access token.
                 KivaAPI.sharedInstance.setOAuthAccessToken(credential.oauth_token, oAuth1: oauthswift)
                 
-                completionHandler(success: true, error: nil, kivaAPI: self.kivaAPI)
+                completionHandler(true, nil, self.kivaAPI)
             },
             failure: {
                 
                 (error:NSError!) -> Void in
                 print(error.localizedDescription)
-                completionHandler(success: false, error: error, kivaAPI: nil)
+                completionHandler(false, error, nil)
             }
         )
     }

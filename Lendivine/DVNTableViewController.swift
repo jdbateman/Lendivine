@@ -34,10 +34,10 @@ class DVNTableViewController: UITableViewController {
         @brief Find loans from Kiva.org and save to the Core data persistant store on disk.
         @discussion The caller should refetch after calling this function. Loans found on Kiva are insantiated in the sharedContext. Updates of the persistent store are done using an internal scratch context that is reset upon completion of processing.
     */
-    func populateLoans(numberOfLoansToAdd: Int, completionHandler: (success: Bool, error: NSError?) -> Void) {
+    func populateLoans(_ numberOfLoansToAdd: Int, completionHandler: @escaping (_ success: Bool, _ error: NSError?) -> Void) {
         
         guard let kivaAPI = self.kivaAPI else {
-            completionHandler(success: false, error: NSError(domain: "kivaAPI is nil.", code: 2019, userInfo: [NSLocalizedDescriptionKey: "kivaAPI is nil in populateLoans in DVNTableViewController."]))
+            completionHandler(false, NSError(domain: "kivaAPI is nil.", code: 2019, userInfo: [NSLocalizedDescriptionKey: "kivaAPI is nil in populateLoans in DVNTableViewController."]))
             return
         }
         
@@ -50,17 +50,17 @@ class DVNTableViewController: UITableViewController {
                 if let loans = loanResults {
                     for loan in loans where (loan.id != nil) && (loan.id != -1) {
                         // persist the loan
-                        CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().loansScratchContext2)
+                        _ = CoreDataLoanHelper.upsert(loan, toContext: CoreDataContext.sharedInstance().loansScratchContext2)
                     }
                     CoreDataContext.sharedInstance().loansScratchContext2.reset()
                     CoreDataContext.sharedInstance().loansScratchContext.reset()
-                    completionHandler(success: true, error: nil)
+                    completionHandler(true, nil)
                     return
                 }
             }
             
             CoreDataContext.sharedInstance().loansScratchContext.reset()
-            completionHandler(success: false, error: error)
+            completionHandler(false, error)
         }
     }
     
@@ -69,7 +69,7 @@ class DVNTableViewController: UITableViewController {
         @discussion KivaLoan objects are instantiated in the specified context but not saved to the persistent store.
         @return A collection of KivaLoan objects.
     */
-    func findLoans(kivaAPI: KivaAPI, context: NSManagedObjectContext, completionHandler: (success: Bool, error: NSError?, loans: [KivaLoan]?) -> Void) {
+    func findLoans(_ kivaAPI: KivaAPI, context: NSManagedObjectContext, completionHandler: @escaping (_ success: Bool, _ error: NSError?, _ loans: [KivaLoan]?) -> Void) {
         
         var nextPage = self.readNextKivaPage()
         if nextPage < 1 {
@@ -77,26 +77,26 @@ class DVNTableViewController: UITableViewController {
         }
 
         
-        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: nil /*KivaAPI.LoanSector.Agriculture*/, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: nextPage, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext ) {
+        kivaAPI.kivaSearchLoans(queryMatch: nil /*"family"*/, status: KivaLoan.Status.fundraising.rawValue, gender: nil, regions: nil, countries: nil, sector: nil /*KivaAPI.LoanSector.Agriculture*/, borrowerType: KivaAPI.LoanBorrowerType.individuals.rawValue, maxPartnerRiskRating: KivaAPI.PartnerRiskRatingMaximum.medLow, maxPartnerDelinquency: KivaAPI.PartnerDelinquencyMaximum.medium, maxPartnerDefaultRate: KivaAPI.PartnerDefaultRateMaximum.medium, includeNonRatedPartners: true, includedPartnersWithCurrencyRisk: true, page: nextPage as NSNumber?, perPage: LoansTableViewController.KIVA_LOAN_SEARCH_RESULTS_PER_PAGE as NSNumber?, sortBy: KivaAPI.LoanSortBy.popularity.rawValue, context: self.sharedContext ) {
             
             success, error, loanResults, nextPage in
             
             // paging
             if nextPage == -1 {
                 // disable the refresh button
-                self.navigationItem.rightBarButtonItems?[1].enabled = false
+                self.navigationItem.rightBarButtonItems?[1].isEnabled = false
             } else {
                 // save the nextPage
                 self.saveNextKivaPage(nextPage)
                 
                 // enable the refresh button
-                self.navigationItem.rightBarButtonItems?[1].enabled = true
+                self.navigationItem.rightBarButtonItems?[1].isEnabled = true
             }
             
             if success {
-                completionHandler(success: success, error: error, loans: loanResults)
+                completionHandler(success, error, loanResults)
             } else {
-                completionHandler(success: success, error: error, loans: nil)
+                completionHandler(success, error, nil)
             }
         }
     }
@@ -104,17 +104,17 @@ class DVNTableViewController: UITableViewController {
     
     // MARK: Manage next page
     
-    func saveNextKivaPage(page:Int) {
+    func saveNextKivaPage(_ page:Int) {
         
         self.nextPageOfKivaSearchResults = page
-        let appSettings = NSUserDefaults.standardUserDefaults()
+        let appSettings = UserDefaults.standard
         appSettings.setValue(page, forKey: "NextPageOfKivaSearchResults")
     }
     
     func readNextKivaPage() -> Int {
         
-        let appSettings = NSUserDefaults.standardUserDefaults()
-        let nextPage = appSettings.integerForKey("NextPageOfKivaSearchResults")
+        let appSettings = UserDefaults.standard
+        let nextPage = appSettings.integer(forKey: "NextPageOfKivaSearchResults")
         return nextPage
     }
     

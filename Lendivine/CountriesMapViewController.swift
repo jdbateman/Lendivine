@@ -33,7 +33,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
         
         navigationItem.title = "Map Search"
         
-        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .Plain, target: self, action: #selector(CountriesMapViewController.onLoansByListButtonTap))
+        let loansByListButton = UIBarButtonItem(image: UIImage(named: "Donate-32"), style: .plain, target: self, action: #selector(CountriesMapViewController.onLoansByListButtonTap))
         navigationItem.setRightBarButtonItems([loansByListButton], animated: true)
         
         // remove back button
@@ -45,11 +45,11 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         initTapRecognizer()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         deinitTapRecognizer()
     }
     
@@ -62,7 +62,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
         if let tr = tapRecognizer {
             tr.numberOfTapsRequired = 1
             self.mapView.addGestureRecognizer(tr)
-            self.mapView.userInteractionEnabled = true
+            self.mapView.isUserInteractionEnabled = true
         }
     }
     
@@ -71,16 +71,16 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
     }
     
     // User tapped somewhere on the view. End editing.
-    func handleSingleTap(recognizer: UITapGestureRecognizer) {
+    func handleSingleTap(_ recognizer: UITapGestureRecognizer) {
         
         // clear pins
         if let annotation = self.annotation {
             self.mapView.removeAnnotation(annotation)
         }
         
-        if let point = tapRecognizer?.locationInView(self.mapView) {
+        if let point = tapRecognizer?.location(in: self.mapView) {
         
-            let tapPoint:CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
+            let tapPoint:CLLocationCoordinate2D = self.mapView.convert(point, toCoordinateFrom: self.mapView)
             let location = CLLocation(latitude: tapPoint.latitude , longitude: tapPoint.longitude)
             
             // add a pin on the map
@@ -106,7 +106,7 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
                         self.presentCountryLoansController()
                     }
                 } else {
-                    if (error?.domain == kCLErrorDomain) && (error?.code == 2) {
+                    if (error?._domain == kCLErrorDomain) && (error?._code == 2) {
                          LDAlert(viewController: self).displayErrorAlertView("No Internet Connection", message: "Unable to Search for loans in the selected country.")
                     } else {
                         self.showAlert()
@@ -119,11 +119,11 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
     
     // MARK: Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "CountriesMapToCountryLoans" {
             
-                let controller = segue.destinationViewController as! CountryLoansTableViewController
+                let controller = segue.destination as! CountryLoansTableViewController
                 
                 let activityIndicator = DVNActivityIndicator()
                 
@@ -142,8 +142,8 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
     
     /* Modally present the MapViewController on the main thread. */
     func presentCountryLoansController() {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.performSegueWithIdentifier("CountriesMapToCountryLoans", sender: self)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "CountriesMapToCountryLoans", sender: self)
         }
     }
     
@@ -152,16 +152,16 @@ class CountriesMapViewController: MapViewController, UIGestureRecognizerDelegate
 
     func showAlert() {
      
-        let alertController = UIAlertController(title: "Country Not Found", message: "Zoom in and try again.\n\nHint: Tap near the center of the country." , preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Country Not Found", message: "Zoom in and try again.\n\nHint: Tap near the center of the country." , preferredStyle: .alert)
 
-        let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel) {
+        let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel) {
             UIAlertAction in
             // do nothing
         }
         
         alertController.addAction(cancelAction)
         
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
 }

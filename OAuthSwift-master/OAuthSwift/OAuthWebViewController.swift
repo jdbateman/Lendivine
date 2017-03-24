@@ -16,11 +16,11 @@ import Foundation
     public typealias OAuthViewController = NSViewController
 #endif
 
-public class OAuthWebViewController: OAuthViewController, OAuthSwiftURLHandlerType {
+open class OAuthWebViewController: OAuthViewController, OAuthSwiftURLHandlerType {
 
-    public func handle(url: NSURL){
+    open func handle(_ url: URL){
         #if os(iOS)
-            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(
+            UIApplication.shared.keyWindow?.rootViewController?.present(
                 self, animated: true, completion: nil)
         #elseif os(OSX)
             if let p = self.parentViewController { // default behaviour if this controller affected as child controller
@@ -32,9 +32,9 @@ public class OAuthWebViewController: OAuthViewController, OAuthSwiftURLHandlerTy
         #endif
     }
 
-    public func dismissWebViewController() {
+    open func dismissWebViewController() {
         #if os(iOS)
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         #elseif os(OSX)
             if self.presentingViewController != nil { // if presentViewControllerAsModalWindow
                 self.dismissController(nil)
