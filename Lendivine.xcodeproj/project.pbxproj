@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A05C8D60178658DFCBF89EC /* Pods_Lendivine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 858A296AA7C077F5194FFE02 /* Pods_Lendivine.framework */; };
 		9E1911731C94D6CD004E5FBB /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1911721C94D6CD004E5FBB /* Countries.swift */; };
 		9E1C658D1BFD022B003A0C00 /* ViewUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */; };
 		9E36CC171CCD773C006402C4 /* KivaAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36CC161CCD773C006402C4 /* KivaAccount.swift */; };
@@ -55,8 +56,8 @@
 		9E7869EE1C9F3A1200F1FE93 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869ED1C9F3A1200F1FE93 /* CustomView.swift */; };
 		9E7869F01C9F5CCF00F1FE93 /* DVNPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869EF1C9F5CCF00F1FE93 /* DVNPointAnnotation.swift */; };
 		9E79FBBD1CA84AD4008B96B1 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E79FBBC1CA84AD4008B96B1 /* LoginViewController.swift */; };
-		9E82DAB91CE390CE00578491 /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; };
-		9E82DABA1CE390CE00578491 /* OAuthSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9E82DAB91CE390CE00578491 /* ReferenceProxy in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; };
+		9E82DABA1CE390CE00578491 /* ReferenceProxy in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E131BF559E90000D9BF /* AppDelegate.swift */; };
 		9EC72E1B1BF559E90000D9BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E191BF559E90000D9BF /* Main.storyboard */; };
 		9EC72E1D1BF559E90000D9BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1C1BF559E90000D9BF /* Assets.xcassets */; };
@@ -111,7 +112,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9E82DABA1CE390CE00578491 /* OAuthSwift.framework in Embed Frameworks */,
+				9E82DABA1CE390CE00578491 /* ReferenceProxy in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +120,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		644F00D4C057D71FE3EBDE53 /* Pods-Lendivine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lendivine.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lendivine/Pods-Lendivine.release.xcconfig"; sourceTree = "<group>"; };
+		858A296AA7C077F5194FFE02 /* Pods_Lendivine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lendivine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E1911721C94D6CD004E5FBB /* Countries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countries.swift; sourceTree = "<group>"; };
 		9E1C658C1BFD022B003A0C00 /* ViewUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtility.swift; sourceTree = "<group>"; };
 		9E36CC161CCD773C006402C4 /* KivaAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KivaAccount.swift; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 		9EE356931C71577900363652 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		9EE356951C74501400363652 /* LDAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LDAlert.swift; sourceTree = "<group>"; };
 		9EEA02191CF2711A0003CDE7 /* LoansMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansMapViewController.swift; sourceTree = "<group>"; };
+		F2D54FFC0785A11FEAB5C058 /* Pods-Lendivine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lendivine.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lendivine/Pods-Lendivine.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,13 +202,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E82DAB91CE390CE00578491 /* OAuthSwift.framework in Frameworks */,
+				9E82DAB91CE390CE00578491 /* ReferenceProxy in Frameworks */,
+				9A05C8D60178658DFCBF89EC /* Pods_Lendivine.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		62AFEA23D038869F9D47189E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				858A296AA7C077F5194FFE02 /* Pods_Lendivine.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9E39504C1BF66AD7007BC75E /* OAuth */ = {
 			isa = PBXGroup;
 			children = (
@@ -346,6 +359,8 @@
 				9E82DAB11CE38DA800578491 /* OAuthSwift.xcodeproj */,
 				9EC72E121BF559E90000D9BF /* Lendivine */,
 				9EC72E111BF559E90000D9BF /* Products */,
+				EF0F752F5262DF958F976EF7 /* Pods */,
+				62AFEA23D038869F9D47189E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -371,6 +386,15 @@
 			path = Lendivine;
 			sourceTree = "<group>";
 		};
+		EF0F752F5262DF958F976EF7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F2D54FFC0785A11FEAB5C058 /* Pods-Lendivine.debug.xcconfig */,
+				644F00D4C057D71FE3EBDE53 /* Pods-Lendivine.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -378,12 +402,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9EC72E241BF559E90000D9BF /* Build configuration list for PBXNativeTarget "Lendivine" */;
 			buildPhases = (
+				6EB81206D288AA0579FD3095 /* [CP] Check Pods Manifest.lock */,
 				9EB4CA031E85DC4800EC94B9 /* ShellScript */,
 				9EC72E0C1BF559E90000D9BF /* Sources */,
 				9EC72E0D1BF559E90000D9BF /* Frameworks */,
 				9EC72E0E1BF559E90000D9BF /* Resources */,
 				9EF19DB51CE3017F00F2618E /* Embed Frameworks */,
 				9EB4CA041E85DC6B00EC94B9 /* ShellScript */,
+				7C1E6E6643FF97F1F9099F34 /* [CP] Embed Pods Frameworks */,
+				BDB8960DDFF01129FB51B106 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -461,6 +488,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		6EB81206D288AA0579FD3095 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7C1E6E6643FF97F1F9099F34 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lendivine/Pods-Lendivine-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9EB4CA031E85DC4800EC94B9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -486,6 +543,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Set the build number to \"DEVELOPMENT\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion DEVELOPMENT\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		BDB8960DDFF01129FB51B106 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lendivine/Pods-Lendivine-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -686,6 +758,7 @@
 		};
 		9EC72E251BF559E90000D9BF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2D54FFC0785A11FEAB5C058 /* Pods-Lendivine.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -702,6 +775,7 @@
 		};
 		9EC72E261BF559E90000D9BF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 644F00D4C057D71FE3EBDE53 /* Pods-Lendivine.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
