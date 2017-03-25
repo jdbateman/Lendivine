@@ -6,5 +6,7 @@ target 'Lendivine' do
   use_frameworks!
 
   # Pods for Lendivine
-
+  pod 'Fabric'
+  pod 'Crashlytics'
+  
 end

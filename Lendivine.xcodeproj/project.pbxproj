@@ -56,8 +56,8 @@
 		9E7869EE1C9F3A1200F1FE93 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869ED1C9F3A1200F1FE93 /* CustomView.swift */; };
 		9E7869F01C9F5CCF00F1FE93 /* DVNPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7869EF1C9F5CCF00F1FE93 /* DVNPointAnnotation.swift */; };
 		9E79FBBD1CA84AD4008B96B1 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E79FBBC1CA84AD4008B96B1 /* LoginViewController.swift */; };
-		9E82DAB91CE390CE00578491 /* ReferenceProxy in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; };
-		9E82DABA1CE390CE00578491 /* ReferenceProxy in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9E82DAB91CE390CE00578491 /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; };
+		9E82DABA1CE390CE00578491 /* OAuthSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E82DAB61CE38DA800578491 /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9EC72E141BF559E90000D9BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC72E131BF559E90000D9BF /* AppDelegate.swift */; };
 		9EC72E1B1BF559E90000D9BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E191BF559E90000D9BF /* Main.storyboard */; };
 		9EC72E1D1BF559E90000D9BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EC72E1C1BF559E90000D9BF /* Assets.xcassets */; };
@@ -112,7 +112,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9E82DABA1CE390CE00578491 /* ReferenceProxy in Embed Frameworks */,
+				9E82DABA1CE390CE00578491 /* OAuthSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -202,7 +202,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E82DAB91CE390CE00578491 /* ReferenceProxy in Frameworks */,
+				9E82DAB91CE390CE00578491 /* OAuthSwift.framework in Frameworks */,
 				9A05C8D60178658DFCBF89EC /* Pods_Lendivine.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,6 +411,7 @@
 				9EB4CA041E85DC6B00EC94B9 /* ShellScript */,
 				7C1E6E6643FF97F1F9099F34 /* [CP] Embed Pods Frameworks */,
 				BDB8960DDFF01129FB51B106 /* [CP] Copy Pods Resources */,
+				9E58A7621E870B5C003ADC5E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -517,6 +518,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lendivine/Pods-Lendivine-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		9E58A7621E870B5C003ADC5E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ab77be85bd6723eacc8be17de9640ebf695a3f75 7c6e26bff9f0a17ab829d3276152171fd028a8c623c0348ca75e2e752c7221ff";
 		};
 		9EB4CA031E85DC4800EC94B9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

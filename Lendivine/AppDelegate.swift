@@ -8,6 +8,8 @@
 
 import UIKit
 import OAuthSwift
+import Fabric
+import Crashlytics
 
 /* A custom NSNotification that indicates any updated country data from the web service is now available in core data. */
 let appDidBecomeActiveNotificationKey = "com.lendivine.appdelegate.appdidbecomeactive"
@@ -25,6 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var loggedIn: Bool = false
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+        Fabric.with([Crashlytics.self])
         
         Countries.persistCountriesFromWebService() {
             success, error in
