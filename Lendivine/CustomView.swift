@@ -53,7 +53,7 @@ class CustomView: MKAnnotationView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.frame = CGRect(x: 0, y: -20, width: 20, height: 20)
-        self.addSubview(imageView
+        self.addSubview(imageView)
     }
     
     func onChangeLabel() {

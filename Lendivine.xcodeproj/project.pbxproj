@@ -378,10 +378,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9EC72E241BF559E90000D9BF /* Build configuration list for PBXNativeTarget "Lendivine" */;
 			buildPhases = (
+				9EB4CA031E85DC4800EC94B9 /* ShellScript */,
 				9EC72E0C1BF559E90000D9BF /* Sources */,
 				9EC72E0D1BF559E90000D9BF /* Frameworks */,
 				9EC72E0E1BF559E90000D9BF /* Resources */,
 				9EF19DB51CE3017F00F2618E /* Embed Frameworks */,
+				9EB4CA041E85DC6B00EC94B9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -457,6 +459,35 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9EB4CA031E85DC4800EC94B9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the count of Git commits\nbuildNumber=$(git rev-list HEAD | wc -l | tr -d ' ')\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		9EB4CA041E85DC6B00EC94B9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to \"DEVELOPMENT\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion DEVELOPMENT\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9EC72E0C1BF559E90000D9BF /* Sources */ = {
