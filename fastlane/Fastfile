@@ -22,11 +22,23 @@ platform :ios do
     
   end
 
+  #################################################################
+  # test lane
+  #
   desc "Runs all the tests"
   lane :test do
     scan
   end
 
+  def change_log_since_last_tag
+    # http://git-scm.com/docs/pretty-formats
+    # <short hash> <commit title>
+    return changelog_from_git_commits(pretty: '%h %s')
+  end
+
+  #################################################################
+  # beta lane
+  #
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
@@ -38,6 +50,43 @@ platform :ios do
     # You can also use other beta testing services here (run `fastlane actions`)
   end
 
+  #################################################################
+  # beta_crashlytics lane
+  # Learn more here: https://github.com/fastlane/setups/blob/master/samples-ios/distribute-beta-build.md 🚀
+  #
+  desc "Deploy to crashlytics using the ad-hoc provisioning profile."
+  lane :beta_crashlytics do |values|
+    # Fabric generated this lane for deployment to Crashlytics Beta
+    # set 'export_method' to 'ad-hoc' if your Crashlytics Beta distribution uses ad-hoc provisioning
+    gym(scheme: 'Lendivine', export_method: 'ad-hoc')
+
+    emails = values[:test_email] ? values[:test_email] : ['johnbateman00@gmail.com'] # You can list more emails here
+    groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
+
+    change_log = change_log_since_last_tag
+
+    crashlytics(
+                api_token: 'ab77be85bd6723eacc8be17de9640ebf695a3f75',
+             build_secret: '7c6e26bff9f0a17ab829d3276152171fd028a8c623c0348ca75e2e752c7221ff',
+                   emails: emails,
+                   groups: groups,
+                    notes: change_log, # 'Distributed with fastlane', # Check out the changelog_from_git_commits action
+            notifications: true) # Should this distribution notify your testers via email?
+
+    # for all available options run `fastlane action crashlytics`
+
+    # You can notify your team in chat that a beta build has been uploaded
+    # slack(
+    #   slack_url: "https://hooks.slack.com/services/YOUR/TEAM/INFO"
+    #   channel: "beta-releases",
+    #   message: "Successfully uploaded a beta release - see it at https://fabric.io/_/beta"
+    # )
+  end
+
+
+  #################################################################
+  # release lane
+  #
   desc "Deploy a new version to the App Store"
   lane :release do
     # match(type: "appstore")
